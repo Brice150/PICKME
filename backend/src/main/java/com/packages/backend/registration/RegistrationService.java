@@ -38,6 +38,7 @@ public class RegistrationService {
                         request.getEmail(),
                         request.getPassword(),
                         UserRole.ROLE_USER,
+                        request.getGender(),
                         request.getGenderSearch(),
                         request.getRelationshipSearch(),
                         request.getAge(),

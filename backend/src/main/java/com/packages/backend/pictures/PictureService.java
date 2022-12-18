@@ -1,5 +1,6 @@
 package com.packages.backend.pictures;
 
+import com.packages.backend.messages.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,14 +25,31 @@ public class PictureService {
     return pictureRepository.findAll();
   }
 
-  public Picture findPictureById(Long id) {
-    return pictureRepository.findPictureById(id)
-      .orElseThrow(() -> new PictureNotFoundException("Picture by id " + id + " was not found"));
+  public Picture updatePicture(Picture updatePicture) {
+    List<Picture> pictures = this.findAllPictures();
+    for (Picture picture : pictures) {
+      if (picture.getMainPicture()) {
+        picture.setMainPicture(false);
+        pictureRepository.save(picture);
+      }
+    }
+    if (updatePicture.getMainPicture()) {
+      updatePicture.setMainPicture(false);
+    }
+    else {
+      updatePicture.setMainPicture(true);
+    }
+    return pictureRepository.save(updatePicture);
+  }
+
+  public Picture findPictureByContent(String content) {
+    return pictureRepository.findPictureByContent(content)
+      .orElseThrow(() -> new PictureNotFoundException("Picture by content " + content + " was not found"));
   }
 
   @Transactional
-  public void deletePictureById(Long id) {
-    pictureRepository.deletePictureById(id);
+  public void deletePictureByContent(String content) {
+    pictureRepository.deletePictureByContent(content);
   }
 }
 

@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface PictureRepository extends JpaRepository<Picture, Long> {
 
-  void deletePictureById(Long id);
+  void deletePictureByContent(String content);
 
-  Optional<Picture> findPictureById(Long id);
+  Optional<Picture> findPictureByContent(String content);
 }

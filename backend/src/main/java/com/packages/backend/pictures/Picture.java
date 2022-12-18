@@ -14,6 +14,7 @@ public class Picture implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false, updatable = false)
   private Long id;
+  private Boolean isMainPicture;
   private String content;
   @ManyToOne(optional = false)
   @JsonBackReference(value = "pictures")
@@ -22,7 +23,8 @@ public class Picture implements Serializable {
   public Picture() {
   }
 
-  public Picture(String content, User fkUser) {
+  public Picture(Boolean isMainPicture, String content, User fkUser) {
+    this.isMainPicture = isMainPicture;
     this.content = content;
     this.fkUser = fkUser;
   }
@@ -33,6 +35,14 @@ public class Picture implements Serializable {
 
   public void setId(Long id) {
     this.id = id;
+  }
+
+  public Boolean getMainPicture() {
+    return isMainPicture;
+  }
+
+  public void setMainPicture(Boolean mainPicture) {
+    isMainPicture = mainPicture;
   }
 
   public String getContent() {
@@ -55,6 +65,7 @@ public class Picture implements Serializable {
   public String toString() {
     return "Picture{" +
       "id=" + id +
+      ", isMainPicture='" + isMainPicture + '\'' +
       ", content='" + content + '\'' +
       ", fkUser=" + fkUser +
       '}';

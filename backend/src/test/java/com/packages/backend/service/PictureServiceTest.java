@@ -29,7 +29,7 @@ public class PictureServiceTest {
   @Test
   void shouldAddPicture() {
     Picture picture = new Picture(
-      "",new User()
+      false,"test.png",new User()
     );
     underTest.addPicture(picture);
     ArgumentCaptor<Picture> pictureArgumentCaptor = ArgumentCaptor.forClass(Picture.class);
@@ -48,7 +48,7 @@ public class PictureServiceTest {
   @Test
   void shouldFindPictureById() {
     picture picture = new picture(
-      "",new User()
+      1L,"",new User()
     );
     underTest.addPicture(picture);
     underTest.findPictureById(picture.getId());
@@ -58,7 +58,7 @@ public class PictureServiceTest {
 
   @Test
   void shouldDeletePicture() {
-    underTest.deletePictureById(1L);
-    verify(pictureRepository).deletePictureById(1L);
+    underTest.deletePictureByContent("test.png");
+    verify(pictureRepository).deletePictureByContent("test.png");
   }
 }

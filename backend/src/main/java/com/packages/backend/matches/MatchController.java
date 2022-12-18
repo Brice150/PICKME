@@ -35,35 +35,5 @@ public class MatchController {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
   }
-
-  @PostMapping("/add")
-  public ResponseEntity<Match> addMatch(@RequestBody Match match) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = userService.findUserByEmail(currentUserEmail);
-    if (connectedUser.getId().equals(match.getFkSender().getId())
-      && !connectedUser.getId().equals(match.getFkReceiver().getId())) {
-      Match newMatch = matchService.addMatch(match);
-      return new ResponseEntity<>(newMatch, HttpStatus.CREATED);
-    }
-    else {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-  }
-
-  @DeleteMapping("/delete/{id}")
-  public ResponseEntity<?> deleteMatch(@PathVariable("id") Long id) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = userService.findUserByEmail(currentUserEmail);
-    Match match = matchService.findMatchById(id);
-    if (connectedUser.getId().equals(match.getFkSender().getId())) {
-      matchService.deleteMatchById(id);
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    else {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-  }
 }
 

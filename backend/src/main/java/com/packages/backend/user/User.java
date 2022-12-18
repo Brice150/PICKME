@@ -11,7 +11,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.awt.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +29,7 @@ public class User implements UserDetails {
     private UserRole userRole;
     private Boolean locked = false;
     private Boolean enabled = false;
+    private String gender;
     private String genderSearch;
     private String relationshipSearch;
     private String age;
@@ -69,11 +69,12 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String nickname, String email, String password, UserRole userRole, String genderSearch, String relationshipSearch, String age, String city) {
+    public User(String nickname, String email, String password, UserRole userRole,String gender, String genderSearch, String relationshipSearch, String age, String city) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.userRole = userRole;
+        this.gender = gender;
         this.genderSearch = genderSearch;
         this.relationshipSearch = relationshipSearch;
         this.age = age;
@@ -151,6 +152,22 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
+  public String getGender() {
+    return gender;
+  }
+
+  public void setGender(String gender) {
+    this.gender = gender;
+  }
+
+  public List<Picture> getPictures() {
+    return pictures;
+  }
+
+  public void setPictures(List<Picture> pictures) {
+    this.pictures = pictures;
+  }
 
   public String getAge() {
     return age;
@@ -334,14 +351,15 @@ public class User implements UserDetails {
       ", userRole=" + userRole +
       ", locked=" + locked +
       ", enabled=" + enabled +
+      ", gender='" + gender + '\'' +
+      ", genderSearch='" + genderSearch + '\'' +
+      ", relationshipSearch='" + relationshipSearch + '\'' +
       ", age='" + age + '\'' +
       ", city='" + city + '\'' +
       ", height='" + height + '\'' +
       ", languages='" + languages + '\'' +
       ", job='" + job + '\'' +
       ", description='" + description + '\'' +
-      ", genderSearch='" + genderSearch + '\'' +
-      ", relationshipSearch='" + relationshipSearch + '\'' +
       ", smokes='" + smokes + '\'' +
       ", alcoholDrinking='" + alcoholDrinking + '\'' +
       ", organised='" + organised + '\'' +
@@ -351,6 +369,7 @@ public class User implements UserDetails {
       ", parenthood='" + parenthood + '\'' +
       ", gamer='" + gamer + '\'' +
       ", activities='" + activities + '\'' +
+      ", pictures=" + pictures +
       ", tokens=" + tokens +
       ", likes=" + likes +
       ", matches=" + matches +
