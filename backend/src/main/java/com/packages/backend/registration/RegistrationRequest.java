@@ -1,5 +1,7 @@
 package com.packages.backend.registration;
 
+import java.util.Date;
+
 public class RegistrationRequest {
     private final String nickname;
     private final String email;
@@ -7,17 +9,17 @@ public class RegistrationRequest {
     private final String gender;
     private final String genderSearch;
     private final String relationshipSearch;
-    private final String age;
+    private final Date birthDate;
     private final String city;
 
-    public RegistrationRequest(String nickname, String email, String password,String gender, String genderSearch, String relationshipSearch, String age, String city) {
+    public RegistrationRequest(String nickname, String email, String password,String gender, String genderSearch, String relationshipSearch, Date birthDate, String city) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.gender = gender;
         this.genderSearch = genderSearch;
         this.relationshipSearch = relationshipSearch;
-        this.age = age;
+        this.birthDate = birthDate;
         this.city = city;
     }
 
@@ -45,8 +47,8 @@ public class RegistrationRequest {
     return relationshipSearch;
   }
 
-  public String getAge() {
-    return age;
+  public Date getBirthDate() {
+    return birthDate;
   }
 
   public String getCity() {
@@ -61,7 +63,7 @@ public class RegistrationRequest {
       ", password='" + password + '\'' +
       ", genderSearch='" + genderSearch + '\'' +
       ", relationshipSearch='" + relationshipSearch + '\'' +
-      ", age='" + age + '\'' +
+      ", birthDate='" + birthDate + '\'' +
       ", city='" + city + '\'' +
       '}';
   }

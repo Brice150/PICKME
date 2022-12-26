@@ -18,5 +18,9 @@ export interface User {
     username: string;
     accountNonLocked: boolean;
     authorities: Authority[];
-    
+    gender: string;
+    genderSearch: string;
+    relationshipSearch: string;
+    birthDate: Date;
+    city: string;
 }

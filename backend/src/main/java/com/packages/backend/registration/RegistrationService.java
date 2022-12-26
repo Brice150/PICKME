@@ -41,7 +41,7 @@ public class RegistrationService {
                         request.getGender(),
                         request.getGenderSearch(),
                         request.getRelationshipSearch(),
-                        request.getAge(),
+                        request.getBirthDate(),
                         request.getCity()
                 )
         );

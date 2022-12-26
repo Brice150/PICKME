@@ -7,6 +7,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component/app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   imports: [
@@ -17,7 +21,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ReactiveFormsModule,
     HttpClientModule,
     MatSnackBarModule,
-    MatDialogModule
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule,
+    MatFormFieldModule    
   ],
   declarations: [AppComponent, routingComponents],
   bootstrap: [AppComponent]

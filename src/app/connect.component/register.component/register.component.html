@@ -11,9 +11,40 @@
   <span *ngIf="registerForm.get('password')!.hasError('required') && registerForm.get('password')!.touched">Password is required</span>
   <span *ngIf="registerForm.get('password')!.hasError('minlength')">Password is too short</span>
   <span *ngIf="registerForm.get('password')!.hasError('maxlength')">Password is too long</span>
+  <input class="user-form-text" placeholder="City" formControlName="city">
+  <span *ngIf="registerForm.get('city')!.hasError('required') && registerForm.get('city')!.touched">City is required</span>
+  <span *ngIf="registerForm.get('city')!.hasError('minlength')">City is too short</span>
+  <span *ngIf="registerForm.get('city')!.hasError('maxlength')">City is too long</span>
+  <select class="user-form-text" formControlName="gender">
+    <option value="" disabled selected hidden>Gender</option>
+    <option value="Man">Man</option>
+    <option value="Woman">Woman</option>
+    <option value="Other">Other</option>
+  </select>
+  <span *ngIf="registerForm.get('gender')!.hasError('required') && registerForm.get('gender')!.touched">Gender is required</span>
+  <select class="user-form-text" formControlName="genderSearch">
+    <option value="" disabled selected hidden>Gender Search</option>
+    <option value="Man">Man</option>
+    <option value="Woman">Woman</option>
+    <option value="Other">Other</option>
+  </select>
+  <span *ngIf="registerForm.get('genderSearch')!.hasError('required') && registerForm.get('genderSearch')!.touched">Gender Search is required</span>
+  <select class="user-form-text" formControlName="relationshipSearch">
+    <option value="" disabled selected hidden>Relationship Search</option>
+    <option value="Serious">Serious</option>
+    <option value="Unserious">Unserious</option>
+    <option value="Friendship">Friendship</option>
+  </select>
+  <span *ngIf="registerForm.get('relationshipSearch')!.hasError('required') && registerForm.get('relationshipSearch')!.touched">Relationship Search is required</span>
+  <mat-form-field>
+    <mat-label>Birth Date</mat-label>
+    <input matInput [matDatepicker]="picker" disabled [max]="minDate" (dateInput)="addBirthDate($event)">
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker color="accent" [startAt]="startDate" disabled="false"></mat-datepicker>
+  </mat-form-field>
+  <span *ngIf="!birthDateExists">Birth Date is required</span>
   <div class="button-container">
-      <button class="invalidButton" title="invalid form" *ngIf="registerForm.invalid" [disabled]="registerForm.invalid" type="submit">Register</button>
-      <button class="validButton" title="register" *ngIf="registerForm.valid" [disabled]="registerForm.invalid" type="submit">Register</button>
+      <button class="validButton" title="register" *ngIf="registerForm.valid && birthDateExists" type="submit">Register</button>
   </div>
 </form>
 

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -32,7 +33,7 @@ public class User implements UserDetails {
     private String gender;
     private String genderSearch;
     private String relationshipSearch;
-    private String age;
+    private Date birthDate;
     private String city;
     private String height;
     private String languages;
@@ -69,7 +70,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String nickname, String email, String password, UserRole userRole,String gender, String genderSearch, String relationshipSearch, String age, String city) {
+    public User(String nickname, String email, String password, UserRole userRole,String gender, String genderSearch, String relationshipSearch, Date birthDate, String city) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
@@ -77,7 +78,7 @@ public class User implements UserDetails {
         this.gender = gender;
         this.genderSearch = genderSearch;
         this.relationshipSearch = relationshipSearch;
-        this.age = age;
+        this.birthDate = birthDate;
         this.city = city;
     }
 
@@ -169,12 +170,12 @@ public class User implements UserDetails {
     this.pictures = pictures;
   }
 
-  public String getAge() {
-    return age;
+  public Date getBirthDate() {
+    return birthDate;
   }
 
-  public void setAge(String age) {
-    this.age = age;
+  public void setBirthDate(Date birthDate) {
+    this.birthDate = birthDate;
   }
 
   public String getCity() {
@@ -354,7 +355,7 @@ public class User implements UserDetails {
       ", gender='" + gender + '\'' +
       ", genderSearch='" + genderSearch + '\'' +
       ", relationshipSearch='" + relationshipSearch + '\'' +
-      ", age='" + age + '\'' +
+      ", birthDate='" + birthDate + '\'' +
       ", city='" + city + '\'' +
       ", height='" + height + '\'' +
       ", languages='" + languages + '\'' +

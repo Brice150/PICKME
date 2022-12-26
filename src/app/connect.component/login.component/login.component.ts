@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit{
       this.connectService.login(user).subscribe(
         (response: any) => {
           sessionStorage.setItem('loggedInUserEmail', JSON.stringify(user.email));
-          this.router.navigate(['/user'])
+          this.router.navigate(['/profile'])
           .then(() => {
             window.location.reload();
           });

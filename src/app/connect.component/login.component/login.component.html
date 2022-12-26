@@ -9,7 +9,6 @@
     <span *ngIf="loginForm.get('password')!.hasError('maxlength')">Password is too long</span>
     <span *ngIf="invalidLogin">Wrong Email or Password</span>
     <div class="button-container">
-        <button class="invalidButton" title="invalid form" *ngIf="loginForm.invalid" [disabled]="loginForm.invalid" type="submit">Login</button>
-        <button class="validButton" title="login" *ngIf="loginForm.valid" [disabled]="loginForm.invalid" type="submit">Login</button>
+        <button class="validButton" title="login" *ngIf="loginForm.valid" type="submit">Login</button>
     </div>
 </form>

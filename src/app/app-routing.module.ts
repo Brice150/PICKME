@@ -4,10 +4,12 @@ import { AppComponent } from './app.component/app.component';
 import { ConnectComponent } from './connect.component/connect.component';
 import { LoginComponent } from './connect.component/login.component/login.component';
 import { RegisterComponent } from './connect.component/register.component/register.component';
+import { ProfileComponent } from './profile.component/profile.component';
 const routes: Routes = [
   {path: 'connect', component: ConnectComponent},
   {path: 'logout', component: ConnectComponent},
-  {path: '', redirectTo: '/pick', pathMatch: 'full'},
+  {path: 'profile', component: ProfileComponent},
+  {path: '', redirectTo: '/connect', pathMatch: 'full'},
 ];
 
 const routerOptions: ExtraOptions = {
@@ -24,4 +26,5 @@ export const routingComponents = [
   AppComponent, 
   ConnectComponent,
   LoginComponent,
-  RegisterComponent]
+  RegisterComponent,
+  ProfileComponent]
