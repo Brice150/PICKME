@@ -1,0 +1,62 @@
+.nav {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
+    font-size: 30px;
+    margin-left: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 5px;
+    cursor: pointer;
+    transition: 0.5s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+} 
+
+.nav::before {
+    content: '';
+    position: absolute;
+    background-color: white;
+    height: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.nav:hover {
+    color: black;
+}
+
+.nav:hover .buttons.active a {
+    color: black;
+}
+
+.nav:hover::before {
+    height: 100%;
+}
+
+.nav .menu {
+    width: 30px;
+    height: 30px;
+}
+
+.nav .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.nav .buttons a {
+    display: none;
+}
+
+.nav .buttons.active a {
+    display: block;
+    margin-top: 10px;
+    color: white;
+}

@@ -23,4 +23,17 @@ export interface User {
     relationshipSearch: string;
     birthDate: Date;
     city: string;
+    height: string;
+    languages: string;
+    job: string;
+    description: string;
+    smokes: string;
+    alcoholDrinking: string;
+    organised: string;
+    personality: string;
+    sportPractice: string;
+    animals: string;
+    parenthood: string;
+    gamer: string;
+    activities: string;
 }

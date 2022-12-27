@@ -41,31 +41,17 @@ public class UserController {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
+    users.removeIf(user -> currentUserEmail.equals(user.getEmail()));
+    users.removeIf(user ->
+      !connectedUser.getGender().equals(user.getGenderSearch())
+      || !connectedUser.getGenderSearch().equals(user.getGender())
+        || !connectedUser.getRelationshipSearch().equals(user.getRelationshipSearch())
+    );
     for (User user: users) {
-      if (user.getMessagesReceived() != null) {
-        for (int i=0; i<user.getMessagesReceived().size(); i++) {
-          if (!connectedUser.getId().equals(user.getMessagesReceived().get(i).getFkSender().getId())) {
-            user.getMessagesReceived().remove(i);
-          }
-        }
-      }
-      if (user.getMessagesSent() != null) {
-        for (int i = 0; i<user.getMessagesSent().size(); i++) {
-          if (!connectedUser.getId().equals(user.getMessagesSent().get(i).getFkReceiver().getId())) {
-            user.getMessagesSent().remove(i);
-          }
-        }
-      }
-      if (user.getLikes() != null) {
-        for (int i=0; i<user.getLikes().size(); i++) {
-            user.getLikes().remove(i);
-        }
-      }
-      if (user.getMatches() != null) {
-        for (int i=0; i<user.getMatches().size(); i++) {
-          user.getMatches().remove(i);
-        }
-      }
+      user.setMessagesReceived(null);
+      user.setMessagesSent(null);
+      user.setLikes(null);
+      user.setMatches(null);
       user.setPassword(null);
       user.setTokens(null);
       user.setUserRole(UserRole.HIDDEN);

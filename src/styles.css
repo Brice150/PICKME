@@ -2,8 +2,7 @@
     --invalid: #ff0000;
     --valid: #0fff00;
     --background: #ffffff;
-    --scrollbar: #1779ff;
-    --header: #003785;
+    --scrollbar: black;
 }
 
 body { 
@@ -11,4 +10,18 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+  
+::-webkit-scrollbar-track {
+    border-radius: 5px;
+    box-shadow: inset 0 0 10px rgb(82, 82, 82);
+}
+  
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: var(--scrollbar);
 }
