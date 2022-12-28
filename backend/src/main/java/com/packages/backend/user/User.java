@@ -32,10 +32,10 @@ public class User implements UserDetails {
     private Boolean enabled = false;
     private String gender;
     private String genderSearch;
-    private String relationshipSearch;
+    private String relationshipType;
     private Date birthDate;
     private String city;
-    private String height;
+    private Long height;
     private String languages;
     private String job;
     private String description;
@@ -70,14 +70,14 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String nickname, String email, String password, UserRole userRole,String gender, String genderSearch, String relationshipSearch, Date birthDate, String city) {
+    public User(String nickname, String email, String password, UserRole userRole,String gender, String genderSearch, String relationshipType, Date birthDate, String city) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.userRole = userRole;
         this.gender = gender;
         this.genderSearch = genderSearch;
-        this.relationshipSearch = relationshipSearch;
+        this.relationshipType = relationshipType;
         this.birthDate = birthDate;
         this.city = city;
     }
@@ -186,11 +186,11 @@ public class User implements UserDetails {
     this.city = city;
   }
 
-  public String getHeight() {
+  public Long getHeight() {
     return height;
   }
 
-  public void setHeight(String height) {
+  public void setHeight(Long height) {
     this.height = height;
   }
 
@@ -226,12 +226,12 @@ public class User implements UserDetails {
     this.genderSearch = genderSearch;
   }
 
-  public String getRelationshipSearch() {
-    return relationshipSearch;
+  public String getRelationshipType() {
+    return relationshipType;
   }
 
-  public void setRelationshipSearch(String relationshipSearch) {
-    this.relationshipSearch = relationshipSearch;
+  public void setRelationshipType(String relationshipType) {
+    this.relationshipType = relationshipType;
   }
 
   public String getSmokes() {
@@ -354,7 +354,7 @@ public class User implements UserDetails {
       ", enabled=" + enabled +
       ", gender='" + gender + '\'' +
       ", genderSearch='" + genderSearch + '\'' +
-      ", relationshipSearch='" + relationshipSearch + '\'' +
+      ", relationshipType='" + relationshipType + '\'' +
       ", birthDate='" + birthDate + '\'' +
       ", city='" + city + '\'' +
       ", height='" + height + '\'' +

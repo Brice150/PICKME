@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
+import { AdminComponent } from './admin.component/admin.component';
 import { AppComponent } from './app.component/app.component';
 import { ConnectComponent } from './connect.component/connect.component';
 import { LoginComponent } from './connect.component/login.component/login.component';
@@ -18,6 +19,7 @@ const routes: Routes = [
   {path: 'select', component: SelectComponent},
   {path: 'like', component: LikeComponent},
   {path: 'match', component: MatchComponent},
+  {path: 'admin', component: AdminComponent},
   {path: '', redirectTo: '/connect', pathMatch: 'full'},
 ];
 
@@ -42,4 +44,5 @@ export const routingComponents = [
   MessageComponent,
   LikeComponent,
   MatchComponent,
-  NavComponent]
+  NavComponent,
+  AdminComponent]

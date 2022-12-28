@@ -1,1 +1,122 @@
 <app-header [title]="'Profile'"></app-header>
+<div class="main-container">
+    <div class="container">
+        <div class="content">
+            <div class="picture">
+
+            </div>
+            <form class="user-form" [formGroup]="updateForm" (ngSubmit)="updateUser(updateForm.value)">
+                <input class="user-form-text" type="hidden" formControlName="id" ngModel="{{loggedInUser?.id}}">
+                <input class="user-form-text" type="hidden" formControlName="userRole" ngModel="{{loggedInUser?.userRole}}">
+                <input class="user-form-text" type="hidden" formControlName="enabled" ngModel="{{loggedInUser?.enabled}}">
+                <input class="user-form-text" type="hidden" formControlName="locked" ngModel="{{loggedInUser?.locked}}">
+                <input class="user-form-text" type="hidden" formControlName="birthDate" ngModel="{{loggedInUser?.birthDate}}">
+                <input class="user-form-text" placeholder="Nickname" formControlName="nickname" ngModel="{{loggedInUser?.nickname}}">
+                <span *ngIf="updateForm.get('nickname')!.hasError('required') && updateForm.get('nickname')!.touched">Nickname is required</span>
+                <span *ngIf="updateForm.get('nickname')!.hasError('maxlength')">Nickname is too long</span>
+                <span *ngIf="updateForm.get('nickname')!.hasError('minlength')">Nickname is too short</span>
+                <input class="user-form-text" placeholder="City" formControlName="city" ngModel="{{loggedInUser?.city}}">
+                <span *ngIf="updateForm.get('city')!.hasError('required') && updateForm.get('city')!.touched">City is required</span>
+                <span *ngIf="updateForm.get('city')!.hasError('minlength')">City is too short</span>
+                <span *ngIf="updateForm.get('city')!.hasError('maxlength')">City is too long</span>
+                <input class="user-form-text" placeholder="Job" formControlName="job" ngModel="{{loggedInUser?.job}}">
+                <span *ngIf="updateForm.get('job')!.hasError('maxlength')">Job is too long</span>
+                <input class="user-form-text" placeholder="Height" formControlName="height" ngModel="{{loggedInUser?.height}}">
+                <span *ngIf="updateForm.get('height')!.hasError('pattern')">Height must be an Integer in centimeters</span>
+                <input class="user-form-text" placeholder="Languages" formControlName="languages" ngModel="{{loggedInUser?.languages}}">
+                <input class="user-form-text" placeholder="Activities" formControlName="activities" ngModel="{{loggedInUser?.activities}}">
+                <textarea class="user-form-text" placeholder="Description" formControlName="description" ngModel="{{loggedInUser?.description}}"></textarea>
+                <div class="flex">
+                   <select class="user-form-text" formControlName="gender" ngModel="{{loggedInUser?.gender}}">
+                        <option value="" disabled selected hidden>Gender</option>
+                        <option value="Man">Man</option>
+                        <option value="Woman">Woman</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <div class="inbetween">Who search</div>
+                    <select class="user-form-text" formControlName="genderSearch"  ngModel="{{loggedInUser?.genderSearch}}">
+                        <option value="" disabled selected hidden>Gender Search</option>
+                        <option value="Man">Man</option>
+                        <option value="Woman">Woman</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <div class="inbetween">For</div>
+                    <select class="user-form-text" formControlName="relationshipType" ngModel="{{loggedInUser?.relationshipType}}">
+                        <option value="" disabled selected hidden>Relationship</option>
+                        <option value="Serious">Serious</option>
+                        <option value="Unserious">Unserious</option>
+                        <option value="Friendship">Friendship</option>
+                    </select>
+                </div>
+                <div class="span-container">
+                    <span *ngIf="updateForm.get('gender')!.hasError('required') && updateForm.get('gender')!.touched">Gender is required</span>
+                    <span *ngIf="updateForm.get('genderSearch')!.hasError('required') && updateForm.get('genderSearch')!.touched">Gender Search is required</span>
+                    <span *ngIf="updateForm.get('relationshipType')!.hasError('required') && updateForm.get('relationshipType')!.touched">Relationship Type is required</span>
+                </div>
+                <div class="flex">
+                    <select class="user-form-text" formControlName="alcohol" ngModel="{{loggedInUser?.alcoholDrinking}}">
+                         <option value="" disabled selected hidden>Alcohol</option>
+                         <option value="Never drinks alcohol">Never drinks alcohol</option>
+                         <option value="Drinks sometimes alcohol">Drinks sometimes alcohol</option>
+                         <option value="Drinks a lot alcohol">Drinks a lot alcohol</option>
+                     </select>
+                     <select class="user-form-text" formControlName="smokes"  ngModel="{{loggedInUser?.smokes}}">
+                         <option value="" disabled selected hidden>Smoking</option>
+                         <option value="Never smokes">Never smokes</option>
+                         <option value="Smokes sometimes">Smokes sometimes</option>
+                         <option value="Smokes a lot">Smokes a lot</option>
+                     </select>
+                 </div>
+                 <div class="flex">
+                    <select class="user-form-text" formControlName="sport" ngModel="{{loggedInUser?.sportPractice}}">
+                        <option value="" disabled selected hidden>Sport</option>
+                        <option value="Never practice sport">Never practice sport</option>
+                        <option value="Practices sport sometimes">Practices sport sometimes</option>
+                        <option value="Athlete">Athlete</option>
+                    </select>
+                    <select class="user-form-text" formControlName="parenthood" ngModel="{{loggedInUser?.parenthood}}">
+                         <option value="" disabled selected hidden>Parenthood</option>
+                         <option value="Doesn't want children">Doesn't want children</option>
+                         <option value="Will want children someday">Will want children someday</option>
+                         <option value="Has children">Has children</option>
+                     </select>
+                 </div>
+                 <div class="flex">
+                    <select class="user-form-text" formControlName="gamer"  ngModel="{{loggedInUser?.gamer}}">
+                        <option value="" disabled selected hidden>Gamer</option>
+                        <option value="Never play video games">Never play video games</option>
+                        <option value="Play video games sometimes">Play video games sometimes</option>
+                        <option value="Play video games a lot">Play video games a lot</option>
+                    </select>
+                    <select class="user-form-text" formControlName="animals" ngModel="{{loggedInUser?.animals}}">
+                        <option value="" disabled selected hidden>Animals</option>
+                        <option value="Doesn't like animals">Doesn't like animals</option>
+                        <option value="Likes animals">Likes animals</option>
+                        <option value="Has animals">Has animals</option>
+                    </select>
+                 </div>
+                 <div class="flex">
+                    <select class="user-form-text" formControlName="organised" ngModel="{{loggedInUser?.organised}}">
+                         <option value="" disabled selected hidden>Organised</option>
+                         <option value="Messy">Messy</option>
+                         <option value="Reasonably organised">Reasonably organised</option>
+                         <option value="Very organised">Very organised</option>
+                     </select>
+                     <select class="user-form-text" formControlName="personality"  ngModel="{{loggedInUser?.personality}}">
+                         <option value="" disabled selected hidden>Personality</option>
+                         <option value="Introvert">Introvert</option>
+                         <option value="Ambivert">Ambivert</option>
+                         <option value="Extravert">Extravert</option>
+                     </select>
+                 </div>
+                <input type="password" class="user-form-text" placeholder="Confirm Password" formControlName="password">
+                <span *ngIf="updateForm.get('password')!.hasError('required') && updateForm.get('password')!.touched">A password is required</span>
+                <span *ngIf="updateForm.get('password')!.hasError('minlength')">Password is too short</span>
+                <span *ngIf="updateForm.get('password')!.hasError('maxlength')">Password is too long</span>
+                <div class="button-container">
+                    <button class="validButton" title="update" *ngIf="updateForm.valid" type="submit">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

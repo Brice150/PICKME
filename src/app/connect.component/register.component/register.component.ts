@@ -37,7 +37,7 @@ export class RegisterComponent implements OnInit {
       city: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(2)]],
       gender: ['', [Validators.required]],
       genderSearch: ['', [Validators.required]],
-      relationshipSearch: ['', [Validators.required]]
+      relationshipType: ['', [Validators.required]]
     })
   }
 

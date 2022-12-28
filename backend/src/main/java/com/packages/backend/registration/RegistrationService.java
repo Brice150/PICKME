@@ -40,7 +40,7 @@ public class RegistrationService {
                         UserRole.ROLE_USER,
                         request.getGender(),
                         request.getGenderSearch(),
-                        request.getRelationshipSearch(),
+                        request.getRelationshipType(),
                         request.getBirthDate(),
                         request.getCity()
                 )

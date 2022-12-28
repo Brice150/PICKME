@@ -8,17 +8,17 @@ public class RegistrationRequest {
     private final String password;
     private final String gender;
     private final String genderSearch;
-    private final String relationshipSearch;
+    private final String relationshipType;
     private final Date birthDate;
     private final String city;
 
-    public RegistrationRequest(String nickname, String email, String password,String gender, String genderSearch, String relationshipSearch, Date birthDate, String city) {
+    public RegistrationRequest(String nickname, String email, String password,String gender, String genderSearch, String relationshipType, Date birthDate, String city) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.gender = gender;
         this.genderSearch = genderSearch;
-        this.relationshipSearch = relationshipSearch;
+        this.relationshipType = relationshipType;
         this.birthDate = birthDate;
         this.city = city;
     }
@@ -43,8 +43,8 @@ public class RegistrationRequest {
     return genderSearch;
   }
 
-  public String getRelationshipSearch() {
-    return relationshipSearch;
+  public String getRelationshipType() {
+    return relationshipType;
   }
 
   public Date getBirthDate() {
@@ -62,7 +62,7 @@ public class RegistrationRequest {
       ", email='" + email + '\'' +
       ", password='" + password + '\'' +
       ", genderSearch='" + genderSearch + '\'' +
-      ", relationshipSearch='" + relationshipSearch + '\'' +
+      ", relationshipType='" + relationshipType + '\'' +
       ", birthDate='" + birthDate + '\'' +
       ", city='" + city + '\'' +
       '}';

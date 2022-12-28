@@ -4,10 +4,8 @@
     right: 5px;
     color: white;
     font-size: 30px;
-    margin-left: 10px;
     border-radius: 10px;
     overflow: hidden;
-    padding: 5px;
     cursor: pointer;
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -40,6 +38,7 @@
 }
 
 .nav .menu {
+    padding: 5px;
     width: 30px;
     height: 30px;
 }
@@ -55,8 +54,23 @@
     display: none;
 }
 
+.nav .buttons.active {
+    margin-top: 5px;
+}
+
 .nav .buttons.active a {
     display: block;
-    margin-top: 10px;
+    color: white;
+    padding: 5px;
+    transition: 0.5s;
+}
+
+.nav .buttons.active a.active-link {
+    background-color: black;
+    color: white;
+}
+
+.nav .buttons.active a:hover {
+    background-color: black;
     color: white;
 }

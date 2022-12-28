@@ -3,10 +3,11 @@
         <a title="menu" (click)="extend()"><i class='bx bx-menu'></i></a>
     </div>
     <div class="buttons">
-        <a title="profile" routerLink="/profile"><i class='bx bxs-user'></i></a>
-        <a title="select" routerLink="/select"><i class='bx bx-search'></i></a>
-        <a title="like" routerLink="/like"><i class='bx bxs-like'></i></a>
-        <a title="match" routerLink="/match"><i class='bx bxs-flame'></i></a>
+        <a title="select" routerLink="/select" routerLinkActive="active-link"><i class='bx bxs-wink-smile'></i></a>
+        <a title="profile" routerLink="/profile" routerLinkActive="active-link"><i class='bx bxs-user'></i></a>
+        <a title="like" routerLink="/like" routerLinkActive="active-link"><i class='bx bxs-like'></i></a>
+        <a title="match" routerLink="/match" routerLinkActive="active-link"><i class='bx bxs-flame'></i></a>
+        <a title="admin" routerLink="/admin" routerLinkActive="active-link" *ngIf="isAdmin"><i class='bx bxs-key'></i></a>
         <a title="logout" (click)="logout()"><i class='bx bxs-log-out'></i></a>
     </div>
 </div>

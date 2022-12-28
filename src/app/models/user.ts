@@ -20,7 +20,7 @@ export interface User {
     authorities: Authority[];
     gender: string;
     genderSearch: string;
-    relationshipSearch: string;
+    relationshipType: string;
     birthDate: Date;
     city: string;
     height: string;

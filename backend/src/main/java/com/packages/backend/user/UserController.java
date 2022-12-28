@@ -45,7 +45,7 @@ public class UserController {
     users.removeIf(user ->
       !connectedUser.getGender().equals(user.getGenderSearch())
       || !connectedUser.getGenderSearch().equals(user.getGender())
-        || !connectedUser.getRelationshipSearch().equals(user.getRelationshipSearch())
+        || !connectedUser.getRelationshipType().equals(user.getRelationshipType())
     );
     for (User user: users) {
       user.setMessagesReceived(null);

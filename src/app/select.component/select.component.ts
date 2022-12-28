@@ -23,7 +23,6 @@ export class SelectComponent implements OnInit{
   getUsers() {
     this.userService.getUsers().subscribe(
       (response: User[]) => {
-        console.log(response);
         this.users=response;
       },
       (error: HttpErrorResponse) => {
@@ -47,8 +46,8 @@ export class SelectComponent implements OnInit{
   }
 
   getDescription(user: User): string {
-    let description: string = user.description;
-    if (user.description.length > 150) {
+    let description: string = user?.description;
+    if (user.description && user.description.length > 150) {
       description = user.description.substring(0,147) + "..."
     }
     return description
