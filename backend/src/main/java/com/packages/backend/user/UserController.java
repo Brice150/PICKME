@@ -74,16 +74,19 @@ public class UserController {
 
   @GetMapping("/user/find/id/{id}")
   public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = userService.findUserByEmail(currentUserEmail);
-    if (connectedUser.getId().equals(id)) {
-      User user = userService.findUserById(id);
-      return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-    else {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
+    User user = userService.findUserById(id);
+    user.setMessagesReceived(null);
+    user.setMessagesSent(null);
+    user.setLikes(null);
+    user.setMatches(null);
+    user.setPassword(null);
+    user.setTokens(null);
+    user.setUserRole(UserRole.HIDDEN);
+    user.setEmail(null);
+    user.setGender(null);
+    user.setGenderSearch(null);
+    user.setRelationshipType(null);
+    return new ResponseEntity<>(user, HttpStatus.OK);
   }
 
   @PutMapping("/user/update")

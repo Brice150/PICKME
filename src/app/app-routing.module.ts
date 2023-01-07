@@ -10,6 +10,7 @@ import { NavComponent } from './header.component/nav.component/nav.component';
 import { LikeComponent } from './like.component/like.component';
 import { MatchComponent } from './match.component/match.component';
 import { MessageComponent } from './match.component/message.component/message.component';
+import { MoreInfoComponent } from './moreinfo.component/moreinfo.component';
 import { ProfileComponent } from './profile.component/profile.component';
 import { SelectComponent } from './select.component/select.component';
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
   {path: 'like', component: LikeComponent},
   {path: 'match', component: MatchComponent},
   {path: 'admin', component: AdminComponent},
+  {path: 'moreinfo/:id', component: MoreInfoComponent},
   {path: '', redirectTo: '/connect', pathMatch: 'full'},
 ];
 
@@ -45,4 +47,5 @@ export const routingComponents = [
   LikeComponent,
   MatchComponent,
   NavComponent,
-  AdminComponent]
+  AdminComponent,
+  MoreInfoComponent]

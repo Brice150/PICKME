@@ -54,7 +54,7 @@
                     <span *ngIf="updateForm.get('relationshipType')!.hasError('required') && updateForm.get('relationshipType')!.touched">Relationship Type is required</span>
                 </div>
                 <div class="flex">
-                    <select class="user-form-text" formControlName="alcohol" ngModel="{{loggedInUser?.alcoholDrinking}}">
+                    <select class="user-form-text" formControlName="alcoholDrinking" ngModel="{{loggedInUser?.alcoholDrinking}}">
                          <option value="" disabled selected hidden>Alcohol</option>
                          <option value="Never drinks alcohol">Never drinks alcohol</option>
                          <option value="Drinks sometimes alcohol">Drinks sometimes alcohol</option>
@@ -68,7 +68,7 @@
                      </select>
                  </div>
                  <div class="flex">
-                    <select class="user-form-text" formControlName="sport" ngModel="{{loggedInUser?.sportPractice}}">
+                    <select class="user-form-text" formControlName="sportPractice" ngModel="{{loggedInUser?.sportPractice}}">
                         <option value="" disabled selected hidden>Sport</option>
                         <option value="Never practice sport">Never practice sport</option>
                         <option value="Practices sport sometimes">Practices sport sometimes</option>

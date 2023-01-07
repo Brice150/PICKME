@@ -46,9 +46,9 @@ export class ProfileComponent implements OnInit{
       gender: ['', [Validators.required]],
       genderSearch: ['', [Validators.required]],
       relationshipType: ['', [Validators.required]],
-      alcohol: [''],
+      alcoholDrinking: [''],
       smokes: [''],
-      sport: [''],
+      sportPractice: [''],
       parenthood: [''],
       gamer: [''],
       animals: [''],
@@ -62,6 +62,7 @@ export class ProfileComponent implements OnInit{
   updateUser(user: User) {
     this.userService.updateUser(user).subscribe(
       (response: User) => {
+        this.updateForm.get("password")?.reset();
         this.snackBar.open("Content updated", "Dismiss", {duration: 2000});
       },
       (error: HttpErrorResponse) => {

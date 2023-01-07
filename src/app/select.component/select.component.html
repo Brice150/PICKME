@@ -17,7 +17,7 @@
                         </div>
                     </div>
                     <p class="description">{{getDescription(user)}}</p>
-                    <a class="more" title="more info" routerLink="">More Info</a>
+                    <a class="more" title="more info" (click)="moreInfo(user?.id)">More Info</a>
                 </div>
             </div>
         </div>
