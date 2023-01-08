@@ -30,6 +30,7 @@ public class User implements UserDetails {
     private UserRole userRole;
     private Boolean locked = false;
     private Boolean enabled = false;
+    private String mainPicture;
     private String gender;
     private String genderSearch;
     private String relationshipType;
@@ -153,6 +154,14 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
+  public String getMainPicture() {
+    return mainPicture;
+  }
+
+  public void setMainPicture(String mainPicture) {
+    this.mainPicture = mainPicture;
+  }
 
   public String getGender() {
     return gender;
@@ -352,6 +361,7 @@ public class User implements UserDetails {
       ", userRole=" + userRole +
       ", locked=" + locked +
       ", enabled=" + enabled +
+      ", mainPicture='" + mainPicture + '\'' +
       ", gender='" + gender + '\'' +
       ", genderSearch='" + genderSearch + '\'' +
       ", relationshipType='" + relationshipType + '\'' +

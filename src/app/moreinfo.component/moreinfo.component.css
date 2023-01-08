@@ -25,6 +25,116 @@
     -webkit-backdrop-filter: blur(3.6px);
 }
 
+.content .return {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    color: white;
+    font-size: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 5px;
+    cursor: pointer;
+    transition: 0.5s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+} 
+
+.content .return::before {
+    content: '';
+    position: absolute;
+    background-color: white;
+    height: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.content .return:hover {
+    color: black;
+}
+
+.content .return:hover::before {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.content .like {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
+    font-size: 30px;
+    margin-left: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 5px;
+    cursor: pointer;
+    transition: 0.5s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+} 
+
+.content .like::before {
+    content: '';
+    position: absolute;
+    background-color: white;
+    height: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.content .like:hover {
+    color: black;
+}
+
+.content .like:hover::before {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.picture-container {
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.picture-container .pictures {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.picture-container .no-picture {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.picture-container img {
+    margin: 10px;
+    height: 100px;
+    width: 130px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.5s;
+    z-index: 10;
+}
+
+.picture-container img:hover {
+    z-index: 15;
+    transform: scale(2);
+}
+
 .user-form {
     width: 80%;
     margin: auto;

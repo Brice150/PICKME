@@ -2,32 +2,39 @@
 <div class="main-container">
     <div class="container">
         <div class="content">
-            <div class="picture">
-
+            <a class="return" title="return" routerLink="/select" routerLinkActive="active"><i class='bx bx-arrow-back'></i></a>
+            <a class="like" title="like" (click)="like(user)"><i class='bx bxs-like'></i></a>
+            <div class="picture-container">
+                <div class="pictures" >
+                    <img [src]="picture.content" *ngFor="let picture of pictures">
+                </div>
+                <div class="no-picture" *ngIf="pictures.length === 0">
+                    <img [src]="imagePath + 'No-Image.png'">
+                </div>
             </div>
             <div class="user-form">
-                <div class="user-form-text">{{user?.nickname}}</div>
-                <div class="user-form-text">{{user?.city}}</div>
-                <div class="user-form-text">{{user?.job}}</div>
-                <div class="user-form-text">{{user?.height}}</div>
-                <div class="user-form-text">{{user?.languages}}</div>
-                <div class="user-form-text">{{user?.activities}}</div>
-                <div class="user-form-text">{{user?.description}}</div>
+                <div class="user-form-text">{{user.nickname}}</div>
+                <div class="user-form-text">{{user.city}}</div>
+                <div class="user-form-text">{{user.job}}</div>
+                <div class="user-form-text">{{user.height}}</div>
+                <div class="user-form-text">{{user.languages}}</div>
+                <div class="user-form-text">{{user.activities}}</div>
+                <div class="user-form-text">{{user.description}}</div>
                 <div class="flex">
-                    <div class="user-form-text">{{user?.alcoholDrinking}}</div>
-                    <div class="user-form-text">{{user?.smokes}}</div>
+                    <div class="user-form-text">{{user.alcoholDrinking}}</div>
+                    <div class="user-form-text">{{user.smokes}}</div>
                 </div>
                 <div class="flex">
-                    <div class="user-form-text">{{user?.sportPractice}}</div>
-                    <div class="user-form-text">{{user?.parenthood}}</div>
+                    <div class="user-form-text">{{user.sportPractice}}</div>
+                    <div class="user-form-text">{{user.parenthood}}</div>
                 </div>
                 <div class="flex">
-                    <div class="user-form-text">{{user?.gamer}}</div>
-                    <div class="user-form-text">{{user?.animals}}</div>
+                    <div class="user-form-text">{{user.gamer}}</div>
+                    <div class="user-form-text">{{user.animals}}</div>
                 </div>
                 <div class="flex">
-                    <div class="user-form-text">{{user?.organised}}</div>
-                    <div class="user-form-text">{{user?.personality}}</div>
+                    <div class="user-form-text">{{user.organised}}</div>
+                    <div class="user-form-text">{{user.personality}}</div>
                  </div>
             </div>
         </div>

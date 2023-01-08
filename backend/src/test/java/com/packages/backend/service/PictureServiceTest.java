@@ -29,7 +29,7 @@ public class PictureServiceTest {
   @Test
   void shouldAddPicture() {
     Picture picture = new Picture(
-      false,"test.png",new User()
+      "test.png",new User()
     );
     underTest.addPicture(picture);
     ArgumentCaptor<Picture> pictureArgumentCaptor = ArgumentCaptor.forClass(Picture.class);

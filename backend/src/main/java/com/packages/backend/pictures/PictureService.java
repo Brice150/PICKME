@@ -1,12 +1,11 @@
 package com.packages.backend.pictures;
 
-import com.packages.backend.messages.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PictureService {
@@ -26,19 +25,6 @@ public class PictureService {
   }
 
   public Picture updatePicture(Picture updatePicture) {
-    List<Picture> pictures = this.findAllPictures();
-    for (Picture picture : pictures) {
-      if (picture.getMainPicture()) {
-        picture.setMainPicture(false);
-        pictureRepository.save(picture);
-      }
-    }
-    if (updatePicture.getMainPicture()) {
-      updatePicture.setMainPicture(false);
-    }
-    else {
-      updatePicture.setMainPicture(true);
-    }
     return pictureRepository.save(updatePicture);
   }
 

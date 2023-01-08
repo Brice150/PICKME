@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
+import { PictureService } from '../services/picture.service';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -16,6 +17,7 @@ export class SelectComponent implements OnInit{
 
   constructor(
     private userService: UserService,
+    private pictureService: PictureService,
     private router: Router) {}
 
   ngOnInit() {
@@ -26,6 +28,9 @@ export class SelectComponent implements OnInit{
     this.userService.getUsers().subscribe(
       (response: User[]) => {
         this.users=response;
+        for (let user of this.users) {
+          this.getMainPicture(user);
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error);
@@ -47,16 +52,43 @@ export class SelectComponent implements OnInit{
     return age;
   }
 
-  getDescription(user: User): string {
-    let description: string = user?.description;
+  getDescription(user: User): string | null {
+    let description: string | null = user?.description;
     if (user.description && user.description.length > 150) {
       description = user.description.substring(0,147) + "..."
     }
-    return description
+    return description;
   }
 
-  getImage(user: User): string {
-    return this.imagePath + "No-Image.png"
+  getMainPicture(user: User) {
+    let reader = new FileReader();
+    if (user.mainPicture) {
+      this.pictureService.getPicture(user.mainPicture.toString()).subscribe(
+        event => {
+        if (event.type === HttpEventType.Response) {
+          if (event.body instanceof Array) {
+
+          }
+          else {
+            let image = new File([event.body!], user.mainPicture!.toString());
+            reader.readAsDataURL(image);
+            reader.onloadend = (loaded) => {
+              user.mainPicture = reader.result!;
+            }
+          }
+        }
+        },
+        (error: HttpErrorResponse) => {
+          alert(error);
+        }
+      );
+    }
+    else {
+      user.mainPicture = this.imagePath + "No-Image.png";
+    }
+    (error: HttpErrorResponse) => {
+      alert(error);
+    }
   }
 
   like(user: User) {

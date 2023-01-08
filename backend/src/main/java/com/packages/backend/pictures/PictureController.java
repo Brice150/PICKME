@@ -1,6 +1,5 @@
 package com.packages.backend.pictures;
 
-import com.packages.backend.messages.Message;
 import com.packages.backend.user.User;
 import com.packages.backend.user.UserService;
 import org.springframework.core.io.Resource;
@@ -22,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.nio.file.Files.copy;
 import static java.nio.file.Paths.get;
@@ -39,6 +39,13 @@ public class PictureController {
   public PictureController(PictureService pictureService, UserService userService) {
     this.pictureService = pictureService;
     this.userService = userService;
+  }
+
+  @GetMapping("/find/all/{id}")
+  public ResponseEntity<List<Picture>> getAllPictures(@PathVariable("id") Long id) {
+    List<Picture> pictures = pictureService.findAllPictures();
+    pictures.removeIf(picture -> !id.equals(picture.getFkUser().getId()));
+    return new ResponseEntity<>(pictures, HttpStatus.OK);
   }
 
   @GetMapping("/get/{content}")
@@ -72,7 +79,7 @@ public class PictureController {
       if (content == null) {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
       }
-      Picture newPicture = new Picture(false, content, connectedUser);
+      Picture newPicture = new Picture(content, connectedUser);
       pictureService.addPicture(newPicture);
       return new ResponseEntity<>(newPicture, HttpStatus.CREATED);
     }
@@ -88,7 +95,8 @@ public class PictureController {
     User connectedUser = userService.findUserByEmail(currentUserEmail);
     Picture picture = pictureService.findPictureByContent(content);
     if (connectedUser.getId().equals(picture.getFkUser().getId())) {
-      pictureService.updatePicture(picture);
+      connectedUser.setMainPicture(picture.getContent());
+      userService.updateUser(connectedUser);
       return new ResponseEntity<>(picture, HttpStatus.OK);
     }
     else {
@@ -104,6 +112,10 @@ public class PictureController {
     Picture picture = pictureService.findPictureByContent(content);
     if (connectedUser.getId().equals(picture.getFkUser().getId())) {
       if (content != null) {
+        if (content.equals(connectedUser.getMainPicture())) {
+          connectedUser.setMainPicture(null);
+          userService.updateUser(connectedUser);
+        }
         Path imagePath = get(IMAGEDIRECTORY).normalize().resolve(content);
         if (Files.exists(imagePath)) {
           Files.delete(imagePath);
