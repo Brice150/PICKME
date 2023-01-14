@@ -31,7 +31,7 @@ public class MessageServiceTest {
   @Test
   void shouldAddMessage() {
     Message message = new Message(
-      "content",new Date(),"user1","user2",new User(),new User()
+      "content",new Date(),new User(),new User()
     );
     underTest.addMessage(message);
     ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
@@ -49,7 +49,7 @@ public class MessageServiceTest {
   @Test
   void shouldUpdateMessage() {
     Message message = new Message(
-      "content",new Date(),"user1","user2",new User(),new User()
+      "content",new Date(),new User(),new User()
     );
     underTest.updateMessage(message);
     ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);

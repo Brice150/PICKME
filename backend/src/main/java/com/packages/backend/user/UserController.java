@@ -59,20 +59,17 @@ public class UserController {
     return new ResponseEntity<>(users, HttpStatus.OK);
   }
 
-  @GetMapping("/user/find/email/{email}")
-  public ResponseEntity<User> getUserByEmail(@PathVariable("email") String email) {
+  @GetMapping("/user")
+  public ResponseEntity<User> getConnectedUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
-    if (currentUserEmail.equals(email)) {
-      User user = userService.findUserByEmail(email);
-      return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-    else {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
+    User user = userService.findUserByEmail(currentUserEmail);
+    user.setPassword(null);
+    user.setTokens(null);
+    return new ResponseEntity<>(user, HttpStatus.OK);
   }
 
-  @GetMapping("/user/find/id/{id}")
+  @GetMapping("/user/{id}")
   public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
     User user = userService.findUserById(id);
     user.setMessagesReceived(null);
@@ -89,26 +86,12 @@ public class UserController {
     return new ResponseEntity<>(user, HttpStatus.OK);
   }
 
-  @PutMapping("/user/update")
+  @PutMapping("/user")
   public ResponseEntity<User> updateUser(@RequestBody User user) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
     if (connectedUser.getId().equals(user.getId())) {
-      if (!connectedUser.getNickname().equals(user.getNickname())) {
-        if (connectedUser.getMessagesReceived() != null) {
-          for (Message message : connectedUser.getMessagesReceived()) {
-            message.setToUser(user.getNickname());
-            messageService.updateMessage(message);
-          }
-        }
-        if (connectedUser.getMessagesSent() != null) {
-          for (Message message : connectedUser.getMessagesSent()) {
-            message.setFromUser(user.getNickname());
-            messageService.updateMessage(message);
-          }
-        }
-      }
       user.setEmail(currentUserEmail);
       user.setUserRole(connectedUser.getUserRole());
       User updateUser = userService.updateUser(user);
@@ -119,7 +102,7 @@ public class UserController {
     }
   }
 
-  @DeleteMapping("/user/delete/{email}")
+  @DeleteMapping("/user/{email}")
   public ResponseEntity<?> deleteUser(@PathVariable("email") String email) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();

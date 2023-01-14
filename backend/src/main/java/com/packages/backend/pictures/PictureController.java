@@ -41,14 +41,14 @@ public class PictureController {
     this.userService = userService;
   }
 
-  @GetMapping("/find/all/{id}")
-  public ResponseEntity<List<Picture>> getAllPictures(@PathVariable("id") Long id) {
+  @GetMapping("/all/{fkUser}")
+  public ResponseEntity<List<Picture>> getAllUserPictures(@PathVariable("fkUser") Long fkUser) {
     List<Picture> pictures = pictureService.findAllPictures();
-    pictures.removeIf(picture -> !id.equals(picture.getFkUser().getId()));
+    pictures.removeIf(picture -> !fkUser.equals(picture.getFkUser().getId()));
     return new ResponseEntity<>(pictures, HttpStatus.OK);
   }
 
-  @GetMapping("/get/{content}")
+  @GetMapping("/{content}")
   public ResponseEntity<Resource> getPicture(@PathVariable("content") String content) throws IOException {
     Path imagePath = get(IMAGEDIRECTORY).normalize().resolve(content);
     if (!Files.exists(imagePath)) {
@@ -62,7 +62,7 @@ public class PictureController {
       .headers(httpHeaders).body(resource);
   }
 
-  @PostMapping("/add")
+  @PostMapping()
   public ResponseEntity<Picture> addPicture(@RequestParam("content")List<MultipartFile> multipartImages) throws IOException {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
@@ -88,7 +88,7 @@ public class PictureController {
     }
   }
 
-  @PutMapping("/update/{content}")
+  @PutMapping("/{content}")
   public ResponseEntity<Picture> updatePicture(@PathVariable("content") String content) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
@@ -104,7 +104,7 @@ public class PictureController {
     }
   }
 
-  @DeleteMapping("/delete/{content}")
+  @DeleteMapping("/{content}")
   public ResponseEntity<?> deletePicture(@PathVariable("content") String content) throws IOException {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();

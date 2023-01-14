@@ -27,23 +27,8 @@ public class LikeController {
     this.matchService = matchService;
   }
 
-  @GetMapping("/find/{id}")
-  public ResponseEntity<Like> getLikeById(@PathVariable("id") Long id) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = userService.findUserByEmail(currentUserEmail);
-    Like like = likeService.findLikeById(id);
-    if (connectedUser.getId().equals(like.getFkSender().getId())
-      || connectedUser.getId().equals(like.getFkReceiver().getId())) {
-      return new ResponseEntity<>(like, HttpStatus.OK);
-    }
-    else {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-  }
-
-  @GetMapping("/find/all")
-  public ResponseEntity<List<Like>> getAllLikes() {
+  @GetMapping("/all")
+  public ResponseEntity<List<Like>> getAllUserLikes() {
     List<Like> likes = likeService.findAllLikes();
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
@@ -52,7 +37,7 @@ public class LikeController {
     return new ResponseEntity<>(likes, HttpStatus.OK);
   }
 
-  @PostMapping("/add")
+  @PostMapping()
   public ResponseEntity<Like> addLike(@RequestBody Like like) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
@@ -75,7 +60,7 @@ public class LikeController {
     }
   }
 
-  @DeleteMapping("/delete/{id}")
+  @DeleteMapping("/{id}")
   public ResponseEntity<?> deleteLike(@PathVariable("id") Long id) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();

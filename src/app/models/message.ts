@@ -4,6 +4,6 @@ export interface Message {
     date: Date;
     fromUser: string;
     toUser: string;
-    fkReceiver: any;
-    fkSender: any;
+    fkReceiver: number;
+    fkSender: number;
 }

@@ -27,7 +27,7 @@ export class MoreInfoComponent implements OnInit {
   }
 
   getUser(id: any) {
-    this.userService.findUserById(id).subscribe(
+    this.userService.getUserById(id).subscribe(
       (response: User) => {
         this.user = response;
         this.getPictures(id!);
@@ -39,7 +39,7 @@ export class MoreInfoComponent implements OnInit {
   }
 
   getPictures(id: any) {
-    this.pictureService.getPictures(id).subscribe(
+    this.pictureService.getAllUserPictures(id).subscribe(
       (response: Picture[]) => {
         if (response.length > 0) {
           for (let picture of response) {

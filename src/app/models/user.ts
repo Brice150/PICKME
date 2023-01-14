@@ -1,5 +1,8 @@
 import { Authority } from "./authority";
+import { Like } from "./like";
+import { Match } from "./match";
 import { Message } from "./message";
+import { Picture } from "./picture";
 import { Token } from "./token";
 
 export interface User {
@@ -13,6 +16,9 @@ export interface User {
     userRole: string;
     messagesSended: Message[];
     messagesReceived: Message[];
+    likes: Like[];
+    matches: Match[];
+    picture: Picture[];
     credentialsNonExpired: boolean;
     accountNonExpired: boolean;
     username: string;

@@ -18,17 +18,11 @@ export class NavComponent implements OnInit{
     private userService: UserService) {}
 
   ngOnInit() {
-    if (sessionStorage.getItem('loggedInUserEmail')===null) {
-      this.loggedInUserEmail = null;
-    }
-    else {
-      this.loggedInUserEmail = JSON.parse(sessionStorage.getItem('loggedInUserEmail') || '{}');
-      this.getUserRole(this.loggedInUserEmail!);
-    }
+    this.getUserRole();
   }
 
-  getUserRole(email: string) {
-    this.userService.findUserByEmail(email).subscribe(
+  getUserRole() {
+    this.userService.getConnectedUser().subscribe(
       (response: User) => {
         if (response.userRole === "ROLE_ADMIN") {
           this.isAdmin = true;

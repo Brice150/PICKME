@@ -11,29 +11,23 @@ export class AdminService {
 
     constructor(private http: HttpClient) {}
 
-    public getUsers(): Observable<User[]> {
-        return this.http.get<any>(`${this.apiServerUrl}/admin/user/all`,
+    public getAllUsers(): Observable<User[]> {
+        return this.http.get<User[]>(`${this.apiServerUrl}/admin/user/all`,
         { withCredentials: true });
     }
 
     public deleteUser(email: string): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/admin/user/delete/${email}`,
+        return this.http.delete<void>(`${this.apiServerUrl}/admin/user/${email}`,
         { withCredentials: true });
     }
 
-    public getMessages(): Observable<Message[]> {
-        return this.http.get<any>(`${this.apiServerUrl}/admin/message/all`,
+    public getAllMessages(): Observable<Message[]> {
+        return this.http.get<Message[]>(`${this.apiServerUrl}/admin/message/all`,
         { withCredentials: true });
     }
 
     public deleteMessage(messageId: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/admin/message/delete/${messageId}`,
+        return this.http.delete<void>(`${this.apiServerUrl}/admin/message/${messageId}`,
         { withCredentials: true });
     }
-
-    public deleteObject(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/admin/object/delete/${id}`,
-        { withCredentials: true });
-    }
-
 }

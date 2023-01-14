@@ -25,7 +25,7 @@ export class SelectComponent implements OnInit{
   }
 
   getUsers() {
-    this.userService.getUsers().subscribe(
+    this.userService.getAllUsers().subscribe(
       (response: User[]) => {
         this.users=response;
         for (let user of this.users) {

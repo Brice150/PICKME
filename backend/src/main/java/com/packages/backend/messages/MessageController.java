@@ -1,5 +1,6 @@
 package com.packages.backend.messages;
 
+import com.packages.backend.pictures.Picture;
 import com.packages.backend.user.User;
 import com.packages.backend.user.UserService;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/message")
@@ -21,22 +24,21 @@ public class MessageController {
     this.userService = userService;
   }
 
-  @GetMapping("/find/{id}")
-  public ResponseEntity<Message> getMessageById(@PathVariable("id") Long id) {
+  @GetMapping("/all/{fkUser}")
+  public ResponseEntity<List<Message>> getAllUserMessages(@PathVariable("fkUser") Long fkUser) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
-    Message message = messageService.findMessageById(id);
-    if (connectedUser.getId().equals(message.getFkSender().getId())
-      || connectedUser.getId().equals(message.getFkReceiver().getId())) {
-      return new ResponseEntity<>(message, HttpStatus.OK);
-    }
-    else {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
+    List<Message> messages = messageService.findAllMessages();
+    messages.removeIf(message ->
+      (!connectedUser.getId().equals(message.getFkReceiver().getId())
+      && !connectedUser.getId().equals(message.getFkSender().getId()))
+      || (!fkUser.equals(message.getFkReceiver().getId())
+      && !fkUser.equals(message.getFkSender().getId())));
+    return new ResponseEntity<>(messages, HttpStatus.OK);
   }
 
-  @PostMapping("/add")
+  @PostMapping()
   public ResponseEntity<Message> addMessage(@RequestBody Message message) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
@@ -51,7 +53,7 @@ public class MessageController {
     }
   }
 
-  @PutMapping("/update")
+  @PutMapping()
   public ResponseEntity<Message> updateMessage(@RequestBody Message message) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
@@ -65,7 +67,7 @@ public class MessageController {
     }
   }
 
-  @DeleteMapping("/delete/{id}")
+  @DeleteMapping("/{id}")
   public ResponseEntity<?> deleteMessage(@PathVariable("id") Long id) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();

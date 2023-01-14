@@ -1,9 +1,11 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment';
+import { Picture } from '../models/picture';
 import { User } from '../models/user';
+import { PictureService } from '../services/picture.service';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -16,20 +18,16 @@ export class ProfileComponent implements OnInit{
   loggedInUser!: User | null;
   loggedInUserEmail!: string | null;
   updateForm!: FormGroup;
+  pictures: Picture[] = [];
 
   constructor(
     private userService: UserService,
+    private pictureService: PictureService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
-    if (sessionStorage.getItem('loggedInUserEmail')===null) {
-      this.loggedInUserEmail = null;
-    }
-    else {
-      this.loggedInUserEmail = JSON.parse(sessionStorage.getItem('loggedInUserEmail') || '{}');
-    }
     this.updateForm = this.fb.group({
       id: [''],
       userRole: [''],
@@ -72,13 +70,85 @@ export class ProfileComponent implements OnInit{
   }
 
   getLoggedInUser() {
-    this.userService.findUserByEmail(this.loggedInUserEmail!).subscribe(
+    this.userService.getConnectedUser().subscribe(
       (response: User) => {
         this.loggedInUser = response;
+        this.getMainPicture(response);
+        this.getPictures(response.id);
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
     )
+  }
+
+  getMainPicture(user: User) {
+    let reader = new FileReader();
+    if (user.mainPicture) {
+      this.pictureService.getPicture(user.mainPicture.toString()).subscribe(
+        event => {
+        if (event.type === HttpEventType.Response) {
+          if (event.body instanceof Array) {
+
+          }
+          else {
+            let image = new File([event.body!], user.mainPicture!.toString());
+            reader.readAsDataURL(image);
+            reader.onloadend = (loaded) => {
+              user.mainPicture = reader.result!;
+            }
+          }
+        }
+        },
+        (error: HttpErrorResponse) => {
+          alert(error);
+        }
+      );
+    }
+    else {
+      user.mainPicture = this.imagePath + "No-Image.png";
+    }
+    (error: HttpErrorResponse) => {
+      alert(error);
+    }
+  }
+
+  getPictures(id: any) {
+    this.pictureService.getAllUserPictures(id).subscribe(
+      (response: Picture[]) => {
+        if (response.length > 0) {
+          for (let picture of response) {
+            let reader = new FileReader();
+            this.pictureService.getPicture(picture.content.toString()).subscribe(
+              event => {
+              if (event.type === HttpEventType.Response) {
+                if (event.body instanceof Array) {
+                            
+                }
+                else {
+                  let image = new File([event.body!], picture.content.toString());
+                  reader.readAsDataURL(image);
+                  reader.onloadend = (loaded) => {
+                    picture.content = reader.result!;
+                  }
+                }
+              }
+              },
+              (error: HttpErrorResponse) => {
+                alert(error);
+              }
+            );   
+            this.pictures.push(picture);
+          }   
+          }
+        },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    )
+  }
+
+  addPicture() {
+    
   }
 }

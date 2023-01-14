@@ -10,13 +10,13 @@ export class PictureService {
 
     constructor(private http: HttpClient) {}
 
-    public getPictures(id: number): Observable<Picture[]> {
-        return this.http.get<Picture[]>(`${this.apiServerUrl}/picture/find/all/${id}`,
+    public getAllUserPictures(fkUser: number): Observable<Picture[]> {
+        return this.http.get<Picture[]>(`${this.apiServerUrl}/picture/all/${fkUser}`,
         { withCredentials: true });
     }
 
     public getPicture(content: string): Observable<HttpEvent<Blob>> {
-        return this.http.get(`${this.apiServerUrl}/picture/get/${content}`, {
+        return this.http.get(`${this.apiServerUrl}/picture/${content}`, {
             reportProgress: true,
             observe: 'events',
             responseType: 'blob',
@@ -25,7 +25,7 @@ export class PictureService {
     }
 
     public addPicture(formData: FormData): Observable<HttpEvent<string[]>> {
-        return this.http.post<string[]>(`${this.apiServerUrl}/picture/add`, formData, {
+        return this.http.post<string[]>(`${this.apiServerUrl}/picture`, formData, {
             reportProgress: true,
             observe: 'events',
             withCredentials: true
@@ -33,12 +33,12 @@ export class PictureService {
     }
 
     public updatePicture(content: string): Observable<Picture> {
-        return this.http.put<Picture>(`${this.apiServerUrl}/picture/update/${content}`,
+        return this.http.put<Picture>(`${this.apiServerUrl}/picture/${content}`,
         { withCredentials: true });
     }
 
-    public deletePicture(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/picture/delete/${id}`,
+    public deletePicture(content: string): Observable<void> {
+        return this.http.delete<void>(`${this.apiServerUrl}/picture/${content}`,
         { withCredentials: true });
     }
 }

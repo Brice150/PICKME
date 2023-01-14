@@ -1,5 +1,6 @@
 package com.packages.backend.matches;
 
+import com.packages.backend.likes.Like;
 import com.packages.backend.user.User;
 import com.packages.backend.user.UserService;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/match")
@@ -21,19 +24,15 @@ public class MatchController {
     this.userService = userService;
   }
 
-  @GetMapping("/find/{id}")
-  public ResponseEntity<Match> getMatchById(@PathVariable("id") Long id) {
+  @GetMapping("/all")
+  public ResponseEntity<List<Match>> getAllUserMatches() {
+    List<Match> matches = matchService.findAllMatches();
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
-    Match match = matchService.findMatchById(id);
-    if (connectedUser.getId().equals(match.getFkSender().getId())
-      || connectedUser.getId().equals(match.getFkReceiver().getId())) {
-      return new ResponseEntity<>(match, HttpStatus.OK);
-    }
-    else {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
+    matches.removeIf(match -> !connectedUser.getId().equals(match.getFkReceiver().getId())
+                              && !connectedUser.getId().equals(match.getFkSender().getId()));
+    return new ResponseEntity<>(matches, HttpStatus.OK);
   }
 }
 

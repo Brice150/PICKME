@@ -2,8 +2,16 @@
 <div class="main-container">
     <div class="container">
         <div class="content">
-            <div class="picture">
-
+            <div class="main-picture-container">
+                <div class="main-picture" >
+                    <img [src]="loggedInUser?.mainPicture">
+                </div>
+            </div>
+            <div class="picture-container">
+                <div class="pictures" >
+                    <img [src]="picture.content" *ngFor="let picture of pictures">
+                    <a click="addPicture()" title="add picture"><i class='bx bx-image'></i></a>
+                </div>
             </div>
             <form class="user-form" [formGroup]="updateForm" (ngSubmit)="updateUser(updateForm.value)">
                 <input class="user-form-text" type="hidden" formControlName="id" ngModel="{{loggedInUser?.id}}">

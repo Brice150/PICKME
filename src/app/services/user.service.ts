@@ -10,29 +10,28 @@ export class UserService {
 
     constructor(private http: HttpClient) {}
 
-    public getUsers(): Observable<User[]> {
-        return this.http.get<any>(`${this.apiServerUrl}/user/all`,
+    public getAllUsers(): Observable<User[]> {
+        return this.http.get<User[]>(`${this.apiServerUrl}/user/all`,
         { withCredentials: true });
     }
 
-    public findUserByEmail(email: string): Observable<User> {
-        return this.http.get<User>(`${this.apiServerUrl}/user/find/email/${email}`,
+    public getConnectedUser(): Observable<User> {
+        return this.http.get<User>(`${this.apiServerUrl}/user`,
         { withCredentials: true });
     }
     
-    public findUserById(id: number): Observable<User> {
-        return this.http.get<User>(`${this.apiServerUrl}/user/find/id/${id}`,
+    public getUserById(userId: number): Observable<User> {
+        return this.http.get<User>(`${this.apiServerUrl}/user/${userId}`,
         { withCredentials: true });
     }
 
     public updateUser(user: User): Observable<User> {
-        return this.http.put<User>(`${this.apiServerUrl}/user/update`, user,
+        return this.http.put<User>(`${this.apiServerUrl}/user`, user,
         { withCredentials: true });
     }
 
-    public deleteUser(email: string): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/user/delete/${email}`,
+    public deleteUser(userEmail: string): Observable<void> {
+        return this.http.delete<void>(`${this.apiServerUrl}/user/${userEmail}`,
         { withCredentials: true });
     }
-
 }
