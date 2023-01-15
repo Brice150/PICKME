@@ -58,7 +58,7 @@ public class PictureServiceTest {
 
   @Test
   void shouldDeletePicture() {
-    underTest.deletePictureByContent("test.png");
-    verify(pictureRepository).deletePictureByContent("test.png");
+    underTest.deletePictureById(1L);
+    verify(pictureRepository).deletePictureById(1L);
   }
 }

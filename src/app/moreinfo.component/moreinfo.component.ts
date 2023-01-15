@@ -1,9 +1,11 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { Like } from '../models/like';
 import { Picture } from '../models/picture';
 import { User } from '../models/user';
+import { LikeService } from '../services/like.service';
 import { PictureService } from '../services/picture.service';
 import { UserService } from '../services/user.service';
 
@@ -16,14 +18,31 @@ export class MoreInfoComponent implements OnInit {
   imagePath: string = environment.imagePath;
   user!: User;
   pictures: Picture[] = [];
+  loggedInUser!: User;
+  mode!: string | null;
 
   constructor(
     private userService: UserService,
     private pictureService: PictureService,
-    private route: ActivatedRoute) {}
+    private route: ActivatedRoute,
+    private router: Router,
+    private likeService: LikeService) {}
 
   ngOnInit() {
+    this.mode = this.route.snapshot.paramMap.get('mode');
     this.getUser(this.route.snapshot.paramMap.get('id'));
+    this.getLoggedInUser();
+  }
+
+  getLoggedInUser() {
+    this.userService.getConnectedUser().subscribe(
+      (response: User) => {
+        this.loggedInUser = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
   }
 
   getUser(id: any) {
@@ -74,10 +93,42 @@ export class MoreInfoComponent implements OnInit {
   }
 
   like(user: User) {
-    
+    let like: any = {
+      "date": null, 
+      "fkSender": {"id": this.loggedInUser.id}, 
+      "fkReceiver": {"id": user.id}};
+    this.likeService.addLike(like).subscribe(
+      (response: Like) => {
+        this.router.navigate(['/select'])
+        .then(() => {
+          window.location.reload();
+        });
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
   }
 
-  return () {
-    
+  dislike(user: User) {
+    this.likeService.getLikeByFk(this.loggedInUser.id, user.id).subscribe(
+      (like: Like) => {
+        this.likeService.deleteLike(like.id).subscribe(
+          (response: void) => {
+            this.router.navigate(['/match'])
+            .then(() => {
+              window.location.reload();
+            });
+          },
+          (error: HttpErrorResponse) => {
+            alert(error.message);
+          }
+        );
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
   }
+
 }

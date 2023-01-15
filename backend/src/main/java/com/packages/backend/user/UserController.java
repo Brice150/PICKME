@@ -1,6 +1,8 @@
 package com.packages.backend.user;
 
+import com.packages.backend.likes.Like;
 import com.packages.backend.likes.LikeService;
+import com.packages.backend.matches.Match;
 import com.packages.backend.matches.MatchService;
 import com.packages.backend.messages.Message;
 import com.packages.backend.messages.MessageService;
@@ -11,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -38,6 +41,7 @@ public class UserController {
   @GetMapping("/user/all")
   public ResponseEntity<List<User>> getAllUsers() {
     List<User> users = userService.findAllUsers();
+    List<Like> likes = likeService.findAllLikes();
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
@@ -47,6 +51,83 @@ public class UserController {
       || !connectedUser.getGenderSearch().equals(user.getGender())
         || !connectedUser.getRelationshipType().equals(user.getRelationshipType())
     );
+    likes.removeIf(like -> like.getFkSender().getId() != connectedUser.getId());
+    for (Like like: likes) {
+      users.removeIf(user ->
+        like.getFkReceiver().getId() == user.getId()
+      );
+    }
+    for (User user: users) {
+      user.setMessagesReceived(null);
+      user.setMessagesSent(null);
+      user.setLikes(null);
+      user.setMatches(null);
+      user.setPassword(null);
+      user.setTokens(null);
+      user.setUserRole(UserRole.HIDDEN);
+    }
+    return new ResponseEntity<>(users, HttpStatus.OK);
+  }
+
+  @GetMapping("/user/all/like")
+  public ResponseEntity<List<User>> getAllUsersThatLiked() {
+    List<User> users = userService.findAllUsers();
+    List<Like> likes = likeService.findAllLikes();
+    List<Match> matches = matchService.findAllMatches();
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String currentUserEmail = authentication.getName();
+    User connectedUser = userService.findUserByEmail(currentUserEmail);
+    users.removeIf(user -> currentUserEmail.equals(user.getEmail()));
+    likes.removeIf(like -> like.getFkReceiver().getId() != connectedUser.getId());
+    if (likes.size() == 0) {
+      return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+    }
+    matches.removeIf(match ->
+      match.getFkReceiver().getId() != connectedUser.getId()
+      && match.getFkSender().getId() != connectedUser.getId()
+    );
+    for (Like like: likes) {
+      users.removeIf(user -> like.getFkSender().getId() != user.getId());
+    }
+    for (Match match: matches) {
+      users.removeIf(user ->
+        match.getFkSender().getId() == user.getId()
+        || match.getFkReceiver().getId() == user.getId()
+      );
+    }
+    for (User user: users) {
+      user.setMessagesReceived(null);
+      user.setMessagesSent(null);
+      user.setLikes(null);
+      user.setMatches(null);
+      user.setPassword(null);
+      user.setTokens(null);
+      user.setUserRole(UserRole.HIDDEN);
+    }
+    return new ResponseEntity<>(users, HttpStatus.OK);
+  }
+
+  @GetMapping("/user/all/match")
+  public ResponseEntity<List<User>> getAllUsersThatMatched() {
+    List<User> users = userService.findAllUsers();
+    List<Match> matches = matchService.findAllMatches();
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String currentUserEmail = authentication.getName();
+    User connectedUser = userService.findUserByEmail(currentUserEmail);
+    users.removeIf(user -> currentUserEmail.equals(user.getEmail()));
+    matches.removeIf(match ->
+      match.getFkReceiver().getId() != connectedUser.getId()
+        && match.getFkSender().getId() != connectedUser.getId()
+    );
+    if (matches.size() == 0) {
+      return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+    }
+    for (Match match: matches) {
+      users.removeIf(user ->
+        match.getFkSender().getId() != user.getId()
+        && match.getFkReceiver().getId() != user.getId()
+      );
+    }
     for (User user: users) {
       user.setMessagesReceived(null);
       user.setMessagesSent(null);

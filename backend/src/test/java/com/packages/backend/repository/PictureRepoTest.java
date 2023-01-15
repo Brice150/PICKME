@@ -43,7 +43,7 @@ public class PictureRepoTest {
 
   @Test
   void shouldNotFindPictureById() {
-    Optional<Picture> pictureFound = underTest.findPictureByContent("");
+    Optional<Picture> pictureFound = underTest.findPictureById(1L);
     assertThat(pictureFound.isPresent()).isFalse();
   }
 

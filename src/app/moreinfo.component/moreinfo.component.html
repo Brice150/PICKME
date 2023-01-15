@@ -2,8 +2,11 @@
 <div class="main-container">
     <div class="container">
         <div class="content">
-            <a class="return" title="return" routerLink="/select" routerLinkActive="active"><i class='bx bx-arrow-back'></i></a>
-            <a class="like" title="like" (click)="like(user)"><i class='bx bxs-like'></i></a>
+            <a *ngIf="mode === 'select'" class="return" title="return" routerLink="/select" routerLinkActive="active"><i class='bx bx-arrow-back'></i></a>
+            <a *ngIf="mode === 'like'" class="return" title="return" routerLink="/like" routerLinkActive="active"><i class='bx bx-arrow-back'></i></a>
+            <a *ngIf="mode === 'match'" class="return" title="return" routerLink="/match" routerLinkActive="active"><i class='bx bx-arrow-back'></i></a>
+            <a *ngIf="mode === 'select' || mode === 'like'" class="like" title="like" (click)="like(user)"><i class='bx bxs-like'></i></a>
+            <a *ngIf="mode === 'match'" class="like" title="dislike" (click)="dislike(user)"><i class='bx bxs-dislike'></i></a>
             <div class="picture-container">
                 <div class="pictures" >
                     <img [src]="picture.content" *ngFor="let picture of pictures">

@@ -67,12 +67,18 @@ public class PictureController {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
+    List<Picture> pictures = pictureService.findAllPictures();
     if (connectedUser != null) {
       List<String> contents = new ArrayList<>();
       String content = null;
       for (MultipartFile image : multipartImages) {
         content = StringUtils.cleanPath(image.getOriginalFilename());
         Path fileStorage = get(IMAGEDIRECTORY, content).normalize();
+        for (Picture picture: pictures) {
+          if (picture.getContent().equals(content)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+          }
+        }
         copy(image.getInputStream(), fileStorage, REPLACE_EXISTING);
         contents.add(content);
       }
@@ -80,6 +86,10 @@ public class PictureController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
       }
       Picture newPicture = new Picture(content, connectedUser);
+      if (connectedUser.getMainPicture() == null) {
+        connectedUser.setMainPicture(newPicture.getContent());
+        userService.updateUser(connectedUser);
+      }
       pictureService.addPicture(newPicture);
       return new ResponseEntity<>(newPicture, HttpStatus.CREATED);
     }
@@ -88,12 +98,12 @@ public class PictureController {
     }
   }
 
-  @PutMapping("/{content}")
-  public ResponseEntity<Picture> updatePicture(@PathVariable("content") String content) {
+  @PutMapping("/{id}")
+  public ResponseEntity<Picture> pickMainPicture(@PathVariable("id") Long id) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
-    Picture picture = pictureService.findPictureByContent(content);
+    Picture picture = pictureService.findPictureById(id);
     if (connectedUser.getId().equals(picture.getFkUser().getId())) {
       connectedUser.setMainPicture(picture.getContent());
       userService.updateUser(connectedUser);
@@ -104,27 +114,27 @@ public class PictureController {
     }
   }
 
-  @DeleteMapping("/{content}")
-  public ResponseEntity<?> deletePicture(@PathVariable("content") String content) throws IOException {
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deletePicture(@PathVariable("id") Long id) throws IOException {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
-    Picture picture = pictureService.findPictureByContent(content);
+    Picture picture = pictureService.findPictureById(id);
     if (connectedUser.getId().equals(picture.getFkUser().getId())) {
-      if (content != null) {
-        if (content.equals(connectedUser.getMainPicture())) {
+      if (picture.getContent() != null) {
+        if (picture.getContent().equals(connectedUser.getMainPicture())) {
           connectedUser.setMainPicture(null);
           userService.updateUser(connectedUser);
         }
-        Path imagePath = get(IMAGEDIRECTORY).normalize().resolve(content);
+        Path imagePath = get(IMAGEDIRECTORY).normalize().resolve(picture.getContent());
         if (Files.exists(imagePath)) {
           Files.delete(imagePath);
         }
         else {
-          throw new PictureNotFoundException(content + " was not found on the server");
+          throw new PictureNotFoundException(picture.getContent() + " was not found on the server");
         }
       }
-      pictureService.deletePictureByContent(content);
+      pictureService.deletePictureById(id);
       return new ResponseEntity<>(HttpStatus.OK);
     }
     else {

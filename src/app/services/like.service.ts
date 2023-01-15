@@ -10,8 +10,8 @@ export class LikeService {
 
     constructor(private http: HttpClient) {}
 
-    public getAllLikes(): Observable<Like[]> {
-        return this.http.get<Like[]>(`${this.apiServerUrl}/like/all`,
+    public getLikeByFk(fkSender: number, fkReceiver: number): Observable<Like> {
+        return this.http.get<Like>(`${this.apiServerUrl}/like/${fkSender}/${fkReceiver}`,
         { withCredentials: true });
     }
 

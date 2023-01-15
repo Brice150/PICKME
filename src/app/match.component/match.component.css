@@ -12,4 +12,172 @@
     align-items: center;
     justify-content: center;
     width: 100%;
+    flex-wrap: wrap;
+}
+
+.container .content{
+    overflow: hidden;
+    margin: 0 20px;
+    margin-bottom: 20px;
+    max-width: 320px;
+    width: 80%;
+    border-radius: 20px;
+    padding-bottom: 10px;
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.container .content:hover {
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.card .picture-container img {
+    max-width: 340px;
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.content .dislike {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
+    font-size: 30px;
+    margin-left: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 5px;
+    cursor: pointer;
+    transition: 0.5s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+} 
+
+.content .dislike::before {
+    content: '';
+    position: absolute;
+    background-color: white;
+    height: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.content .dislike:hover {
+    color: black;
+}
+
+.content .dislike:hover::before {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.card .text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+}
+
+.card .text .flex {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin-bottom: 10px;
+    height: 60px;
+}
+
+.card .text .flex .left {
+    display: flex;
+    align-items: left;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.card .text .flex .right {
+    display: flex;
+    align-items: left;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.card h2 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.card h3 {
+    font-size: 17px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.card h4 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    text-align: right;
+    color: black;
+}
+
+.card h5 {
+    font-size: 17px;
+    font-weight: 400;
+    margin: 0;
+    text-align: right;
+    color: black;
+}
+
+.text .description {
+    height: 80px;
+    width: 90%;
+    text-align: justify;
+}
+
+.text .more {
+    text-decoration: none;
+    color: black;
+    padding: 15px 30px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.5s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+}
+
+.text .more::before {
+    content: '';
+    position: absolute;
+    background-color: black;
+    height: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.text .more:hover {
+    color: white;
+}
+
+.text .more:hover::before {
+    height: 100%;
+    border-radius: 10px;
 }

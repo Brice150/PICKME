@@ -5,6 +5,7 @@ import { AppComponent } from './app.component/app.component';
 import { ConnectComponent } from './connect.component/connect.component';
 import { LoginComponent } from './connect.component/login.component/login.component';
 import { RegisterComponent } from './connect.component/register.component/register.component';
+import { DialogComponent } from './dialog.component/dialog.component';
 import { HeaderComponent } from './header.component/header.component';
 import { NavComponent } from './header.component/nav.component/nav.component';
 import { LikeComponent } from './like.component/like.component';
@@ -21,7 +22,7 @@ const routes: Routes = [
   {path: 'like', component: LikeComponent},
   {path: 'match', component: MatchComponent},
   {path: 'admin', component: AdminComponent},
-  {path: 'moreinfo/:id', component: MoreInfoComponent},
+  {path: 'moreinfo/:id/:mode', component: MoreInfoComponent},
   {path: '', redirectTo: '/connect', pathMatch: 'full'},
 ];
 
@@ -48,4 +49,5 @@ export const routingComponents = [
   MatchComponent,
   NavComponent,
   AdminComponent,
-  MoreInfoComponent]
+  MoreInfoComponent,
+  DialogComponent]

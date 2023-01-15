@@ -32,13 +32,13 @@ export class PictureService {
         })
     }
 
-    public updatePicture(content: string): Observable<Picture> {
-        return this.http.put<Picture>(`${this.apiServerUrl}/picture/${content}`,
+    public pickMainPicture(pictureId: number): Observable<Picture> {
+        return this.http.put<Picture>(`${this.apiServerUrl}/picture/${pictureId}`,
         { withCredentials: true });
     }
 
-    public deletePicture(content: string): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/picture/${content}`,
+    public deletePicture(pictureId: number): Observable<void> {
+        return this.http.delete<void>(`${this.apiServerUrl}/picture/${pictureId}`,
         { withCredentials: true });
     }
 }

@@ -2,15 +2,23 @@
 <div class="main-container">
     <div class="container">
         <div class="content">
+            <a class="delete" title="delete account" (click)="openDialog()"><i class='bx bx-x'></i></a>
             <div class="main-picture-container">
                 <div class="main-picture" >
                     <img [src]="loggedInUser?.mainPicture">
                 </div>
             </div>
             <div class="picture-container">
-                <div class="pictures" >
-                    <img [src]="picture.content" *ngFor="let picture of pictures">
-                    <a click="addPicture()" title="add picture"><i class='bx bx-image'></i></a>
+                <div class="pictures">
+                    <div class="picture" *ngFor="let picture of pictures">
+                        <img [src]="picture.content">
+                        <div class="overlay">
+                            <a (click)="pickMainPicture(picture.id)" title="pick main-picture" class="in-picture"><i class='bx bx-image-alt'></i></a>
+                            <a (click)="deletePicture(picture.id)" title="delete picture" class="in-picture"><i class='bx bxs-trash'></i></a>
+                        </div>
+                    </div>
+                    <label for="image" class="in-picture add" title="add picture"><i class='bx bx-image'></i></label>
+                    <input type="file" id="image" (change)="addPicture($any($event.target).files)" name="files">
                 </div>
             </div>
             <form class="user-form" [formGroup]="updateForm" (ngSubmit)="updateUser(updateForm.value)">
@@ -122,7 +130,7 @@
                 <span *ngIf="updateForm.get('password')!.hasError('minlength')">Password is too short</span>
                 <span *ngIf="updateForm.get('password')!.hasError('maxlength')">Password is too long</span>
                 <div class="button-container">
-                    <button class="validButton" title="update" *ngIf="updateForm.valid" type="submit">Update</button>
+                    <button class="validButton" title="update account" *ngIf="updateForm.valid" type="submit">Update</button>
                 </div>
             </form>
         </div>

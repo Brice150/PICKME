@@ -28,14 +28,14 @@ public class PictureService {
     return pictureRepository.save(updatePicture);
   }
 
-  public Picture findPictureByContent(String content) {
-    return pictureRepository.findPictureByContent(content)
-      .orElseThrow(() -> new PictureNotFoundException("Picture by content " + content + " was not found"));
+  public Picture findPictureById(Long id) {
+    return pictureRepository.findPictureById(id)
+      .orElseThrow(() -> new PictureNotFoundException("Picture by id " + id + " was not found"));
   }
 
   @Transactional
-  public void deletePictureByContent(String content) {
-    pictureRepository.deletePictureByContent(content);
+  public void deletePictureById(Long id) {
+    pictureRepository.deletePictureById(id);
   }
 }
 

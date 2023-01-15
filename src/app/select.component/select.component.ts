@@ -2,7 +2,9 @@ import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { Like } from '../models/like';
 import { User } from '../models/user';
+import { LikeService } from '../services/like.service';
 import { PictureService } from '../services/picture.service';
 import { UserService } from '../services/user.service';
 
@@ -14,14 +16,28 @@ import { UserService } from '../services/user.service';
 export class SelectComponent implements OnInit{
   imagePath: string = environment.imagePath;
   users: User[] = [];
+  loggedInUser!: User;
 
   constructor(
     private userService: UserService,
     private pictureService: PictureService,
+    private likeService: LikeService,
     private router: Router) {}
 
   ngOnInit() {
     this.getUsers();
+    this.getLoggedInUser();
+  }
+
+  getLoggedInUser() {
+    this.userService.getConnectedUser().subscribe(
+      (response: User) => {
+        this.loggedInUser = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
   }
 
   getUsers() {
@@ -92,10 +108,21 @@ export class SelectComponent implements OnInit{
   }
 
   like(user: User) {
-    
+    let like: any = {
+      "date": null, 
+      "fkSender": {"id": this.loggedInUser.id}, 
+      "fkReceiver": {"id": user.id}};
+    this.likeService.addLike(like).subscribe(
+      (response: Like) => {
+        this.getUsers();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
   }
 
   moreInfo(id: any) {
-    this.router.navigate(['moreinfo', id]);
+    this.router.navigate(['moreinfo', id, 'select']);
   }
 }

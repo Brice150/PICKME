@@ -3,6 +3,7 @@ package com.packages.backend.likes;
 import com.packages.backend.matches.Match;
 import com.packages.backend.matches.MatchService;
 import com.packages.backend.user.User;
+import com.packages.backend.user.UserRole;
 import com.packages.backend.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +28,21 @@ public class LikeController {
     this.matchService = matchService;
   }
 
-  @GetMapping("/all")
-  public ResponseEntity<List<Like>> getAllUserLikes() {
+  @GetMapping("/{fkSender}/{fkReceiver}")
+  public ResponseEntity<Like> getLikeByFk(@PathVariable("fkSender") Long fkSender, @PathVariable("fkReceiver") Long fkReceiver) {
     List<Like> likes = likeService.findAllLikes();
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
-    likes.removeIf(like -> !connectedUser.getId().equals(like.getFkReceiver().getId()));
-    return new ResponseEntity<>(likes, HttpStatus.OK);
+    likes.removeIf(like ->
+        fkSender != like.getFkSender().getId()
+        || fkReceiver != like.getFkReceiver().getId()
+      );
+    if (likes.size() == 0) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    Like like = likes.get(0);
+    return new ResponseEntity<>(like, HttpStatus.OK);
   }
 
   @PostMapping()

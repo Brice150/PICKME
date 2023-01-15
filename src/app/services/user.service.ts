@@ -15,6 +15,16 @@ export class UserService {
         { withCredentials: true });
     }
 
+    public getAllUsersThatLiked(): Observable<User[]> {
+        return this.http.get<User[]>(`${this.apiServerUrl}/user/all/like`,
+        { withCredentials: true });
+    }
+
+    public getAllUsersThatMatched(): Observable<User[]> {
+        return this.http.get<User[]>(`${this.apiServerUrl}/user/all/match`,
+        { withCredentials: true });
+    }
+
     public getConnectedUser(): Observable<User> {
         return this.http.get<User>(`${this.apiServerUrl}/user`,
         { withCredentials: true });
