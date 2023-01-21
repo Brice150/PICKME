@@ -1,33 +1,36 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSnackBarModule }from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
-import { AppRoutingModule, routingComponents } from './app-routing.module';
-import { AppComponent } from './app.component/app.component';
+import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule } from '@angular/material/core';
+import { appRouter } from './app.router';
+import { SelectModule } from './select/select.module';
+import { ProfileModule } from './profile/profile.module';
+import { MoreinfoModule } from './moreinfo/moreinfo.module';
+import { MatchModule } from './match/match.module';
+import { LikeModule } from './like/like.module';
+import { ConnectModule } from './connect/connect.module';
+import { AdminModule } from './admin/admin.module';
 
 @NgModule({
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    appRouter,
+    SelectModule,
+    ProfileModule,
+    MoreinfoModule,
+    MatchModule,
+    LikeModule,
+    ConnectModule,
+    AdminModule,
     BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
     HttpClientModule,
     MatSnackBarModule,
-    MatDialogModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatInputModule,
-    MatFormFieldModule,    
+    MatDialogModule
   ],
-  declarations: [AppComponent, routingComponents],
+  declarations: [AppComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
