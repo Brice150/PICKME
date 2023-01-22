@@ -54,28 +54,6 @@ export class LikeComponent {
     )
   }
 
-  getAge(user: User): number{
-    let age: number = 0;
-    let today: Date = new Date();
-    let birthDate: Date = new Date(user.birthDate);
-    let dateDifference: Date = new Date(
-      today.getFullYear() - birthDate.getFullYear(), 
-      today.getMonth() - birthDate.getMonth(), 
-      today.getDate() - birthDate.getDate()
-    )
-    age = dateDifference.getFullYear();
-    age = Number(String(age).slice(-2));
-    return age;
-  }
-
-  getDescription(user: User): string | null {
-    let description: string | null = user?.description;
-    if (user.description && user.description.length > 150) {
-      description = user.description.substring(0,147) + "..."
-    }
-    return description;
-  }
-
   getMainPicture(user: User) {
     let reader = new FileReader();
     if (user.mainPicture) {

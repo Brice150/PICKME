@@ -8,17 +8,6 @@
                     <img [src]="user.mainPicture" [alt]="user.nickname">
                 </div>
                 <div class="text">
-                    <div class="flex">
-                        <div class="left">
-                            <h2>{{user.nickname}}</h2>
-                            <h3>{{user?.job}}</h3>
-                        </div>
-                        <div class="right">
-                            <h4>{{getAge(user)}}</h4>
-                            <h5>{{user.city}}</h5>
-                        </div>
-                    </div>
-                    <p class="description">{{getDescription(user)}}</p>
                     <a class="more" title="more info" (click)="moreInfo(user.id)">More Info</a>
                 </div>
             </div>

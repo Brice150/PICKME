@@ -39,6 +39,7 @@ export class NavComponent implements OnInit{
 
   extend() {
     let buttons = document.querySelector(".buttons");
+    console.log(document.querySelector(".active"))
     if (!document.querySelector(".active")) {
       buttons?.classList.add("active");
     }

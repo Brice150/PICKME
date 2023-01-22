@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LikeComponent } from './like.component';
 import { HeaderModule } from '../header/header.module';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -9,7 +10,8 @@ import { HeaderModule } from '../header/header.module';
   declarations: [LikeComponent],
   imports: [
     CommonModule,
-    HeaderModule
+    HeaderModule,
+    SharedModule
   ],
   exports: [LikeComponent]
 })

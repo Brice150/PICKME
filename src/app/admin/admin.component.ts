@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-admin',
@@ -7,5 +6,35 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent {
-  imagePath: string = environment.imagePath;
+  isConnected!: boolean;
+  activeObjects: boolean = false;
+  activeUsers: boolean = true;
+  activeMessages: boolean = false;
+
+  ngOnInit() {
+    if (sessionStorage.getItem('loggedInUserEmail')===null) {
+      this.isConnected = false;
+    }
+    else {
+      this.isConnected = true;
+    }
+  }
+
+  onObjects() {
+    this.activeObjects = true;
+    this.activeUsers = false;
+    this.activeMessages = false;
+  }
+  
+  onUsers() {
+    this.activeObjects = false;
+    this.activeUsers = true;
+    this.activeMessages = false;
+  }
+
+  onMessages() {
+    this.activeObjects = false;
+    this.activeUsers = false;
+    this.activeMessages = true;
+  }
 }

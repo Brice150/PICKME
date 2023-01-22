@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { User } from 'src/app/core/interfaces/user';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -8,4 +9,5 @@ import { environment } from 'src/environments/environment';
 })
 export class MessageComponent {
   imagePath: string = environment.imagePath;
+  @Input() user: User = {} as User;
 }

@@ -14,11 +14,11 @@
                             <h3>{{user?.job}}</h3>
                         </div>
                         <div class="right">
-                            <h4>{{getAge(user)}}</h4>
+                            <h4>{{user.birthDate | age}}</h4>
                             <h5>{{user.city}}</h5>
                         </div>
                     </div>
-                    <p class="description">{{getDescription(user)}}</p>
+                    <p class="description">{{user.description | description:150}}</p>
                     <a class="more" title="more info" (click)="moreInfo(user.id)">More Info</a>
                 </div>
             </div>

@@ -1,13 +1,16 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { Like } from '../core/interfaces/like';
 import { Picture } from '../core/interfaces/picture';
 import { User } from '../core/interfaces/user';
+import { AdminService } from '../core/services/admin.service';
 import { LikeService } from '../core/services/like.service';
 import { PictureService } from '../core/services/picture.service';
 import { UserService } from '../core/services/user.service';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-moreinfo',
@@ -26,7 +29,9 @@ export class MoreInfoComponent implements OnInit {
     private pictureService: PictureService,
     private route: ActivatedRoute,
     private router: Router,
-    private likeService: LikeService) {}
+    private likeService: LikeService,
+    public dialog: MatDialog,
+    private adminService: AdminService) {}
 
   ngOnInit() {
     this.mode = this.route.snapshot.paramMap.get('mode');
@@ -124,6 +129,29 @@ export class MoreInfoComponent implements OnInit {
             alert(error.message);
           }
         );
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(DialogComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteUser();
+      }
+    });
+  }
+
+  deleteUser() {
+    this.adminService.deleteUser(this.user?.email!).subscribe(
+      (response: void) => {
+        this.router.navigate(['/admin'])
+        .then(() => {
+          window.location.reload();
+        });
       },
       (error: HttpErrorResponse) => {
         alert(error.message);

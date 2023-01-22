@@ -1,0 +1,169 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+    flex-direction: column;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+}
+
+.text-research {
+    margin: 10px;
+    min-width: 170px;
+    width: 30%;
+    border: 0;
+    background: rgba(255, 255, 255, 0.22);
+    padding: 10px 20px;
+    outline: none;
+    color: white;
+    border-radius: 50px;
+    transition: 0.5s;
+}
+
+.text-research::placeholder {
+    color: white;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    display: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 20px;
+}
+
+th {
+    padding: 10px;
+    text-align: center;
+    color: black;
+    background: rgba(255, 255, 255, 0.22);
+}
+
+tr {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 10px;
+}
+
+td {
+    border: none;
+    padding: 10px;
+    color: white;
+    transition: 0.5s;
+    text-align: center;
+}
+
+td .delete {
+    position: relative;
+    color: white;
+    font-size: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 5px 5px 0 5px;
+    cursor: pointer;
+    transition: 0.5s;
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+} 
+
+td .delete::before {
+    content: '';
+    position: absolute;
+    background-color: white;
+    height: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+td .delete:hover {
+    color: black;
+}
+
+td .delete:hover::before {
+    height: 100%;
+    border-radius: 10px;
+}
+
+td .more {
+    position: relative;
+    color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.5s;
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+} 
+
+td .more::before {
+    content: '';
+    position: absolute;
+    background-color: white;
+    height: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+td .more:hover {
+    color: black;
+}
+
+td .more:hover::before {
+    height: 100%;
+    border-radius: 10px;
+}
+
+@media only screen and (max-width: 550px) {
+    table,thead,tbody,tr,th,td {
+        display: block;
+    }
+
+    thead {
+        display: none;
+    }
+
+    td {
+        position: relative;
+        text-align: right;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 33%;
+        bottom: 0;
+        padding: 10px;
+        color: white;
+        background-color: var(--secondarybis);
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+    }
+
+    tr {
+        margin-bottom: 1rem;
+    }
+}

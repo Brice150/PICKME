@@ -13,3 +13,58 @@
     justify-content: center;
     width: 100%;
 }
+
+.content {
+    width: 90%;
+}
+
+.btn-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.btn-container a {
+    position: relative;
+    color: white;
+    font-size: 30px;
+    margin: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.5s;
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+} 
+
+.btn-container a::before {
+    content: '';
+    position: absolute;
+    background-color: white;
+    height: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.btn-container .unactive-content:hover {
+    color: black;
+}
+
+.btn-container .unactive-content:hover::before {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.btn-container .active-content {
+    background-color: white;
+    color: black;
+}

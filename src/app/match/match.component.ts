@@ -16,6 +16,7 @@ import { UserService } from '../core/services/user.service';
 export class MatchComponent {
   imagePath: string = environment.imagePath;
   users: User[] = [];
+  selectedUser: User = {} as User;
   loggedInUser!: User;
 
   constructor(
@@ -52,28 +53,6 @@ export class MatchComponent {
         alert(error);
       }
     )
-  }
-
-  getAge(user: User): number{
-    let age: number = 0;
-    let today: Date = new Date();
-    let birthDate: Date = new Date(user.birthDate);
-    let dateDifference: Date = new Date(
-      today.getFullYear() - birthDate.getFullYear(), 
-      today.getMonth() - birthDate.getMonth(), 
-      today.getDate() - birthDate.getDate()
-    )
-    age = dateDifference.getFullYear();
-    age = Number(String(age).slice(-2));
-    return age;
-  }
-
-  getDescription(user: User): string | null {
-    let description: string | null = user?.description;
-    if (user.description && user.description.length > 150) {
-      description = user.description.substring(0,147) + "..."
-    }
-    return description;
   }
 
   getMainPicture(user: User) {
@@ -127,5 +106,9 @@ export class MatchComponent {
 
   moreInfo(id: any) {
     this.router.navigate(['moreinfo', id, 'match']);
+  }
+
+  viewMessage(user: User) {
+    this.selectedUser = user;
   }
 }
