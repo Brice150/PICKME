@@ -15,6 +15,11 @@ export class MessageService {
         { withCredentials: true });
     }
 
+    public getUserMessagesNumber(fkUser: number): Observable<number> {
+        return this.http.get<number>(`${this.apiServerUrl}/message/all/number/${fkUser}`,
+        { withCredentials: true });
+    }
+
     public addMessage(message: Message): Observable<Message> {
         return this.http.post<Message>(`${this.apiServerUrl}/message`, message,
         { withCredentials: true });

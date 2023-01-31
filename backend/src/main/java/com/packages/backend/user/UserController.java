@@ -22,13 +22,11 @@ import java.util.List;
 public class UserController {
 
   private final UserService userService;
-  private final MessageService messageService;
   private final LikeService likeService;
   private final MatchService matchService;
 
-  public UserController(UserService userService, MessageService messageService, LikeService likeService, MatchService matchService) {
+  public UserController(UserService userService, LikeService likeService, MatchService matchService) {
     this.userService = userService;
-    this.messageService = messageService;
     this.likeService = likeService;
     this.matchService = matchService;
   }

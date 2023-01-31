@@ -1,6 +1,6 @@
 <app-header [title]="'Match'"></app-header>
 <div class="main-container">
-    <div class="container">
+    <div class="container" *ngIf="users.length !== 0">
         <div class="content" *ngFor="let user of users">
             <a class="card" title="send message" (click)="viewMessage(user)">
                 <div class="picture-container">
@@ -8,6 +8,9 @@
                 </div>
                 <div class="text">
                     <h2>{{user.nickname}}</h2>
+                </div>
+                <div class="messages-number">
+                    <h2 *ngIf="user.messagesNumber != 0">{{user.messagesNumber}}</h2>
                 </div>
             </a>
         </div>

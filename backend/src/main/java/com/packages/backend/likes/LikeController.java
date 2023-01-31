@@ -50,13 +50,14 @@ public class LikeController {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
-    if (connectedUser.getId().equals(like.getFkSender().getId())
-      && !connectedUser.getId().equals(like.getFkReceiver().getId())) {
+    if (connectedUser.getId() == like.getFkSender().getId()
+      && connectedUser.getId() != like.getFkReceiver().getId()) {
       User likedUser = userService.findUserById(like.getFkReceiver().getId());
       Like newLike = likeService.addLike(like);
       List<Like> likes = likeService.findAllLikes();
       for (Like previousLike : likes) {
-        if (connectedUser.getId().equals(previousLike.getFkReceiver().getId())) {
+        if (connectedUser.getId() == previousLike.getFkReceiver().getId()
+            && likedUser.getId() == previousLike.getFkSender().getId()) {
           Match match = new Match(null, connectedUser, likedUser);
           matchService.addMatch(match);
         }
@@ -74,12 +75,14 @@ public class LikeController {
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
     Like like = likeService.findLikeById(id);
-    if (connectedUser.getId().equals(like.getFkSender().getId())) {
+    if (connectedUser.getId() == like.getFkSender().getId()) {
       likeService.deleteLikeById(id);
       List<Match> matches = matchService.findAllMatches();
       for (Match previousMatch : matches) {
-        if (connectedUser.getId().equals(previousMatch.getFkReceiver().getId())
-          || connectedUser.getId().equals(previousMatch.getFkSender().getId())) {
+        if ((connectedUser.getId() == previousMatch.getFkReceiver().getId()
+            && like.getFkReceiver().getId() == previousMatch.getFkSender().getId())
+          || (connectedUser.getId() == previousMatch.getFkSender().getId())
+            && like.getFkReceiver().getId() == previousMatch.getFkReceiver().getId()) {
           matchService.deleteMatchById(previousMatch.getId());
         }
       }

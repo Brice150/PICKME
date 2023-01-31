@@ -104,7 +104,7 @@ export class MoreInfoComponent implements OnInit {
       "fkReceiver": {"id": user.id}};
     this.likeService.addLike(like).subscribe(
       (response: Like) => {
-        this.router.navigate(['/select'])
+        this.router.navigate(['/'+this.mode])
         .then(() => {
           window.location.reload();
         });
@@ -120,7 +120,7 @@ export class MoreInfoComponent implements OnInit {
       (like: Like) => {
         this.likeService.deleteLike(like.id).subscribe(
           (response: void) => {
-            this.router.navigate(['/match'])
+            this.router.navigate(['/'+this.mode])
             .then(() => {
               window.location.reload();
             });

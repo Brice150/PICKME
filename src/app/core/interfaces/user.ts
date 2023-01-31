@@ -16,6 +16,7 @@ export interface User {
     userRole: string;
     messagesSended: Message[];
     messagesReceived: Message[];
+    messagesNumber: number;
     likes: Like[];
     matches: Match[];
     picture: Picture[];

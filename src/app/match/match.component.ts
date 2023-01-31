@@ -7,6 +7,8 @@ import { User } from '../core/interfaces/user';
 import { LikeService } from '../core/services/like.service';
 import { PictureService } from '../core/services/picture.service';
 import { UserService } from '../core/services/user.service';
+import { MessageService } from '../core/services/message.service';
+import { Message } from '../core/interfaces/message';
 
 @Component({
   selector: 'app-match',
@@ -18,11 +20,13 @@ export class MatchComponent {
   users: User[] = [];
   selectedUser: User = {} as User;
   loggedInUser!: User;
+  messagesNumber: number = 1; 
 
   constructor(
     private userService: UserService,
     private pictureService: PictureService,
     private likeService: LikeService,
+    private messageService: MessageService,
     private router: Router) {}
 
   ngOnInit() {
@@ -47,6 +51,7 @@ export class MatchComponent {
         this.users=response;
         for (let user of this.users) {
           this.getMainPicture(user);
+          this.getUserMessagesNumber(user);
         }
       },
       (error: HttpErrorResponse) => {
@@ -84,6 +89,17 @@ export class MatchComponent {
     (error: HttpErrorResponse) => {
       alert(error);
     }
+  }
+
+  getUserMessagesNumber(user: User) {
+    this.messageService.getUserMessagesNumber(user.id).subscribe(
+      (response: number) => {
+        user.messagesNumber = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error);
+      }
+    )
   }
 
   dislike(user: User) {

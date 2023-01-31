@@ -38,6 +38,20 @@ public class MessageController {
     return new ResponseEntity<>(messages, HttpStatus.OK);
   }
 
+  @GetMapping("/all/number/{fkUser}")
+  public ResponseEntity<Integer> getUserMessagesNumber(@PathVariable("fkUser") Long fkUser) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String currentUserEmail = authentication.getName();
+    User connectedUser = userService.findUserByEmail(currentUserEmail);
+    List<Message> messages = messageService.findAllMessages();
+    messages.removeIf(message ->
+      (!connectedUser.getId().equals(message.getFkReceiver().getId())
+        && !connectedUser.getId().equals(message.getFkSender().getId()))
+        || (!fkUser.equals(message.getFkReceiver().getId())
+        && !fkUser.equals(message.getFkSender().getId())));
+    return new ResponseEntity<>(messages.size(), HttpStatus.OK);
+  }
+
   @PostMapping()
   public ResponseEntity<Message> addMessage(@RequestBody Message message) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
