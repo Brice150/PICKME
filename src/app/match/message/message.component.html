@@ -1,1 +1,22 @@
-{{user.nickname}}
+<div class="container">
+    <div class="content">
+        <div class="header">
+            <div class="picture-container">
+                <img [src]="selectedUser.mainPicture" [alt]="selectedUser.nickname">
+            </div>
+            <div class="text">
+                <h2>{{selectedUser.nickname}}</h2>
+            </div>
+            <a class="more" title="more info" (click)="moreInfo(selectedUser.id)">More Info</a>
+            <a class="dislike" title="dislike" (click)="dislike(selectedUser)"><i class='bx bxs-dislike'></i></a>
+        </div>
+        <div class="messages-container">
+            <div class="message">
+                test envoie
+            </div>
+            <div class="message">
+                test retour
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,148 @@
+.container {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    min-width: 250px;
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+}
+
+.container .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-direction: column;
+}
+
+.container .content .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.dislike {
+    margin: 0 10px;
+    position: relative;
+    color: white;
+    font-size: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 5px;
+    cursor: pointer;
+    transition: 0.5s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+} 
+
+.dislike::before {
+    content: '';
+    position: absolute;
+    background-color: white;
+    height: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.dislike:hover {
+    color: black;
+}
+
+.dislike:hover::before {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.more {
+    margin: 0 10px;
+    position: relative;
+    text-decoration: none;
+    color: black;
+    padding: 15px 30px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.5s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+}
+
+.more::before {
+    content: '';
+    position: absolute;
+    background-color: black;
+    height: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.more:hover {
+    color: white;
+}
+
+.more:hover::before {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.header .picture-container {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    padding: 5px;
+    margin: 0 10px;
+}
+
+.header .picture-container img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.header .text {
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+}
+
+.header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.container .content .messages-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+}

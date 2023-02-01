@@ -100,7 +100,7 @@ export class SelectComponent implements OnInit{
     );
   }
 
-  moreInfo(id: any) {
+  moreInfo(id: number) {
     this.router.navigate(['moreinfo', id, 'select']);
   }
 }

@@ -8,7 +8,6 @@ import { LikeService } from '../core/services/like.service';
 import { PictureService } from '../core/services/picture.service';
 import { UserService } from '../core/services/user.service';
 import { MessageService } from '../core/services/message.service';
-import { Message } from '../core/interfaces/message';
 
 @Component({
   selector: 'app-match',
@@ -18,7 +17,7 @@ import { Message } from '../core/interfaces/message';
 export class MatchComponent {
   imagePath: string = environment.imagePath;
   users: User[] = [];
-  selectedUser: User = {} as User;
+  selectedUser!: User;
   loggedInUser!: User;
   messagesNumber: number = 1; 
 
@@ -49,6 +48,9 @@ export class MatchComponent {
     this.userService.getAllUsersThatMatched().subscribe(
       (response: User[]) => {
         this.users=response;
+        if (this.users.length !== 0) {
+          this.selectedUser = this.users[0];
+        } 
         for (let user of this.users) {
           this.getMainPicture(user);
           this.getUserMessagesNumber(user);
