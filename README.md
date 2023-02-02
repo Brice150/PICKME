@@ -13,7 +13,7 @@ This application is a Full-Stack demo of my skills in Angular and Spring Boot.
 Clone the project
 
 ```bash
-  git clone https://github.com/Brice150/PLART.git
+  git clone https://github.com/Brice150/PICKME.git
 ```
 
 Go to backend directory 
