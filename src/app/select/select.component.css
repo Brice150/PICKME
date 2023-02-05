@@ -12,43 +12,42 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    flex-wrap: wrap;
 }
 
-.container .content{
+swiper {
+    width: 100%;
+}
+
+swiper .swiper-wrapper {
+    width: 100%;
+    padding-bottom: 40px;
+    padding-top: 20px;
+}
+
+.container .inner-content{
     overflow: hidden;
-    margin: 0 20px;
-    margin-bottom: 20px;
-    max-width: 320px;
-    width: 80%;
+    width: 100%;
     border-radius: 20px;
     padding-bottom: 10px;
     background: rgba(255, 255, 255, 0.22);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
     -webkit-backdrop-filter: blur(3.6px);
-    cursor: pointer;
-    transition: 0.5s;
-}
-
-.container .content:hover {
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
 .card .picture-container img {
-    max-width: 340px;
     width: 100%;
     max-height: 200px;
     object-fit: cover;
 }
 
-.content .like {
+.inner-content .like {
     position: absolute;
     top: 5px;
     right: 5px;
     color: white;
     font-size: 30px;
-    margin-left: 10px;
     border-radius: 10px;
     overflow: hidden;
     padding: 5px;
@@ -59,7 +58,7 @@
     -webkit-backdrop-filter: blur(3.6px);
 } 
 
-.content .like::before {
+.inner-content .like::before {
     content: '';
     position: absolute;
     background-color: white;
@@ -71,11 +70,11 @@
     z-index: -1;
 }
 
-.content .like:hover {
+.inner-content .like:hover {
     color: black;
 }
 
-.content .like:hover::before {
+.inner-content .like:hover::before {
     height: 100%;
     border-radius: 10px;
 }

@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { SwiperOptions } from 'swiper';
 import { Like } from '../core/interfaces/like';
 import { User } from '../core/interfaces/user';
 import { LikeService } from '../core/services/like.service';
@@ -17,6 +18,34 @@ export class SelectComponent implements OnInit{
   imagePath: string = environment.imagePath;
   users: User[] = [];
   loggedInUser!: User;
+  config: SwiperOptions = {
+    grabCursor: true,
+    speed: 1500,
+    loop: false,
+    pagination: { 
+      el: '.swiper-pagination', 
+      clickable: true, 
+      dynamicBullets: true
+    },
+    spaceBetween: 80,
+    breakpoints: {
+      0: {
+        slidesPerView: 1
+      },
+      500: {
+        slidesPerView: 2
+      },
+      800: {
+        slidesPerView: 3
+      },
+      1400: {
+        slidesPerView: 4
+      },
+      2000: {
+        slidesPerView: 5
+      }
+    }
+  };
 
   constructor(
     private userService: UserService,

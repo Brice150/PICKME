@@ -10,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -35,6 +37,9 @@ public class MessageController {
       && !connectedUser.getId().equals(message.getFkSender().getId()))
       || (!fkUser.equals(message.getFkReceiver().getId())
       && !fkUser.equals(message.getFkSender().getId())));
+    Comparator<Message> messagesSort = Comparator
+      .comparing(Message::getDate, (date1, date2) -> date1.compareTo(date2));
+    Collections.sort(messages, messagesSort);
     return new ResponseEntity<>(messages, HttpStatus.OK);
   }
 

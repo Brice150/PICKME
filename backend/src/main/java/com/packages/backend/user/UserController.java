@@ -4,8 +4,6 @@ import com.packages.backend.likes.Like;
 import com.packages.backend.likes.LikeService;
 import com.packages.backend.matches.Match;
 import com.packages.backend.matches.MatchService;
-import com.packages.backend.messages.Message;
-import com.packages.backend.messages.MessageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -47,7 +47,7 @@ public class UserController {
     users.removeIf(user ->
       !connectedUser.getGender().equals(user.getGenderSearch())
       || !connectedUser.getGenderSearch().equals(user.getGender())
-        || !connectedUser.getRelationshipType().equals(user.getRelationshipType())
+      || !connectedUser.getCity().equals(user.getCity())
     );
     likes.removeIf(like -> like.getFkSender().getId() != connectedUser.getId());
     for (Like like: likes) {
@@ -64,6 +64,17 @@ public class UserController {
       user.setTokens(null);
       user.setUserRole(UserRole.HIDDEN);
     }
+    Comparator<User> usersSort = Comparator
+      .comparing((User user) -> compareAttributes(connectedUser.getRelationshipType(), user.getRelationshipType()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getPersonality(), user.getPersonality()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getParenthood(), user.getParenthood()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getSmokes(), user.getSmokes()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getOrganised(), user.getOrganised()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getSportPractice(), user.getSportPractice()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getAnimals(), user.getAnimals()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getGamer(), user.getGamer()));
+    Collections.sort(users, usersSort);
     return new ResponseEntity<>(users, HttpStatus.OK);
   }
 
@@ -97,6 +108,17 @@ public class UserController {
       user.setTokens(null);
       user.setUserRole(UserRole.HIDDEN);
     }
+    Comparator<User> usersSort = Comparator
+      .comparing((User user) -> compareAttributes(connectedUser.getRelationshipType(), user.getRelationshipType()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getPersonality(), user.getPersonality()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getParenthood(), user.getParenthood()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getSmokes(), user.getSmokes()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getOrganised(), user.getOrganised()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getSportPractice(), user.getSportPractice()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getAnimals(), user.getAnimals()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getGamer(), user.getGamer()));
+    Collections.sort(users, usersSort);
     return new ResponseEntity<>(users, HttpStatus.OK);
   }
 
@@ -107,6 +129,8 @@ public class UserController {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
+    Collections.sort(matches, (Match match1, Match match2) ->
+      match2.getDate().compareTo(match1.getDate()));
     for (Match match: matches) {
       if (match.getFkReceiver().getId() == connectedUser.getId()) {
         users.add(match.getFkSender());
@@ -150,7 +174,6 @@ public class UserController {
     user.setEmail(null);
     user.setGender(null);
     user.setGenderSearch(null);
-    user.setRelationshipType(null);
     return new ResponseEntity<>(user, HttpStatus.OK);
   }
 
@@ -181,5 +204,27 @@ public class UserController {
     else {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
+  }
+
+  public static int compareAttributes(String attribute1, String attribute2) {
+    int result=0;
+    if ((attribute1 == null && attribute2 == null)) {
+      result = 0;
+    }
+    else if (attribute1 != null && attribute2 == null) {
+      result = 0;
+    }
+    else if (attribute1 == null && attribute2 != null) {
+      result = 0;
+    }
+    else if (attribute1 != null && attribute2 != null) {
+      if (attribute1.equals(attribute2)) {
+        result = -1;
+      }
+      else {
+        result = 1;
+      }
+    }
+    return result;
   }
 }

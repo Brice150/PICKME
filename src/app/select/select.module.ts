@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SelectComponent } from './select.component';
 import { HeaderModule } from '../header/header.module';
 import { SharedModule } from '../shared/shared.module';
+import { NgxUsefulSwiperModule } from 'ngx-useful-swiper';
 
 
 
@@ -11,7 +12,8 @@ import { SharedModule } from '../shared/shared.module';
   imports: [
     CommonModule,
     HeaderModule,
-    SharedModule
+    SharedModule,
+    NgxUsefulSwiperModule
   ],
   exports: [SelectComponent]
 })
