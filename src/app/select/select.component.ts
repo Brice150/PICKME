@@ -8,6 +8,7 @@ import { User } from '../core/interfaces/user';
 import { LikeService } from '../core/services/like.service';
 import { PictureService } from '../core/services/picture.service';
 import { UserService } from '../core/services/user.service';
+import { AgePipe } from '../shared/pipes/age.pipe';
 
 @Component({
   selector: 'app-select',
@@ -18,6 +19,8 @@ export class SelectComponent implements OnInit{
   imagePath: string = environment.imagePath;
   users: User[] = [];
   loggedInUser!: User;
+  minAge: number = 18;
+  maxAge: number = 0;
   config: SwiperOptions = {
     grabCursor: true,
     speed: 1500,
@@ -51,17 +54,24 @@ export class SelectComponent implements OnInit{
     private userService: UserService,
     private pictureService: PictureService,
     private likeService: LikeService,
-    private router: Router) {}
+    private router: Router,
+    private agePipe: AgePipe) {}
 
   ngOnInit() {
-    this.getUsers();
     this.getLoggedInUser();
+    this.getUsers();
   }
 
   getLoggedInUser() {
     this.userService.getConnectedUser().subscribe(
       (response: User) => {
         this.loggedInUser = response;
+        if (this.agePipe.transform(response.birthDate) + 5 <= 100) {
+          this.maxAge = this.agePipe.transform(response.birthDate) + 5;
+        }
+        else {
+          this.maxAge = 100;
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -73,6 +83,8 @@ export class SelectComponent implements OnInit{
     this.userService.getAllUsers().subscribe(
       (response: User[]) => {
         this.users=response;
+        this.users = this.users.filter(user => this.minAge <= this.agePipe.transform(user.birthDate)
+                      && this.agePipe.transform(user.birthDate) <= this.maxAge);
         for (let user of this.users) {
           this.getMainPicture(user);
         }

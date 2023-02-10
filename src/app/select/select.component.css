@@ -7,6 +7,31 @@
     flex-direction: column;
 }
 
+.age-container span {
+    font-size: 18px;
+    font-weight: 500;
+    color: white;
+}
+
+mat-slider {
+    width: 50%;
+}
+
+::ng-deep .mdc-slider__track {
+    background-color: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+}
+
+::ng-deep .mdc-slider__track--active_fill {
+    background-color: white;
+    color: white;
+}
+
+::ng-deep .mat-ripple {
+    display: none;
+}
+
 .container {
     display: flex;
     align-items: center;
@@ -30,7 +55,6 @@ swiper .swiper-wrapper {
     border-radius: 20px;
     padding-bottom: 10px;
     background: rgba(255, 255, 255, 0.22);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
     -webkit-backdrop-filter: blur(3.6px);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
@@ -179,4 +203,16 @@ swiper .swiper-wrapper {
 .text .more:hover::before {
     height: 100%;
     border-radius: 10px;
+}
+
+@media only screen and (max-width: 800px) {
+    mat-slider {
+        width: 80%;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    mat-slider {
+        width: 90%;
+    }
 }

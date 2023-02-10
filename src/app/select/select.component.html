@@ -1,5 +1,12 @@
 <app-header [title]="'Select'"></app-header>
 <div class="main-container">
+    <div class="age-container">
+        <span>Age</span>
+    </div>
+    <mat-slider min="18" max="100" discrete (change)="getUsers()">
+        <input matSliderStartThumb [(ngModel)]="minAge">
+        <input matSliderEndThumb [(ngModel)]="maxAge">
+    </mat-slider>
     <div class="container">
         <swiper [config]="config">
             <div class="swiper-wrapper">

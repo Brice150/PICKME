@@ -4,7 +4,9 @@ import { SelectComponent } from './select.component';
 import { HeaderModule } from '../header/header.module';
 import { SharedModule } from '../shared/shared.module';
 import { NgxUsefulSwiperModule } from 'ngx-useful-swiper';
-
+import {MatSliderModule} from '@angular/material/slider';
+import { FormsModule } from '@angular/forms';
+import { AgePipe } from '../shared/pipes/age.pipe';
 
 
 @NgModule({
@@ -13,8 +15,11 @@ import { NgxUsefulSwiperModule } from 'ngx-useful-swiper';
     CommonModule,
     HeaderModule,
     SharedModule,
-    NgxUsefulSwiperModule
+    NgxUsefulSwiperModule,
+    MatSliderModule,
+    FormsModule
   ],
-  exports: [SelectComponent]
+  exports: [SelectComponent],
+  providers: [AgePipe]
 })
 export class SelectModule { }
