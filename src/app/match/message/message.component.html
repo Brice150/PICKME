@@ -11,11 +11,27 @@
             <a class="dislike" title="dislike" (click)="dislike(selectedUser)"><i class='bx bxs-dislike'></i></a>
         </div>
         <div class="messages-container">
-            <div class="message">
-                test envoie
-            </div>
-            <div class="message">
-                test retour
+            <div class="message" *ngFor="let message of messages">
+                <div *ngIf="message.sender !== loggedInUser.nickname" class="inner-message-container left">
+                    <div class="inner-message">
+                        <div class="header-message">
+                            <span>{{message.sender}}</span>
+                            <span *ngIf="isToday(message)">{{message.date | date:"shortTime"}}</span>
+                            <span *ngIf="!isToday(message)">{{message.date | date:"shortDate"}}</span>
+                        </div>
+                        <span class="message-content">{{message?.content}}</span>
+                    </div>
+                </div>
+                <div *ngIf="message.sender === loggedInUser.nickname" class="inner-message-container right">
+                    <div class="inner-message">
+                        <div class="header-message">
+                            <span>{{message.sender}}</span>
+                            <span *ngIf="isToday(message)">{{message.date | date:"shortTime"}}</span>
+                            <span *ngIf="!isToday(message)">{{message.date | date:"shortDate"}}</span>
+                        </div>
+                        <span class="message-content">{{message?.content}}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

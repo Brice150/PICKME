@@ -1,7 +1,7 @@
 package com.packages.backend.messages;
 
-import com.packages.backend.pictures.Picture;
 import com.packages.backend.user.User;
+import com.packages.backend.user.UserRole;
 import com.packages.backend.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +41,27 @@ public class MessageController {
       .comparing(Message::getDate, (date1, date2) -> date1.compareTo(date2));
     Collections.sort(messages, messagesSort);
     return new ResponseEntity<>(messages, HttpStatus.OK);
+  }
+
+  @GetMapping("/sender/{id}")
+  public ResponseEntity<User> getMessageSender(@PathVariable("id") Long id) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String currentUserEmail = authentication.getName();
+    User connectedUser = userService.findUserByEmail(currentUserEmail);
+    Message message = messageService.findMessageById(id);
+    if (message.getFkSender().getId() != connectedUser.getId()
+        && message.getFkReceiver().getId() != connectedUser.getId()) {
+      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+    User messageSender = message.getFkSender();
+    messageSender.setMessagesReceived(null);
+    messageSender.setMessagesSent(null);
+    messageSender.setLikes(null);
+    messageSender.setMatches(null);
+    messageSender.setPassword(null);
+    messageSender.setTokens(null);
+    messageSender.setUserRole(UserRole.HIDDEN);
+    return new ResponseEntity<>(messageSender, HttpStatus.OK);
   }
 
   @GetMapping("/all/number/{fkUser}")

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Message } from '../interfaces/message';
+import { User } from '../interfaces/user';
 
 @Injectable({providedIn: 'root'})
 export class MessageService {
@@ -12,6 +13,11 @@ export class MessageService {
 
     public getAllUserMessages(fkUser: number): Observable<Message[]> {
         return this.http.get<Message[]>(`${this.apiServerUrl}/message/all/${fkUser}`,
+        { withCredentials: true });
+    }
+
+    public getMessageSender(messageId: number): Observable<User> {
+        return this.http.get<User>(`${this.apiServerUrl}/message/sender/${messageId}`,
         { withCredentials: true });
     }
 

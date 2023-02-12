@@ -2,9 +2,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Like } from 'src/app/core/interfaces/like';
+import { Message } from 'src/app/core/interfaces/message';
 import { User } from 'src/app/core/interfaces/user';
 import { LikeService } from 'src/app/core/services/like.service';
-import { UserService } from 'src/app/core/services/user.service';
+import { MessageService } from 'src/app/core/services/message.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -15,27 +16,17 @@ import { environment } from 'src/environments/environment';
 export class MessageComponent implements OnInit{
   imagePath: string = environment.imagePath;
   @Input() selectedUser!: User;
-  loggedInUser!: User;
+  @Input() messages!: Message[];
+  @Input() loggedInUser!: User;
 
   constructor(
     private likeService: LikeService,
     private router: Router,
-    private userService: UserService
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
-    this.getLoggedInUser();
-  }
 
-  getLoggedInUser() {
-    this.userService.getConnectedUser().subscribe(
-      (response: User) => {
-        this.loggedInUser = response;
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
   }
 
   moreInfo(id: number) {
@@ -61,5 +52,16 @@ export class MessageComponent implements OnInit{
         alert(error.message);
       }
     );
+  }
+
+  isToday(message: Message): boolean {
+    let today: Date = new Date();
+    let messageDate: Date = new Date(message.date);
+    let isToday: boolean = 
+    messageDate.getFullYear() === today.getFullYear() &&
+    messageDate.getMonth() === today.getMonth() &&
+    messageDate.getDate() === today.getDate()
+    ;
+    return isToday;
   }
 }

@@ -8,6 +8,7 @@ import { LikeService } from '../core/services/like.service';
 import { PictureService } from '../core/services/picture.service';
 import { UserService } from '../core/services/user.service';
 import { MessageService } from '../core/services/message.service';
+import { Message } from '../core/interfaces/message';
 
 @Component({
   selector: 'app-match',
@@ -20,6 +21,7 @@ export class MatchComponent {
   selectedUser!: User;
   loggedInUser!: User;
   messagesNumber: number = 1; 
+  messages: Message[]= [];
 
   constructor(
     private userService: UserService,
@@ -29,8 +31,8 @@ export class MatchComponent {
     private router: Router) {}
 
   ngOnInit() {
-    this.getUsers();
     this.getLoggedInUser();
+    this.getUsers();
   }
 
   getLoggedInUser() {
@@ -50,6 +52,7 @@ export class MatchComponent {
         this.users=response;
         if (this.users.length !== 0) {
           this.selectedUser = this.users[0];
+          this.getSelectedUserMessages(this.selectedUser.id);
         } 
         for (let user of this.users) {
           this.getMainPicture(user);
@@ -128,5 +131,32 @@ export class MatchComponent {
 
   viewMessage(user: User) {
     this.selectedUser = user;
+    this.getSelectedUserMessages(user.id);
+  }
+
+  getSelectedUserMessages(userId: number) {
+    this.messageService.getAllUserMessages(userId).subscribe(
+      (response: Message[]) => {
+        this.messages = response;
+        for (let message of this.messages) {
+          this.getMessageSender(message);
+        }
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
+  getMessageSender(message: Message) {
+    this.messageService.getMessageSender(message.id).subscribe(
+      (response: User) => {
+        message.sender = response.nickname;
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+        alert(error.message);
+      }
+    );
   }
 }

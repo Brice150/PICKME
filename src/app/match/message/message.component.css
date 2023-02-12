@@ -4,7 +4,8 @@
     align-items: center;
     justify-content: center;
     border-radius: 20px;
-    min-width: 250px;
+    width: 95%;
+    max-width: 650px;
     background: rgba(255, 255, 255, 0.22);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
@@ -25,7 +26,7 @@
     justify-content: space-around;
     width: 100%;
     flex-wrap: wrap;
-    margin-bottom: 20px;
+    margin: 10px;
 }
 
 .dislike {
@@ -36,6 +37,8 @@
     border-radius: 10px;
     overflow: hidden;
     padding: 5px;
+    width: 30px;
+    height: 30px;
     cursor: pointer;
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -145,4 +148,74 @@
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
     -webkit-backdrop-filter: blur(3.6px);
+}
+
+.messages-container .message {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;  
+}
+
+.messages-container .inner-message-container {
+    width: 100%;
+    display: flex;
+    align-items: center;  
+}
+
+.left {
+    justify-content: left;
+}
+
+.right {
+    justify-content: right;
+}
+
+.messages-container .message .inner-message {
+    width: 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.messages-container .message .left .inner-message {
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(3.6px);
+}
+
+.messages-container .message .right .inner-message {
+    background-color: white;
+}
+
+.inner-message .header-message {
+    background-color: black;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 10px 10px 0 0;
+}
+
+.inner-message .message-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: justify;
+    width: 95%;
+    padding: 5px;
+    border-radius: 10px 10px 0 0;
+    font-size: 17px;
+}
+
+@media only screen and (min-width: 1300px) {
+    .container {
+        width: 950px;
+        max-width: none;
+    }
 }

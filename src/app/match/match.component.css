@@ -11,7 +11,8 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    min-width: 250px;
+    max-width: 250px;
+    width: 95%;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.22);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -34,10 +35,12 @@
 }
 
 .card.selected-user {
+    background-color: white;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
 .container .content .card:hover {
+    background-color: white;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -61,6 +64,15 @@
     justify-content: center;
     flex-direction: column;
     color: white;
+    transition: 0.5s;
+}
+
+.card.selected-user .text {
+    color: black;
+}
+
+.container .content .card:hover .text {
+    color: black;
 }
 
 .card h2 {
@@ -68,4 +80,17 @@
     font-weight: 600;
     letter-spacing: 1px;
     margin: 0;
+}
+
+.card .messages-number {
+    color: white;
+    transition: 0.5s;
+}
+
+.card.selected-user .messages-number {
+    color: black;
+}
+
+.container .content .card:hover .messages-number {
+    color: black;
 }

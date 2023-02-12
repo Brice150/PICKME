@@ -6,4 +6,5 @@ export interface Message {
     toUser: string;
     fkReceiver: number;
     fkSender: number;
+    sender: string | null;
 }
