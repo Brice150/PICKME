@@ -289,12 +289,13 @@ select option {
 }
 
 textarea::-webkit-scrollbar {
-    width: 0px;
+    display: none;
 }
 
 textarea {
     color: white;
-    font-size: 1em;
+    font-size: 16px;
+    font-family:Arial, Helvetica, sans-serif;
     resize: vertical;
 }
 
@@ -308,11 +309,43 @@ input[type="file"] {
     display: none;
 }
 
+.chip-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 20px 0;
+}
+
+.chip-container span {
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+mat-chip-listbox {
+    width: 100%;
+}
+
+mat-chip-option {
+    width: 100%;
+    font-size: 1em;
+}
+
 @media only screen and (max-width: 520px) {
     .flex {
         flex-wrap: wrap;
     }
+
     .flex select {
         margin-bottom: 10px;
+    }
+
+    .chip-container span {
+        font-size: 16px;
+    }
+
+    mat-chip-option {
+        font-size: 13px;
     }
 }

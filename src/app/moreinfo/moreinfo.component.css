@@ -178,11 +178,20 @@
     margin: 0 10px;
 }
 
+mat-chip-listbox {
+    width: 100%;
+}
+
 @media only screen and (max-width: 520px) {
     .flex {
         flex-wrap: wrap;
     }
+
     .flex select {
         margin-bottom: 10px;
+    }
+    
+    mat-chip {
+        font-size: 13px;
     }
 }

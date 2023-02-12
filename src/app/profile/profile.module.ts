@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProfileComponent } from './profile.component';
 import { HeaderModule } from '../header/header.module';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { MatChipsModule } from '@angular/material/chips';
 
 
 @NgModule({
@@ -11,7 +11,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     HeaderModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatChipsModule
   ],
   exports: [ProfileComponent]
 })

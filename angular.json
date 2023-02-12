@@ -26,8 +26,8 @@
             ],
             "styles": [
               "./node_modules/swiper/swiper-bundle.css",
-              "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.css"
+              "src/styles.css",
+              "src/theme.scss"
             ],
             "scripts": []
           },

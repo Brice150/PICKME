@@ -39,8 +39,8 @@
                 <span *ngIf="updateForm.get('job')!.hasError('maxlength')">Job is too long</span>
                 <input class="user-form-text" placeholder="Height" formControlName="height" ngModel="{{loggedInUser?.height}}">
                 <span *ngIf="updateForm.get('height')!.hasError('pattern')">Height must be an Integer in centimeters</span>
-                <input class="user-form-text" placeholder="Languages" formControlName="languages" ngModel="{{loggedInUser?.languages}}">
-                <input class="user-form-text" placeholder="Activities" formControlName="activities" ngModel="{{loggedInUser?.activities}}">
+                <textarea class="user-form-text" placeholder="Languages" formControlName="languages" ngModel="{{loggedInUser?.languages}}"></textarea>
+                <textarea class="user-form-text" placeholder="Activities" formControlName="activities" ngModel="{{loggedInUser?.activities}}"></textarea>
                 <textarea class="user-form-text" placeholder="Description" formControlName="description" ngModel="{{loggedInUser?.description}}"></textarea>
                 <div class="flex">
                    <select class="user-form-text" formControlName="gender" ngModel="{{loggedInUser?.gender}}">
@@ -69,62 +69,78 @@
                     <span *ngIf="updateForm.get('genderSearch')!.hasError('required') && updateForm.get('genderSearch')!.touched">Gender Search is required</span>
                     <span *ngIf="updateForm.get('relationshipType')!.hasError('required') && updateForm.get('relationshipType')!.touched">Relationship Type is required</span>
                 </div>
-                <div class="flex">
-                    <select class="user-form-text" formControlName="alcoholDrinking" ngModel="{{loggedInUser?.alcoholDrinking}}">
-                         <option value="" disabled selected hidden>Alcohol</option>
-                         <option value="Never drinks alcohol">Never drinks alcohol</option>
-                         <option value="Drinks sometimes alcohol">Drinks sometimes alcohol</option>
-                         <option value="Drinks a lot alcohol">Drinks a lot alcohol</option>
-                     </select>
-                     <select class="user-form-text" formControlName="smokes"  ngModel="{{loggedInUser?.smokes}}">
-                         <option value="" disabled selected hidden>Smoking</option>
-                         <option value="Never smokes">Never smokes</option>
-                         <option value="Smokes sometimes">Smokes sometimes</option>
-                         <option value="Smokes a lot">Smokes a lot</option>
-                     </select>
-                 </div>
-                 <div class="flex">
-                    <select class="user-form-text" formControlName="sportPractice" ngModel="{{loggedInUser?.sportPractice}}">
-                        <option value="" disabled selected hidden>Sport</option>
-                        <option value="Never practice sport">Never practice sport</option>
-                        <option value="Practices sport sometimes">Practices sport sometimes</option>
-                        <option value="Athlete">Athlete</option>
-                    </select>
-                    <select class="user-form-text" formControlName="parenthood" ngModel="{{loggedInUser?.parenthood}}">
-                         <option value="" disabled selected hidden>Parenthood</option>
-                         <option value="Doesn't want children">Doesn't want children</option>
-                         <option value="Will want children someday">Will want children someday</option>
-                         <option value="Has children">Has children</option>
-                     </select>
-                 </div>
-                 <div class="flex">
-                    <select class="user-form-text" formControlName="gamer"  ngModel="{{loggedInUser?.gamer}}">
-                        <option value="" disabled selected hidden>Gamer</option>
-                        <option value="Never play video games">Never play video games</option>
-                        <option value="Play video games sometimes">Play video games sometimes</option>
-                        <option value="Play video games a lot">Play video games a lot</option>
-                    </select>
-                    <select class="user-form-text" formControlName="animals" ngModel="{{loggedInUser?.animals}}">
-                        <option value="" disabled selected hidden>Animals</option>
-                        <option value="Doesn't like animals">Doesn't like animals</option>
-                        <option value="Likes animals">Likes animals</option>
-                        <option value="Has animals">Has animals</option>
-                    </select>
-                 </div>
-                 <div class="flex">
-                    <select class="user-form-text" formControlName="organised" ngModel="{{loggedInUser?.organised}}">
-                         <option value="" disabled selected hidden>Organised</option>
-                         <option value="Messy">Messy</option>
-                         <option value="Reasonably organised">Reasonably organised</option>
-                         <option value="Very organised">Very organised</option>
-                     </select>
-                     <select class="user-form-text" formControlName="personality"  ngModel="{{loggedInUser?.personality}}">
-                         <option value="" disabled selected hidden>Personality</option>
-                         <option value="Introvert">Introvert</option>
-                         <option value="Ambivert">Ambivert</option>
-                         <option value="Extravert">Extravert</option>
-                     </select>
-                 </div>
+                <div class="chip-container">
+                    <span>Alcohol Drinking</span>
+                    <mat-chip-listbox>
+                        <mat-chip-option color="accent" *ngFor="let attribute of alcoholDrinking" [selected]="isSelected(attribute, 'alcoholDrinking')" (click)="select(attribute, 'alcoholDrinking')">
+                            <i class='bx bxs-drink' matChipAvatar></i>
+                            {{attribute}}
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+                <div class="chip-container">
+                    <span>Smoking</span>
+                    <mat-chip-listbox>
+                        <mat-chip-option color="accent" *ngFor="let attribute of smokes" [selected]="isSelected(attribute, 'smokes')" (click)="select(attribute, 'smokes')">
+                            <i class='bx bx-wind' matChipAvatar></i>
+                            {{attribute}}
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+                <div class="chip-container">
+                    <span>Sport Pratice</span>
+                    <mat-chip-listbox>
+                        <mat-chip-option color="accent" *ngFor="let attribute of sportPractice" [selected]="isSelected(attribute, 'sportPractice')" (click)="select(attribute, 'sportPractice')">
+                            <i class='bx bx-dumbbell' matChipAvatar></i>
+                            {{attribute}}
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+                <div class="chip-container">
+                    <span>Parenthood</span>
+                    <mat-chip-listbox>
+                        <mat-chip-option color="accent" *ngFor="let attribute of parenthood" [selected]="isSelected(attribute, 'parenthood')" (click)="select(attribute, 'parenthood')">
+                            <i class='bx bx-child' matChipAvatar></i>
+                            {{attribute}}
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+                <div class="chip-container">
+                    <span>Gaming</span>
+                    <mat-chip-listbox>
+                        <mat-chip-option color="accent" *ngFor="let attribute of gamer" [selected]="isSelected(attribute, 'gamer')" (click)="select(attribute, 'gamer')">
+                            <i class='bx bxs-joystick' matChipAvatar></i>
+                            {{attribute}}
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+                <div class="chip-container">
+                    <span>Animals</span>
+                    <mat-chip-listbox>
+                        <mat-chip-option color="accent" *ngFor="let attribute of animals" [selected]="isSelected(attribute, 'animals')" (click)="select(attribute, 'animals')">
+                            <i class='bx bxs-cat' matChipAvatar></i>
+                            {{attribute}}
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+                <div class="chip-container">
+                    <span>Organised</span>
+                    <mat-chip-listbox>
+                        <mat-chip-option color="accent" *ngFor="let attribute of organised" [selected]="isSelected(attribute, 'organised')" (click)="select(attribute, 'organised')">
+                            <i class='bx bxs-layer' matChipAvatar></i>
+                            {{attribute}}
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+                <div class="chip-container">
+                    <span>Personality</span>
+                    <mat-chip-listbox>
+                        <mat-chip-option color="accent" *ngFor="let attribute of personality" [selected]="isSelected(attribute, 'personality')" (click)="select(attribute, 'personality')">
+                            <i class='bx bxs-user-voice' matChipAvatar></i>
+                            {{attribute}}
+                        </mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
                 <input type="password" class="user-form-text" placeholder="Confirm Password" formControlName="password">
                 <span *ngIf="updateForm.get('password')!.hasError('required') && updateForm.get('password')!.touched">A password is required</span>
                 <span *ngIf="updateForm.get('password')!.hasError('minlength')">Password is too short</span>

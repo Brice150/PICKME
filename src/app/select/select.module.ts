@@ -4,7 +4,7 @@ import { SelectComponent } from './select.component';
 import { HeaderModule } from '../header/header.module';
 import { SharedModule } from '../shared/shared.module';
 import { NgxUsefulSwiperModule } from 'ngx-useful-swiper';
-import {MatSliderModule} from '@angular/material/slider';
+import { MatSliderModule } from '@angular/material/slider';
 import { FormsModule } from '@angular/forms';
 import { AgePipe } from '../shared/pipes/age.pipe';
 

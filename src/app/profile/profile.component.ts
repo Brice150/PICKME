@@ -23,6 +23,46 @@ export class ProfileComponent implements OnInit{
   updateForm!: FormGroup;
   pictures: Picture[] = [];
   picturesData!: FormData;
+  alcoholDrinking: string[] = [
+    "Never drinks alcohol",
+    "Drinks sometimes alcohol",
+    "Drinks a lot alcohol"
+  ];
+  smokes: string[] = [
+    "Never smokes",
+    "Smokes sometimes",
+    "Smokes a lot"
+  ];
+  sportPractice: string[] = [
+    "Never practice sport",
+    "Practices sport sometimes",
+    "Athlete"
+  ];
+  parenthood: string[] = [
+    "Doesn't want children",
+    "Will want children someday",
+    "Has children"
+  ];
+  gamer: string[] = [
+    "Never play video games",
+    "Play video games sometimes",
+    "Play video games a lot"
+  ];
+  animals: string[] = [
+    "Doesn't like animals",
+    "Likes animals",
+    "Has animals"
+  ];
+  organised: string[] = [
+    "Messy",
+    "Reasonably organised",
+    "Very organised"
+  ];
+  personality: string[] = [
+    "Introvert",
+    "Ambivert",
+    "Extravert"
+  ];
 
   constructor(
     private router: Router,
@@ -50,14 +90,6 @@ export class ProfileComponent implements OnInit{
       gender: ['', [Validators.required]],
       genderSearch: ['', [Validators.required]],
       relationshipType: ['', [Validators.required]],
-      alcoholDrinking: [''],
-      smokes: [''],
-      sportPractice: [''],
-      parenthood: [''],
-      gamer: [''],
-      animals: [''],
-      organised: [''],
-      personality: [''],
       password: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(5)]]
     })
     this.getLoggedInUser(0);
@@ -79,6 +111,14 @@ export class ProfileComponent implements OnInit{
   }
 
   updateUser(user: User) {
+    user.alcoholDrinking = this.loggedInUser!.alcoholDrinking;
+    user.smokes = this.loggedInUser!.smokes;
+    user.sportPractice = this.loggedInUser!.sportPractice;
+    user.parenthood = this.loggedInUser!.parenthood;
+    user.gamer = this.loggedInUser!.gamer;
+    user.animals = this.loggedInUser!.animals;
+    user.organised = this.loggedInUser!.organised;
+    user.personality = this.loggedInUser!.personality;
     this.userService.updateUser(user).subscribe(
       (response: User) => {
         this.updateForm.get("password")?.reset();
@@ -219,5 +259,19 @@ export class ProfileComponent implements OnInit{
         alert(error.message);
       }
     )
+  }
+
+  isSelected(attribute: string, property: string): boolean {
+    let selected: boolean = false;
+    if (attribute && this.loggedInUser) {
+      selected = (this.loggedInUser as any)[property] === attribute
+    }
+    return selected;
+  }
+
+  select(attribute: string, property: string) {
+    if (attribute && this.loggedInUser) {
+      (this.loggedInUser as any)[property] = attribute;
+    }
   }
 }

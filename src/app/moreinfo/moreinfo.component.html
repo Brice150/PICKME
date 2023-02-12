@@ -19,6 +19,7 @@
             </div>
             <div class="user-form">
                 <div class="user-form-text" *ngIf="user.nickname">{{user.nickname}}</div>
+                <div class="user-form-text" *ngIf="user.nickname">{{user.birthDate | age}}</div>
                 <div class="user-form-text" *ngIf="user.city">{{user.city}}</div>
                 <div class="user-form-text" *ngIf="user.city">{{user.relationshipType}}</div>
                 <div class="user-form-text" *ngIf="user.job">{{user.job}}</div>
@@ -26,22 +27,40 @@
                 <div class="user-form-text" *ngIf="user.languages">{{user.languages}}</div>
                 <div class="user-form-text" *ngIf="user.activities">{{user.activities}}</div>
                 <div class="user-form-text" *ngIf="user.description">{{user.description}}</div>
-                <div class="flex">
-                    <div class="user-form-text" *ngIf="user.alcoholDrinking">{{user.alcoholDrinking}}</div>
-                    <div class="user-form-text" *ngIf="user.smokes">{{user.smokes}}</div>
-                </div>
-                <div class="flex">
-                    <div class="user-form-text" *ngIf="user.sportPractice">{{user.sportPractice}}</div>
-                    <div class="user-form-text" *ngIf="user.parenthood">{{user.parenthood}}</div>
-                </div>
-                <div class="flex">
-                    <div class="user-form-text" *ngIf="user.gamer">{{user.gamer}}</div>
-                    <div class="user-form-text" *ngIf="user.animals">{{user.animals}}</div>
-                </div>
-                <div class="flex">
-                    <div class="user-form-text" *ngIf="user.organised">{{user.organised}}</div>
-                    <div class="user-form-text" *ngIf="user.personality">{{user.personality}}</div>
-                 </div>
+                <mat-chip-listbox>
+                    <mat-chip color="accent">
+                        <i class='bx bxs-drink' matChipAvatar></i>
+                        {{user.alcoholDrinking}}
+                    </mat-chip>
+                    <mat-chip color="accent">
+                        <i class='bx bx-wind' matChipAvatar></i>
+                        {{user.smokes}}
+                    </mat-chip>
+                    <mat-chip color="accent">
+                        <i class='bx bx-dumbbell' matChipAvatar></i>
+                        {{user.sportPractice}}
+                    </mat-chip>
+                    <mat-chip color="accent">
+                        <i class='bx bx-child' matChipAvatar></i>
+                        {{user.parenthood}}
+                    </mat-chip>
+                    <mat-chip color="accent">
+                        <i class='bx bxs-joystick' matChipAvatar></i>
+                        {{user.gamer}}
+                    </mat-chip>
+                    <mat-chip color="accent">
+                        <i class='bx bxs-cat' matChipAvatar></i>
+                        {{user.animals}}
+                    </mat-chip>
+                    <mat-chip color="accent">
+                        <i class='bx bxs-layer' matChipAvatar></i>
+                        {{user.organised}}
+                    </mat-chip>
+                    <mat-chip color="accent">
+                        <i class='bx bxs-user-voice' matChipAvatar></i>
+                        {{user.personality}}
+                    </mat-chip>
+                </mat-chip-listbox>
             </div>
         </div>
     </div>
