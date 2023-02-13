@@ -1,17 +1,16 @@
 .main-container {
-    padding-top: 80px;
+    padding-top: 60px;
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    height: calc(100vh - 110px);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .container {
     margin: 10px;
     display: flex;
     align-items: center;
-    flex-direction: column;
-    max-width: 250px;
+    justify-content: space-around;
     width: 95%;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.22);
@@ -21,7 +20,7 @@
 }
 
 .container .content {
-    width: 100%;
+    width: 250px;
 }
 
 .card {
@@ -93,4 +92,8 @@
 
 .container .content .card:hover .messages-number {
     color: black;
+}
+
+app-message {
+    width: 95%;
 }

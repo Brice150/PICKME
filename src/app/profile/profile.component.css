@@ -239,6 +239,8 @@ select option {
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
     -webkit-backdrop-filter: blur(3.6px);
+    font-weight: 700;
+    font-size: 15px;
 }
 
 .user-form .button-container .validButton::before {

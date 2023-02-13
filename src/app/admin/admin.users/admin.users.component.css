@@ -2,13 +2,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 10px;
     flex-direction: column;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.22);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
+    overflow: hidden;
 }
 
 .text-research {
@@ -99,14 +95,13 @@ td .delete:hover::before {
 
 td .more {
     position: relative;
-    color: white;
+    color: black;
     border-radius: 10px;
     overflow: hidden;
     padding: 10px;
     font-weight: 700;
     cursor: pointer;
     transition: 0.5s;
-    background: rgba(255, 255, 255, 0.22);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
     -webkit-backdrop-filter: blur(3.6px);
@@ -115,7 +110,7 @@ td .more {
 td .more::before {
     content: '';
     position: absolute;
-    background-color: white;
+    background-color: black;
     height: 0%;
     top: 0;
     left: 0;
@@ -125,7 +120,7 @@ td .more::before {
 }
 
 td .more:hover {
-    color: black;
+    color: white;
 }
 
 td .more:hover::before {

@@ -1,11 +1,10 @@
 .container {
-    margin: 10px;
+    margin: 10px 0;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 20px;
-    width: 95%;
-    max-width: 650px;
+    width: 100%;
     background: rgba(255, 255, 255, 0.22);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
@@ -172,7 +171,12 @@
 }
 
 .messages-container .message .inner-message {
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
     width: 45%;
+    max-width: 450px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -181,17 +185,7 @@
     margin: 10px;
 }
 
-.messages-container .message .left .inner-message {
-    background: rgba(255, 255, 255, 0.22);
-    backdrop-filter: blur(3.6px);
-}
-
-.messages-container .message .right .inner-message {
-    background-color: white;
-}
-
 .inner-message .header-message {
-    background-color: black;
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -200,6 +194,18 @@
     font-size: 14px;
     font-weight: 500;
     border-radius: 10px 10px 0 0;
+}
+
+.messages-container .message .left .inner-message .header-message{
+    background-color: rgb(161, 33, 33);
+}
+
+.messages-container .message .right .inner-message .header-message{
+    background-color: black;
+}
+
+.messages-container .message .right .inner-message {
+    cursor: pointer;
 }
 
 .inner-message .message-content {
@@ -213,9 +219,130 @@
     font-size: 17px;
 }
 
-@media only screen and (min-width: 1300px) {
-    .container {
-        width: 950px;
-        max-width: none;
-    }
+.delete {
+    position: relative;
+    color: white;
+    font-size: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 5px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: 0.5s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+} 
+
+.delete::before {
+    content: '';
+    position: absolute;
+    background-color: white;
+    height: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.delete:hover {
+    color: black;
+}
+
+.delete:hover::before {
+    height: 100%;
+    border-radius: 10px;
+}
+
+form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 90%;
+}
+
+textarea::-webkit-scrollbar {
+    display: none;
+}
+
+textarea {
+    color: black;
+    font-size: 16px;
+    font-family:Arial, Helvetica, sans-serif;
+    resize: vertical;
+    background: transparent;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 16px 0;
+    border: 0;
+    padding: 20px 40px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+    outline: none;
+    border-radius: 10px;
+}
+
+::placeholder {
+    color: black;
+}
+
+form span {
+    color: black;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.button-container button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+    padding: 15px 30px;
+    margin: 10px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    overflow: hidden;
+    border-radius: 10px;
+    transition: 0.5s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.button-container button::before {
+    content: '';
+    position: absolute;
+    background-color: black;
+    height: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.button-container button:hover {
+    color: white;
+}
+
+.button-container button:hover::before {
+    height: 100%;
+    border-radius: 10px;
 }
