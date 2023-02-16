@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatchComponent } from './match.component';
 import { HeaderModule } from '../header/header.module';
 import { MessageModule } from './message/message.module';
+import { NgxUsefulSwiperModule } from 'ngx-useful-swiper';
 
 
 
@@ -11,7 +12,8 @@ import { MessageModule } from './message/message.module';
   imports: [
     CommonModule,
     MessageModule,
-    HeaderModule
+    HeaderModule,
+    NgxUsefulSwiperModule
   ],
   exports: [MatchComponent]
 })

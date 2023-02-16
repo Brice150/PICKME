@@ -9,6 +9,7 @@ import { PictureService } from '../core/services/picture.service';
 import { UserService } from '../core/services/user.service';
 import { MessageService } from '../core/services/message.service';
 import { Message } from '../core/interfaces/message';
+import { SwiperOptions } from 'swiper';
 
 @Component({
   selector: 'app-match',
@@ -22,6 +23,34 @@ export class MatchComponent {
   loggedInUser!: User;
   messagesNumber: number = 1; 
   messages: Message[]= [];
+  config: SwiperOptions = {
+    grabCursor: true,
+    speed: 1500,
+    loop: false,
+    pagination: { 
+      el: '.swiper-pagination', 
+      clickable: true, 
+      dynamicBullets: true
+    },
+    spaceBetween: 80,
+    breakpoints: {
+      0: {
+        slidesPerView: 1
+      },
+      500: {
+        slidesPerView: 2
+      },
+      800: {
+        slidesPerView: 3
+      },
+      1400: {
+        slidesPerView: 4
+      },
+      2000: {
+        slidesPerView: 5
+      }
+    }
+  };
 
   constructor(
     private userService: UserService,
