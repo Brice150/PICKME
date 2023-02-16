@@ -134,6 +134,12 @@ export class MatchComponent {
     this.getSelectedUserMessages(user.id);
   }
 
+  refreshUserMessages(user: User) {
+    this.selectedUser = user;
+    this.getSelectedUserMessages(user.id);
+    this.getUserMessagesNumber(user);
+  }
+
   getSelectedUserMessages(userId: number) {
     this.messageService.getAllUserMessages(userId).subscribe(
       (response: Message[]) => {

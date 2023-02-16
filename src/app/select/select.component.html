@@ -1,5 +1,5 @@
 <app-header [title]="'Select'"></app-header>
-<div class="main-container">
+<div class="main-container" *ngIf="users.length !== 0">
     <div class="age-container">
         <span>Age</span>
     </div>
@@ -37,5 +37,10 @@
             </div>
             <div class="swiper-pagination"></div>
         </swiper>
+    </div>
+</div>
+<div class="main-container" *ngIf="users.length === 0">
+    <div class="no-profile-container">
+        <span>No profile to show...</span>
     </div>
 </div>

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -22,6 +22,7 @@ export class MessageComponent implements OnInit{
   @Input() selectedUser!: User;
   @Input() messages!: Message[];
   @Input() loggedInUser!: User;
+  @Output() onRefresh: EventEmitter<User> = new EventEmitter()
   messageForm!: FormGroup;
   isModifying: boolean = false;
   updatedMessage!: Message | null;
@@ -83,7 +84,7 @@ export class MessageComponent implements OnInit{
     this.messageService.addMessage(message).subscribe(
       (response: Message) => {
         this.messageForm.get("content")?.reset();
-        //emettre evenement pour rafraichir la page
+        this.onRefresh.emit(this.selectedUser);
         this.snackBar.open("Content sent", "Dismiss", {duration: 2000});
       },
       (error: HttpErrorResponse) => {
@@ -111,7 +112,7 @@ export class MessageComponent implements OnInit{
     this.messageService.updateMessage(message).subscribe(
       (response: Message) => {
         this.unmodifyMessage();
-        //emettre evenement pour rafraichir la page
+        this.onRefresh.emit(this.selectedUser);
         this.snackBar.open("Content updated", "Dismiss", {duration: 2000});
       },
       (error: HttpErrorResponse) => {
@@ -123,7 +124,7 @@ export class MessageComponent implements OnInit{
   deleteMessage(message: Message) {
     this.messageService.deleteMessage(message.id).subscribe(
       (response: void) => {
-        //emettre evenement pour rafraichir la page
+        this.onRefresh.emit(this.selectedUser);
         this.snackBar.open("Content deleted", "Dismiss", {duration: 2000});
       },
       (error: HttpErrorResponse) => {

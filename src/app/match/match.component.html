@@ -26,5 +26,5 @@
             </a>
         </div>
     </div>
-    <app-message *ngIf="selectedUser" [loggedInUser]="loggedInUser" [selectedUser]="selectedUser" [messages]="messages"></app-message>
+    <app-message *ngIf="selectedUser" [loggedInUser]="loggedInUser" [selectedUser]="selectedUser" [messages]="messages" (onRefresh)="refreshUserMessages($event)"></app-message>
 </div>

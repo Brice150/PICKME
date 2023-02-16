@@ -7,6 +7,12 @@
     flex-direction: column;
 }
 
+.no-profile-container span {
+    font-size: 18px;
+    font-weight: 500;
+    color: white;
+}
+
 .container {
     display: flex;
     align-items: center;

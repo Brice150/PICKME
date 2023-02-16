@@ -13,6 +13,12 @@
     color: white;
 }
 
+.no-profile-container span {
+    font-size: 18px;
+    font-weight: 500;
+    color: white;
+}
+
 mat-slider {
     width: 50%;
 }

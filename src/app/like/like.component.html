@@ -1,5 +1,5 @@
 <app-header [title]="'Like'"></app-header>
-<div class="main-container">
+<div class="main-container" *ngIf="users.length !== 0">
     <div class="container">
         <div class="content" *ngFor="let user of users">
             <a class="like" title="like" (click)="like(user)"><i class='bx bxs-like'></i></a>
@@ -12,5 +12,10 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div class="main-container" *ngIf="users.length === 0">
+    <div class="no-profile-container">
+        <span>No profile to show...</span>
     </div>
 </div>
