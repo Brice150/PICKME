@@ -194,4 +194,17 @@ export class MatchComponent {
       }
     );
   }
+
+  search(key: string){
+    const results: User[] = [];
+    for (const user of this.users) {
+      if (user.nickname?.toLowerCase().indexOf(key.toLowerCase())!== -1) {
+        results.push(user);
+      }
+    }
+    this.users = results;
+    if (results.length === 0 ||!key) {
+      this.getUsers();
+    }
+  }
 }

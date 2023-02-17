@@ -13,6 +13,36 @@
     width: 100%;
 }
 
+.no-profile-container span {
+    font-size: 18px;
+    font-weight: 500;
+    color: white;
+}
+
+.text-research {
+    margin: 10px;
+    min-width: 170px;
+    width: 30%;
+    border: 0;
+    background: rgba(255, 255, 255, 0.22);
+    padding: 10px 20px;
+    outline: none;
+    color: white;
+    border-radius: 50px;
+    transition: 0.5s;
+}
+
+.text-research::placeholder {
+    color: white;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    display: none;
+}
+
 swiper {
     width: 100%;
 }

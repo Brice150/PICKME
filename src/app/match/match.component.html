@@ -1,5 +1,6 @@
 <app-header [title]="'Match'"></app-header>
 <div class="main-container">
+    <input type="search" (ngModelChange)="search(key.value)" #key="ngModel" ngModel name="key" class="text-research" placeholder="Search">
     <div class="container" *ngIf="users.length !== 0">
         <swiper [config]="config">
             <div class="swiper-wrapper">
@@ -34,4 +35,9 @@
         </swiper>
     </div>
     <app-message *ngIf="selectedUser" [loggedInUser]="loggedInUser" [selectedUser]="selectedUser" [messages]="messages" (onRefresh)="refreshUserMessages($event)"></app-message>
+</div>
+<div class="main-container" *ngIf="users.length === 0">
+    <div class="no-profile-container">
+        <span>No match for now...</span>
+    </div>
 </div>

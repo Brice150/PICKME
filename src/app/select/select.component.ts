@@ -60,6 +60,7 @@ export class SelectComponent implements OnInit{
   ngOnInit() {
     this.getLoggedInUser();
     this.getUsers();
+    
   }
 
   getLoggedInUser() {
@@ -82,7 +83,7 @@ export class SelectComponent implements OnInit{
   getUsers() {
     this.userService.getAllUsers().subscribe(
       (response: User[]) => {
-        this.users=response;
+        this.users= response;
         this.users = this.users.filter(user => this.minAge <= this.agePipe.transform(user.birthDate)
                       && this.agePipe.transform(user.birthDate) <= this.maxAge);
         for (let user of this.users) {
