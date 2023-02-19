@@ -60,7 +60,6 @@ export class SelectComponent implements OnInit{
   ngOnInit() {
     this.getLoggedInUser();
     this.getUsers();
-    
   }
 
   getLoggedInUser() {
