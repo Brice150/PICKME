@@ -25,8 +25,8 @@ export class LikeComponent {
     private router: Router) {}
 
   ngOnInit() {
-    this.getUsers();
     this.getLoggedInUser();
+    this.getUsers();
   }
 
   getLoggedInUser() {
@@ -46,6 +46,12 @@ export class LikeComponent {
         this.users=response;
         for (let user of this.users) {
           this.getMainPicture(user);
+        }
+        const loaderWrapper = document.getElementById('loaderWrapper');
+        loaderWrapper!.style.display = 'none';
+        if (this.users.length === 0) {
+          const noProfileToShow = document.getElementById('noProfileToShow');
+          noProfileToShow!.style.display = 'contents';
         }
       },
       (error: HttpErrorResponse) => {

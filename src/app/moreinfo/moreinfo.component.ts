@@ -94,7 +94,9 @@ export class MoreInfoComponent implements OnInit {
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
-    )
+    );
+    const loaderWrapper = document.getElementById('loaderWrapper');
+    loaderWrapper!.style.display = 'none';
   }
 
   like(user: User) {

@@ -13,6 +13,10 @@
     color: white;
 }
 
+.no-profile-container {
+    display: none;
+}
+
 .no-profile-container span {
     font-size: 18px;
     font-weight: 500;
@@ -250,9 +254,9 @@ swiper .swiper-wrapper {
     100% {
       transform: rotate(360deg);
     }
-  }
+}
   
-  @keyframes loader-inner {
+@keyframes loader-inner {
     0% {
       height: 0%;
     }
@@ -272,7 +276,7 @@ swiper .swiper-wrapper {
     100% {
       height: 0%;
     }
-  }
+}
 
 @media only screen and (max-width: 800px) {
     mat-slider {

@@ -27,6 +27,8 @@ export class AdminMessagesComponent implements OnInit{
     this.adminService.getAllMessages().subscribe(
       (response: Message[]) => {
         this.messages = response;
+        const loaderWrapper = document.getElementById('loaderWrapper');
+        loaderWrapper!.style.display = 'none';
       },
       (error: HttpErrorResponse) => {
         alert(error);

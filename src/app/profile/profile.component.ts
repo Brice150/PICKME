@@ -183,6 +183,8 @@ export class ProfileComponent implements OnInit{
     (error: HttpErrorResponse) => {
       alert(error);
     }
+    const loaderWrapper = document.getElementById('loaderWrapper');
+    loaderWrapper!.style.display = 'none';
   }
 
   getPictures(fkUser: any) {

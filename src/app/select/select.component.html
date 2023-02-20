@@ -1,5 +1,5 @@
 <app-header [title]="'Select'"></app-header>
-<div class="main-container" *ngIf="users.length !== 0">
+<div class="main-container">
     <div class="age-container">
         <span>Age</span>
     </div>
@@ -7,7 +7,7 @@
         <input matSliderStartThumb [(ngModel)]="minAge">
         <input matSliderEndThumb [(ngModel)]="maxAge">
     </mat-slider>
-    <div class="container">
+    <div class="container" *ngIf="users.length !== 0">
         <swiper [config]="config">
             <div class="swiper-wrapper">
                 <div class="swiper-slide" *ngFor="let user of users">
@@ -39,8 +39,8 @@
         </swiper>
     </div>
 </div>
-<div class="main-container" *ngIf="users.length === 0">
-    <div class="no-profile-container">
+<div class="main-container">
+    <div class="no-profile-container" id="noProfileToShow">
         <span>No profile to show...</span>
     </div>
 </div>

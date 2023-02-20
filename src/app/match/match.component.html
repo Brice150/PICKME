@@ -36,8 +36,12 @@
     </div>
     <app-message *ngIf="selectedUser" [loggedInUser]="loggedInUser" [selectedUser]="selectedUser" [messages]="messages" (onRefresh)="refreshUserMessages($event)"></app-message>
 </div>
-<div class="main-container" *ngIf="users.length === 0">
-    <div class="no-profile-container">
+<div class="main-container">
+    <div class="no-profile-container" id="noProfileToShow">
         <span>No match for now...</span>
     </div>
+</div>
+
+<div class="loader-wrapper" id="loaderWrapper">
+    <span class="loader"><span class="loader-inner"></span></span>
 </div>

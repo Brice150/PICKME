@@ -80,6 +80,8 @@ export class SelectComponent implements OnInit{
   }
 
   getUsers() {
+    const noProfileToShow = document.getElementById('noProfileToShow');
+    noProfileToShow!.style.display = 'none';
     this.userService.getAllUsers().subscribe(
       (response: User[]) => {
         this.users= response;
@@ -88,11 +90,17 @@ export class SelectComponent implements OnInit{
         for (let user of this.users) {
           this.getMainPicture(user);
         }
+        const loaderWrapper = document.getElementById('loaderWrapper');
+        loaderWrapper!.style.display = 'none';
+        if (this.users.length === 0) {
+          const noProfileToShow = document.getElementById('noProfileToShow');
+          noProfileToShow!.style.display = 'contents';
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error);
       }
-    )
+    );
   }
 
   getMainPicture(user: User) {

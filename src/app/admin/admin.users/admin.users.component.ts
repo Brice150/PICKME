@@ -29,6 +29,8 @@ export class AdminUsersComponent implements OnInit{
     this.adminService.getAllUsers().subscribe(
       (response: User[]) => {
         this.users = response;
+        const loaderWrapper = document.getElementById('loaderWrapper');
+        loaderWrapper!.style.display = 'none';
       },
       (error: HttpErrorResponse) => {
         alert(error);
