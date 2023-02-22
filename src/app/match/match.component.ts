@@ -89,10 +89,6 @@ export class MatchComponent {
         }
         const loaderWrapper = document.getElementById('loaderWrapper');
         loaderWrapper!.style.display = 'none';
-        if (this.users.length === 0) {
-          const noProfileToShow = document.getElementById('noProfileToShow');
-          noProfileToShow!.style.display = 'contents';
-        }
       },
       (error: HttpErrorResponse) => {
         alert(error);

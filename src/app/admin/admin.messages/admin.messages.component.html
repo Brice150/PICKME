@@ -12,7 +12,7 @@
             <tr *ngFor="let message of messages">
                 <td data-label="Content">{{message.content | description:50}}</td>
                 <td data-label="Date">{{message?.date | date:"short"}}</td>
-                <td data-label="Delete" class="delete-cell"><a class="delete" title="delete" (click)="openDialog(message.id)"><i class='bx bx-message-square-x'></i></a></td>
+                <td data-label="Delete" class="delete-cell"><a class="delete" title="delete" (click)="openDialog(message.id)"><i class='bx bx-x'></i></a></td>
             </tr>
         </tbody>
     </table>
