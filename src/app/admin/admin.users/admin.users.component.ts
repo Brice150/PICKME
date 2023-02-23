@@ -42,7 +42,7 @@ export class AdminUsersComponent implements OnInit{
     this.adminService.deleteUser(email).subscribe(
       (response: void) => {
         this.getUsers();
-        this.snackBar.open("Content deleted", "Dismiss", {duration: 2000});
+        this.snackBar.open("User deleted", "Dismiss", {duration: 2000});
       },
       (error: HttpErrorResponse) => {
         alert(error);

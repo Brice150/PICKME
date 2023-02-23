@@ -122,7 +122,7 @@ export class ProfileComponent implements OnInit{
     this.userService.updateUser(user).subscribe(
       (response: User) => {
         this.updateForm.get("password")?.reset();
-        this.snackBar.open("Content updated", "Dismiss", {duration: 2000});
+        this.snackBar.open("Profile updated", "Dismiss", {duration: 2000});
       },
       (error: HttpErrorResponse) => {
         alert(error.message);

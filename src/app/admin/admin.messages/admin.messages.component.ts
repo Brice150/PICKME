@@ -40,7 +40,7 @@ export class AdminMessagesComponent implements OnInit{
     this.adminService.deleteMessage(id).subscribe(
       (response: void) => {
         this.getMessages();
-        this.snackBar.open("Content deleted", "Dismiss", {duration: 2000});
+        this.snackBar.open("Message deleted", "Dismiss", {duration: 2000});
       },
       (error: HttpErrorResponse) => {
         alert(error);

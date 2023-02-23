@@ -85,7 +85,7 @@ export class MessageComponent implements OnInit{
       (response: Message) => {
         this.messageForm.get("content")?.reset();
         this.onRefresh.emit(this.selectedUser);
-        this.snackBar.open("Content sent", "Dismiss", {duration: 2000});
+        this.snackBar.open("Message sent", "Dismiss", {duration: 2000});
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -113,7 +113,7 @@ export class MessageComponent implements OnInit{
       (response: Message) => {
         this.unmodifyMessage();
         this.onRefresh.emit(this.selectedUser);
-        this.snackBar.open("Content updated", "Dismiss", {duration: 2000});
+        this.snackBar.open("Message updated", "Dismiss", {duration: 2000});
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -125,7 +125,7 @@ export class MessageComponent implements OnInit{
     this.messageService.deleteMessage(message.id).subscribe(
       (response: void) => {
         this.onRefresh.emit(this.selectedUser);
-        this.snackBar.open("Content deleted", "Dismiss", {duration: 2000});
+        this.snackBar.open("Message deleted", "Dismiss", {duration: 2000});
       },
       (error: HttpErrorResponse) => {
         alert(error.message);

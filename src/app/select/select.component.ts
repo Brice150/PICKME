@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { SwiperOptions } from 'swiper';
@@ -55,7 +56,8 @@ export class SelectComponent implements OnInit{
     private pictureService: PictureService,
     private likeService: LikeService,
     private router: Router,
-    private agePipe: AgePipe) {}
+    private agePipe: AgePipe,
+    private snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.getLoggedInUser();
@@ -136,6 +138,7 @@ export class SelectComponent implements OnInit{
     this.likeService.addLike(like).subscribe(
       (response: Like) => {
         this.getUsers();
+        this.snackBar.open("Like sent", "Dismiss", {duration: 2000});
       },
       (error: HttpErrorResponse) => {
         alert(error.message);

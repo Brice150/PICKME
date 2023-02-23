@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { Like } from '../core/interfaces/like';
@@ -22,7 +23,8 @@ export class LikeComponent {
     private userService: UserService,
     private pictureService: PictureService,
     private likeService: LikeService,
-    private router: Router) {}
+    private router: Router,
+    private snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.getLoggedInUser();
@@ -95,6 +97,7 @@ export class LikeComponent {
     this.likeService.addLike(like).subscribe(
       (response: Like) => {
         this.getUsers();
+        this.snackBar.open("Like sent", "Dismiss", {duration: 2000});
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
