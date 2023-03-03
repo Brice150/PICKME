@@ -1,4 +1,4 @@
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -15,9 +15,12 @@ export class LikeService {
         { withCredentials: true });
     }
 
-    public addLike(like: Like): Observable<Like> {
-        return this.http.post<Like>(`${this.apiServerUrl}/like`, like,
-        { withCredentials: true });
+    public addLike(like: Like): Observable<any> {
+        return this.http.post<string>(`${this.apiServerUrl}/like`, like,
+        { 
+            withCredentials: true,
+            responseType: 'text' as 'json'
+        });
     }
 
     public deleteLike(likeId: number): Observable<void> {

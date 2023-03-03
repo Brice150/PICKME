@@ -17,6 +17,7 @@ import { AgePipe } from '../shared/pipes/age.pipe';
   styleUrls: ['./select.component.css']
 })
 export class SelectComponent implements OnInit{
+  notification!: string | null;
   imagePath: string = environment.imagePath;
   users: User[] = [];
   loggedInUser!: User;
@@ -136,9 +137,15 @@ export class SelectComponent implements OnInit{
       "fkSender": {"id": this.loggedInUser.id}, 
       "fkReceiver": {"id": user.id}};
     this.likeService.addLike(like).subscribe(
-      (response: Like) => {
+      (response: string) => {
         this.getUsers();
         this.snackBar.open("Like sent", "Dismiss", {duration: 2000});
+        if (response !== null) {
+          this.notification = response;
+          setTimeout(() => {
+            this.notification = null;
+          }, 3000);
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);

@@ -46,23 +46,40 @@ public class LikeController {
   }
 
   @PostMapping()
-  public ResponseEntity<Like> addLike(@RequestBody Like like) {
+  public ResponseEntity<String> addLike(@RequestBody Like like) {
+    String matchNotification = null;
+    Boolean alreadyMatched = false;
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
     User connectedUser = userService.findUserByEmail(currentUserEmail);
     if (connectedUser.getId() == like.getFkSender().getId()
       && connectedUser.getId() != like.getFkReceiver().getId()) {
       User likedUser = userService.findUserById(like.getFkReceiver().getId());
-      Like newLike = likeService.addLike(like);
+      List<Match> matches = matchService.findAllMatches();
+      for (Match previousMatch : matches) {
+        if ((connectedUser.getId() == previousMatch.getFkReceiver().getId()
+          && likedUser.getId() == previousMatch.getFkSender().getId())
+          || (connectedUser.getId() == previousMatch.getFkSender().getId()
+          && likedUser.getId() == previousMatch.getFkReceiver().getId())) {
+          alreadyMatched = true;
+        }
+      }
       List<Like> likes = likeService.findAllLikes();
       for (Like previousLike : likes) {
+        if (previousLike.getFkReceiver().getId() == like.getFkReceiver().getId()
+            && previousLike.getFkSender().getId() == like.getFkSender().getId()) {
+          return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         if (connectedUser.getId() == previousLike.getFkReceiver().getId()
-            && likedUser.getId() == previousLike.getFkSender().getId()) {
+            && likedUser.getId() == previousLike.getFkSender().getId()
+            && !alreadyMatched) {
+          matchNotification = likedUser.getNickname();
           Match match = new Match(null, connectedUser, likedUser);
           matchService.addMatch(match);
         }
       }
-      return new ResponseEntity<>(newLike, HttpStatus.CREATED);
+      Like newLike = likeService.addLike(like);
+      return new ResponseEntity<>(matchNotification, HttpStatus.CREATED);
     }
     else {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);

@@ -1,6 +1,7 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { Like } from '../core/interfaces/like';
@@ -18,6 +19,7 @@ import { DialogComponent } from '../dialog/dialog.component';
   styleUrls: ['./moreinfo.component.css']
 })
 export class MoreInfoComponent implements OnInit {
+  notification!: string | null;
   imagePath: string = environment.imagePath;
   user!: User;
   pictures: Picture[] = [];
@@ -31,12 +33,13 @@ export class MoreInfoComponent implements OnInit {
     private router: Router,
     private likeService: LikeService,
     public dialog: MatDialog,
-    private adminService: AdminService) {}
+    private adminService: AdminService,
+    private snackBar: MatSnackBar) {}
 
   ngOnInit() {
+    this.getLoggedInUser();
     this.mode = this.route.snapshot.paramMap.get('mode');
     this.getUser(this.route.snapshot.paramMap.get('id'));
-    this.getLoggedInUser();
   }
 
   getLoggedInUser() {
@@ -59,7 +62,7 @@ export class MoreInfoComponent implements OnInit {
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
-    )
+    );
   }
 
   getPictures(id: any) {
@@ -105,11 +108,15 @@ export class MoreInfoComponent implements OnInit {
       "fkSender": {"id": this.loggedInUser.id}, 
       "fkReceiver": {"id": user.id}};
     this.likeService.addLike(like).subscribe(
-      (response: Like) => {
-        this.router.navigate(['/'+this.mode])
-        .then(() => {
-          window.location.reload();
-        });
+      (response: string) => {
+        this.snackBar.open("Like sent", "Dismiss", {duration: 2000});
+        if (response !== null) {
+          this.notification = response;
+          setTimeout(() => {
+            this.notification = null;
+            this.router.navigate(['/'+this.mode]);
+          }, 3000);
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -122,10 +129,7 @@ export class MoreInfoComponent implements OnInit {
       (like: Like) => {
         this.likeService.deleteLike(like.id).subscribe(
           (response: void) => {
-            this.router.navigate(['/'+this.mode])
-            .then(() => {
-              window.location.reload();
-            });
+            this.router.navigate(['/'+this.mode]);
           },
           (error: HttpErrorResponse) => {
             alert(error.message);
@@ -148,12 +152,9 @@ export class MoreInfoComponent implements OnInit {
   }
 
   deleteUser() {
-    this.adminService.deleteUser(this.user?.email!).subscribe(
+    this.adminService.deleteUser(this.user.email).subscribe(
       (response: void) => {
-        this.router.navigate(['/admin'])
-        .then(() => {
-          window.location.reload();
-        });
+        this.router.navigate(['/admin']);
       },
       (error: HttpErrorResponse) => {
         alert(error.message);

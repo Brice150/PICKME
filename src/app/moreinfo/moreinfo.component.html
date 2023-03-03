@@ -18,51 +18,59 @@
                 </div>
             </div>
             <div class="user-form">
-                <div class="user-form-text" *ngIf="user.nickname">{{user.nickname}}</div>
-                <div class="user-form-text" *ngIf="user.nickname">{{user.birthDate | age}}</div>
-                <div class="user-form-text" *ngIf="user.city">{{user.city}}</div>
-                <div class="user-form-text" *ngIf="user.city">{{user.relationshipType}}</div>
-                <div class="user-form-text" *ngIf="user.job">{{user.job}}</div>
-                <div class="user-form-text" *ngIf="user.height">{{user.height}}</div>
-                <div class="user-form-text" *ngIf="user.languages">{{user.languages}}</div>
-                <div class="user-form-text" *ngIf="user.activities">{{user.activities}}</div>
-                <div class="user-form-text" *ngIf="user.description">{{user.description}}</div>
+                <div class="user-form-text" *ngIf="user?.nickname">{{user.nickname}}</div>
+                <div class="user-form-text" *ngIf="user?.birthDate">{{user.birthDate | age}}</div>
+                <div class="user-form-text" *ngIf="user?.city">{{user.city}}</div>
+                <div class="user-form-text" *ngIf="user?.relationshipType">{{user.relationshipType}}</div>
+                <div class="user-form-text" *ngIf="user?.job">{{user.job}}</div>
+                <div class="user-form-text" *ngIf="user?.height">{{user.height}}</div>
+                <div class="user-form-text" *ngIf="user?.languages">{{user.languages}}</div>
+                <div class="user-form-text" *ngIf="user?.activities">{{user.activities}}</div>
+                <div class="user-form-text" *ngIf="user?.description">{{user.description}}</div>
                 <mat-chip-listbox>
-                    <mat-chip color="accent">
+                    <mat-chip color="accent" *ngIf="user?.alcoholDrinking">
                         <i class='bx bxs-drink' matChipAvatar></i>
                         {{user.alcoholDrinking}}
                     </mat-chip>
-                    <mat-chip color="accent">
+                    <mat-chip color="accent" *ngIf="user?.smokes">
                         <i class='bx bx-wind' matChipAvatar></i>
                         {{user.smokes}}
                     </mat-chip>
-                    <mat-chip color="accent">
+                    <mat-chip color="accent" *ngIf="user?.sportPractice">
                         <i class='bx bx-dumbbell' matChipAvatar></i>
                         {{user.sportPractice}}
                     </mat-chip>
-                    <mat-chip color="accent">
+                    <mat-chip color="accent" *ngIf="user?.parenthood">
                         <i class='bx bx-child' matChipAvatar></i>
                         {{user.parenthood}}
                     </mat-chip>
-                    <mat-chip color="accent">
+                    <mat-chip color="accent" *ngIf="user?.gamer">
                         <i class='bx bxs-joystick' matChipAvatar></i>
                         {{user.gamer}}
                     </mat-chip>
-                    <mat-chip color="accent">
+                    <mat-chip color="accent" *ngIf="user?.animals">
                         <i class='bx bxs-cat' matChipAvatar></i>
                         {{user.animals}}
                     </mat-chip>
-                    <mat-chip color="accent">
+                    <mat-chip color="accent" *ngIf="user?.organised">
                         <i class='bx bxs-layer' matChipAvatar></i>
                         {{user.organised}}
                     </mat-chip>
-                    <mat-chip color="accent">
+                    <mat-chip color="accent" *ngIf="user?.personality">
                         <i class='bx bxs-user-voice' matChipAvatar></i>
                         {{user.personality}}
                     </mat-chip>
                 </mat-chip-listbox>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="match-container" *ngIf="notification">
+    <div class="match-message">
+        <span class="pre-message">MATCH with</span>
+        <span class="notification">{{notification}}</span>
+        <i class='bx bxs-flame'></i>
     </div>
 </div>
 
