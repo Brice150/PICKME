@@ -1,8 +1,8 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 import { Like } from '../core/interfaces/like';
 import { Picture } from '../core/interfaces/picture';
@@ -34,7 +34,7 @@ export class MoreInfoComponent implements OnInit {
     private likeService: LikeService,
     public dialog: MatDialog,
     private adminService: AdminService,
-    private snackBar: MatSnackBar) {}
+    private toastr: ToastrService) {}
 
   ngOnInit() {
     this.getLoggedInUser();
@@ -48,7 +48,7 @@ export class MoreInfoComponent implements OnInit {
         this.loggedInUser = response;
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -60,7 +60,7 @@ export class MoreInfoComponent implements OnInit {
         this.getPictures(id!);
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -87,7 +87,7 @@ export class MoreInfoComponent implements OnInit {
               }
               },
               (error: HttpErrorResponse) => {
-                alert(error);
+                this.toastr.error(error.message);
               }
             );   
             this.pictures.push(picture);
@@ -95,7 +95,7 @@ export class MoreInfoComponent implements OnInit {
           }
         },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
     const loaderWrapper = document.getElementById('loaderWrapper');
@@ -109,7 +109,7 @@ export class MoreInfoComponent implements OnInit {
       "fkReceiver": {"id": user.id}};
     this.likeService.addLike(like).subscribe(
       (response: string) => {
-        this.snackBar.open("Like sent", "Dismiss", {duration: 2000});
+        this.toastr.success("Like sent");
         if (response !== null) {
           this.notification = response;
           setTimeout(() => {
@@ -119,7 +119,7 @@ export class MoreInfoComponent implements OnInit {
         }
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -132,12 +132,12 @@ export class MoreInfoComponent implements OnInit {
             this.router.navigate(['/'+this.mode]);
           },
           (error: HttpErrorResponse) => {
-            alert(error.message);
+            this.toastr.error(error.message);
           }
         );
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -157,7 +157,7 @@ export class MoreInfoComponent implements OnInit {
         this.router.navigate(['/admin']);
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }

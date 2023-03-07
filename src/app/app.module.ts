@@ -13,6 +13,7 @@ import { MatchModule } from './match/match.module';
 import { LikeModule } from './like/like.module';
 import { ConnectModule } from './connect/connect.module';
 import { AdminModule } from './admin/admin.module';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { AdminModule } from './admin/admin.module';
     ConnectModule,
     AdminModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     HttpClientModule,
     MatSnackBarModule,
     MatDialogModule

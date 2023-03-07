@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
 import { User } from '../../core/interfaces/user';
 import { ConnectService } from '../../core/services/connect.service';
 
@@ -24,7 +24,7 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder, 
     private connectService: ConnectService,
     private dateAdapter: DateAdapter<Date>,
-    private snackBar: MatSnackBar) 
+    private toastr: ToastrService) 
     {
       this.dateAdapter.setLocale('en-GB');
       const currentYear = new Date().getFullYear();
@@ -48,10 +48,10 @@ export class RegisterComponent implements OnInit {
     this.connectService.register(user).subscribe(
       (response: User) => {
         this.onConfirmEmail=true;
-        this.snackBar.open("Please confirm your email", "Dismiss", {duration: 2000});
+        this.toastr.success("Please confirm your email");
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }

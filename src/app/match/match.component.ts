@@ -10,6 +10,7 @@ import { UserService } from '../core/services/user.service';
 import { MessageService } from '../core/services/message.service';
 import { Message } from '../core/interfaces/message';
 import { SwiperOptions } from 'swiper';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-match',
@@ -57,7 +58,8 @@ export class MatchComponent {
     private pictureService: PictureService,
     private likeService: LikeService,
     private messageService: MessageService,
-    private router: Router) {}
+    private router: Router,
+    private toastr: ToastrService) {}
 
   ngOnInit() {
     this.getLoggedInUser();
@@ -70,7 +72,7 @@ export class MatchComponent {
         this.loggedInUser = response;
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -91,7 +93,7 @@ export class MatchComponent {
         loaderWrapper!.style.display = 'none';
       },
       (error: HttpErrorResponse) => {
-        alert(error);
+        this.toastr.error(error.message);
       }
     )
   }
@@ -115,7 +117,7 @@ export class MatchComponent {
         }
         },
         (error: HttpErrorResponse) => {
-          alert(error);
+          this.toastr.error(error.message);
         }
       );
     }
@@ -123,7 +125,7 @@ export class MatchComponent {
       user.mainPicture = this.imagePath + "No-Image.png";
     }
     (error: HttpErrorResponse) => {
-      alert(error);
+      this.toastr.error(error.message);
     }
   }
 
@@ -133,7 +135,7 @@ export class MatchComponent {
         user.messagesNumber = response;
       },
       (error: HttpErrorResponse) => {
-        alert(error);
+        this.toastr.error(error.message);
       }
     )
   }
@@ -146,12 +148,12 @@ export class MatchComponent {
             this.getUsers();
           },
           (error: HttpErrorResponse) => {
-            alert(error.message);
+            this.toastr.error(error.message);
           }
         );
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -180,7 +182,7 @@ export class MatchComponent {
         }
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -191,8 +193,7 @@ export class MatchComponent {
         message.sender = response.nickname;
       },
       (error: HttpErrorResponse) => {
-        console.log(error);
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }

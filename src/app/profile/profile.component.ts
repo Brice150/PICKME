@@ -2,7 +2,6 @@ import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { DialogComponent } from '../dialog/dialog.component';
@@ -10,6 +9,7 @@ import { Picture } from '../core/interfaces/picture';
 import { User } from '../core/interfaces/user';
 import { PictureService } from '../core/services/picture.service';
 import { UserService } from '../core/services/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-profile',
@@ -69,7 +69,7 @@ export class ProfileComponent implements OnInit{
     private userService: UserService,
     private pictureService: PictureService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrService,
     public dialog: MatDialog
   ) {}
 
@@ -104,7 +104,7 @@ export class ProfileComponent implements OnInit{
           this.getPictures(this.loggedInUser.id);
         },
         (error: HttpErrorResponse) => {
-          alert(error.message);
+          this.toastr.error(error.message);
         }
       )
     }, wait);
@@ -122,10 +122,10 @@ export class ProfileComponent implements OnInit{
     this.userService.updateUser(user).subscribe(
       (response: User) => {
         this.updateForm.get("password")?.reset();
-        this.snackBar.open("Profile updated", "Dismiss", {duration: 2000});
+        this.toastr.success("Profile updated");
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -140,7 +140,7 @@ export class ProfileComponent implements OnInit{
         });
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -173,7 +173,7 @@ export class ProfileComponent implements OnInit{
         }
         },
         (error: HttpErrorResponse) => {
-          alert(error);
+          this.toastr.error(error.message);
         }
       );
     }
@@ -181,7 +181,7 @@ export class ProfileComponent implements OnInit{
       user.mainPicture = this.imagePath + "No-Image.png";
     }
     (error: HttpErrorResponse) => {
-      alert(error);
+      this.toastr.error(error.message);
     }
     const loaderWrapper = document.getElementById('loaderWrapper');
     loaderWrapper!.style.display = 'none';
@@ -210,7 +210,7 @@ export class ProfileComponent implements OnInit{
               }
               },
               (error: HttpErrorResponse) => {
-                alert(error);
+                this.toastr.error(error.message);
               }
             );   
             this.pictures.push(picture);
@@ -218,7 +218,7 @@ export class ProfileComponent implements OnInit{
           }
         },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     )
   }
@@ -233,11 +233,11 @@ export class ProfileComponent implements OnInit{
         console.log(event);
       },
       (error: HttpErrorResponse) => {
-        alert(error);
+        this.toastr.error(error.message);
       }
     );
     this.getLoggedInUser(100);
-    this.snackBar.open("Picture added", "Dismiss", {duration: 2000});
+    this.toastr.success("Picture added");
   }
 
   pickMainPicture(pictureId: number) {
@@ -246,7 +246,7 @@ export class ProfileComponent implements OnInit{
         this.getMainPicture(this.loggedInUser!);
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     )
   }
@@ -255,10 +255,10 @@ export class ProfileComponent implements OnInit{
     this.pictureService.deletePicture(pictureId).subscribe(
       (response: void) => {
         this.getLoggedInUser(0);
-        this.snackBar.open("Picture deleted", "Dismiss", {duration: 2000});
+        this.toastr.success("Picture deleted");
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     )
   }

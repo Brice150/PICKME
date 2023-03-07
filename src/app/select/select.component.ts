@@ -1,10 +1,9 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 import { SwiperOptions } from 'swiper';
-import { Like } from '../core/interfaces/like';
 import { User } from '../core/interfaces/user';
 import { LikeService } from '../core/services/like.service';
 import { PictureService } from '../core/services/picture.service';
@@ -58,7 +57,7 @@ export class SelectComponent implements OnInit{
     private likeService: LikeService,
     private router: Router,
     private agePipe: AgePipe,
-    private snackBar: MatSnackBar) {}
+    private toastr: ToastrService) {}
 
   ngOnInit() {
     this.getLoggedInUser();
@@ -77,7 +76,7 @@ export class SelectComponent implements OnInit{
         }
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -95,7 +94,7 @@ export class SelectComponent implements OnInit{
         loaderWrapper!.style.display = 'none';
       },
       (error: HttpErrorResponse) => {
-        alert(error);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -119,7 +118,7 @@ export class SelectComponent implements OnInit{
         }
         },
         (error: HttpErrorResponse) => {
-          alert(error);
+          this.toastr.error(error.message);
         }
       );
     }
@@ -127,7 +126,7 @@ export class SelectComponent implements OnInit{
       user.mainPicture = this.imagePath + "No-Image.png";
     }
     (error: HttpErrorResponse) => {
-      alert(error);
+      this.toastr.error(error.message);
     }
   }
 
@@ -139,7 +138,7 @@ export class SelectComponent implements OnInit{
     this.likeService.addLike(like).subscribe(
       (response: string) => {
         this.getUsers();
-        this.snackBar.open("Like sent", "Dismiss", {duration: 2000});
+        this.toastr.success("Like sent");
         if (response !== null) {
           this.notification = response;
           setTimeout(() => {
@@ -148,7 +147,7 @@ export class SelectComponent implements OnInit{
         }
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }

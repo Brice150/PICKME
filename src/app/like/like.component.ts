@@ -1,9 +1,8 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
-import { Like } from '../core/interfaces/like';
 import { User } from '../core/interfaces/user';
 import { LikeService } from '../core/services/like.service';
 import { PictureService } from '../core/services/picture.service';
@@ -25,7 +24,7 @@ export class LikeComponent {
     private pictureService: PictureService,
     private likeService: LikeService,
     private router: Router,
-    private snackBar: MatSnackBar) {}
+    private toastr: ToastrService) {}
 
   ngOnInit() {
     this.getLoggedInUser();
@@ -38,7 +37,7 @@ export class LikeComponent {
         this.loggedInUser = response;
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -54,7 +53,7 @@ export class LikeComponent {
         loaderWrapper!.style.display = 'none';
       },
       (error: HttpErrorResponse) => {
-        alert(error);
+        this.toastr.error(error.message);
       }
     )
   }
@@ -78,7 +77,7 @@ export class LikeComponent {
         }
         },
         (error: HttpErrorResponse) => {
-          alert(error);
+          this.toastr.error(error.message);
         }
       );
     }
@@ -86,7 +85,7 @@ export class LikeComponent {
       user.mainPicture = this.imagePath + "No-Image.png";
     }
     (error: HttpErrorResponse) => {
-      alert(error);
+      this.toastr.error(error.message);
     }
   }
 
@@ -98,7 +97,7 @@ export class LikeComponent {
     this.likeService.addLike(like).subscribe(
       (response: string) => {
         this.getUsers();
-        this.snackBar.open("Like sent", "Dismiss", {duration: 2000});
+        this.toastr.success("Like sent", 'toast-bottom-center');
         if (response !== null) {
           this.notification = response;
           setTimeout(() => {
@@ -107,7 +106,7 @@ export class LikeComponent {
         }
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }

@@ -1,10 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogComponent } from 'src/app/dialog/dialog.component';
 import { Message } from 'src/app/core/interfaces/message';
 import { AdminService } from 'src/app/core/services/admin.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin-messages',
@@ -16,7 +16,7 @@ export class AdminMessagesComponent implements OnInit{
 
   constructor(
     private adminService: AdminService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrService,
     public dialog: MatDialog) {}
 
   ngOnInit() {
@@ -31,7 +31,7 @@ export class AdminMessagesComponent implements OnInit{
         loaderWrapper!.style.display = 'none';
       },
       (error: HttpErrorResponse) => {
-        alert(error);
+        this.toastr.error(error.message);
       }
     )
   }
@@ -40,10 +40,10 @@ export class AdminMessagesComponent implements OnInit{
     this.adminService.deleteMessage(id).subscribe(
       (response: void) => {
         this.getMessages();
-        this.snackBar.open("Message deleted", "Dismiss", {duration: 2000});
+        this.toastr.success("Message deleted");
       },
       (error: HttpErrorResponse) => {
-        alert(error);
+        this.toastr.error(error.message);
       }
     )
   }

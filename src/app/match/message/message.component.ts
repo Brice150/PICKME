@@ -2,8 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Like } from 'src/app/core/interfaces/like';
 import { Message } from 'src/app/core/interfaces/message';
 import { User } from 'src/app/core/interfaces/user';
@@ -32,7 +32,7 @@ export class MessageComponent implements OnInit{
     private likeService: LikeService,
     private router: Router,
     private messageService: MessageService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrService,
     public dialog: MatDialog
   ) {}
 
@@ -57,12 +57,12 @@ export class MessageComponent implements OnInit{
             });
           },
           (error: HttpErrorResponse) => {
-            alert(error.message);
+            this.toastr.error(error.message);
           }
         );
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     );
   }
@@ -85,10 +85,10 @@ export class MessageComponent implements OnInit{
       (response: Message) => {
         this.messageForm.get("content")?.reset();
         this.onRefresh.emit(this.selectedUser);
-        this.snackBar.open("Message sent", "Dismiss", {duration: 2000});
+        this.toastr.success("Message sent");
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     )
   }
@@ -113,10 +113,10 @@ export class MessageComponent implements OnInit{
       (response: Message) => {
         this.unmodifyMessage();
         this.onRefresh.emit(this.selectedUser);
-        this.snackBar.open("Message updated", "Dismiss", {duration: 2000});
+        this.toastr.success("Message updated");
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     )
   }
@@ -125,10 +125,10 @@ export class MessageComponent implements OnInit{
     this.messageService.deleteMessage(message.id).subscribe(
       (response: void) => {
         this.onRefresh.emit(this.selectedUser);
-        this.snackBar.open("Message deleted", "Dismiss", {duration: 2000});
+        this.toastr.success("Message deleted");
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       });
   }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { User } from '../../core/interfaces/user';
 import { ConnectService } from '../../core/services/connect.service';
 
@@ -16,7 +17,8 @@ export class LoginComponent implements OnInit{
   constructor(
     private fb: FormBuilder, 
     private connectService: ConnectService,
-    private router: Router) {}
+    private router: Router,
+    private toastr: ToastrService) {}
 
     ngOnInit() {
       this.loginForm = this.fb.group({
@@ -31,11 +33,12 @@ export class LoginComponent implements OnInit{
           sessionStorage.setItem('loggedInUserEmail', JSON.stringify(user.email));
           this.router.navigate(['/select'])
           .then(() => {
-            window.location.reload();
+            this.toastr.success("Logged in !");
           });
         },
         () => {
           this.invalidLogin = true;
+          this.toastr.error("Wrong email or password !");
           setTimeout(() => {
             this.invalidLogin = false;
           }, 2000);

@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { User } from '../../core/interfaces/user';
 import { UserService } from '../../core/services/user.service';
 
@@ -15,7 +16,8 @@ export class NavComponent implements OnInit{
   isAdmin!: boolean;
 
   constructor(private router: Router, 
-    private userService: UserService) {}
+    private userService: UserService,
+    private toastr: ToastrService) {}
 
   ngOnInit() {
     this.getUserRole();
@@ -32,7 +34,7 @@ export class NavComponent implements OnInit{
         }
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.toastr.error(error.message);
       }
     )
   }

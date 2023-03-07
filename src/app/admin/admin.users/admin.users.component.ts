@@ -1,11 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogComponent } from 'src/app/dialog/dialog.component';
 import { User } from 'src/app/core/interfaces/user';
 import { AdminService } from 'src/app/core/services/admin.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin-users',
@@ -17,7 +17,7 @@ export class AdminUsersComponent implements OnInit{
 
   constructor(
     private adminService: AdminService,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrService,
     public dialog: MatDialog,
     private router: Router) {}
   
@@ -33,7 +33,7 @@ export class AdminUsersComponent implements OnInit{
         loaderWrapper!.style.display = 'none';
       },
       (error: HttpErrorResponse) => {
-        alert(error);
+        this.toastr.error(error.message);
       }
     )
   }
@@ -42,10 +42,10 @@ export class AdminUsersComponent implements OnInit{
     this.adminService.deleteUser(email).subscribe(
       (response: void) => {
         this.getUsers();
-        this.snackBar.open("User deleted", "Dismiss", {duration: 2000});
+        this.toastr.success("User deleted");
       },
       (error: HttpErrorResponse) => {
-        alert(error);
+        this.toastr.error(error.message);
       }
     )
   }
