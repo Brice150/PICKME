@@ -48,7 +48,9 @@ export class MoreInfoComponent implements OnInit {
         this.loggedInUser = response;
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }
@@ -60,7 +62,9 @@ export class MoreInfoComponent implements OnInit {
         this.getPictures(id!);
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }
@@ -87,7 +91,9 @@ export class MoreInfoComponent implements OnInit {
               }
               },
               (error: HttpErrorResponse) => {
-                this.toastr.error(error.message);
+                this.toastr.error(error.message, "Server error", {
+                  positionClass: "toast-bottom-center" 
+                });
               }
             );   
             this.pictures.push(picture);
@@ -95,7 +101,9 @@ export class MoreInfoComponent implements OnInit {
           }
         },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
     const loaderWrapper = document.getElementById('loaderWrapper');
@@ -109,9 +117,14 @@ export class MoreInfoComponent implements OnInit {
       "fkReceiver": {"id": user.id}};
     this.likeService.addLike(like).subscribe(
       (response: string) => {
-        this.toastr.success("Like sent");
+        this.toastr.success("Liked "+user.nickname, "Like", {
+          positionClass: "toast-bottom-center" 
+        });
         if (response !== null) {
           this.notification = response;
+          this.toastr.success("Match with "+response, "Match", {
+            positionClass: "toast-bottom-center" 
+          });
           setTimeout(() => {
             this.notification = null;
             this.router.navigate(['/'+this.mode]);
@@ -119,7 +132,9 @@ export class MoreInfoComponent implements OnInit {
         }
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }
@@ -129,15 +144,24 @@ export class MoreInfoComponent implements OnInit {
       (like: Like) => {
         this.likeService.deleteLike(like.id).subscribe(
           (response: void) => {
-            this.router.navigate(['/'+this.mode]);
+            this.router.navigate(['/'+this.mode])
+            .then(() => {
+              this.toastr.success("Disliked "+user.nickname, "Dislike", {
+                positionClass: "toast-bottom-center" 
+              });
+            });
           },
           (error: HttpErrorResponse) => {
-            this.toastr.error(error.message);
+            this.toastr.error(error.message, "Server error", {
+              positionClass: "toast-bottom-center" 
+            });
           }
         );
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }
@@ -154,10 +178,17 @@ export class MoreInfoComponent implements OnInit {
   deleteUser() {
     this.adminService.deleteUser(this.user.email).subscribe(
       (response: void) => {
-        this.router.navigate(['/admin']);
+        this.router.navigate(['/admin'])
+        .then(() => {
+          this.toastr.success("User deleted : "+this.user.nickname, "User", {
+            positionClass: "toast-bottom-center" 
+          });
+        });
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }

@@ -57,12 +57,16 @@ export class MessageComponent implements OnInit{
             });
           },
           (error: HttpErrorResponse) => {
-            this.toastr.error(error.message);
+            this.toastr.error(error.message, "Server error", {
+              positionClass: "toast-bottom-center" 
+            });
           }
         );
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center"
+        });
       }
     );
   }
@@ -85,10 +89,14 @@ export class MessageComponent implements OnInit{
       (response: Message) => {
         this.messageForm.get("content")?.reset();
         this.onRefresh.emit(this.selectedUser);
-        this.toastr.success("Message sent");
+        this.toastr.success("Message sent", "Message", {
+          positionClass: "toast-bottom-center" 
+        });
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     )
   }
@@ -113,10 +121,14 @@ export class MessageComponent implements OnInit{
       (response: Message) => {
         this.unmodifyMessage();
         this.onRefresh.emit(this.selectedUser);
-        this.toastr.success("Message updated");
+        this.toastr.success("Message updated", "Message", {
+          positionClass: "toast-bottom-center" 
+        });
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     )
   }
@@ -125,10 +137,14 @@ export class MessageComponent implements OnInit{
     this.messageService.deleteMessage(message.id).subscribe(
       (response: void) => {
         this.onRefresh.emit(this.selectedUser);
-        this.toastr.success("Message deleted");
+        this.toastr.success("Message deleted", "Message", {
+          positionClass: "toast-bottom-center" 
+        });
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       });
   }
 

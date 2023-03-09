@@ -33,7 +33,9 @@ export class AdminUsersComponent implements OnInit{
         loaderWrapper!.style.display = 'none';
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     )
   }
@@ -42,10 +44,14 @@ export class AdminUsersComponent implements OnInit{
     this.adminService.deleteUser(email).subscribe(
       (response: void) => {
         this.getUsers();
-        this.toastr.success("User deleted");
+        this.toastr.success("User deleted", "User", {
+          positionClass: "toast-bottom-center" 
+        });
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     )
   }

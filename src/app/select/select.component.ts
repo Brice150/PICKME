@@ -76,7 +76,9 @@ export class SelectComponent implements OnInit{
         }
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }
@@ -94,7 +96,9 @@ export class SelectComponent implements OnInit{
         loaderWrapper!.style.display = 'none';
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }
@@ -118,7 +122,9 @@ export class SelectComponent implements OnInit{
         }
         },
         (error: HttpErrorResponse) => {
-          this.toastr.error(error.message);
+          this.toastr.error(error.message, "Server error", {
+            positionClass: "toast-bottom-center" 
+          });
         }
       );
     }
@@ -126,7 +132,9 @@ export class SelectComponent implements OnInit{
       user.mainPicture = this.imagePath + "No-Image.png";
     }
     (error: HttpErrorResponse) => {
-      this.toastr.error(error.message);
+      this.toastr.error(error.message, "Server error", {
+        positionClass: "toast-bottom-center" 
+      });
     }
   }
 
@@ -138,16 +146,23 @@ export class SelectComponent implements OnInit{
     this.likeService.addLike(like).subscribe(
       (response: string) => {
         this.getUsers();
-        this.toastr.success("Like sent");
+        this.toastr.success("Liked "+user.nickname, "Like", {
+          positionClass: "toast-bottom-center" 
+        });
         if (response !== null) {
           this.notification = response;
+          this.toastr.success("Match with "+response, "Match", {
+            positionClass: "toast-bottom-center" 
+          });
           setTimeout(() => {
             this.notification = null;
           }, 3000);
         }
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }

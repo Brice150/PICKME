@@ -30,15 +30,19 @@ export class LoginComponent implements OnInit{
     loginUser(user: User) {
       this.connectService.login(user).subscribe(
         (response: any) => {
-          sessionStorage.setItem('loggedInUserEmail', JSON.stringify(user.email));
-          this.router.navigate(['/select'])
+          sessionStorage.setItem("loggedInUserEmail", JSON.stringify(user.email));
+          this.router.navigate(["/select"])
           .then(() => {
-            this.toastr.success("Logged in !");
+            this.toastr.success("Logged in !", "Connection", {
+              positionClass: "toast-bottom-center" 
+            });
           });
         },
         () => {
           this.invalidLogin = true;
-          this.toastr.error("Wrong email or password !");
+          this.toastr.error("Wrong email or password !", "Connection error", {
+            positionClass: "toast-bottom-center" 
+          });
           setTimeout(() => {
             this.invalidLogin = false;
           }, 2000);

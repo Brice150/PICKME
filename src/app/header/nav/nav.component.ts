@@ -34,7 +34,9 @@ export class NavComponent implements OnInit{
         }
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     )
   }

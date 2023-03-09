@@ -104,7 +104,9 @@ export class ProfileComponent implements OnInit{
           this.getPictures(this.loggedInUser.id);
         },
         (error: HttpErrorResponse) => {
-          this.toastr.error(error.message);
+          this.toastr.error(error.message, "Server error", {
+            positionClass: "toast-bottom-center" 
+          });
         }
       )
     }, wait);
@@ -122,10 +124,14 @@ export class ProfileComponent implements OnInit{
     this.userService.updateUser(user).subscribe(
       (response: User) => {
         this.updateForm.get("password")?.reset();
-        this.toastr.success("Profile updated");
+        this.toastr.success("Profile updated", "Profile", {
+          positionClass: "toast-bottom-center" 
+        });
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }
@@ -136,11 +142,15 @@ export class ProfileComponent implements OnInit{
         sessionStorage.removeItem('loggedInUserEmail');
         this.router.navigate(['/connect'])
         .then(() => {
-          window.location.reload();
+          this.toastr.success("Profile deleted", "Profile", {
+            positionClass: "toast-bottom-center" 
+          });
         });
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }
@@ -173,7 +183,9 @@ export class ProfileComponent implements OnInit{
         }
         },
         (error: HttpErrorResponse) => {
-          this.toastr.error(error.message);
+          this.toastr.error(error.message, "Server error", {
+            positionClass: "toast-bottom-center" 
+          });
         }
       );
     }
@@ -181,7 +193,9 @@ export class ProfileComponent implements OnInit{
       user.mainPicture = this.imagePath + "No-Image.png";
     }
     (error: HttpErrorResponse) => {
-      this.toastr.error(error.message);
+      this.toastr.error(error.message, "Server error", {
+        positionClass: "toast-bottom-center" 
+      });
     }
     const loaderWrapper = document.getElementById('loaderWrapper');
     loaderWrapper!.style.display = 'none';
@@ -210,7 +224,9 @@ export class ProfileComponent implements OnInit{
               }
               },
               (error: HttpErrorResponse) => {
-                this.toastr.error(error.message);
+                this.toastr.error(error.message, "Server error", {
+                  positionClass: "toast-bottom-center" 
+                });
               }
             );   
             this.pictures.push(picture);
@@ -218,7 +234,9 @@ export class ProfileComponent implements OnInit{
           }
         },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     )
   }
@@ -233,20 +251,29 @@ export class ProfileComponent implements OnInit{
         console.log(event);
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
     this.getLoggedInUser(100);
-    this.toastr.success("Picture added");
+    this.toastr.success("Picture added", "Profile", {
+      positionClass: "toast-bottom-center" 
+    });
   }
 
   pickMainPicture(pictureId: number) {
     this.pictureService.pickMainPicture(pictureId).subscribe(
       (response: Picture) => {
         this.getMainPicture(this.loggedInUser!);
+        this.toastr.success("Main picture selected", "Profile", {
+          positionClass: "toast-bottom-center" 
+        });
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     )
   }
@@ -255,10 +282,14 @@ export class ProfileComponent implements OnInit{
     this.pictureService.deletePicture(pictureId).subscribe(
       (response: void) => {
         this.getLoggedInUser(0);
-        this.toastr.success("Picture deleted");
+        this.toastr.success("Picture deleted", "Profile", {
+          positionClass: "toast-bottom-center" 
+        });
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     )
   }

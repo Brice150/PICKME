@@ -31,7 +31,9 @@ export class AdminMessagesComponent implements OnInit{
         loaderWrapper!.style.display = 'none';
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     )
   }
@@ -40,10 +42,14 @@ export class AdminMessagesComponent implements OnInit{
     this.adminService.deleteMessage(id).subscribe(
       (response: void) => {
         this.getMessages();
-        this.toastr.success("Message deleted");
+        this.toastr.success("Message deleted", "Message", {
+          positionClass: "toast-bottom-center" 
+        });
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     )
   }

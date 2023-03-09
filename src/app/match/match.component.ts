@@ -72,7 +72,9 @@ export class MatchComponent {
         this.loggedInUser = response;
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }
@@ -93,7 +95,9 @@ export class MatchComponent {
         loaderWrapper!.style.display = 'none';
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     )
   }
@@ -117,7 +121,9 @@ export class MatchComponent {
         }
         },
         (error: HttpErrorResponse) => {
-          this.toastr.error(error.message);
+          this.toastr.error(error.message, "Server error", {
+            positionClass: "toast-bottom-center" 
+          });
         }
       );
     }
@@ -125,7 +131,9 @@ export class MatchComponent {
       user.mainPicture = this.imagePath + "No-Image.png";
     }
     (error: HttpErrorResponse) => {
-      this.toastr.error(error.message);
+      this.toastr.error(error.message, "Server error", {
+        positionClass: "toast-bottom-center" 
+      });
     }
   }
 
@@ -135,7 +143,9 @@ export class MatchComponent {
         user.messagesNumber = response;
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     )
   }
@@ -146,14 +156,21 @@ export class MatchComponent {
         this.likeService.deleteLike(like.id).subscribe(
           (response: void) => {
             this.getUsers();
+            this.toastr.success("Disliked "+user.nickname, "Dislike", {
+              positionClass: "toast-bottom-center" 
+            });
           },
           (error: HttpErrorResponse) => {
-            this.toastr.error(error.message);
+            this.toastr.error(error.message, "Server error", {
+              positionClass: "toast-bottom-center" 
+            });
           }
         );
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }
@@ -182,7 +199,9 @@ export class MatchComponent {
         }
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }
@@ -193,7 +212,9 @@ export class MatchComponent {
         message.sender = response.nickname;
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }

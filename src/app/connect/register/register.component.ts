@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
     private dateAdapter: DateAdapter<Date>,
     private toastr: ToastrService) 
     {
-      this.dateAdapter.setLocale('en-GB');
+      this.dateAdapter.setLocale("en-GB");
       const currentYear = new Date().getFullYear();
       this.minDate = new Date(currentYear - 18, new Date().getMonth(), new Date().getDate());
     }
@@ -48,10 +48,14 @@ export class RegisterComponent implements OnInit {
     this.connectService.register(user).subscribe(
       (response: User) => {
         this.onConfirmEmail=true;
-        this.toastr.success("Please confirm your email");
+        this.toastr.success("Please confirm your email", "Connection", {
+          positionClass: "toast-bottom-center" 
+        });
       },
       (error: HttpErrorResponse) => {
-        this.toastr.error(error.message);
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        });
       }
     );
   }
