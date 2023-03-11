@@ -12,13 +12,15 @@
                 <div class="pictures">
                     <div class="picture" *ngFor="let picture of pictures">
                         <img [src]="picture.content">
-                        <div class="overlay">
+                        <div class="under">
                             <a (click)="pickMainPicture(picture.id)" title="pick main-picture" class="in-picture"><i class='bx bx-image-alt'></i></a>
                             <a (click)="deletePicture(picture.id)" title="delete picture" class="in-picture"><i class='bx bxs-trash'></i></a>
                         </div>
                     </div>
-                    <label for="image" class="in-picture add" title="add picture"><i class='bx bx-image'></i></label>
-                    <input type="file" id="image" (change)="addPicture($any($event.target).files)" name="files">
+                    <div class="add-container">
+                        <label for="image" class="add" title="add picture"><i class='bx bx-plus'></i></label>
+                        <input type="file" id="image" (change)="addPicture($any($event.target).files)" name="files">
+                    </div>
                 </div>
             </div>
             <form class="user-form" [formGroup]="updateForm" (ngSubmit)="updateUser(updateForm.value)">
