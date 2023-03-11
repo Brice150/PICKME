@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AdminUsersComponent } from './admin.users.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 
@@ -11,7 +12,8 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    SharedModule
   ],
   exports : [AdminUsersComponent]
 })

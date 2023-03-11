@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
 })
 export class AdminComponent {
   isConnected!: boolean;
-  activeObjects: boolean = false;
   activeUsers: boolean = true;
   activeMessages: boolean = false;
 
@@ -21,19 +20,16 @@ export class AdminComponent {
   }
 
   onObjects() {
-    this.activeObjects = true;
     this.activeUsers = false;
     this.activeMessages = false;
   }
   
   onUsers() {
-    this.activeObjects = false;
     this.activeUsers = true;
     this.activeMessages = false;
   }
 
   onMessages() {
-    this.activeObjects = false;
     this.activeUsers = false;
     this.activeMessages = true;
   }

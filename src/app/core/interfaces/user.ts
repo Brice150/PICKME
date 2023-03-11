@@ -14,7 +14,7 @@ export interface User {
     password: string;
     tokens: Token[];
     userRole: string;
-    messagesSended: Message[];
+    messagesSent: Message[];
     messagesReceived: Message[];
     messagesNumber: number;
     likes: Like[];

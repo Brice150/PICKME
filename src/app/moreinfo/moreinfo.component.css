@@ -229,7 +229,7 @@ mat-chip-listbox {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    animation: rotate 3s ease 1;
+    animation: translate 3s ease 1;
 }
 
 .match-container i {
@@ -238,7 +238,7 @@ mat-chip-listbox {
     color: white;
 }
 
-@keyframes rotate {
+@keyframes translate {
     0% {
         transform: translateX(-200px);
     }

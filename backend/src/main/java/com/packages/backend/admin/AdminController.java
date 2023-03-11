@@ -49,7 +49,6 @@ public class AdminController {
     List<User> users = userService.findAllUsers();
     for (User user: users) {
       user.setMessagesReceived(null);
-      user.setMessagesSent(null);
       user.setPassword(null);
       user.setTokens(null);
     }
@@ -101,15 +100,6 @@ public class AdminController {
     }
     userService.deleteUserByEmail(email);
     return new ResponseEntity<>(HttpStatus.OK);
-  }
-
-  @GetMapping("/message/all")
-  public ResponseEntity<List<Message>> getAllMessages() {
-    List<Message> messages = messageService.findAllMessages();
-    Comparator<Message> messagesSort = Comparator
-      .comparing(Message::getDate, (date1, date2) -> date2.compareTo(date1));
-    Collections.sort(messages, messagesSort);
-    return new ResponseEntity<>(messages, HttpStatus.OK);
   }
 
   @DeleteMapping("/message/{id}")

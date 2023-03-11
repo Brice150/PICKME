@@ -55,7 +55,9 @@ export class NavComponent implements OnInit{
     sessionStorage.removeItem('loggedInUserEmail');
     this.router.navigate(['/connect'])
     .then(() => {
-      window.location.reload();
+      this.toastr.success("Logged out", "Connection", {
+        positionClass: "toast-bottom-center" 
+      });
     });
   }
 }

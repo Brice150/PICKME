@@ -7,16 +7,6 @@
     flex-direction: column;
 }
 
-.no-profile-container {
-    display: none;
-}
-
-.no-profile-container span {
-    font-size: 18px;
-    font-weight: 500;
-    color: white;
-}
-
 .container {
     display: flex;
     align-items: center;
@@ -124,41 +114,6 @@
     flex-direction: column;
 }
 
-.card h2 {
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    margin: 0;
-}
-
-.card h3 {
-    font-size: 17px;
-    font-weight: 400;
-    margin: 0;
-}
-
-.card h4 {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0;
-    text-align: right;
-    color: black;
-}
-
-.card h5 {
-    font-size: 17px;
-    font-weight: 400;
-    margin: 0;
-    text-align: right;
-    color: black;
-}
-
-.text .description {
-    height: 80px;
-    width: 90%;
-    text-align: justify;
-}
-
 .text .more {
     text-decoration: none;
     color: black;
@@ -239,7 +194,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    animation: rotate 3s ease 1;
+    animation: translate 3s ease 1;
 }
 
 .match-container i {
@@ -248,7 +203,7 @@
     color: white;
 }
 
-@keyframes rotate {
+@keyframes translate {
     0% {
         transform: translateX(-200px);
     }

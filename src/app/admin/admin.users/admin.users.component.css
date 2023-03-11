@@ -1,14 +1,21 @@
-.container {
+.main-container {
+    padding-bottom: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    border-radius: 10px;
-    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
 }
 
 .text-research {
-    margin: 10px;
+    margin-bottom: 20px;
     min-width: 170px;
     width: 30%;
     border: 0;
@@ -31,51 +38,99 @@ input[type="search"]::-webkit-search-cancel-button {
     display: none;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0 20px;
-}
-
-th {
-    padding: 10px;
-    text-align: center;
-    color: black;
-    background: rgba(255, 255, 255, 0.22);
-}
-
-tr {
-    background: rgba(255, 255, 255, 0.22);
-    border-radius: 10px;
-}
-
-td {
-    border: none;
-    padding: 10px;
-    color: white;
-    transition: 0.5s;
-    text-align: center;
-}
-
-td .delete {
+.container .content{
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
+    overflow: hidden;
+    margin: 10px 20px;
+    max-width: 320px;
+    width: 100%;
+    border-radius: 20px;
+    padding-bottom: 10px;
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.6px);
+    -webkit-backdrop-filter: blur(3.6px);
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.container .content:hover {
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.card {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.card .info-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 10px;
+}
+
+.card .info-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50px;
+}
+
+.card .info-container .info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.card .info-container .info span {
+    margin: 5px;
+}
+
+.card .info-container .info .nickname {
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.card .info-container .info .role {
+    color: black;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.card .info-container .info .role.admin {
+    color: red;
+    font-weight: 500;
+}
+
+.content .delete {
+    position: absolute;
+    top: 5px;
+    right: 5px;
     color: white;
     font-size: 30px;
+    margin-left: 10px;
     border-radius: 10px;
     overflow: hidden;
     padding: 5px;
+    width: 30px;
+    height: 30px;
     cursor: pointer;
     transition: 0.5s;
-    background: rgba(255, 255, 255, 0.22);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
     -webkit-backdrop-filter: blur(3.6px);
 } 
 
-td .delete::before {
+.content .delete::before {
     content: '';
     position: absolute;
     background-color: white;
@@ -87,33 +142,40 @@ td .delete::before {
     z-index: -1;
 }
 
-td .delete:hover {
+.content .delete:hover {
     color: black;
 }
 
-td .delete:hover::before {
+.content .delete:hover::before {
     height: 100%;
     border-radius: 10px;
 }
 
-td .more {
+.card .text {
     display: flex;
-    justify-content: center;
     align-items: center;
-    position: relative;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+}
+
+.text .more {
+    text-decoration: none;
     color: black;
+    padding: 15px 30px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
     border-radius: 10px;
     overflow: hidden;
-    padding: 10px;
-    font-weight: 700;
     cursor: pointer;
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
     -webkit-backdrop-filter: blur(3.6px);
-} 
+}
 
-td .more::before {
+.text .more::before {
     content: '';
     position: absolute;
     background-color: black;
@@ -125,11 +187,11 @@ td .more::before {
     z-index: -1;
 }
 
-td .more:hover {
+.text .more:hover {
     color: white;
 }
 
-td .more:hover::before {
+.text .more:hover::before {
     height: 100%;
     border-radius: 10px;
 }
@@ -203,40 +265,5 @@ td .more:hover::before {
     
     100% {
       height: 0%;
-    }
-}
-
-@media only screen and (max-width: 550px) {
-    table,thead,tbody,tr,th,td {
-        display: block;
-    }
-
-    thead {
-        display: none;
-    }
-
-    td {
-        position: relative;
-        text-align: right;
-    }
-
-    td::before {
-        content: attr(data-label);
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 33%;
-        bottom: 0;
-        padding: 10px;
-        color: white;
-        background-color: var(--secondarybis);
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        justify-content: left;
-    }
-
-    tr {
-        margin-bottom: 1rem;
     }
 }

@@ -13,16 +13,6 @@
     color: white;
 }
 
-.no-profile-container {
-    display: none;
-}
-
-.no-profile-container span {
-    font-size: 18px;
-    font-weight: 500;
-    color: white;
-}
-
 mat-slider {
     width: 50%;
 }
@@ -249,7 +239,7 @@ swiper .swiper-wrapper {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    animation: rotate 3s ease 1;
+    animation: translate 3s ease 1;
 }
 
 .match-container i {
@@ -258,7 +248,7 @@ swiper .swiper-wrapper {
     color: white;
 }
 
-@keyframes rotate {
+@keyframes translate {
     0% {
         transform: translateX(-200px);
     }
