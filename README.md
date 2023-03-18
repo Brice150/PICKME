@@ -8,6 +8,47 @@ This application is a Full-Stack demo of my skills in Angular and Spring Boot.
 
 ## Pages Features
 
+### Connect
+
+- Register with email confirmation
+- Login with form control and failure animation
+- Logout is available on any page once logged in
+
+### Select
+
+- View profiles that are similar to yours
+- Select profile age you want to see
+- Like a profile
+- View more information about a profile
+
+### Profile
+
+- Modify your profile
+- Add pictures and select main profile picture
+- Delete your account (needs confirmation)
+
+### Like
+
+- View profiles that liked you
+- Like a profile
+- View more information about a profile
+
+### Match
+
+- View profiles that matched with you
+- Search a user
+- Dislike a profile
+- View more information about a profile
+- Send a message, update or delete it
+
+### Admin
+
+- Admin role needed to view this page
+- Search user or message
+- See all users or messages
+- View more information about a profile
+- Delete user or message
+
 ## Run Locally
 
 Clone the project
