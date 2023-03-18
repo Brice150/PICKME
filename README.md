@@ -4,7 +4,8 @@
   
 # PICK ME, a dating web application
 
-This application is a Full-Stack demo of my skills in Angular and Spring Boot.
+Frontend : Angular CLI
+Backend : Spring Boot
 
 ## Pages Features
 
