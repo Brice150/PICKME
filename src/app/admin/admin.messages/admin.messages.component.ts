@@ -109,10 +109,17 @@ export class AdminMessagesComponent implements OnInit{
   }
 
   search(key: string){
-    const results: User[] = [];
-    for (const user of this.users) {
-      if (user.nickname?.toLowerCase().indexOf(key.toLowerCase())!== -1) {
+    let results: User[] = [];
+    for (let user of this.users) {
+      if (user.nickname.toLowerCase().indexOf(key.toLowerCase())!== -1) {
         results.push(user);
+
+      }
+      for (let message of user.messagesSent) {
+        if (message.content.toLowerCase().indexOf(key.toLowerCase())!== -1
+            && !results.includes(user)) {
+          results.push(user);
+        }
       }
     }
     this.users = results;

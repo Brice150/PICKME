@@ -1,4 +1,4 @@
-import { HttpClient, HttpEvent} from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -30,11 +30,6 @@ export class PictureService {
             observe: 'events',
             withCredentials: true
         })
-    }
-
-    public pickMainPicture(pictureId: number): Observable<Picture> {
-        return this.http.put<Picture>(`${this.apiServerUrl}/picture/${pictureId}`,
-        { withCredentials: true });
     }
 
     public deletePicture(pictureId: number): Observable<void> {

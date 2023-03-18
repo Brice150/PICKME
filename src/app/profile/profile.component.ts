@@ -23,6 +23,7 @@ export class ProfileComponent implements OnInit{
   updateForm!: FormGroup;
   pictures: Picture[] = [];
   picturesData!: FormData;
+  selectedPictureId!: number;
   alcoholDrinking: string[] = [
     "Never drinks alcohol",
     "Drinks sometimes alcohol",
@@ -121,9 +122,11 @@ export class ProfileComponent implements OnInit{
     user.animals = this.loggedInUser!.animals;
     user.organised = this.loggedInUser!.organised;
     user.personality = this.loggedInUser!.personality;
+    user.mainPicture = this.selectedPictureId.toString();
     this.userService.updateUser(user).subscribe(
       (response: User) => {
         this.updateForm.get("password")?.reset();
+        this.getLoggedInUser(0);
         this.toastr.success("Profile updated", "Profile", {
           positionClass: "toast-bottom-center" 
         });
@@ -262,20 +265,15 @@ export class ProfileComponent implements OnInit{
     });
   }
 
-  pickMainPicture(pictureId: number) {
-    this.pictureService.pickMainPicture(pictureId).subscribe(
-      (response: Picture) => {
-        this.getMainPicture(this.loggedInUser!);
-        this.toastr.success("Main picture selected", "Profile", {
-          positionClass: "toast-bottom-center" 
-        });
-      },
-      (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, "Server error", {
-          positionClass: "toast-bottom-center" 
-        });
-      }
-    )
+  pickMainPicture(picture: Picture) {
+    this.selectedPictureId = picture.id;
+    this.loggedInUser!.mainPicture = picture.content;
+    this.toastr.info("Please type password bottom page to update profile", "Profile", {
+      positionClass: "toast-bottom-center" 
+    });
+    this.toastr.success("Main picture selected", "Profile", {
+      positionClass: "toast-bottom-center" 
+    });
   }
 
   deletePicture(pictureId: number) {

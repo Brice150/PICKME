@@ -220,9 +220,9 @@ export class MatchComponent {
   }
 
   search(key: string){
-    const results: User[] = [];
-    for (const user of this.users) {
-      if (user.nickname?.toLowerCase().indexOf(key.toLowerCase())!== -1) {
+    let results: User[] = [];
+    for (let user of this.users) {
+      if (user.nickname.toLowerCase().indexOf(key.toLowerCase())!== -1) {
         results.push(user);
       }
     }

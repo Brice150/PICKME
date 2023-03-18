@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static java.nio.file.Files.copy;
 import static java.nio.file.Paths.get;
@@ -91,22 +92,6 @@ public class PictureController {
       }
       pictureService.addPicture(newPicture);
       return new ResponseEntity<>(newPicture, HttpStatus.CREATED);
-    }
-    else {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-  }
-
-  @PutMapping("/{id}")
-  public ResponseEntity<Picture> pickMainPicture(@PathVariable("id") Long id) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = userService.findUserByEmail(currentUserEmail);
-    Picture picture = pictureService.findPictureById(id);
-    if (connectedUser.getId().equals(picture.getFkUser().getId())) {
-      connectedUser.setMainPicture(picture.getContent());
-      userService.updateUser(connectedUser);
-      return new ResponseEntity<>(picture, HttpStatus.OK);
     }
     else {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);

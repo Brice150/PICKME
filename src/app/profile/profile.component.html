@@ -13,7 +13,7 @@
                     <div class="picture" *ngFor="let picture of pictures">
                         <img [src]="picture.content">
                         <div class="under">
-                            <a (click)="pickMainPicture(picture.id)" title="pick main-picture" class="in-picture"><i class='bx bx-image-alt'></i></a>
+                            <a (click)="pickMainPicture(picture)" title="pick main-picture" class="in-picture"><i class='bx bx-image-alt'></i></a>
                             <a (click)="deletePicture(picture.id)" title="delete picture" class="in-picture"><i class='bx bxs-trash'></i></a>
                         </div>
                     </div>

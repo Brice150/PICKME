@@ -201,6 +201,9 @@ public class UserController {
     if (connectedUser.getId().equals(user.getId())) {
       user.setEmail(currentUserEmail);
       user.setUserRole(connectedUser.getUserRole());
+      if (user.getMainPicture() != null) {
+        user.setMainPicture(pictureService.findPictureById(Long.parseLong(user.getMainPicture())).getContent());
+      }
       User updateUser = userService.updateUser(user);
       return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }
