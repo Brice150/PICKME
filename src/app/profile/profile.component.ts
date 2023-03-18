@@ -122,7 +122,9 @@ export class ProfileComponent implements OnInit{
     user.animals = this.loggedInUser!.animals;
     user.organised = this.loggedInUser!.organised;
     user.personality = this.loggedInUser!.personality;
-    user.mainPicture = this.selectedPictureId.toString();
+    if (this.selectedPictureId) {
+      user.mainPicture = this.selectedPictureId.toString();
+    }
     this.userService.updateUser(user).subscribe(
       (response: User) => {
         this.updateForm.get("password")?.reset();

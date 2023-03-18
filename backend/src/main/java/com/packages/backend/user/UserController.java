@@ -204,6 +204,9 @@ public class UserController {
       if (user.getMainPicture() != null) {
         user.setMainPicture(pictureService.findPictureById(Long.parseLong(user.getMainPicture())).getContent());
       }
+      else {
+        user.setMainPicture(connectedUser.getMainPicture());
+      }
       User updateUser = userService.updateUser(user);
       return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }

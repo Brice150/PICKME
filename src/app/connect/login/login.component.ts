@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -38,11 +39,18 @@ export class LoginComponent implements OnInit{
             });
           });
         },
-        () => {
+        (error: HttpErrorResponse) => {
           this.invalidLogin = true;
-          this.toastr.error("Wrong email or password !", "Connection error", {
-            positionClass: "toast-bottom-center" 
-          });
+          if (error.error.includes("Bad credentials")) {
+            this.toastr.error("Wrong email or password !", "Connection error", {
+              positionClass: "toast-bottom-center" 
+            });
+          }
+          else if (error.error.includes("User is disabled")) {
+            this.toastr.warning("Please confirm your email before login", "Email not confirmed", {
+              positionClass: "toast-bottom-center" 
+            });
+          }
           setTimeout(() => {
             this.invalidLogin = false;
           }, 2000);
