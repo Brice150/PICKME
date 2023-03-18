@@ -5,6 +5,7 @@
 # PICK ME, a dating web application
 
 Frontend : Angular CLI
+<br>
 Backend : Spring Boot
 
 ## Pages Features
