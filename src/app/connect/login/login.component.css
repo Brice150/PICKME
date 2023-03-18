@@ -38,7 +38,6 @@
     padding: 20px 40px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
     outline: none;
     border-radius: 10px;
 }
@@ -76,7 +75,6 @@ input {
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
     font-weight: 700;
     font-size: 15px;
 }

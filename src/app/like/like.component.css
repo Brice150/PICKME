@@ -26,7 +26,6 @@
     background: rgba(255, 255, 255, 0.22);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
     cursor: pointer;
     transition: 0.5s;
 }
@@ -60,7 +59,6 @@
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
 } 
 
 .content .like::before {
@@ -127,7 +125,6 @@
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
 }
 
 .text .more::before {
@@ -163,7 +160,6 @@
     justify-content: center;
     background: rgba(0, 0, 0, 0.22);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
     animation: popup 3s ease 1;
 }
 

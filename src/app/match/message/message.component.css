@@ -8,7 +8,6 @@
     background: rgba(255, 255, 255, 0.22);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
 }
 
 .container .content {
@@ -42,7 +41,6 @@
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
 } 
 
 .dislike::before {
@@ -81,7 +79,6 @@
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
 }
 
 .more::before {
@@ -146,7 +143,6 @@
     background: rgba(255, 255, 255, 0.22);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
 }
 
 .messages-container .message {
@@ -174,7 +170,6 @@
     background: rgba(255, 255, 255, 0.22);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
     width: 45%;
     max-width: 450px;
     display: flex;
@@ -232,7 +227,6 @@
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
 } 
 
 .delete::before {
@@ -282,7 +276,6 @@ textarea {
     padding: 20px 40px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
     outline: none;
     border-radius: 10px;
 }
@@ -321,7 +314,6 @@ form span {
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
     font-weight: 700;
     font-size: 15px;
 }

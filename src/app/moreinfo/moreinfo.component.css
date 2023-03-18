@@ -22,7 +22,6 @@
     background: rgba(255, 255, 255, 0.22);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
 }
 
 .content .return {
@@ -40,7 +39,6 @@
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
 } 
 
 .content .return::before {
@@ -80,7 +78,6 @@
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
 } 
 
 .content .like::before {
@@ -163,7 +160,6 @@
     padding: 20px 40px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
     outline: none;
     border-radius: 10px;
     color: white;
@@ -198,7 +194,6 @@ mat-chip-listbox {
     justify-content: center;
     background: rgba(0, 0, 0, 0.22);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
     animation: popup 3s ease 1;
 }
 

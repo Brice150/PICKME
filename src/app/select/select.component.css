@@ -41,7 +41,6 @@ swiper .swiper-wrapper {
     padding-bottom: 10px;
     background: rgba(255, 255, 255, 0.22);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -70,7 +69,6 @@ swiper .swiper-wrapper {
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
 } 
 
 .inner-content .like::before {
@@ -172,7 +170,6 @@ swiper .swiper-wrapper {
     transition: 0.5s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
 }
 
 .text .more::before {
@@ -208,7 +205,6 @@ swiper .swiper-wrapper {
     justify-content: center;
     background: rgba(0, 0, 0, 0.22);
     backdrop-filter: blur(3.6px);
-    -webkit-backdrop-filter: blur(3.6px);
     animation: popup 3s ease 1;
 }
 
