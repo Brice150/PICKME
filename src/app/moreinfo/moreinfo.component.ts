@@ -120,7 +120,7 @@ export class MoreInfoComponent implements OnInit {
         this.toastr.success("Liked "+user.nickname, "Like", {
           positionClass: "toast-bottom-center" 
         });
-        if (response !== null) {
+        if (response !== "") {
           this.notification = response;
           this.toastr.success("Match with "+response, "Match", {
             positionClass: "toast-bottom-center" 
