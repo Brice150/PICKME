@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'http://pickme-env.eba-2eftvtmr.eu-west-3.elasticbeanstalk.com',
+  apiBaseUrl: 'http://pickme-env.eba-hvgf52rr.eu-west-3.elasticbeanstalk.com',
   imagePath: './assets/images/'
 };
