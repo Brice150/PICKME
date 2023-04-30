@@ -4,256 +4,288 @@
   
 # PICK ME, a dating web application
 
-Frontend : Angular CLI
+Frontend : Angular
 <br>
 Backend : Spring Boot
 
-## Pages Features
+<details>
+  <summary>Pages Features</summary>
 
-### Connect
+  ### Connect
 
-- Register with email confirmation
-- Login with form control and failure animation
-- Logout is available on any page once logged in
+  - Register with email confirmation
+  - Login with form control and failure animation
+  - Logout is available on any page once logged in
 
-### Select
+  ### Select
 
-- View profiles that are similar to yours
-- Select profile age you want to see
-- Like a profile
-- View more information about a profile
+  - View profiles that are similar to yours
+  - Select profile age you want to see
+  - Like a profile
+  - View more information about a profile
 
-### Profile
+  ### Profile
 
-- Modify your profile
-- Add pictures and select main profile picture
-- Delete your account (needs confirmation)
+  - Modify your profile
+  - Add pictures and select main profile picture
+  - Delete your account (needs confirmation)
 
-### Like
+  ### Like
 
-- View profiles that liked you
-- Like a profile
-- View more information about a profile
+  - View profiles that liked you
+  - Like a profile
+  - View more information about a profile
 
-### Match
+  ### Match
 
-- View profiles that matched with you
-- Search a user
-- Dislike a profile
-- View more information about a profile
-- Send a message, update or delete it
+  - View profiles that matched with you
+  - Search a user
+  - Dislike a profile
+  - View more information about a profile
+  - Send a message, update or delete it
 
-### Admin
+  ### Admin
 
-- Admin role needed to view this page
-- Search user or message
-- See all users or messages
-- View more information about a profile
-- Delete user or message
+  - Admin role needed to view this page
+  - Search user or message
+  - See all users or messages
+  - View more information about a profile
+  - Delete user or message
 
-## Run Locally
+</details>
 
-Clone the project
+<details>
+  <summary>Run Locally</summary>
 
-```bash
-  git clone https://github.com/Brice150/PICKME.git
-```
+  ### Clone the project
 
-Go to backend directory 
---> Run application on Intellij
+  ```bash
+    git clone https://github.com/Brice150/PICKME.git
+  ```
 
-Install dependencies
+  ### Go to backend directory 
+    --> Run application on Intellij
 
-```bash
-  npm install
-```
+  ### Install dependencies
 
-Start the server
+  ```bash
+    npm install
+  ```
 
-```bash
-  ng serve -o
-```
+  ### Start the server
 
-## API Reference
+  ```bash
+    ng serve -o
+  ```
 
-### Connection
+</details>
 
-#### Register
+<details>
+  <summary>API Reference</summary>
 
-```http
-  POST /registration
-```
+  <br>
 
-#### Confirm email
+  <details>
+  <summary>Connection</summary>
 
-```http
-  GET /registration/confirm
-```
+  ### Register
 
-#### Login
+  ```http
+    POST /registration
+  ```
 
-```http
-  GET /login
-```
+  ### Confirm email
 
-#### Logout
+  ```http
+    GET /registration/confirm
+  ```
 
-```http
-  GET /logout
-```
+  ### Login
 
-### Admin
+  ```http
+    GET /login
+  ```
 
-#### Get all users
+  ### Logout
 
-```http
-  GET /admin/user/all
-```
+  ```http
+    GET /logout
+  ```
 
-#### Delete user
+  </details>
 
-```http
-  DELETE /admin/user/${email}
-```
+  <details>
+  <summary>Admin</summary>
 
-#### Delete message
+  ### Get all users
 
-```http
-  DELETE /admin/message/${messageId}
-```
+  ```http
+    GET /admin/user/all
+  ```
 
-### User
+  ### Delete user
 
-#### Get all users
+  ```http
+    DELETE /admin/user/${email}
+  ```
 
-```http
-  GET /user/all
-```
+  ### Delete message
 
-#### Get all users that liked
+  ```http
+    DELETE /admin/message/${messageId}
+  ```
 
-```http
-  GET /user/all/like
-```
+  </details>
 
-#### Get all users that matched
+  <details>
+  <summary>User</summary>
 
-```http
-  GET /user/all/match
-```
+  ### Get all users
 
-#### Get connected user
+  ```http
+    GET /user/all
+  ```
 
-```http
-  GET /user
-```
+  ### Get all users that liked
 
-#### Get user by id
+  ```http
+    GET /user/all/like
+  ```
 
-```http
-  GET /user/${userId}
-```
+  ### Get all users that matched
 
-#### Update user
+  ```http
+    GET /user/all/match
+  ```
 
-```http
-  PUT /user
-```
+  ### Get connected user
 
-#### Delete user
+  ```http
+    GET /user
+  ```
 
-```http
-  DELETE /user/${email}
-```
+  ### Get user by id
 
-### Message
+  ```http
+    GET /user/${userId}
+  ```
 
-#### Get all user messages
+  ### Update user
 
-```http
-  GET /message/all/${userId}
-```
+  ```http
+    PUT /user
+  ```
 
-#### Get message sender
+  ### Delete user
 
-```http
-  GET /message/sender/${messageId}
-```
+  ```http
+    DELETE /user/${email}
+  ```
 
-#### Get user messages number
+  </details>
 
-```http
-  GET /message/all/number/${userId}
-```
+  <details>
+  <summary>Message</summary>
 
-#### Add message
+  ### Get all user messages
 
-```http
-  POST /message
-```
+  ```http
+    GET /message/all/${userId}
+  ```
 
-#### Update message
+  ### Get message sender
 
-```http
-  PUT /message
-```
+  ```http
+    GET /message/sender/${messageId}
+  ```
 
-#### Delete message
+  ### Get user messages number
 
-```http
-  DELETE /message/${messageId}
-```
+  ```http
+    GET /message/all/number/${userId}
+  ```
 
-### Like
+  ### Add message
 
-#### Get like by foreign keys
+  ```http
+    POST /message
+  ```
 
-```http
-  GET /like/${userId1}/${userId2}
-```
+  ### Update message
 
-#### Add like
+  ```http
+    PUT /message
+  ```
 
-```http
-  POST /like
-```
+  ### Delete message
 
-#### Delete like
+  ```http
+    DELETE /message/${messageId}
+  ```
 
-```http
-  DELETE /like/${likeId}
-```
+  </details>
 
-### Picture
+  <details>
+  <summary>Like</summary>
 
-#### Get all user pictures
+  ### Get like by foreign keys
 
-```http
-  GET /picture/all/${userId}
-```
+  ```http
+    GET /like/${userId1}/${userId2}
+  ```
 
-#### Get picture
+  ### Add like
 
-```http
-  GET /picture/${pictureName}
-```
+  ```http
+    POST /like
+  ```
 
-#### Add picture
+  ### Delete like
 
-```http
-  POST /picture
-```
+  ```http
+    DELETE /like/${likeId}
+  ```
 
-#### Delete picture
+  </details>
 
-```http
-  DELETE /picture/${pictureId}
-```
+  <details>
+  <summary>Picture</summary>
 
-### Match
+  ### Get all user pictures
 
-#### Get all user matches
+  ```http
+    GET /picture/all/${userId}
+  ```
 
-```http
-  GET /match/all
-```
+  ### Get picture
+
+  ```http
+    GET /picture/${pictureName}
+  ```
+
+  ### Add picture
+
+  ```http
+    POST /picture
+  ```
+
+  ### Delete picture
+
+  ```http
+    DELETE /picture/${pictureId}
+  ```
+
+  </details>
+
+  <details>
+  <summary>Match</summary>
+
+  ### Get all user matches
+
+  ```http
+    GET /match/all
+  ```
+
+  </details>
+
+</details>
