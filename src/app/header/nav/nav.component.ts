@@ -1,9 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { User } from '../../core/interfaces/user';
 import { UserService } from '../../core/services/user.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-nav',
@@ -11,9 +12,10 @@ import { UserService } from '../../core/services/user.service';
   styleUrls: ['./nav.component.css']
 })
 
-export class NavComponent implements OnInit{
+export class NavComponent implements OnInit, OnDestroy{
   loggedInUserEmail!: string | null;
   isAdmin!: boolean;
+  getUserRoleSubscription!: Subscription;
 
   constructor(private router: Router, 
     private userService: UserService,
@@ -23,9 +25,13 @@ export class NavComponent implements OnInit{
     this.getUserRole();
   }
 
+  ngOnDestroy() {
+    this.getUserRoleSubscription && this.getUserRoleSubscription.unsubscribe();
+  }
+
   getUserRole() {
-    this.userService.getConnectedUser().subscribe(
-      (response: User) => {
+    this.getUserRoleSubscription = this.userService.getConnectedUser().subscribe({
+      next: (response: User) => {
         if (response.userRole === "ROLE_ADMIN") {
           this.isAdmin = true;
         }
@@ -33,12 +39,12 @@ export class NavComponent implements OnInit{
           this.isAdmin = false;
         }
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    )
+    })
   }
 
   extend() {
@@ -57,7 +63,7 @@ export class NavComponent implements OnInit{
     .then(() => {
       this.toastr.success("Logged out", "Connection", {
         positionClass: "toast-bottom-center" 
-      });
-    });
+      })
+    })
   }
 }

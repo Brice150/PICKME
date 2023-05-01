@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { Like } from '../core/interfaces/like';
@@ -11,13 +11,14 @@ import { MessageService } from '../core/services/message.service';
 import { Message } from '../core/interfaces/message';
 import { SwiperOptions } from 'swiper';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-match',
   templateUrl: './match.component.html',
   styleUrls: ['./match.component.css']
 })
-export class MatchComponent {
+export class MatchComponent implements OnInit, OnDestroy{
   imagePath: string = environment.imagePath;
   users: User[] = [];
   selectedUser!: User;
@@ -52,6 +53,14 @@ export class MatchComponent {
       }
     }
   };
+  getLoggedInUserSubscription!: Subscription;
+  getUsersSubscription!: Subscription;
+  getMainPictureSubscription!: Subscription;
+  getUserMessagesNumberSubscription!: Subscription;
+  getLikeByFkSubscription!: Subscription;
+  deleteLikeSubscription!: Subscription;
+  getSelectedUserMessagesSubscription!: Subscription;
+  getMessageSenderSubscription!: Subscription;
 
   constructor(
     private userService: UserService,
@@ -66,22 +75,33 @@ export class MatchComponent {
     this.getUsers();
   }
 
+  ngOnDestroy() {
+    this.getLoggedInUserSubscription && this.getLoggedInUserSubscription.unsubscribe();
+    this.getUsersSubscription && this.getUsersSubscription.unsubscribe();
+    this.getMainPictureSubscription && this.getMainPictureSubscription.unsubscribe();
+    this.getUserMessagesNumberSubscription && this.getUserMessagesNumberSubscription.unsubscribe();
+    this.getLikeByFkSubscription && this.getLikeByFkSubscription.unsubscribe();
+    this.deleteLikeSubscription && this.deleteLikeSubscription.unsubscribe();
+    this.getSelectedUserMessagesSubscription && this.getSelectedUserMessagesSubscription.unsubscribe();
+    this.getMessageSenderSubscription && this.getMessageSenderSubscription.unsubscribe();
+  }
+
   getLoggedInUser() {
-    this.userService.getConnectedUser().subscribe(
-      (response: User) => {
+    this.getLoggedInUserSubscription = this.userService.getConnectedUser().subscribe({
+      next: (response: User) => {
         this.loggedInUser = response;
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    );
+    })
   }
 
   getUsers() {
-    this.userService.getAllUsersThatMatched().subscribe(
-      (response: User[]) => {
+    this.getUsersSubscription = this.userService.getAllUsersThatMatched().subscribe({
+      next: (response: User[]) => {
         this.users=response;
         if (this.users.length !== 0) {
           this.selectedUser = this.users[0];
@@ -94,19 +114,19 @@ export class MatchComponent {
         const loaderWrapper = document.getElementById('loaderWrapper');
         loaderWrapper!.style.display = 'none';
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    )
+    })
   }
 
   getMainPicture(user: User) {
     let reader = new FileReader();
     if (user.mainPicture) {
-      this.pictureService.getPicture(user.mainPicture.toString()).subscribe(
-        event => {
+      this.getMainPictureSubscription = this.pictureService.getPicture(user.mainPicture.toString()).subscribe({
+        next: event => {
         if (event.type === HttpEventType.Response) {
           if (event.body instanceof Array) {
 
@@ -120,59 +140,56 @@ export class MatchComponent {
           }
         }
         },
-        (error: HttpErrorResponse) => {
+        error: (error: HttpErrorResponse) => {
           this.toastr.error(error.message, "Server error", {
             positionClass: "toast-bottom-center" 
-          });
+          })
         }
-      );
+      })
     }
     else {
       user.mainPicture = this.imagePath + "No-Image.png";
     }
-    (error: HttpErrorResponse) => {
-      this.toastr.error(error.message, "Server error", {
-        positionClass: "toast-bottom-center" 
-      });
-    }
   }
 
   getUserMessagesNumber(user: User) {
-    this.messageService.getUserMessagesNumber(user.id).subscribe(
-      (response: number) => {
+    this.getUserMessagesNumberSubscription = this.messageService.getUserMessagesNumber(user.id).subscribe({
+      next: (response: number) => {
         user.messagesNumber = response;
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    )
+    })
   }
 
   dislike(user: User) {
-    this.likeService.getLikeByFk(this.loggedInUser.id, user.id).subscribe(
-      (like: Like) => {
-        this.likeService.deleteLike(like.id).subscribe(
-          (response: void) => {
+    this.getLikeByFkSubscription = this.likeService.getLikeByFk(this.loggedInUser.id, user.id).subscribe({
+      next: (like: Like) => {
+        this.deleteLikeSubscription = this.likeService.deleteLike(like.id).subscribe({
+          next: (response: void) => {
             this.getUsers();
-            this.toastr.success("Disliked "+user.nickname, "Dislike", {
-              positionClass: "toast-bottom-center" 
-            });
           },
-          (error: HttpErrorResponse) => {
+          error: (error: HttpErrorResponse) => {
             this.toastr.error(error.message, "Server error", {
               positionClass: "toast-bottom-center" 
-            });
+            })
+          },
+          complete: () => {
+            this.toastr.success("Disliked "+user.nickname, "Dislike", {
+              positionClass: "toast-bottom-center" 
+            })
           }
-        );
+        })
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    );
+    })
   }
 
   moreInfo(id: any) {
@@ -191,32 +208,32 @@ export class MatchComponent {
   }
 
   getSelectedUserMessages(userId: number) {
-    this.messageService.getAllUserMessages(userId).subscribe(
-      (response: Message[]) => {
+    this.getSelectedUserMessagesSubscription = this.messageService.getAllUserMessages(userId).subscribe({
+      next: (response: Message[]) => {
         this.messages = response;
         for (let message of this.messages) {
           this.getMessageSender(message);
         }
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    );
+    })
   }
 
   getMessageSender(message: Message) {
-    this.messageService.getMessageSender(message.id).subscribe(
-      (response: User) => {
+    this.getMessageSenderSubscription = this.messageService.getMessageSender(message.id).subscribe({
+      next: (response: User) => {
         message.sender = response.nickname;
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    );
+    })
   }
 
   search(key: string){

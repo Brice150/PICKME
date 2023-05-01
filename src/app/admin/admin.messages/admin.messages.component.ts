@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/dialog/dialog.component';
 import { Message } from 'src/app/core/interfaces/message';
@@ -8,16 +8,20 @@ import { ToastrService } from 'ngx-toastr';
 import { User } from 'src/app/core/interfaces/user';
 import { PictureService } from 'src/app/core/services/picture.service';
 import { environment } from 'src/environments/environment';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-admin-messages',
   templateUrl: './admin.messages.component.html',
   styleUrls: ['./admin.messages.component.css']
 })
-export class AdminMessagesComponent implements OnInit{
+export class AdminMessagesComponent implements OnInit, OnDestroy{
   messages: Message[]=[];
   users: User[]=[];
   imagePath: string = environment.imagePath;
+  getUsersSubscription!: Subscription;
+  getMainPictureSubscription!: Subscription;
+  deleteMessageSubscription!: Subscription;
 
   constructor(
     private adminService: AdminService,
@@ -29,9 +33,15 @@ export class AdminMessagesComponent implements OnInit{
     this.getUsers();
   }
 
+  ngOnDestroy() {
+    this.getUsersSubscription && this.getUsersSubscription.unsubscribe();
+    this.getMainPictureSubscription && this.getMainPictureSubscription.unsubscribe();
+    this.deleteMessageSubscription && this.deleteMessageSubscription.unsubscribe();
+  }
+
   getUsers() {
-    this.adminService.getAllUsers().subscribe(
-      (response: User[]) => {
+    this.getUsersSubscription = this.adminService.getAllUsers().subscribe({
+      next: (response: User[]) => {
         this.users = response.filter(user => user.messagesSent.length !== 0);
         for (let user of this.users) {
           this.getMainPicture(user);
@@ -39,19 +49,19 @@ export class AdminMessagesComponent implements OnInit{
         const loaderWrapper = document.getElementById('loaderWrapper');
         loaderWrapper!.style.display = 'none';
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    )
+    })
   }
 
   getMainPicture(user: User) {
     let reader = new FileReader();
     if (user.mainPicture) {
-      this.pictureService.getPicture(user.mainPicture.toString()).subscribe(
-        event => {
+      this.getMainPictureSubscription = this.pictureService.getPicture(user.mainPicture.toString()).subscribe({
+        next: event => {
         if (event.type === HttpEventType.Response) {
           if (event.body instanceof Array) {
 
@@ -65,37 +75,34 @@ export class AdminMessagesComponent implements OnInit{
           }
         }
         },
-        (error: HttpErrorResponse) => {
+        error: (error: HttpErrorResponse) => {
           this.toastr.error(error.message, "Server error", {
             positionClass: "toast-bottom-center" 
-          });
+          })
         }
-      );
+      })
     }
     else {
       user.mainPicture = this.imagePath + "No-Image.png";
     }
-    (error: HttpErrorResponse) => {
-      this.toastr.error(error.message, "Server error", {
-        positionClass: "toast-bottom-center" 
-      });
-    }
   }
 
   deleteMessage(id: number) {
-    this.adminService.deleteMessage(id).subscribe(
-      (response: void) => {
+    this.deleteMessageSubscription = this.adminService.deleteMessage(id).subscribe({
+      next: (response: void) => {
         this.getUsers();
-        this.toastr.success("Message deleted", "Message", {
-          positionClass: "toast-bottom-center" 
-        });
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
+      },
+      complete: () => {
+        this.toastr.success("Message deleted", "Message", {
+          positionClass: "toast-bottom-center" 
+        })
       }
-    )
+    })
   }
   
   openDialog(id: number) {
@@ -105,7 +112,7 @@ export class AdminMessagesComponent implements OnInit{
       if (result) {
         this.deleteMessage(id);
       }
-    });
+    })
   }
 
   search(key: string){

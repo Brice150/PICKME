@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/dialog/dialog.component';
 import { User } from 'src/app/core/interfaces/user';
@@ -8,15 +8,19 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 import { PictureService } from 'src/app/core/services/picture.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-admin-users',
   templateUrl: './admin.users.component.html',
   styleUrls: ['./admin.users.component.css']
 })
-export class AdminUsersComponent implements OnInit{
+export class AdminUsersComponent implements OnInit, OnDestroy{
   users: User[]=[];
   imagePath: string = environment.imagePath;
+  getUsersSubscription!: Subscription;
+  getMainPictureSubscription!: Subscription;
+  deleteUserSubscription!: Subscription;
 
   constructor(
     private adminService: AdminService,
@@ -29,9 +33,15 @@ export class AdminUsersComponent implements OnInit{
     this.getUsers();
   }
 
+  ngOnDestroy() {
+    this.getUsersSubscription && this.getUsersSubscription.unsubscribe();
+    this.getMainPictureSubscription && this.getMainPictureSubscription.unsubscribe();
+    this.deleteUserSubscription && this.deleteUserSubscription.unsubscribe();
+  }
+
   getUsers() {
-    this.adminService.getAllUsers().subscribe(
-      (response: User[]) => {
+    this.getUsersSubscription = this.adminService.getAllUsers().subscribe({
+      next: (response: User[]) => {
         this.users = response;
         for (let user of this.users) {
           this.getMainPicture(user);
@@ -39,19 +49,19 @@ export class AdminUsersComponent implements OnInit{
         const loaderWrapper = document.getElementById('loaderWrapper');
         loaderWrapper!.style.display = 'none';
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    )
+    })
   }
 
   getMainPicture(user: User) {
     let reader = new FileReader();
     if (user.mainPicture) {
-      this.pictureService.getPicture(user.mainPicture.toString()).subscribe(
-        event => {
+      this.getMainPictureSubscription = this.pictureService.getPicture(user.mainPicture.toString()).subscribe({
+        next: event => {
         if (event.type === HttpEventType.Response) {
           if (event.body instanceof Array) {
 
@@ -65,37 +75,34 @@ export class AdminUsersComponent implements OnInit{
           }
         }
         },
-        (error: HttpErrorResponse) => {
+        error: (error: HttpErrorResponse) => {
           this.toastr.error(error.message, "Server error", {
             positionClass: "toast-bottom-center" 
-          });
+          })
         }
-      );
+      })
     }
     else {
       user.mainPicture = this.imagePath + "No-Image.png";
     }
-    (error: HttpErrorResponse) => {
-      this.toastr.error(error.message, "Server error", {
-        positionClass: "toast-bottom-center" 
-      });
-    }
   }
 
   deleteUser(email: string) {
-    this.adminService.deleteUser(email).subscribe(
-      (response: void) => {
+    this.deleteUserSubscription = this.adminService.deleteUser(email).subscribe({
+      next: (response: void) => {
         this.getUsers();
-        this.toastr.success("User deleted", "User", {
-          positionClass: "toast-bottom-center" 
-        });
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
+      },
+      complete: () => {
+        this.toastr.success("User deleted", "User", {
+          positionClass: "toast-bottom-center" 
+        })
       }
-    )
+    })
   }
 
   openDialog(email: string) {
@@ -105,7 +112,7 @@ export class AdminUsersComponent implements OnInit{
       if (result) {
         this.deleteUser(email);
       }
-    });
+    })
   }
 
   search(key: string){

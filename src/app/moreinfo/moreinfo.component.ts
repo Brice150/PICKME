@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -12,19 +12,28 @@ import { LikeService } from '../core/services/like.service';
 import { PictureService } from '../core/services/picture.service';
 import { UserService } from '../core/services/user.service';
 import { DialogComponent } from '../dialog/dialog.component';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-moreinfo',
   templateUrl: './moreinfo.component.html',
   styleUrls: ['./moreinfo.component.css']
 })
-export class MoreInfoComponent implements OnInit {
+export class MoreInfoComponent implements OnInit, OnDestroy {
   notification!: string | null;
   imagePath: string = environment.imagePath;
   user!: User;
   pictures: Picture[] = [];
   loggedInUser!: User;
   mode!: string | null;
+  getLoggedInUserSubscription!: Subscription;
+  getUserSubscription!: Subscription;
+  getAllUserPicturesSubscription!: Subscription;
+  getPictureSubscription!: Subscription;
+  likeSubscription!: Subscription;
+  getLikeByFkSubscription!: Subscription;
+  deleteLikeSubscription!: Subscription;
+  deleteUserSubscription!: Subscription;
 
   constructor(
     private userService: UserService,
@@ -42,41 +51,52 @@ export class MoreInfoComponent implements OnInit {
     this.getUser(this.route.snapshot.paramMap.get('id'));
   }
 
+  ngOnDestroy() {
+    this.getLoggedInUserSubscription && this.getLoggedInUserSubscription.unsubscribe();
+    this.getUserSubscription && this.getUserSubscription.unsubscribe();
+    this.getAllUserPicturesSubscription && this.getAllUserPicturesSubscription.unsubscribe();
+    this.getPictureSubscription && this.getPictureSubscription.unsubscribe();
+    this.likeSubscription && this.likeSubscription.unsubscribe();
+    this.getLikeByFkSubscription && this.getLikeByFkSubscription.unsubscribe();
+    this.deleteLikeSubscription && this.deleteLikeSubscription.unsubscribe();
+    this.deleteUserSubscription && this.deleteUserSubscription.unsubscribe();
+  }
+
   getLoggedInUser() {
-    this.userService.getConnectedUser().subscribe(
-      (response: User) => {
+    this.getLoggedInUserSubscription = this.userService.getConnectedUser().subscribe({
+      next: (response: User) => {
         this.loggedInUser = response;
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    );
+    })
   }
 
   getUser(id: any) {
-    this.userService.getUserById(id).subscribe(
-      (response: User) => {
+    this.getUserSubscription = this.userService.getUserById(id).subscribe({
+      next: (response: User) => {
         this.user = response;
         this.getPictures(id!);
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    );
+    })
   }
 
   getPictures(id: any) {
-    this.pictureService.getAllUserPictures(id).subscribe(
-      (response: Picture[]) => {
+    this.getAllUserPicturesSubscription = this.pictureService.getAllUserPictures(id).subscribe({
+      next: (response: Picture[]) => {
         if (response.length > 0) {
           for (let picture of response) {
             let reader = new FileReader();
-            this.pictureService.getPicture(picture.content.toString()).subscribe(
-              event => {
+            this.getPictureSubscription = this.pictureService.getPicture(picture.content.toString()).subscribe({
+              next: event => {
               if (event.type === HttpEventType.Response) {
                 if (event.body instanceof Array) {
                             
@@ -90,22 +110,22 @@ export class MoreInfoComponent implements OnInit {
                 }
               }
               },
-              (error: HttpErrorResponse) => {
+              error: (error: HttpErrorResponse) => {
                 this.toastr.error(error.message, "Server error", {
                   positionClass: "toast-bottom-center" 
-                });
+                })
               }
-            );   
+            })
             this.pictures.push(picture);
           }   
           }
         },
-      (error: HttpErrorResponse) => {
+        error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    );
+    })
     const loaderWrapper = document.getElementById('loaderWrapper');
     loaderWrapper!.style.display = 'none';
   }
@@ -115,55 +135,55 @@ export class MoreInfoComponent implements OnInit {
       "date": null, 
       "fkSender": {"id": this.loggedInUser.id}, 
       "fkReceiver": {"id": user.id}};
-    this.likeService.addLike(like).subscribe(
-      (response: string) => {
+      this.likeSubscription = this.likeService.addLike(like).subscribe({
+      next: (response: string) => {
+        this.router.navigate(['/'+this.mode]);
         this.toastr.success("Liked "+user.nickname, "Like", {
           positionClass: "toast-bottom-center" 
-        });
+        })
         if (response !== "") {
           this.notification = response;
           this.toastr.success("Match with "+response, "Match", {
             positionClass: "toast-bottom-center" 
-          });
+          })
           setTimeout(() => {
             this.notification = null;
-            this.router.navigate(['/'+this.mode]);
-          }, 3000);
+          }, 3000)
         }
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    );
+    })
   }
 
   dislike(user: User) {
-    this.likeService.getLikeByFk(this.loggedInUser.id, user.id).subscribe(
-      (like: Like) => {
-        this.likeService.deleteLike(like.id).subscribe(
-          (response: void) => {
+    this.getLikeByFkSubscription = this.likeService.getLikeByFk(this.loggedInUser.id, user.id).subscribe({
+      next: (like: Like) => {
+        this.deleteLikeSubscription = this.likeService.deleteLike(like.id).subscribe({
+          next: (response: void) => {
             this.router.navigate(['/'+this.mode])
-            .then(() => {
-              this.toastr.success("Disliked "+user.nickname, "Dislike", {
-                positionClass: "toast-bottom-center" 
-              });
-            });
           },
-          (error: HttpErrorResponse) => {
+          error: (error: HttpErrorResponse) => {
             this.toastr.error(error.message, "Server error", {
               positionClass: "toast-bottom-center" 
-            });
+            })
+          },
+          complete: () => {
+            this.toastr.success("Disliked "+user.nickname, "Dislike", {
+              positionClass: "toast-bottom-center" 
+            })
           }
-        );
+        })
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    );
+    })
   }
 
   openDialog() {
@@ -172,25 +192,25 @@ export class MoreInfoComponent implements OnInit {
       if (result) {
         this.deleteUser();
       }
-    });
+    })
   }
 
   deleteUser() {
-    this.adminService.deleteUser(this.user.email).subscribe(
-      (response: void) => {
+    this.deleteUserSubscription = this.adminService.deleteUser(this.user.email).subscribe({
+      next: (response: void) => {
         this.router.navigate(['/admin'])
-        .then(() => {
-          this.toastr.success("User deleted : "+this.user.nickname, "User", {
-            positionClass: "toast-bottom-center" 
-          });
-        });
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
+      },
+      complete: () => {
+        this.toastr.success("User deleted : "+this.user.nickname, "User", {
+          positionClass: "toast-bottom-center" 
+        })
       }
-    );
+    })
   }
 
 }

@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
@@ -7,17 +7,22 @@ import { User } from '../core/interfaces/user';
 import { LikeService } from '../core/services/like.service';
 import { PictureService } from '../core/services/picture.service';
 import { UserService } from '../core/services/user.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-like',
   templateUrl: './like.component.html',
   styleUrls: ['./like.component.css']
 })
-export class LikeComponent {
+export class LikeComponent implements OnInit, OnDestroy{
   imagePath: string = environment.imagePath;
   users: User[] = [];
   loggedInUser!: User;
   notification!: string | null;
+  getLoggedInUserSubscription!: Subscription;
+  getUsersSubscription!: Subscription;
+  getMainPictureSubscription!: Subscription;
+  likeSubscription!: Subscription;
 
   constructor(
     private userService: UserService,
@@ -31,22 +36,29 @@ export class LikeComponent {
     this.getUsers();
   }
 
+  ngOnDestroy() {
+    this.getLoggedInUserSubscription && this.getLoggedInUserSubscription.unsubscribe();
+    this.getUsersSubscription && this.getUsersSubscription.unsubscribe();
+    this.getMainPictureSubscription && this.getMainPictureSubscription.unsubscribe();
+    this.likeSubscription && this.likeSubscription.unsubscribe();
+  }
+
   getLoggedInUser() {
-    this.userService.getConnectedUser().subscribe(
-      (response: User) => {
+    this.getLoggedInUserSubscription = this.userService.getConnectedUser().subscribe({
+      next: (response: User) => {
         this.loggedInUser = response;
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    );
+    })
   }
 
   getUsers() {
-    this.userService.getAllUsersThatLiked().subscribe(
-      (response: User[]) => {
+    this.getUsersSubscription = this.userService.getAllUsersThatLiked().subscribe({
+      next: (response: User[]) => {
         this.users=response;
         for (let user of this.users) {
           this.getMainPicture(user);
@@ -54,19 +66,19 @@ export class LikeComponent {
         const loaderWrapper = document.getElementById('loaderWrapper');
         loaderWrapper!.style.display = 'none';
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    )
+    })
   }
 
   getMainPicture(user: User) {
     let reader = new FileReader();
     if (user.mainPicture) {
-      this.pictureService.getPicture(user.mainPicture.toString()).subscribe(
-        event => {
+      this.getMainPictureSubscription = this.pictureService.getPicture(user.mainPicture.toString()).subscribe({
+        next: event => {
         if (event.type === HttpEventType.Response) {
           if (event.body instanceof Array) {
 
@@ -80,20 +92,15 @@ export class LikeComponent {
           }
         }
         },
-        (error: HttpErrorResponse) => {
+        error: (error: HttpErrorResponse) => {
           this.toastr.error(error.message, "Server error", {
             positionClass: "toast-bottom-center" 
-          });
+          })
         }
-      );
+      })
     }
     else {
       user.mainPicture = this.imagePath + "No-Image.png";
-    }
-    (error: HttpErrorResponse) => {
-      this.toastr.error(error.message, "Server error", {
-        positionClass: "toast-bottom-center" 
-      });
     }
   }
 
@@ -102,28 +109,28 @@ export class LikeComponent {
       "date": null, 
       "fkSender": {"id": this.loggedInUser.id}, 
       "fkReceiver": {"id": user.id}};
-    this.likeService.addLike(like).subscribe(
-      (response: string) => {
+      this.likeSubscription = this.likeService.addLike(like).subscribe({
+      next: (response: string) => {
         this.getUsers();
         this.toastr.success("Liked "+user.nickname, "Like", {
           positionClass: "toast-bottom-center" 
-        });
+        })
         if (response !== "") {
           this.notification = response;
           this.toastr.success("Match with "+response, "Match", {
             positionClass: "toast-bottom-center" 
-          });
+          })
           setTimeout(() => {
             this.notification = null;
-          }, 3000);
+          }, 3000)
         }
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    );
+    })
   }
 
   moreInfo(id: any) {

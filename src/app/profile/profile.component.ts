@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -10,13 +10,14 @@ import { User } from '../core/interfaces/user';
 import { PictureService } from '../core/services/picture.service';
 import { UserService } from '../core/services/user.service';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit{
+export class ProfileComponent implements OnInit, OnDestroy{
   imagePath: string = environment.imagePath;
   loggedInUser!: User | null;
   loggedInUserEmail!: string | null;
@@ -64,6 +65,14 @@ export class ProfileComponent implements OnInit{
     "Ambivert",
     "Extravert"
   ];
+  getLoggedInUserSubscription!: Subscription;
+  updateUserSubscription!: Subscription;
+  deleteUserSubscription!: Subscription;
+  getMainPictureSubscription!: Subscription;
+  getAllUserPicturesSubscription!: Subscription;
+  getPictureSubscription!: Subscription;
+  addPictureSubscription!: Subscription;
+  deletePictureSubscription!: Subscription;
 
   constructor(
     private router: Router,
@@ -96,21 +105,32 @@ export class ProfileComponent implements OnInit{
     this.getLoggedInUser(0);
   }
 
+  ngOnDestroy() {
+    this.getLoggedInUserSubscription && this.getLoggedInUserSubscription.unsubscribe();
+    this.updateUserSubscription && this.updateUserSubscription.unsubscribe();
+    this.deleteUserSubscription && this.deleteUserSubscription.unsubscribe();
+    this.getMainPictureSubscription && this.getMainPictureSubscription.unsubscribe();
+    this.getAllUserPicturesSubscription && this.getAllUserPicturesSubscription.unsubscribe();
+    this.getPictureSubscription && this.getPictureSubscription.unsubscribe();
+    this.addPictureSubscription && this.addPictureSubscription.unsubscribe();
+    this.deletePictureSubscription && this.deletePictureSubscription.unsubscribe();
+  }
+
   getLoggedInUser(wait: number) {
     setTimeout(() => {
-      this.userService.getConnectedUser().subscribe(
-        (response: User) => {
+      this.getLoggedInUserSubscription = this.userService.getConnectedUser().subscribe({
+        next: (response: User) => {
           this.loggedInUser = response;
           this.getMainPicture(this.loggedInUser);
           this.getPictures(this.loggedInUser.id);
         },
-        (error: HttpErrorResponse) => {
+        error: (error: HttpErrorResponse) => {
           this.toastr.error(error.message, "Server error", {
             positionClass: "toast-bottom-center" 
-          });
+          })
         }
-      )
-    }, wait);
+      })
+    }, wait)
   }
 
   updateUser(user: User) {
@@ -125,39 +145,41 @@ export class ProfileComponent implements OnInit{
     if (this.selectedPictureId) {
       user.mainPicture = this.selectedPictureId.toString();
     }
-    this.userService.updateUser(user).subscribe(
-      (response: User) => {
+    this.updateUserSubscription = this.userService.updateUser(user).subscribe({
+      next: (response: User) => {
         this.updateForm.get("password")?.reset();
         this.getLoggedInUser(0);
-        this.toastr.success("Profile updated", "Profile", {
-          positionClass: "toast-bottom-center" 
-        });
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
+      },
+      complete: () => {
+        this.toastr.success("Profile updated", "Profile", {
+          positionClass: "toast-bottom-center" 
+        })
       }
-    );
+    })
   }
 
   deleteUser() {
-    this.userService.deleteUser(this.loggedInUser?.email!).subscribe(
-      (response: void) => {
+    this.deleteUserSubscription = this.userService.deleteUser(this.loggedInUser?.email!).subscribe({
+      next: (response: void) => {
         sessionStorage.removeItem('loggedInUserEmail');
         this.router.navigate(['/connect'])
-        .then(() => {
-          this.toastr.success("Profile deleted", "Profile", {
-            positionClass: "toast-bottom-center" 
-          });
-        });
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
+      },
+      complete: () => {
+        this.toastr.success("Profile deleted", "Profile", {
+          positionClass: "toast-bottom-center" 
+        })
       }
-    );
+    })
   }
 
   openDialog() {
@@ -166,14 +188,14 @@ export class ProfileComponent implements OnInit{
       if (result) {
         this.deleteUser();
       }
-    });
+    })
   }
 
   getMainPicture(user: User) {
     let reader = new FileReader();
     if (user.mainPicture) {
-      this.pictureService.getPicture(user.mainPicture.toString()).subscribe(
-        event => {
+      this.getMainPictureSubscription = this.pictureService.getPicture(user.mainPicture.toString()).subscribe({
+        next: event => {
         if (event.type === HttpEventType.Response) {
           if (event.body instanceof Array) {
 
@@ -187,20 +209,15 @@ export class ProfileComponent implements OnInit{
           }
         }
         },
-        (error: HttpErrorResponse) => {
+        error: (error: HttpErrorResponse) => {
           this.toastr.error(error.message, "Server error", {
             positionClass: "toast-bottom-center" 
-          });
+          })
         }
-      );
+      })
     }
     else {
       user.mainPicture = this.imagePath + "No-Image.png";
-    }
-    (error: HttpErrorResponse) => {
-      this.toastr.error(error.message, "Server error", {
-        positionClass: "toast-bottom-center" 
-      });
     }
     const loaderWrapper = document.getElementById('loaderWrapper');
     loaderWrapper!.style.display = 'none';
@@ -208,13 +225,13 @@ export class ProfileComponent implements OnInit{
 
   getPictures(fkUser: any) {
     this.pictures = [];
-    this.pictureService.getAllUserPictures(fkUser).subscribe(
-      (response: Picture[]) => {
+    this.getAllUserPicturesSubscription = this.pictureService.getAllUserPictures(fkUser).subscribe({
+      next: (response: Picture[]) => {
         if (response.length > 0) {
           for (let picture of response) {
             let reader = new FileReader();
-            this.pictureService.getPicture(picture.content.toString()).subscribe(
-              event => {
+            this.getPictureSubscription = this.pictureService.getPicture(picture.content.toString()).subscribe({
+              next: event => {
               if (event.type === HttpEventType.Response) {
                 if (event.body instanceof Array) {
                             
@@ -228,22 +245,22 @@ export class ProfileComponent implements OnInit{
                 }
               }
               },
-              (error: HttpErrorResponse) => {
+              error: (error: HttpErrorResponse) => {
                 this.toastr.error(error.message, "Server error", {
                   positionClass: "toast-bottom-center" 
-                });
+                })
               }
-            );   
+            })
             this.pictures.push(picture);
           }   
           }
-        },
-      (error: HttpErrorResponse) => {
+      },
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    )
+    })
   }
 
   addPicture(files: File[]) {
@@ -251,20 +268,20 @@ export class ProfileComponent implements OnInit{
     for (const file of files) {
       this.picturesData.append('content', file, file.name);
     }
-    this.pictureService.addPicture(this.picturesData).subscribe(
-      event => {
+    this.addPictureSubscription = this.pictureService.addPicture(this.picturesData).subscribe({
+      next: event => {
         console.log(event);
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
       }
-    );
+    })
     this.getLoggedInUser(100);
     this.toastr.success("Picture added", "Profile", {
       positionClass: "toast-bottom-center" 
-    });
+    })
   }
 
   pickMainPicture(picture: Picture) {
@@ -272,26 +289,28 @@ export class ProfileComponent implements OnInit{
     this.loggedInUser!.mainPicture = picture.content;
     this.toastr.info("Please type password bottom page to update profile", "Profile", {
       positionClass: "toast-bottom-center" 
-    });
+    })
     this.toastr.success("Main picture selected", "Profile", {
       positionClass: "toast-bottom-center" 
-    });
+    })
   }
 
   deletePicture(pictureId: number) {
-    this.pictureService.deletePicture(pictureId).subscribe(
-      (response: void) => {
+    this.deletePictureSubscription = this.pictureService.deletePicture(pictureId).subscribe({
+      next: (response: void) => {
         this.getLoggedInUser(0);
-        this.toastr.success("Picture deleted", "Profile", {
-          positionClass: "toast-bottom-center" 
-        });
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         this.toastr.error(error.message, "Server error", {
           positionClass: "toast-bottom-center" 
-        });
+        })
+      },
+      complete: () => {
+        this.toastr.success("Picture deleted", "Profile", {
+          positionClass: "toast-bottom-center" 
+        })
       }
-    )
+    })
   }
 
   isSelected(attribute: string, property: string): boolean {
