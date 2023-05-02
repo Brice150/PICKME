@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import static java.nio.file.Paths.get;
 
@@ -47,7 +47,7 @@ public class AdminController {
   @GetMapping("/user/all")
   public ResponseEntity<List<User>> getAllUsers() {
     List<User> users = userService.findAllUsers();
-    for (User user: users) {
+    for (User user : users) {
       user.setMessagesReceived(null);
       user.setPassword(null);
       user.setTokens(null);
@@ -55,7 +55,7 @@ public class AdminController {
     Comparator<User> usersSort = Comparator
       .comparing(User::getUserRole, (role1, role2) -> role2.compareTo(role1))
       .thenComparing(User::getUsername);
-    Collections.sort(users, usersSort);
+    users.sort(usersSort);
     return new ResponseEntity<>(users, HttpStatus.OK);
   }
 
@@ -64,34 +64,33 @@ public class AdminController {
     User selectedUser = userService.findUserByEmail(email);
     List<Like> likes = likeService.findAllLikes();
     for (Like like : likes) {
-      if (selectedUser.getId() == like.getFkSender().getId()
-        || selectedUser.getId() == like.getFkReceiver().getId()) {
+      if (Objects.equals(selectedUser.getId(), like.getFkSender().getId())
+        || Objects.equals(selectedUser.getId(), like.getFkReceiver().getId())) {
         likeService.deleteLikeById(like.getId());
       }
     }
     List<Match> matches = matchService.findAllMatches();
     for (Match match : matches) {
-      if (selectedUser.getId() == match.getFkReceiver().getId()
-        || selectedUser.getId() == match.getFkSender().getId()) {
+      if (Objects.equals(selectedUser.getId(), match.getFkReceiver().getId())
+        || Objects.equals(selectedUser.getId(), match.getFkSender().getId())) {
         matchService.deleteMatchById(match.getId());
       }
     }
     List<Message> messages = messageService.findAllMessages();
     for (Message message : messages) {
-      if (selectedUser.getId() == message.getFkReceiver().getId()
-        || selectedUser.getId() == message.getFkSender().getId()) {
+      if (Objects.equals(selectedUser.getId(), message.getFkReceiver().getId())
+        || Objects.equals(selectedUser.getId(), message.getFkSender().getId())) {
         messageService.deleteMessageById(message.getId());
       }
     }
     List<Picture> pictures = pictureService.findAllPictures();
     for (Picture picture : pictures) {
-      if (selectedUser.getId() == picture.getFkUser().getId()) {
+      if (Objects.equals(selectedUser.getId(), picture.getFkUser().getId())) {
         if (picture.getContent() != null) {
           Path imagePath = get(IMAGEDIRECTORY).normalize().resolve(picture.getContent());
           if (Files.exists(imagePath)) {
             Files.delete(imagePath);
-          }
-          else {
+          } else {
             throw new PictureNotFoundException(picture.getContent() + " was not found on the server");
           }
         }
