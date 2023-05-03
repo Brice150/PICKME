@@ -54,7 +54,7 @@ public class UserRepoTest {
 
   @Test
   void shouldNotFindUserByEmail() {
-    Optional<User> userFound = underTest.findByEmail("email");
+    Optional<User> userFound = underTest.findUserByEmail("email");
     assertThat(userFound.isPresent()).isFalse();
   }
 

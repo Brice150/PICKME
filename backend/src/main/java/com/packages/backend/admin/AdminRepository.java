@@ -1,32 +1,20 @@
-package com.packages.backend.user;
+package com.packages.backend.admin;
 
 import com.packages.backend.likes.Like;
 import com.packages.backend.matches.Match;
 import com.packages.backend.messages.Message;
 import com.packages.backend.pictures.Picture;
+import com.packages.backend.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-@Transactional(readOnly = true)
-public interface UserRepository extends JpaRepository<User, Long> {
-
-  @Query("SELECT u FROM User u WHERE u.email = :email")
-  Optional<User> findUserByEmail(@Param("email") String email);
-
-  @Transactional
-  @Modifying
-  @Query("UPDATE User a " +
-    "SET a.enabled = TRUE WHERE a.email = ?1")
-  int enableUser(String email);
-
+public interface AdminRepository extends JpaRepository<Match, Long> {
   @Transactional
   @Modifying
   @Query("DELETE FROM ConfirmationToken c WHERE c.fkUserToken.id = :fkUser")
@@ -69,9 +57,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Query("SELECT p FROM Picture p WHERE p.fkUser.id = :fkUser")
   List<Picture> findAllPicturesByFk(@Param("fkUser") Long fkUser);
 
-  @Query("SELECT u FROM User u WHERE u.genderSearch = :gender AND u.gender = :genderSearch AND u.city = :city")
-  List<User> findAllUsers(@Param("genderSearch") String genderSearch, @Param("gender") String gender, @Param("city") String city);
+  @Query("SELECT u FROM User u")
+  List<User> findAllUsers();
 
-  @Query("SELECT p FROM Picture p WHERE p.id = :id")
-  Optional<Picture> findPictureById(Long id);
+  @Query("SELECT u FROM User u WHERE u.email = :email")
+  Optional<User> findUserByEmail(@Param("email") String email);
 }

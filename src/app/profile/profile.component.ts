@@ -164,7 +164,7 @@ export class ProfileComponent implements OnInit, OnDestroy{
   }
 
   deleteUser() {
-    this.deleteUserSubscription = this.userService.deleteUser(this.loggedInUser?.email!).subscribe({
+    this.deleteUserSubscription = this.userService.deleteConnectedUser().subscribe({
       next: (response: void) => {
         sessionStorage.removeItem('loggedInUserEmail');
         this.router.navigate(['/connect'])

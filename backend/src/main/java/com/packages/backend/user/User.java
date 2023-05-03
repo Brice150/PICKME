@@ -19,69 +19,69 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
-    private Long id;
-    private String nickname;
-    private String email;
-    private String password;
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole;
-    private Boolean locked = false;
-    private Boolean enabled = false;
-    private String mainPicture;
-    private String gender;
-    private String genderSearch;
-    private String relationshipType;
-    private Date birthDate;
-    private String city;
-    private Long height;
-    private String languages;
-    private String job;
-    private String description;
-    private String smokes;
-    private String alcoholDrinking;
-    private String organised;
-    private String personality;
-    private String sportPractice;
-    private String animals;
-    private String parenthood;
-    private String gamer;
-    private String activities;
-    @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "pictures")
-    private List<Picture> pictures;
-    @OneToMany(mappedBy = "fkUserToken", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "tokens")
-    private List<ConfirmationToken> tokens;
-    @OneToMany(mappedBy = "fkReceiver", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "likesSent")
-    private List<Like> likes;
-    @OneToMany(mappedBy = "fkSender", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "matchesSent")
-    private List<Match> matches;
-    @OneToMany(mappedBy = "fkSender", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "messagesSent")
-    private List<Message> messagesSent;
-    @OneToMany(mappedBy = "fkReceiver", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "messagesReceived")
-    private List<Message> messagesReceived;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(nullable = false, updatable = false)
+  private Long id;
+  private String nickname;
+  private String email;
+  private String password;
+  @Enumerated(EnumType.STRING)
+  private UserRole userRole;
+  private Boolean locked = false;
+  private Boolean enabled = false;
+  private String mainPicture;
+  private String gender;
+  private String genderSearch;
+  private String relationshipType;
+  private Date birthDate;
+  private String city;
+  private Long height;
+  private String languages;
+  private String job;
+  private String description;
+  private String smokes;
+  private String alcoholDrinking;
+  private String organised;
+  private String personality;
+  private String sportPractice;
+  private String animals;
+  private String parenthood;
+  private String gamer;
+  private String activities;
+  @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL)
+  @JsonManagedReference(value = "pictures")
+  private List<Picture> pictures;
+  @OneToMany(mappedBy = "fkUserToken", cascade = CascadeType.ALL)
+  @JsonManagedReference(value = "tokens")
+  private List<ConfirmationToken> tokens;
+  @OneToMany(mappedBy = "fkReceiver", cascade = CascadeType.ALL)
+  @JsonManagedReference(value = "likesSent")
+  private List<Like> likes;
+  @OneToMany(mappedBy = "fkSender", cascade = CascadeType.ALL)
+  @JsonManagedReference(value = "matchesSent")
+  private List<Match> matches;
+  @OneToMany(mappedBy = "fkSender", cascade = CascadeType.ALL)
+  @JsonManagedReference(value = "messagesSent")
+  private List<Message> messagesSent;
+  @OneToMany(mappedBy = "fkReceiver", cascade = CascadeType.ALL)
+  @JsonManagedReference(value = "messagesReceived")
+  private List<Message> messagesReceived;
 
-    public User() {
-    }
+  public User() {
+  }
 
-    public User(String nickname, String email, String password, UserRole userRole,String gender, String genderSearch, String relationshipType, Date birthDate, String city) {
-        this.nickname = nickname;
-        this.email = email;
-        this.password = password;
-        this.userRole = userRole;
-        this.gender = gender;
-        this.genderSearch = genderSearch;
-        this.relationshipType = relationshipType;
-        this.birthDate = birthDate;
-        this.city = city;
-    }
+  public User(String nickname, String email, String password, UserRole userRole, String gender, String genderSearch, String relationshipType, Date birthDate, String city) {
+    this.nickname = nickname;
+    this.email = email;
+    this.password = password;
+    this.userRole = userRole;
+    this.gender = gender;
+    this.genderSearch = genderSearch;
+    this.relationshipType = relationshipType;
+    this.birthDate = birthDate;
+    this.city = city;
+  }
 
   public Long getId() {
     return id;
@@ -100,60 +100,60 @@ public class User implements UserDetails {
   }
 
   public String getEmail() {
-        return email;
-    }
+    return email;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public UserRole getUserRole() {
-        return userRole;
-    }
+  public UserRole getUserRole() {
+    return userRole;
+  }
 
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
-    }
+  public void setUserRole(UserRole userRole) {
+    this.userRole = userRole;
+  }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
-        return Collections.singletonList(authority);
-    }
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
+    return Collections.singletonList(authority);
+  }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+  @Override
+  public String getPassword() {
+    return password;
+  }
 
-    @Override
-    public String getUsername() {
-        return email;
-    }
+  @Override
+  public String getUsername() {
+    return email;
+  }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return !locked;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return !locked;
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
 
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
+  @Override
+  public boolean isEnabled() {
+    return enabled;
+  }
 
   public String getMainPicture() {
     return mainPicture;
