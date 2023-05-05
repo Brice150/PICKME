@@ -5,7 +5,6 @@ import com.packages.backend.user.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 @Entity
 @Table(name = "pictures")
@@ -49,15 +48,6 @@ public class Picture implements Serializable {
 
   public void setFkUser(User fkUser) {
     this.fkUser = fkUser;
-  }
-
-  @Override
-  public String toString() {
-    return "Picture{" +
-      "id=" + id +
-      ", content='" + content + '\'' +
-      ", fkUser=" + fkUser +
-      '}';
   }
 }
 

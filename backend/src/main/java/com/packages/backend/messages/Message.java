@@ -72,16 +72,5 @@ public class Message implements Serializable {
   public void setFkReceiver(User fkReceiver) {
     this.fkReceiver = fkReceiver;
   }
-
-  @Override
-  public String toString() {
-    return "Message{" +
-      "id=" + id +
-      ", content='" + content + '\'' +
-      ", date=" + date +
-      ", fkSender=" + fkSender +
-      ", fkReceiver=" + fkReceiver +
-      '}';
-  }
 }
 

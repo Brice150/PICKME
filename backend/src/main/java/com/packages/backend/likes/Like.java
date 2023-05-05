@@ -62,15 +62,5 @@ public class Like implements Serializable {
   public void setFkReceiver(User fkReceiver) {
     this.fkReceiver = fkReceiver;
   }
-
-  @Override
-  public String toString() {
-    return "Like{" +
-      "id=" + id +
-      ", date=" + date +
-      ", fkSender=" + fkSender +
-      ", fkReceiver=" + fkReceiver +
-      '}';
-  }
 }
 

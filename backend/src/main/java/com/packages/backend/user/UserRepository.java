@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findUserByEmail(@Param("email") String email);
 
   @Transactional
-  @Modifying
+  @Modifying(clearAutomatically = true)
   @Query("UPDATE User a " +
     "SET a.enabled = TRUE WHERE a.email = ?1")
   int enableUser(String email);

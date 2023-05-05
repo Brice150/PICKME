@@ -62,15 +62,5 @@ public class Match implements Serializable {
   public void setFkReceiver(User fkReceiver) {
     this.fkReceiver = fkReceiver;
   }
-
-  @Override
-  public String toString() {
-    return "Match{" +
-      "id=" + id +
-      ", date=" + date +
-      ", fkSender=" + fkSender +
-      ", fkReceiver=" + fkReceiver +
-      '}';
-  }
 }
 

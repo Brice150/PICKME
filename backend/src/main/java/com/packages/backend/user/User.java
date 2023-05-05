@@ -350,42 +350,4 @@ public class User implements UserDetails {
   public void setTokens(List<ConfirmationToken> tokens) {
     this.tokens = tokens;
   }
-
-  @Override
-  public String toString() {
-    return "User{" +
-      "id=" + id +
-      ", nickname='" + nickname + '\'' +
-      ", email='" + email + '\'' +
-      ", password='" + password + '\'' +
-      ", userRole=" + userRole +
-      ", locked=" + locked +
-      ", enabled=" + enabled +
-      ", mainPicture='" + mainPicture + '\'' +
-      ", gender='" + gender + '\'' +
-      ", genderSearch='" + genderSearch + '\'' +
-      ", relationshipType='" + relationshipType + '\'' +
-      ", birthDate='" + birthDate + '\'' +
-      ", city='" + city + '\'' +
-      ", height='" + height + '\'' +
-      ", languages='" + languages + '\'' +
-      ", job='" + job + '\'' +
-      ", description='" + description + '\'' +
-      ", smokes='" + smokes + '\'' +
-      ", alcoholDrinking='" + alcoholDrinking + '\'' +
-      ", organised='" + organised + '\'' +
-      ", personality='" + personality + '\'' +
-      ", sportPractice='" + sportPractice + '\'' +
-      ", animals='" + animals + '\'' +
-      ", parenthood='" + parenthood + '\'' +
-      ", gamer='" + gamer + '\'' +
-      ", activities='" + activities + '\'' +
-      ", pictures=" + pictures +
-      ", tokens=" + tokens +
-      ", likes=" + likes +
-      ", matches=" + matches +
-      ", messagesSent=" + messagesSent +
-      ", messagesReceived=" + messagesReceived +
-      '}';
-  }
 }

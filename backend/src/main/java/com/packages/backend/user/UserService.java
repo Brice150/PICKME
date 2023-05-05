@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.nio.file.Paths.get;
 
@@ -27,16 +28,19 @@ import static java.nio.file.Paths.get;
 public class UserService implements UserDetailsService {
 
   private final static String USER_EMAIL_NOT_FOUND_MSG = "user with email %s not found";
-  private final static String USER_ID_NOT_FOUND_MSG = "user with id %s not found";
   private final UserRepository userRepository;
+  private final RestrictedUserDTOMapper restrictedUserDTOMapper;
+  private final UserDTOMapper userDTOMapper;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final ConfirmationTokenService confirmationTokenService;
   public static final String IMAGEDIRECTORY = "src/main/resources/pictures";
 
-  public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService) {
+  public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService, RestrictedUserDTOMapper restrictedUserDTOMapper, UserDTOMapper userDTOMapper) {
     this.userRepository = userRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.confirmationTokenService = confirmationTokenService;
+    this.restrictedUserDTOMapper = restrictedUserDTOMapper;
+    this.userDTOMapper = userDTOMapper;
   }
 
   @Override
@@ -73,28 +77,17 @@ public class UserService implements UserDetailsService {
     userRepository.enableUser(email);
   }
 
-  public List<User> findAllUsers() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = findUserByEmail(currentUserEmail);
+  public List<RestrictedUserDTO> findAllUsers() {
+    User connectedUser = findConnectedUser();
     List<User> users = userRepository.findAllUsers(connectedUser.getGenderSearch(), connectedUser.getGender(), connectedUser.getCity());
     List<Like> likes = userRepository.findAllLikesByFk(connectedUser.getId());
     users.removeIf(user -> !user.isEnabled());
-    users.removeIf(user -> currentUserEmail.equals(user.getEmail()));
+    users.removeIf(user -> connectedUser.getEmail().equals(user.getEmail()));
     likes.removeIf(like -> !Objects.equals(like.getFkSender().getId(), connectedUser.getId()));
     for (Like like : likes) {
       users.removeIf(user ->
         Objects.equals(like.getFkReceiver().getId(), user.getId())
       );
-    }
-    for (User user : users) {
-      user.setMessagesReceived(null);
-      user.setMessagesSent(null);
-      user.setLikes(null);
-      user.setMatches(null);
-      user.setPassword(null);
-      user.setTokens(null);
-      user.setUserRole(UserRole.HIDDEN);
     }
     Comparator<User> usersSort = Comparator
       .comparing((User user) -> compareAttributes(connectedUser.getRelationshipType(), user.getRelationshipType()))
@@ -107,13 +100,11 @@ public class UserService implements UserDetailsService {
       .thenComparing((User user) -> compareAttributes(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking()))
       .thenComparing((User user) -> compareAttributes(connectedUser.getGamer(), user.getGamer()));
     users.sort(usersSort);
-    return users;
+    return users.stream().map(restrictedUserDTOMapper).collect(Collectors.toList());
   }
 
-  public List<User> findAllUsersThatLiked() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = findUserByEmail(currentUserEmail);
+  public List<RestrictedUserDTO> findAllUsersThatLiked() {
+    User connectedUser = findConnectedUser();
     List<User> users = new ArrayList<>();
     List<Like> likes = userRepository.findAllLikesByFk(connectedUser.getId());
     List<Match> matches = userRepository.findAllMatchesByFk(connectedUser.getId());
@@ -125,18 +116,11 @@ public class UserService implements UserDetailsService {
     users.removeIf(user -> !user.isEnabled());
     for (Match match : matches) {
       users.removeIf(user ->
-        Objects.equals(match.getFkReceiver().getId(), connectedUser.getId())
-          || Objects.equals(match.getFkSender().getId(), connectedUser.getId())
+        (Objects.equals(match.getFkReceiver().getId(), connectedUser.getId())
+          && Objects.equals(match.getFkSender().getId(), user.getId()))
+          || (Objects.equals(match.getFkReceiver().getId(), user.getId())
+          && Objects.equals(match.getFkSender().getId(), connectedUser.getId()))
       );
-    }
-    for (User user : users) {
-      user.setMessagesReceived(null);
-      user.setMessagesSent(null);
-      user.setLikes(null);
-      user.setMatches(null);
-      user.setPassword(null);
-      user.setTokens(null);
-      user.setUserRole(UserRole.HIDDEN);
     }
     Comparator<User> usersSort = Comparator
       .comparing((User user) -> compareAttributes(connectedUser.getRelationshipType(), user.getRelationshipType()))
@@ -149,13 +133,11 @@ public class UserService implements UserDetailsService {
       .thenComparing((User user) -> compareAttributes(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking()))
       .thenComparing((User user) -> compareAttributes(connectedUser.getGamer(), user.getGamer()));
     users.sort(usersSort);
-    return users;
+    return users.stream().map(restrictedUserDTOMapper).collect(Collectors.toList());
   }
 
-  public List<User> findAllUsersThatMatched() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = findUserByEmail(currentUserEmail);
+  public List<RestrictedUserDTO> findAllUsersThatMatched() {
+    User connectedUser = findConnectedUser();
     List<User> users = new ArrayList<>();
     List<Match> matches = userRepository.findAllMatchesByFk(connectedUser.getId());
     matches.sort((Match match1, Match match2) ->
@@ -168,24 +150,13 @@ public class UserService implements UserDetailsService {
       }
     }
     users.removeIf(user -> !user.isEnabled());
-    for (User user : users) {
-      user.setMessagesReceived(null);
-      user.setMessagesSent(null);
-      user.setLikes(null);
-      user.setMatches(null);
-      user.setPassword(null);
-      user.setTokens(null);
-      user.setUserRole(UserRole.HIDDEN);
-    }
-    return users;
+    return users.stream().map(restrictedUserDTOMapper).collect(Collectors.toList());
   }
 
-  public Optional<User> updateUser(User user) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = findUserByEmail(currentUserEmail);
+  public Optional<UserDTO> updateUser(User user) {
+    User connectedUser = findConnectedUser();
     if (connectedUser.getId().equals(user.getId())) {
-      user.setEmail(currentUserEmail);
+      user.setEmail(connectedUser.getEmail());
       user.setUserRole(connectedUser.getUserRole());
       if (user.getMainPicture() != null) {
         Optional<Picture> picture = userRepository.findPictureById(Long.parseLong(user.getMainPicture()));
@@ -195,45 +166,39 @@ public class UserService implements UserDetailsService {
       }
       String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
       user.setPassword(encodedPassword);
-      return Optional.of(userRepository.save(user));
+      return Optional.of(userRepository.save(user)).map(userDTOMapper);
     } else {
       return Optional.empty();
     }
   }
 
-  public User findUserByEmail(String email) {
-    return userRepository.findUserByEmail(email)
-      .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_EMAIL_NOT_FOUND_MSG, email)));
+  public Optional<User> findUserById(Long id) {
+    return userRepository.findById(id);
   }
 
-  public User findUserById(Long id) {
-    User user = userRepository.findById(id)
-      .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_ID_NOT_FOUND_MSG, id)));
-    user.setMessagesReceived(null);
-    user.setMessagesSent(null);
-    user.setLikes(null);
-    user.setMatches(null);
-    user.setPassword(null);
-    user.setTokens(null);
-    user.setUserRole(UserRole.HIDDEN);
-    user.setGender(null);
-    user.setGenderSearch(null);
-    return user;
+  public Optional<RestrictedUserDTO> findUserByIdDTO(Long id) {
+    Optional<User> user = findUserById(id);
+    return user.map(restrictedUserDTOMapper);
+  }
+
+  public Optional<User> findUserByEmail(String email) {
+    return userRepository.findUserByEmail(email);
   }
 
   public User findConnectedUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String currentUserEmail = authentication.getName();
-    User user = findUserByEmail(currentUserEmail);
-    user.setPassword(null);
-    user.setTokens(null);
-    return user;
+    Optional<User> user = findUserByEmail(currentUserEmail);
+    return user.orElse(null);
+  }
+
+  public UserDTO findConnectedUserDTO() {
+    Optional<User> userDTO = Optional.of(findConnectedUser());
+    return userDTO.map(userDTOMapper).orElse(null);
   }
 
   public void deleteConnectedUser() throws IOException {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = findUserByEmail(currentUserEmail);
+    User connectedUser = findConnectedUser();
     List<Picture> pictures = userRepository.findAllPicturesByFk(connectedUser.getId());
     for (Picture picture : pictures) {
       if (picture.getContent() != null) {
@@ -263,20 +228,14 @@ public class UserService implements UserDetailsService {
   }
 
   public static int compareAttributes(String attribute1, String attribute2) {
-    int result = 0;
-    if ((attribute1 == null && attribute2 == null)) {
-      result = 0;
-    } else if (attribute1 != null && attribute2 == null) {
-      result = 0;
-    } else if (attribute1 == null && attribute2 != null) {
-      result = 0;
-    } else if (attribute1 != null && attribute2 != null) {
+    if ((attribute1 == null || attribute2 == null)) {
+      return 0;
+    } else {
       if (attribute1.equals(attribute2)) {
-        result = -1;
+        return -1;
       } else {
-        result = 1;
+        return 1;
       }
     }
-    return result;
   }
 }

@@ -8,8 +8,6 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -42,9 +40,7 @@ public class PictureService {
   }
 
   public Optional<Picture> addPicture(List<MultipartFile> multipartImages) throws IOException {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = userService.findUserByEmail(currentUserEmail);
+    User connectedUser = userService.findConnectedUser();
     List<Picture> pictures = findAllPictures();
     if (connectedUser != null) {
       List<String> contents = new ArrayList<>();
@@ -103,9 +99,7 @@ public class PictureService {
 
   @Transactional
   public String deletePictureById(Long id) throws IOException {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = userService.findUserByEmail(currentUserEmail);
+    User connectedUser = userService.findConnectedUser();
     Picture picture = findPictureById(id);
     if (connectedUser.getId().equals(picture.getFkUser().getId())) {
       if (picture.getContent() != null) {

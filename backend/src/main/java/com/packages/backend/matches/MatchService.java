@@ -3,8 +3,6 @@ package com.packages.backend.matches;
 import com.packages.backend.user.User;
 import com.packages.backend.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +24,8 @@ public class MatchService {
     matchRepository.save(match);
   }
 
-  public List<Match> findAllMatches() {
-    return matchRepository.findAll();
-  }
-
   public List<Match> findAllMatchesByFk() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = userService.findUserByEmail(currentUserEmail);
+    User connectedUser = userService.findConnectedUser();
     List<Match> matches = matchRepository.findAllMatchesByFk(connectedUser.getId());
     Comparator<Match> matchesSort = Comparator
       .comparing(Match::getDate, Date::compareTo);
@@ -47,9 +39,7 @@ public class MatchService {
   }
 
   public Optional<Match> findMatchByFk(Long fkSender, Long fkReceiver) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUserEmail = authentication.getName();
-    User connectedUser = userService.findUserByEmail(currentUserEmail);
+    User connectedUser = userService.findConnectedUser();
     if (!Objects.equals(connectedUser.getId(), fkSender)
       && !Objects.equals(connectedUser.getId(), fkReceiver)) {
       return Optional.empty();

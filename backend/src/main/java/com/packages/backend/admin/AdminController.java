@@ -1,6 +1,6 @@
 package com.packages.backend.admin;
 
-import com.packages.backend.user.User;
+import com.packages.backend.user.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +20,7 @@ public class AdminController {
   }
 
   @GetMapping("/user/all")
-  public ResponseEntity<List<User>> getAllUsers() {
+  public ResponseEntity<List<UserDTO>> getAllUsers() {
     return new ResponseEntity<>(adminService.findAllUsers(), HttpStatus.OK);
   }
 

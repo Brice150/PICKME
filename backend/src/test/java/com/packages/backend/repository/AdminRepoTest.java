@@ -1,5 +1,6 @@
 package com.packages.backend.repository;
 
+import com.packages.backend.admin.AdminRepository;
 import com.packages.backend.likes.Like;
 import com.packages.backend.likes.LikeRepository;
 import com.packages.backend.matches.Match;
@@ -18,16 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-class UserRepoTest {
+class AdminRepoTest {
 
+  @Autowired
+  private AdminRepository adminRepository;
   @Autowired
   private MessageRepository messageRepository;
   @Autowired
@@ -40,6 +40,7 @@ class UserRepoTest {
   private UserRepository userRepository;
   @Autowired
   private ConfirmationTokenRepository confirmationTokenRepository;
+
   private User user1;
   private User user2;
   private ConfirmationToken confirmationToken;
@@ -113,122 +114,143 @@ class UserRepoTest {
   }
 
   @Test
-  void testFindUserByEmail() {
-    // When
-    Optional<User> foundUser = userRepository.findUserByEmail(user1.getEmail());
+  void testFindAllMessagesByFk() {
+    //given
+    specificSetUp("message");
 
-    // Then
-    assertThat(foundUser).isPresent().contains(user1);
+    //when
+    List<Message> messages = adminRepository.findAllMessagesByFk(user1.getId());
+
+    //then
+    assertThat(messages).isNotNull().hasSize(2);
   }
 
   @Test
-  void testEnableUser() {
-    // When
-    int updatedUser = userRepository.enableUser(user1.getEmail());
+  void testFindAllMatchesByFk() {
+    //given
+    specificSetUp("match");
 
-    // Then
-    assertThat(updatedUser).isEqualTo(1);
-    Optional<User> enabledUser = userRepository.findUserByEmail(user1.getEmail());
-    assertThat(enabledUser).isPresent();
-    assertThat(enabledUser.get().isEnabled()).isTrue();
+    //when
+    List<Match> matches = adminRepository.findAllMatchesByFk(user1.getId());
+
+    //then
+    assertThat(matches).isNotNull().hasSize(1);
+  }
+
+  @Test
+  void testFindAllLikesByFk() {
+    //given
+    specificSetUp("like");
+
+    //when
+    List<Like> likes = adminRepository.findAllLikesByFk(user1.getId());
+
+    //then
+    assertThat(likes).isNotNull().hasSize(2);
+  }
+
+  @Test
+  void testFindAllPicturesByFk() {
+    //given
+    specificSetUp("picture");
+
+    //when
+    List<Picture> pictures = adminRepository.findAllPicturesByFk(user1.getId());
+
+    //then
+    assertThat(pictures).isNotNull().hasSize(2);
+  }
+
+  @Test
+  void testFindAllUsers() {
+    //when
+    List<User> users = adminRepository.findAllUsers();
+
+    //then
+    assertThat(users).isNotNull().hasSize(2);
+  }
+
+  @Test
+  void testFindUserByEmail() {
+    //when
+    Optional<User> user = adminRepository.findUserByEmail(user1.getEmail());
+
+    //then
+    assertThat(user).isPresent().matches(u -> Objects.equals(u.get().getEmail(), user1.getEmail()));
   }
 
   @Test
   void testDeleteTokenByFk() {
-    // Given
+    //given
     specificSetUp("token");
 
-    // When
-    userRepository.deleteTokenByFk(user1.getId());
+    //when
+    adminRepository.deleteTokenByFk(user1.getId());
 
-    // Then
+    //then
     Optional<ConfirmationToken> deletedToken = confirmationTokenRepository.findByToken(confirmationToken.getToken());
     assertThat(deletedToken).isEmpty();
   }
 
   @Test
   void testDeleteMessageById() {
-    // Given
+    //given
     specificSetUp("message");
 
-    // When
-    userRepository.deleteMessageById(message1.getId());
+    //when
+    adminRepository.deleteMessageById(message1.getId());
 
-    // Then
+    //then
     Optional<Message> deletedMessage = messageRepository.findMessageById(message1.getId());
     assertThat(deletedMessage).isEmpty();
   }
 
   @Test
   void testDeleteMatchById() {
-    // Given
+    //given
     specificSetUp("match");
 
-    // When
-    userRepository.deleteMatchById(match1.getId());
+    //when
+    adminRepository.deleteMatchById(match1.getId());
 
-    // Then
+    //then
     Optional<Match> deletedMatch = matchRepository.findMatchById(match1.getId());
     assertThat(deletedMatch).isEmpty();
   }
 
   @Test
   void testDeleteLikeById() {
-    // Given
+    //given
     specificSetUp("like");
 
-    // When
-    userRepository.deleteLikeById(like1.getId());
+    //when
+    adminRepository.deleteLikeById(like1.getId());
 
-    // Then
+    //then
     Optional<Like> deletedLike = likeRepository.findLikeById(like1.getId());
     assertThat(deletedLike).isEmpty();
   }
 
   @Test
   void testDeletePictureById() {
-    // Given
+    //given
     specificSetUp("picture");
 
-    // When
-    userRepository.deletePictureById(picture1.getId());
+    //when
+    adminRepository.deletePictureById(picture1.getId());
 
-    // Then
-    Optional<Picture> deletedPicture = userRepository.findPictureById(picture1.getId());
+    //then
+    Optional<Picture> deletedPicture = pictureRepository.findPictureById(picture1.getId());
     assertThat(deletedPicture).isEmpty();
   }
 
   @Test
   void testDeleteUserByEmail() {
-    // When
-    userRepository.deleteUserByEmail(user1.getEmail());
+    //when
+    adminRepository.deleteUserByEmail(user1.getEmail());
 
-    // Then
+    //then
     Optional<User> deletedUser = userRepository.findUserByEmail(user1.getEmail());
     assertThat(deletedUser).isEmpty();
-  }
-
-  @Test
-  void testFindAllMessagesByFk() {
-    // Given
-    specificSetUp("message");
-
-    // When
-    List<Message> foundMessages = userRepository.findAllMessagesByFk(user1.getId());
-
-    // Then
-    assertThat(foundMessages).isNotNull().hasSize(2);
-  }
-
-  @Test
-  void testFindAllMatchesByFk() {
-    // Given
-    specificSetUp("match");
-
-    // When
-    List<Match> foundMatches = userRepository.findAllMatchesByFk(user1.getId());
-
-    // Then
-    assertThat(foundMatches).isNotNull().hasSize(1);
   }
 }

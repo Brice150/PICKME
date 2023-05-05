@@ -1,6 +1,6 @@
 package com.packages.backend.messages;
 
-import com.packages.backend.user.User;
+import com.packages.backend.user.RestrictedUserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,8 +25,8 @@ public class MessageController {
   }
 
   @GetMapping("/sender/{id}")
-  public ResponseEntity<User> getMessageSender(@PathVariable("id") Long id) {
-    Optional<User> messageSender = messageService.findMessageSender(id);
+  public ResponseEntity<RestrictedUserDTO> getMessageSender(@PathVariable("id") Long id) {
+    Optional<RestrictedUserDTO> messageSender = messageService.findMessageSender(id);
     return messageSender.map(user -> new ResponseEntity<>(user, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
   }
 

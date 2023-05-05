@@ -6,8 +6,9 @@ import com.packages.backend.messages.Message;
 import com.packages.backend.pictures.Picture;
 import com.packages.backend.pictures.PictureNotFoundException;
 import com.packages.backend.user.User;
+import com.packages.backend.user.UserDTO;
+import com.packages.backend.user.UserDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,32 +17,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.nio.file.Paths.get;
 
 @Service
 public class AdminService {
   private final AdminRepository adminRepository;
+  private final UserDTOMapper userDTOMapper;
   public static final String IMAGEDIRECTORY = "src/main/resources/pictures";
-  private final static String USER_EMAIL_NOT_FOUND_MSG = "user with email %s not found";
 
   @Autowired
-  public AdminService(AdminRepository adminRepository) {
+  public AdminService(AdminRepository adminRepository, UserDTOMapper userDTOMapper) {
     this.adminRepository = adminRepository;
+    this.userDTOMapper = userDTOMapper;
   }
 
-  public List<User> findAllUsers() {
+  public List<UserDTO> findAllUsers() {
     List<User> users = adminRepository.findAllUsers();
-    for (User user : users) {
-      user.setMessagesReceived(null);
-      user.setPassword(null);
-      user.setTokens(null);
-    }
     Comparator<User> usersSort = Comparator
       .comparing(User::getUserRole, (role1, role2) -> role2.compareTo(role1))
       .thenComparing(User::getUsername);
     users.sort(usersSort);
-    return users;
+    return users.stream().map(userDTOMapper).collect(Collectors.toList());
   }
 
   @Transactional
@@ -49,15 +48,18 @@ public class AdminService {
     adminRepository.deleteMessageById(id);
   }
 
-  public User findUserByEmail(String email) {
-    return adminRepository.findUserByEmail(email)
-      .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_EMAIL_NOT_FOUND_MSG, email)));
+  public Optional<User> findUserByEmail(String email) {
+    return adminRepository.findUserByEmail(email);
   }
 
   @Transactional
   public void deleteUserByEmail(String email) throws IOException {
-    User selectedUser = findUserByEmail(email);
-    List<Picture> pictures = adminRepository.findAllPicturesByFk(selectedUser.getId());
+    Optional<User> selectedUser = findUserByEmail(email);
+    Long selectedId = 0L;
+    if (selectedUser.isPresent()) {
+      selectedId = selectedUser.get().getId();
+    }
+    List<Picture> pictures = adminRepository.findAllPicturesByFk(selectedId);
     for (Picture picture : pictures) {
       if (picture.getContent() != null) {
         Path imagePath = get(IMAGEDIRECTORY).normalize().resolve(picture.getContent());
@@ -69,19 +71,19 @@ public class AdminService {
       }
       adminRepository.deletePictureById(picture.getId());
     }
-    List<Like> likes = adminRepository.findAllLikesByFk(selectedUser.getId());
+    List<Like> likes = adminRepository.findAllLikesByFk(selectedId);
     for (Like like : likes) {
       adminRepository.deleteLikeById(like.getId());
     }
-    List<Match> matches = adminRepository.findAllMatchesByFk(selectedUser.getId());
+    List<Match> matches = adminRepository.findAllMatchesByFk(selectedId);
     for (Match match : matches) {
       adminRepository.deleteMatchById(match.getId());
     }
-    List<Message> messages = adminRepository.findAllMessagesByFk(selectedUser.getId());
+    List<Message> messages = adminRepository.findAllMessagesByFk(selectedId);
     for (Message message : messages) {
       adminRepository.deleteMessageById(message.getId());
     }
-    adminRepository.deleteTokenByFk(selectedUser.getId());
+    adminRepository.deleteTokenByFk(selectedId);
     adminRepository.deleteUserByEmail(email);
   }
 }

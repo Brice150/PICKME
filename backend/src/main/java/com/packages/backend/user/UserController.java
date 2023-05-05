@@ -25,33 +25,34 @@ public class UserController {
   }
 
   @GetMapping("/user/all")
-  public ResponseEntity<List<User>> getAllUsers() {
+  public ResponseEntity<List<RestrictedUserDTO>> getAllUsers() {
     return new ResponseEntity<>(userService.findAllUsers(), HttpStatus.OK);
   }
 
   @GetMapping("/user/all/like")
-  public ResponseEntity<List<User>> getAllUsersThatLiked() {
+  public ResponseEntity<List<RestrictedUserDTO>> getAllUsersThatLiked() {
     return new ResponseEntity<>(userService.findAllUsersThatLiked(), HttpStatus.OK);
   }
 
   @GetMapping("/user/all/match")
-  public ResponseEntity<List<User>> getAllUsersThatMatched() {
+  public ResponseEntity<List<RestrictedUserDTO>> getAllUsersThatMatched() {
     return new ResponseEntity<>(userService.findAllUsersThatMatched(), HttpStatus.OK);
   }
 
   @GetMapping("/user")
-  public ResponseEntity<User> getConnectedUser() {
-    return new ResponseEntity<>(userService.findConnectedUser(), HttpStatus.OK);
+  public ResponseEntity<UserDTO> getConnectedUser() {
+    return new ResponseEntity<>(userService.findConnectedUserDTO(), HttpStatus.OK);
   }
 
   @GetMapping("/user/{id}")
-  public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
-    return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);
+  public ResponseEntity<RestrictedUserDTO> getUserById(@PathVariable("id") Long id) {
+    Optional<RestrictedUserDTO> foundUser = userService.findUserByIdDTO(id);
+    return foundUser.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 
   @PutMapping("/user")
-  public ResponseEntity<User> updateUser(@RequestBody User user) {
-    Optional<User> updatedUser = userService.updateUser(user);
+  public ResponseEntity<UserDTO> updateUser(@RequestBody User user) {
+    Optional<UserDTO> updatedUser = userService.updateUser(user);
     return updatedUser.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
   }
 
