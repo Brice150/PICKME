@@ -2,7 +2,7 @@ package com.packages.backend.registration;
 
 import java.util.Date;
 
-public class RegistrationRequest {
+public class Registration {
   private final String nickname;
   private final String email;
   private final String password;
@@ -12,7 +12,7 @@ public class RegistrationRequest {
   private final Date birthDate;
   private final String city;
 
-  public RegistrationRequest(String nickname, String email, String password, String gender, String genderSearch, String relationshipType, Date birthDate, String city) {
+  public Registration(String nickname, String email, String password, String gender, String genderSearch, String relationshipType, Date birthDate, String city) {
     this.nickname = nickname;
     this.email = email;
     this.password = password;

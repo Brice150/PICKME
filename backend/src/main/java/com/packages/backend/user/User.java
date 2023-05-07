@@ -5,7 +5,6 @@ import com.packages.backend.likes.Like;
 import com.packages.backend.matches.Match;
 import com.packages.backend.messages.Message;
 import com.packages.backend.pictures.Picture;
-import com.packages.backend.registration.token.ConfirmationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +28,7 @@ public class User implements UserDetails {
   @Enumerated(EnumType.STRING)
   private UserRole userRole;
   private Boolean locked = false;
-  private Boolean enabled = false;
+  private Boolean enabled = true;
   private String mainPicture;
   private String gender;
   private String genderSearch;
@@ -52,9 +51,6 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL)
   @JsonManagedReference(value = "pictures")
   private List<Picture> pictures;
-  @OneToMany(mappedBy = "fkUserToken", cascade = CascadeType.ALL)
-  @JsonManagedReference(value = "tokens")
-  private List<ConfirmationToken> tokens;
   @OneToMany(mappedBy = "fkReceiver", cascade = CascadeType.ALL)
   @JsonManagedReference(value = "likesSent")
   private List<Like> likes;
@@ -345,9 +341,5 @@ public class User implements UserDetails {
 
   public void setMessagesReceived(List<Message> messagesReceived) {
     this.messagesReceived = messagesReceived;
-  }
-
-  public void setTokens(List<ConfirmationToken> tokens) {
-    this.tokens = tokens;
   }
 }

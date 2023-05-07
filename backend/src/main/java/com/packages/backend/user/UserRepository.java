@@ -22,17 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findUserByEmail(@Param("email") String email);
 
   @Transactional
-  @Modifying(clearAutomatically = true)
-  @Query("UPDATE User a " +
-    "SET a.enabled = TRUE WHERE a.email = ?1")
-  int enableUser(String email);
-
-  @Transactional
-  @Modifying
-  @Query("DELETE FROM ConfirmationToken c WHERE c.fkUserToken.id = :fkUser")
-  void deleteTokenByFk(@Param("fkUser") Long fkUser);
-
-  @Transactional
   @Modifying
   @Query("DELETE FROM Message m WHERE m.id = :id")
   void deleteMessageById(@Param("id") Long id);

@@ -17,11 +17,6 @@ import java.util.Optional;
 public interface AdminRepository extends JpaRepository<Match, Long> {
   @Transactional
   @Modifying
-  @Query("DELETE FROM ConfirmationToken c WHERE c.fkUserToken.id = :fkUser")
-  void deleteTokenByFk(@Param("fkUser") Long fkUser);
-
-  @Transactional
-  @Modifying
   @Query("DELETE FROM Message m WHERE m.id = :id")
   void deleteMessageById(@Param("id") Long id);
 

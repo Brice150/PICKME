@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { User } from '../../core/interfaces/user';
 import { ConnectService } from '../../core/services/connect.service';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -15,18 +16,19 @@ import { Subscription } from 'rxjs/internal/Subscription';
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   registerForm!: FormGroup;
-  onConfirmEmail: boolean = false;
   startDate: Date = new Date(1990, 0, 1);
   minDate: Date;
   birthDateExists: boolean = false;
   birthDate!: Date;
   registerSubscription!: Subscription;
+  loginSubscription!: Subscription;
 
   constructor(
     private fb: FormBuilder, 
     private connectService: ConnectService,
     private dateAdapter: DateAdapter<Date>,
-    private toastr: ToastrService) 
+    private toastr: ToastrService,
+    private router: Router) 
     {
       this.dateAdapter.setLocale("en-GB");
       const currentYear = new Date().getFullYear();
@@ -47,21 +49,22 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.registerSubscription && this.registerSubscription.unsubscribe();
+    this.loginSubscription && this.loginSubscription.unsubscribe();
   }
 
   registerUser(user: User) {
     user.birthDate = this.birthDate;
     this.registerSubscription = this.connectService.register(user).subscribe({
       next: (response: User) => {
-        this.onConfirmEmail=true;
+        this.loginUser(response);
       },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, "Server error", {
+      error: (error: HttpErrorResponse) => {        
+        this.toastr.error(error.error, "Connection", {
           positionClass: "toast-bottom-center" 
         })
       },
       complete: () => {
-        this.toastr.success("Please confirm your email", "Connection", {
+        this.toastr.success("Registration successful", "Connection", {
           positionClass: "toast-bottom-center" 
         })
       }
@@ -73,5 +76,24 @@ export class RegisterComponent implements OnInit, OnDestroy {
       this.birthDate = event.value;
       this.birthDateExists = true;
     }
+  }
+
+  loginUser(user: User) {
+    this.loginSubscription = this.connectService.login(user).subscribe({
+      next: (response: any) => {
+        sessionStorage.setItem("loggedInUserEmail", JSON.stringify(user.email));
+        this.router.navigate(["/select"]);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, "Server error", {
+          positionClass: "toast-bottom-center" 
+        })
+      },
+      complete: () => {
+        this.toastr.success("Logged in !", "Connection", {
+          positionClass: "toast-bottom-center" 
+        })
+      }
+    })
   }
 }

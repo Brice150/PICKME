@@ -9,8 +9,6 @@ import com.packages.backend.messages.Message;
 import com.packages.backend.messages.MessageRepository;
 import com.packages.backend.pictures.Picture;
 import com.packages.backend.pictures.PictureRepository;
-import com.packages.backend.registration.token.ConfirmationToken;
-import com.packages.backend.registration.token.ConfirmationTokenRepository;
 import com.packages.backend.user.User;
 import com.packages.backend.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,8 +16,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,12 +38,9 @@ class AdminRepoTest {
   private PictureRepository pictureRepository;
   @Autowired
   private UserRepository userRepository;
-  @Autowired
-  private ConfirmationTokenRepository confirmationTokenRepository;
 
   private User user1;
   private User user2;
-  private ConfirmationToken confirmationToken;
   private Message message1;
   private Message message2;
   private Match match1;
@@ -101,15 +98,6 @@ class AdminRepoTest {
       );
       pictureRepository.save(picture1);
       pictureRepository.save(picture2);
-    } else if ("token".equals(classTest)) {
-      String token = UUID.randomUUID().toString();
-      confirmationToken = new ConfirmationToken(
-        token,
-        LocalDateTime.now(),
-        LocalDateTime.now().plusMinutes(15),
-        user1
-      );
-      confirmationTokenRepository.save(confirmationToken);
     }
   }
 
@@ -177,19 +165,6 @@ class AdminRepoTest {
 
     //then
     assertThat(user).isPresent().matches(u -> Objects.equals(u.get().getEmail(), user1.getEmail()));
-  }
-
-  @Test
-  void testDeleteTokenByFk() {
-    //given
-    specificSetUp("token");
-
-    //when
-    adminRepository.deleteTokenByFk(user1.getId());
-
-    //then
-    Optional<ConfirmationToken> deletedToken = confirmationTokenRepository.findByToken(confirmationToken.getToken());
-    assertThat(deletedToken).isEmpty();
   }
 
   @Test

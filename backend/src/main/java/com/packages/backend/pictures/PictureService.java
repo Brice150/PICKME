@@ -108,11 +108,7 @@ public class PictureService {
           userService.updateUser(connectedUser);
         }
         Path imagePath = get(IMAGEDIRECTORY).normalize().resolve(picture.getContent());
-        if (Files.exists(imagePath)) {
-          Files.delete(imagePath);
-        } else {
-          throw new PictureNotFoundException(picture.getContent() + " was not found on the server");
-        }
+        Files.deleteIfExists(imagePath);
       }
       pictureRepository.deletePictureById(id);
       return "OK";

@@ -1,6 +1,5 @@
 package com.packages.backend.service;
 
-import com.packages.backend.registration.token.ConfirmationTokenService;
 import com.packages.backend.user.RestrictedUserDTOMapper;
 import com.packages.backend.user.UserDTOMapper;
 import com.packages.backend.user.UserRepository;
@@ -19,8 +18,6 @@ class UserServiceTest {
   @Mock
   private BCryptPasswordEncoder bCryptPasswordEncoder;
   @Mock
-  private ConfirmationTokenService confirmationTokenService;
-  @Mock
   private RestrictedUserDTOMapper restrictedUserDTOMapper;
   @Mock
   private UserDTOMapper userDTOMapper;
@@ -31,7 +28,6 @@ class UserServiceTest {
     userService = new UserService(
       userRepository,
       bCryptPasswordEncoder,
-      confirmationTokenService,
       restrictedUserDTOMapper,
       userDTOMapper);
   }

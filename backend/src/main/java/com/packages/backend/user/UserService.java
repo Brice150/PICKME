@@ -4,9 +4,6 @@ import com.packages.backend.likes.Like;
 import com.packages.backend.matches.Match;
 import com.packages.backend.messages.Message;
 import com.packages.backend.pictures.Picture;
-import com.packages.backend.pictures.PictureNotFoundException;
-import com.packages.backend.registration.token.ConfirmationToken;
-import com.packages.backend.registration.token.ConfirmationTokenService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,13 +28,11 @@ public class UserService implements UserDetailsService {
   private final RestrictedUserDTOMapper restrictedUserDTOMapper;
   private final UserDTOMapper userDTOMapper;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
-  private final ConfirmationTokenService confirmationTokenService;
   public static final String IMAGEDIRECTORY = "src/main/resources/pictures";
 
-  public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService, RestrictedUserDTOMapper restrictedUserDTOMapper, UserDTOMapper userDTOMapper) {
+  public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RestrictedUserDTOMapper restrictedUserDTOMapper, UserDTOMapper userDTOMapper) {
     this.userRepository = userRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    this.confirmationTokenService = confirmationTokenService;
     this.restrictedUserDTOMapper = restrictedUserDTOMapper;
     this.userDTOMapper = userDTOMapper;
   }
@@ -51,30 +45,33 @@ public class UserService implements UserDetailsService {
   }
 
   public String signUpUser(User user) {
-    boolean userExists = userRepository.findUserByEmail(user.getEmail())
-      .isPresent();
-
-    if (userExists) {
-      // TODO check of attributes are the same and
-      // TODO if email not confirmed send confirmation email.
-      throw new IllegalStateException("email already taken");
+    String signUpMessage = "OK";
+    String emptyPhrase = " is empty";
+    if (user.getEmail() == null || user.getEmail().isBlank()) {
+      signUpMessage = "Email" + emptyPhrase;
+    } else if (user.getPassword() == null || user.getPassword().isBlank()) {
+      signUpMessage = "Password" + emptyPhrase;
+    } else if (user.getNickname() == null || user.getNickname().isBlank()) {
+      signUpMessage = "Nickname" + emptyPhrase;
+    } else if (user.getGender() == null || user.getGender().isBlank()) {
+      signUpMessage = "Gender" + emptyPhrase;
+    } else if (user.getGenderSearch() == null || user.getGenderSearch().isBlank()) {
+      signUpMessage = "Gender search" + emptyPhrase;
+    } else if (user.getRelationshipType() == null || user.getRelationshipType().isBlank()) {
+      signUpMessage = "Relationship type" + emptyPhrase;
+    } else if (user.getBirthDate() == null) {
+      signUpMessage = "Birth date" + emptyPhrase;
+    } else if (user.getCity() == null || user.getCity().isBlank()) {
+      signUpMessage = "City" + emptyPhrase;
+    } else if (userRepository.findUserByEmail(user.getEmail()).isPresent()) {
+      signUpMessage = "email already taken";
+    } else {
+      String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+      user.setPassword(encodedPassword);
+      
+      userRepository.save(user);
     }
-    String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-    user.setPassword(encodedPassword);
-    userRepository.save(user);
-    String token = UUID.randomUUID().toString();
-    ConfirmationToken confirmationToken = new ConfirmationToken(
-      token,
-      LocalDateTime.now(),
-      LocalDateTime.now().plusMinutes(15),
-      user
-    );
-    confirmationTokenService.saveConfirmationToken(confirmationToken);
-    return token;
-  }
-
-  public void enableUser(String email) {
-    userRepository.enableUser(email);
+    return signUpMessage;
   }
 
   public List<RestrictedUserDTO> findAllUsers() {
@@ -203,11 +200,7 @@ public class UserService implements UserDetailsService {
     for (Picture picture : pictures) {
       if (picture.getContent() != null) {
         Path imagePath = get(IMAGEDIRECTORY).normalize().resolve(picture.getContent());
-        if (Files.exists(imagePath)) {
-          Files.delete(imagePath);
-        } else {
-          throw new PictureNotFoundException(picture.getContent() + " was not found on the server");
-        }
+        Files.deleteIfExists(imagePath);
       }
       userRepository.deletePictureById(picture.getId());
     }
@@ -223,7 +216,6 @@ public class UserService implements UserDetailsService {
     for (Message message : messages) {
       userRepository.deleteMessageById(message.getId());
     }
-    userRepository.deleteTokenByFk(connectedUser.getId());
     userRepository.deleteUserByEmail(connectedUser.getEmail());
   }
 

@@ -4,7 +4,6 @@ import com.packages.backend.likes.Like;
 import com.packages.backend.matches.Match;
 import com.packages.backend.messages.Message;
 import com.packages.backend.pictures.Picture;
-import com.packages.backend.pictures.PictureNotFoundException;
 import com.packages.backend.user.User;
 import com.packages.backend.user.UserDTO;
 import com.packages.backend.user.UserDTOMapper;
@@ -18,7 +17,6 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.nio.file.Paths.get;
 
@@ -38,9 +36,9 @@ public class AdminService {
     List<User> users = adminRepository.findAllUsers();
     Comparator<User> usersSort = Comparator
       .comparing(User::getUserRole, (role1, role2) -> role2.compareTo(role1))
-      .thenComparing(User::getUsername);
+      .thenComparing(User::getNickname);
     users.sort(usersSort);
-    return users.stream().map(userDTOMapper).collect(Collectors.toList());
+    return users.stream().map(userDTOMapper).toList();
   }
 
   @Transactional
@@ -63,11 +61,7 @@ public class AdminService {
     for (Picture picture : pictures) {
       if (picture.getContent() != null) {
         Path imagePath = get(IMAGEDIRECTORY).normalize().resolve(picture.getContent());
-        if (Files.exists(imagePath)) {
-          Files.delete(imagePath);
-        } else {
-          throw new PictureNotFoundException(picture.getContent() + " was not found on the server");
-        }
+        Files.deleteIfExists(imagePath);
       }
       adminRepository.deletePictureById(picture.getId());
     }
@@ -83,7 +77,6 @@ public class AdminService {
     for (Message message : messages) {
       adminRepository.deleteMessageById(message.getId());
     }
-    adminRepository.deleteTokenByFk(selectedId);
     adminRepository.deleteUserByEmail(email);
   }
 }

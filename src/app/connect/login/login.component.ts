@@ -43,12 +43,7 @@ export class LoginComponent implements OnInit, OnDestroy{
         error: (error: HttpErrorResponse) => {
           this.invalidLogin = true;
           if (error.error.includes("Bad credentials")) {
-            this.toastr.error("Wrong email or password !", "Connection error", {
-              positionClass: "toast-bottom-center" 
-            })
-          }
-          else if (error.error.includes("User is disabled")) {
-            this.toastr.warning("Please confirm your email before login", "Email not confirmed", {
+            this.toastr.error("Wrong email or password !", "Connection", {
               positionClass: "toast-bottom-center" 
             })
           }

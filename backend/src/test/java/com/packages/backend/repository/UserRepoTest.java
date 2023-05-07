@@ -8,8 +8,6 @@ import com.packages.backend.messages.Message;
 import com.packages.backend.messages.MessageRepository;
 import com.packages.backend.pictures.Picture;
 import com.packages.backend.pictures.PictureRepository;
-import com.packages.backend.registration.token.ConfirmationToken;
-import com.packages.backend.registration.token.ConfirmationTokenRepository;
 import com.packages.backend.user.User;
 import com.packages.backend.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,11 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,11 +34,8 @@ class UserRepoTest {
   private PictureRepository pictureRepository;
   @Autowired
   private UserRepository userRepository;
-  @Autowired
-  private ConfirmationTokenRepository confirmationTokenRepository;
   private User user1;
   private User user2;
-  private ConfirmationToken confirmationToken;
   private Message message1;
   private Message message2;
   private Match match1;
@@ -100,15 +93,6 @@ class UserRepoTest {
       );
       pictureRepository.save(picture1);
       pictureRepository.save(picture2);
-    } else if ("token".equals(classTest)) {
-      String token = UUID.randomUUID().toString();
-      confirmationToken = new ConfirmationToken(
-        token,
-        LocalDateTime.now(),
-        LocalDateTime.now().plusMinutes(15),
-        user1
-      );
-      confirmationTokenRepository.save(confirmationToken);
     }
   }
 
@@ -119,31 +103,6 @@ class UserRepoTest {
 
     // Then
     assertThat(foundUser).isPresent().contains(user1);
-  }
-
-  @Test
-  void testEnableUser() {
-    // When
-    int updatedUser = userRepository.enableUser(user1.getEmail());
-
-    // Then
-    assertThat(updatedUser).isEqualTo(1);
-    Optional<User> enabledUser = userRepository.findUserByEmail(user1.getEmail());
-    assertThat(enabledUser).isPresent();
-    assertThat(enabledUser.get().isEnabled()).isTrue();
-  }
-
-  @Test
-  void testDeleteTokenByFk() {
-    // Given
-    specificSetUp("token");
-
-    // When
-    userRepository.deleteTokenByFk(user1.getId());
-
-    // Then
-    Optional<ConfirmationToken> deletedToken = confirmationTokenRepository.findByToken(confirmationToken.getToken());
-    assertThat(deletedToken).isEmpty();
   }
 
   @Test
