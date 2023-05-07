@@ -1,4 +1,4 @@
-<form class="user-form" [formGroup]="registerForm" (ngSubmit)="registerUser(registerForm.value)">
+<form *ngIf="!successfulRegistration" class="user-form" [formGroup]="registerForm" (ngSubmit)="registerUser(registerForm.value)">
   <input class="user-form-text" placeholder="Nickname" formControlName="nickname">
   <span *ngIf="registerForm.get('nickname')!.hasError('required') && registerForm.get('nickname')!.touched">Nickname is required</span>
   <span *ngIf="registerForm.get('nickname')!.hasError('maxlength')">Nickname is too long</span>
@@ -53,3 +53,7 @@
       <button class="validButton" title="register" *ngIf="registerForm.valid && birthDateExists" type="submit">Register</button>
   </div>
 </form>
+
+<div *ngIf="successfulRegistration" class="container">
+  <p>Please login !</p>
+</div>

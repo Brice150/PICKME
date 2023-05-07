@@ -21,7 +21,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   birthDateExists: boolean = false;
   birthDate!: Date;
   registerSubscription!: Subscription;
-  loginSubscription!: Subscription;
+  successfulRegistration: boolean = false;
 
   constructor(
     private fb: FormBuilder, 
@@ -49,14 +49,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.registerSubscription && this.registerSubscription.unsubscribe();
-    this.loginSubscription && this.loginSubscription.unsubscribe();
   }
 
   registerUser(user: User) {
     user.birthDate = this.birthDate;
     this.registerSubscription = this.connectService.register(user).subscribe({
       next: (response: User) => {
-        this.loginUser(response);
+        this.successfulRegistration = true;
       },
       error: (error: HttpErrorResponse) => {        
         this.toastr.error(error.error, "Connection", {
@@ -76,24 +75,5 @@ export class RegisterComponent implements OnInit, OnDestroy {
       this.birthDate = event.value;
       this.birthDateExists = true;
     }
-  }
-
-  loginUser(user: User) {
-    this.loginSubscription = this.connectService.login(user).subscribe({
-      next: (response: any) => {
-        sessionStorage.setItem("loggedInUserEmail", JSON.stringify(user.email));
-        this.router.navigate(["/select"]);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, "Server error", {
-          positionClass: "toast-bottom-center" 
-        })
-      },
-      complete: () => {
-        this.toastr.success("Logged in !", "Connection", {
-          positionClass: "toast-bottom-center" 
-        })
-      }
-    })
   }
 }
