@@ -27,7 +27,7 @@ public class MessageController {
   @GetMapping("/sender/{id}")
   public ResponseEntity<RestrictedUserDTO> getMessageSender(@PathVariable("id") Long id) {
     Optional<RestrictedUserDTO> messageSender = messageService.findMessageSender(id);
-    return messageSender.map(user -> new ResponseEntity<>(user, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
+    return messageSender.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
   }
 
   @GetMapping("/all/number/{fkUser}")
@@ -44,7 +44,7 @@ public class MessageController {
   @PutMapping()
   public ResponseEntity<Message> updateMessage(@RequestBody Message message) {
     Optional<Message> updatedMessage = messageService.updateMessage(message);
-    return updatedMessage.map(messageUpdated -> new ResponseEntity<>(messageUpdated, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
+    return updatedMessage.map(messageUpdated -> new ResponseEntity<>(messageUpdated, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
   }
 
   @DeleteMapping("/{id}")
