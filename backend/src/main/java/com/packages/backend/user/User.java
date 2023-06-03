@@ -151,6 +151,10 @@ public class User implements UserDetails {
     return enabled;
   }
 
+  public void setIsEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
+
   public String getMainPicture() {
     return mainPicture;
   }

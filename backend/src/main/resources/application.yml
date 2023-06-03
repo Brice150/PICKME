@@ -1,9 +1,6 @@
-# Local Configuration
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/pickme
-    username: root
-    password: root
+  profiles:
+    active: dev
 
   jpa:
     show-sql: true

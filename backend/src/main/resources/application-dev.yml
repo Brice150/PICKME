@@ -1,0 +1,6 @@
+# Dev Configuration
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/pickme
+    username: root
+    password: root

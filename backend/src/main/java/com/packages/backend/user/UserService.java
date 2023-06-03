@@ -68,7 +68,7 @@ public class UserService implements UserDetailsService {
     } else {
       String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
       user.setPassword(encodedPassword);
-      
+
       userRepository.save(user);
     }
     return signUpMessage;
@@ -163,6 +163,7 @@ public class UserService implements UserDetailsService {
       }
       String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
       user.setPassword(encodedPassword);
+      user.setIsEnabled(true);
       return Optional.of(userRepository.save(user)).map(userDTOMapper);
     } else {
       return Optional.empty();
