@@ -2,8 +2,6 @@ package com.packages.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -17,9 +15,9 @@ import java.util.List;
 @SpringBootApplication
 public class BackendApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BackendApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(BackendApplication.class, args);
+  }
 
   @Component
   @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -33,7 +31,7 @@ public class BackendApplication {
       List<String> allowedHeaders = Arrays.asList("X-Auth-Token", "Content-Type", "X-Requested-With", "XMLHttpRequest", "Access-Control-Allow-Origin", "Authorization", "File-Name");
       List<String> exposedHeaders = Arrays.asList("X-Auth-Token", "Content-Type", "X-Requested-With", "XMLHttpRequest", "File-Name");
       List<String> allowedMethods = Arrays.asList("POST", "GET", "DELETE", "PUT", "OPTIONS", "PATCH");
-      List<String> allowedOrigins = Arrays.asList("http://localhost:4200/","http://ngpickme.s3-website.eu-west-3.amazonaws.com/");
+      List<String> allowedOrigins = Arrays.asList("http://localhost:4200/", "https://brice150.github.io/PICKME/");
       corsConfig.setAllowedHeaders(allowedHeaders);
       corsConfig.setAllowedMethods(allowedMethods);
       corsConfig.setAllowedOrigins(allowedOrigins);
