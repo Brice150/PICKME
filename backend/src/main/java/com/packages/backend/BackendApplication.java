@@ -31,7 +31,7 @@ public class BackendApplication {
       List<String> allowedHeaders = Arrays.asList("X-Auth-Token", "Content-Type", "X-Requested-With", "XMLHttpRequest", "Access-Control-Allow-Origin", "Authorization", "File-Name");
       List<String> exposedHeaders = Arrays.asList("X-Auth-Token", "Content-Type", "X-Requested-With", "XMLHttpRequest", "File-Name");
       List<String> allowedMethods = Arrays.asList("POST", "GET", "DELETE", "PUT", "OPTIONS", "PATCH");
-      List<String> allowedOrigins = Arrays.asList("http://localhost:4200", "https://pickme-production-187d.up.railway.app/");
+      List<String> allowedOrigins = Arrays.asList("http://localhost:4200", "https://pickme-production-187d.up.railway.app");
       corsConfig.setAllowedHeaders(allowedHeaders);
       corsConfig.setAllowedMethods(allowedMethods);
       corsConfig.setAllowedOrigins(allowedOrigins);
