@@ -58,8 +58,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Query("SELECT p FROM Picture p WHERE p.fkUser.id = :fkUser")
   List<Picture> findAllPicturesByFk(@Param("fkUser") Long fkUser);
 
-  @Query("SELECT u FROM User u WHERE u.genderSearch = :gender AND u.gender = :genderSearch AND u.city = :city")
-  List<User> findAllUsers(@Param("genderSearch") String genderSearch, @Param("gender") String gender, @Param("city") String city);
+  @Query("SELECT u FROM User u WHERE u.genderSearch = :gender AND u.gender = :genderSearch")
+  List<User> findAllUsers(@Param("genderSearch") String genderSearch, @Param("gender") String gender);
 
   @Query("SELECT p FROM Picture p WHERE p.id = :id")
   Optional<Picture> findPictureById(Long id);

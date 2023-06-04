@@ -76,7 +76,7 @@ public class UserService implements UserDetailsService {
 
   public List<RestrictedUserDTO> findAllUsers() {
     User connectedUser = findConnectedUser();
-    List<User> users = userRepository.findAllUsers(connectedUser.getGenderSearch(), connectedUser.getGender(), connectedUser.getCity());
+    List<User> users = userRepository.findAllUsers(connectedUser.getGenderSearch(), connectedUser.getGender());
     List<Like> likes = userRepository.findAllLikesByFk(connectedUser.getId());
     users.removeIf(user -> !user.isEnabled());
     users.removeIf(user -> connectedUser.getEmail().equals(user.getEmail()));
@@ -87,7 +87,8 @@ public class UserService implements UserDetailsService {
       );
     }
     Comparator<User> usersSort = Comparator
-      .comparing((User user) -> compareAttributes(connectedUser.getRelationshipType(), user.getRelationshipType()))
+      .comparing((User user) -> compareAttributes(connectedUser.getCity(), user.getCity()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getRelationshipType(), user.getRelationshipType()))
       .thenComparing((User user) -> compareAttributes(connectedUser.getPersonality(), user.getPersonality()))
       .thenComparing((User user) -> compareAttributes(connectedUser.getParenthood(), user.getParenthood()))
       .thenComparing((User user) -> compareAttributes(connectedUser.getSmokes(), user.getSmokes()))
@@ -120,7 +121,8 @@ public class UserService implements UserDetailsService {
       );
     }
     Comparator<User> usersSort = Comparator
-      .comparing((User user) -> compareAttributes(connectedUser.getRelationshipType(), user.getRelationshipType()))
+      .comparing((User user) -> compareAttributes(connectedUser.getCity(), user.getCity()))
+      .thenComparing((User user) -> compareAttributes(connectedUser.getRelationshipType(), user.getRelationshipType()))
       .thenComparing((User user) -> compareAttributes(connectedUser.getPersonality(), user.getPersonality()))
       .thenComparing((User user) -> compareAttributes(connectedUser.getParenthood(), user.getParenthood()))
       .thenComparing((User user) -> compareAttributes(connectedUser.getSmokes(), user.getSmokes()))

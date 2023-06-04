@@ -143,7 +143,7 @@
                         </mat-chip-option>
                     </mat-chip-listbox>
                 </div>
-                <input type="password" class="user-form-text" placeholder="Confirm Password" formControlName="password">
+                <input type="password" class="user-form-text" placeholder="Old/New Password" formControlName="password">
                 <span *ngIf="updateForm.get('password')!.hasError('required') && updateForm.get('password')!.touched">A password is required</span>
                 <span *ngIf="updateForm.get('password')!.hasError('minlength')">Password is too short</span>
                 <span *ngIf="updateForm.get('password')!.hasError('maxlength')">Password is too long</span>
