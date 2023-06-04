@@ -14,6 +14,7 @@ import { LikeModule } from './like/like.module';
 import { ConnectModule } from './connect/connect.module';
 import { AdminModule } from './admin/admin.module';
 import { ToastrModule } from 'ngx-toastr';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { ToastrModule } from 'ngx-toastr';
     MatDialogModule
   ],
   declarations: [AppComponent],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}]
 })
 export class AppModule { }
