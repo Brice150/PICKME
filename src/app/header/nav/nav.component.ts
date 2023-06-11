@@ -58,7 +58,6 @@ export class NavComponent implements OnInit, OnDestroy{
   }
 
   logout() {
-    sessionStorage.removeItem('loggedInUserEmail');
     this.router.navigate(['/connect'])
     .then(() => {
       this.toastr.success("Logged out", "Connection", {

@@ -6,18 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent {
-  isConnected!: boolean;
   activeUsers: boolean = true;
   activeMessages: boolean = false;
-
-  ngOnInit() {
-    if (sessionStorage.getItem('loggedInUserEmail')===null) {
-      this.isConnected = false;
-    }
-    else {
-      this.isConnected = true;
-    }
-  }
 
   onObjects() {
     this.activeUsers = false;
