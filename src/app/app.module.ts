@@ -14,7 +14,6 @@ import { LikeModule } from './like/like.module';
 import { ConnectModule } from './connect/connect.module';
 import { AdminModule } from './admin/admin.module';
 import { ToastrModule } from 'ngx-toastr';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { ErrorPathComponent } from './error-path/error-path.component';
 
 @NgModule({
@@ -36,6 +35,6 @@ import { ErrorPathComponent } from './error-path/error-path.component';
   ],
   declarations: [AppComponent, ErrorPathComponent],
   bootstrap: [AppComponent],
-  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],
+  providers: [],
 })
 export class AppModule {}

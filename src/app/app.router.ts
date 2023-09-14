@@ -7,16 +7,21 @@ import { MoreInfoComponent } from './moreinfo/moreinfo.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SelectComponent } from './select/select.component';
 import { ErrorPathComponent } from './error-path/error-path.component';
+import { AuthGuard } from './core/auth.guard';
 
 const routes: Routes = [
   { path: 'connect', component: ConnectComponent },
   { path: 'logout', component: ConnectComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'select', component: SelectComponent },
-  { path: 'like', component: LikeComponent },
-  { path: 'match', component: MatchComponent },
-  { path: 'admin', component: AdminComponent },
-  { path: 'moreinfo/:id/:mode', component: MoreInfoComponent },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'select', component: SelectComponent, canActivate: [AuthGuard] },
+  { path: 'like', component: LikeComponent, canActivate: [AuthGuard] },
+  { path: 'match', component: MatchComponent, canActivate: [AuthGuard] },
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+  {
+    path: 'moreinfo/:id/:mode',
+    component: MoreInfoComponent,
+    canActivate: [AuthGuard],
+  },
   { path: '', redirectTo: '/connect', pathMatch: 'full' },
   { path: '**', component: ErrorPathComponent },
 ];

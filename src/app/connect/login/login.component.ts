@@ -47,7 +47,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   loginUser(user: User) {
     this.loginSubscription = this.connectService.login(user).subscribe({
-      next: (response: any) => {
+      next: (response: User) => {
+        sessionStorage.setItem('role', JSON.stringify(response.userRole));
         this.router.navigate(['/select']);
       },
       error: (error: HttpErrorResponse) => {
