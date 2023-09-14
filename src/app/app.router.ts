@@ -6,6 +6,7 @@ import { MatchComponent } from './match/match.component';
 import { MoreInfoComponent } from './moreinfo/moreinfo.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SelectComponent } from './select/select.component';
+import { ErrorPathComponent } from './error-path/error-path.component';
 
 const routes: Routes = [
   { path: 'connect', component: ConnectComponent },
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'admin', component: AdminComponent },
   { path: 'moreinfo/:id/:mode', component: MoreInfoComponent },
   { path: '', redirectTo: '/connect', pathMatch: 'full' },
+  { path: '**', component: ErrorPathComponent },
 ];
 
 export const appRouter = RouterModule.forRoot(routes);
