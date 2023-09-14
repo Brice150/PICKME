@@ -5,16 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
 
-
-
 @NgModule({
   declarations: [AdminUsersComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    SharedModule
-  ],
-  exports : [AdminUsersComponent]
+  imports: [CommonModule, FormsModule, RouterModule, SharedModule],
+  exports: [AdminUsersComponent],
 })
-export class AdminUsersModule { }
+export class AdminUsersModule {}

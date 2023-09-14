@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.css']
+  styleUrls: ['./admin.component.css'],
 })
 export class AdminComponent {
   activeUsers: boolean = true;
@@ -13,7 +13,7 @@ export class AdminComponent {
     this.activeUsers = false;
     this.activeMessages = false;
   }
-  
+
   onUsers() {
     this.activeUsers = true;
     this.activeMessages = false;

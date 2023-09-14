@@ -6,8 +6,6 @@ import { MessageModule } from './message/message.module';
 import { NgxUsefulSwiperModule } from 'ngx-useful-swiper';
 import { FormsModule } from '@angular/forms';
 
-
-
 @NgModule({
   declarations: [MatchComponent],
   imports: [
@@ -15,8 +13,8 @@ import { FormsModule } from '@angular/forms';
     MessageModule,
     HeaderModule,
     NgxUsefulSwiperModule,
-    FormsModule
+    FormsModule,
   ],
-  exports: [MatchComponent]
+  exports: [MatchComponent],
 })
-export class MatchModule { }
+export class MatchModule {}

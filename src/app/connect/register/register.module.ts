@@ -6,8 +6,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 
-
-
 @NgModule({
   declarations: [RegisterComponent],
   imports: [
@@ -15,8 +13,8 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatInputModule
+    MatInputModule,
   ],
-  exports: [RegisterComponent]
+  exports: [RegisterComponent],
 })
-export class RegisterModule { }
+export class RegisterModule {}

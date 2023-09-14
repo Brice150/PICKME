@@ -3,14 +3,9 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header.component';
 import { NavModule } from './nav/nav.module';
 
-
-
 @NgModule({
   declarations: [HeaderComponent],
-  imports: [
-    CommonModule,
-    NavModule
-  ],
-  exports: [HeaderComponent]
+  imports: [CommonModule, NavModule],
+  exports: [HeaderComponent],
 })
-export class HeaderModule { }
+export class HeaderModule {}

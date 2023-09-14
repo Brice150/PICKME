@@ -11,72 +11,73 @@ Backend : Spring Boot
 <details>
   <summary>Pages Features</summary>
 
-  ### Connect
+### Connect
 
-  - Register with email confirmation
-  - Login with form control and failure animation
-  - Logout is available on any page once logged in
+- Register with email confirmation
+- Login with form control and failure animation
+- Logout is available on any page once logged in
 
-  ### Select
+### Select
 
-  - View profiles that are similar to yours
-  - Select profile age you want to see
-  - Like a profile
-  - View more information about a profile
+- View profiles that are similar to yours
+- Select profile age you want to see
+- Like a profile
+- View more information about a profile
 
-  ### Profile
+### Profile
 
-  - Modify your profile
-  - Add pictures and select main profile picture
-  - Delete your account (needs confirmation)
+- Modify your profile
+- Add pictures and select main profile picture
+- Delete your account (needs confirmation)
 
-  ### Like
+### Like
 
-  - View profiles that liked you
-  - Like a profile
-  - View more information about a profile
+- View profiles that liked you
+- Like a profile
+- View more information about a profile
 
-  ### Match
+### Match
 
-  - View profiles that matched with you
-  - Search a user
-  - Dislike a profile
-  - View more information about a profile
-  - Send a message, update or delete it
+- View profiles that matched with you
+- Search a user
+- Dislike a profile
+- View more information about a profile
+- Send a message, update or delete it
 
-  ### Admin
+### Admin
 
-  - Admin role needed to view this page
-  - Search user or message
-  - See all users or messages
-  - View more information about a profile
-  - Delete user or message
+- Admin role needed to view this page
+- Search user or message
+- See all users or messages
+- View more information about a profile
+- Delete user or message
 
 </details>
 
 <details>
   <summary>Run Locally</summary>
 
-  ### Clone the project
+### Clone the project
 
-  ```bash
-    git clone https://github.com/Brice150/PICKME.git
-  ```
+```bash
+  git clone https://github.com/Brice150/PICKME.git
+```
 
-  ### Go to backend directory 
+### Go to backend directory
+
     --> Run application on Intellij
 
-  ### Install dependencies
+### Install dependencies
 
-  ```bash
-    npm install
-  ```
+```bash
+  npm install
+```
 
-  ### Start the server
+### Start the server
 
-  ```bash
-    ng serve -o
-  ```
+```bash
+  ng serve -o
+```
 
 </details>
 
@@ -88,203 +89,203 @@ Backend : Spring Boot
   <details>
   <summary>Connection</summary>
 
-  ### Register
+### Register
 
-  ```http
-    POST /registration
-  ```
+```http
+  POST /registration
+```
 
-  ### Confirm email
+### Confirm email
 
-  ```http
-    GET /registration/confirm
-  ```
+```http
+  GET /registration/confirm
+```
 
-  ### Login
+### Login
 
-  ```http
-    GET /login
-  ```
+```http
+  GET /login
+```
 
-  ### Logout
+### Logout
 
-  ```http
-    GET /logout
-  ```
+```http
+  GET /logout
+```
 
   </details>
 
   <details>
   <summary>Admin</summary>
 
-  ### Get all users
+### Get all users
 
-  ```http
-    GET /admin/user/all
-  ```
+```http
+  GET /admin/user/all
+```
 
-  ### Delete user
+### Delete user
 
-  ```http
-    DELETE /admin/user/${email}
-  ```
+```http
+  DELETE /admin/user/${email}
+```
 
-  ### Delete message
+### Delete message
 
-  ```http
-    DELETE /admin/message/${messageId}
-  ```
+```http
+  DELETE /admin/message/${messageId}
+```
 
   </details>
 
   <details>
   <summary>User</summary>
 
-  ### Get all users
+### Get all users
 
-  ```http
-    GET /user/all
-  ```
+```http
+  GET /user/all
+```
 
-  ### Get all users that liked
+### Get all users that liked
 
-  ```http
-    GET /user/all/like
-  ```
+```http
+  GET /user/all/like
+```
 
-  ### Get all users that matched
+### Get all users that matched
 
-  ```http
-    GET /user/all/match
-  ```
+```http
+  GET /user/all/match
+```
 
-  ### Get connected user
+### Get connected user
 
-  ```http
-    GET /user
-  ```
+```http
+  GET /user
+```
 
-  ### Get user by id
+### Get user by id
 
-  ```http
-    GET /user/${userId}
-  ```
+```http
+  GET /user/${userId}
+```
 
-  ### Update user
+### Update user
 
-  ```http
-    PUT /user
-  ```
+```http
+  PUT /user
+```
 
-  ### Delete user
+### Delete user
 
-  ```http
-    DELETE /user/${email}
-  ```
+```http
+  DELETE /user/${email}
+```
 
   </details>
 
   <details>
   <summary>Message</summary>
 
-  ### Get all user messages
+### Get all user messages
 
-  ```http
-    GET /message/all/${userId}
-  ```
+```http
+  GET /message/all/${userId}
+```
 
-  ### Get message sender
+### Get message sender
 
-  ```http
-    GET /message/sender/${messageId}
-  ```
+```http
+  GET /message/sender/${messageId}
+```
 
-  ### Get user messages number
+### Get user messages number
 
-  ```http
-    GET /message/all/number/${userId}
-  ```
+```http
+  GET /message/all/number/${userId}
+```
 
-  ### Add message
+### Add message
 
-  ```http
-    POST /message
-  ```
+```http
+  POST /message
+```
 
-  ### Update message
+### Update message
 
-  ```http
-    PUT /message
-  ```
+```http
+  PUT /message
+```
 
-  ### Delete message
+### Delete message
 
-  ```http
-    DELETE /message/${messageId}
-  ```
+```http
+  DELETE /message/${messageId}
+```
 
   </details>
 
   <details>
   <summary>Like</summary>
 
-  ### Get like by foreign keys
+### Get like by foreign keys
 
-  ```http
-    GET /like/${userId1}/${userId2}
-  ```
+```http
+  GET /like/${userId1}/${userId2}
+```
 
-  ### Add like
+### Add like
 
-  ```http
-    POST /like
-  ```
+```http
+  POST /like
+```
 
-  ### Delete like
+### Delete like
 
-  ```http
-    DELETE /like/${likeId}
-  ```
+```http
+  DELETE /like/${likeId}
+```
 
   </details>
 
   <details>
   <summary>Picture</summary>
 
-  ### Get all user pictures
+### Get all user pictures
 
-  ```http
-    GET /picture/all/${userId}
-  ```
+```http
+  GET /picture/all/${userId}
+```
 
-  ### Get picture
+### Get picture
 
-  ```http
-    GET /picture/${pictureName}
-  ```
+```http
+  GET /picture/${pictureName}
+```
 
-  ### Add picture
+### Add picture
 
-  ```http
-    POST /picture
-  ```
+```http
+  POST /picture
+```
 
-  ### Delete picture
+### Delete picture
 
-  ```http
-    DELETE /picture/${pictureId}
-  ```
+```http
+  DELETE /picture/${pictureId}
+```
 
   </details>
 
   <details>
   <summary>Match</summary>
 
-  ### Get all user matches
+### Get all user matches
 
-  ```http
-    GET /match/all
-  ```
+```http
+  GET /match/all
+```
 
   </details>
 

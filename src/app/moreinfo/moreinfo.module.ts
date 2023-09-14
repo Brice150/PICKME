@@ -13,8 +13,8 @@ import { SharedModule } from '../shared/shared.module';
     HeaderModule,
     RouterModule,
     MatChipsModule,
-    SharedModule
+    SharedModule,
   ],
-  exports: [MoreInfoComponent]
+  exports: [MoreInfoComponent],
 })
-export class MoreinfoModule { }
+export class MoreinfoModule {}

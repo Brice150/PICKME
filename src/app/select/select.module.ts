@@ -8,7 +8,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { FormsModule } from '@angular/forms';
 import { AgePipe } from '../shared/pipes/age.pipe';
 
-
 @NgModule({
   declarations: [SelectComponent],
   imports: [
@@ -17,9 +16,9 @@ import { AgePipe } from '../shared/pipes/age.pipe';
     SharedModule,
     NgxUsefulSwiperModule,
     MatSliderModule,
-    FormsModule
+    FormsModule,
   ],
   exports: [SelectComponent],
-  providers: [AgePipe]
+  providers: [AgePipe],
 })
-export class SelectModule { }
+export class SelectModule {}

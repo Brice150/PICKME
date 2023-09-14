@@ -1,31 +1,31 @@
 header {
-    position: fixed;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 50px;
-    background: rgba(255, 255, 255, 0.22);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-    width: 100%;
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
+  width: 100%;
 }
 
 header .title-section {
-    display: flex;
-    align-items: center;
-    margin-left: 15px;
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
 }
 
 header .title-section span {
-    color: white;
-    font-size: 20px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
+  color: white;
+  font-size: 20px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
 i {
-    margin-right: 10px;
-    font-size: 23px;
-    color: white;
+  margin-right: 10px;
+  font-size: 23px;
+  color: white;
 }

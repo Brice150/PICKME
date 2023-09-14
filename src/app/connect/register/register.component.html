@@ -1,16 +1,55 @@
-<form *ngIf="!successfulRegistration" class="user-form" [formGroup]="registerForm" (ngSubmit)="registerUser(registerForm.value)">
-  <input class="user-form-text" placeholder="Nickname" formControlName="nickname">
-  <span *ngIf="registerForm.get('nickname')!.hasError('required') && registerForm.get('nickname')!.touched">Nickname is required</span>
-  <span *ngIf="registerForm.get('nickname')!.hasError('maxlength')">Nickname is too long</span>
-  <span *ngIf="registerForm.get('nickname')!.hasError('minlength')">Nickname is too short</span>
-  <input class="user-form-text" placeholder="Email" formControlName="email">
-  <span *ngIf="registerForm.get('email')!.hasError('required') && registerForm.get('email')!.touched">Email is required</span>
-  <span *ngIf="registerForm.get('email')!.hasError('email')">Email is invalid</span>
-  <span *ngIf="registerForm.get('email')!.hasError('maxlength')">Email is too long</span>
-  <input class="user-form-text" placeholder="City" formControlName="city">
-  <span *ngIf="registerForm.get('city')!.hasError('required') && registerForm.get('city')!.touched">City is required</span>
-  <span *ngIf="registerForm.get('city')!.hasError('minlength')">City is too short</span>
-  <span *ngIf="registerForm.get('city')!.hasError('maxlength')">City is too long</span>
+<form
+  *ngIf="!successfulRegistration"
+  class="user-form"
+  [formGroup]="registerForm"
+  (ngSubmit)="registerUser(registerForm.value)"
+>
+  <input
+    class="user-form-text"
+    placeholder="Nickname"
+    formControlName="nickname"
+  />
+  <span
+    *ngIf="
+      registerForm.get('nickname')!.hasError('required') &&
+      registerForm.get('nickname')!.touched
+    "
+    >Nickname is required</span
+  >
+  <span *ngIf="registerForm.get('nickname')!.hasError('maxlength')"
+    >Nickname is too long</span
+  >
+  <span *ngIf="registerForm.get('nickname')!.hasError('minlength')"
+    >Nickname is too short</span
+  >
+  <input class="user-form-text" placeholder="Email" formControlName="email" />
+  <span
+    *ngIf="
+      registerForm.get('email')!.hasError('required') &&
+      registerForm.get('email')!.touched
+    "
+    >Email is required</span
+  >
+  <span *ngIf="registerForm.get('email')!.hasError('email')"
+    >Email is invalid</span
+  >
+  <span *ngIf="registerForm.get('email')!.hasError('maxlength')"
+    >Email is too long</span
+  >
+  <input class="user-form-text" placeholder="City" formControlName="city" />
+  <span
+    *ngIf="
+      registerForm.get('city')!.hasError('required') &&
+      registerForm.get('city')!.touched
+    "
+    >City is required</span
+  >
+  <span *ngIf="registerForm.get('city')!.hasError('minlength')"
+    >City is too short</span
+  >
+  <span *ngIf="registerForm.get('city')!.hasError('maxlength')"
+    >City is too long</span
+  >
   <div class="flex">
     <select class="user-form-text" formControlName="gender">
       <option value="" disabled selected hidden>Gender</option>
@@ -34,23 +73,74 @@
     </select>
   </div>
   <div class="span-container">
-    <span *ngIf="registerForm.get('gender')!.hasError('required') && registerForm.get('gender')!.touched">Gender is required</span>
-    <span *ngIf="registerForm.get('genderSearch')!.hasError('required') && registerForm.get('genderSearch')!.touched">Gender Search is required</span>
-    <span *ngIf="registerForm.get('relationshipType')!.hasError('required') && registerForm.get('relationshipType')!.touched">Relationship Type is required</span>    
+    <span
+      *ngIf="
+        registerForm.get('gender')!.hasError('required') &&
+        registerForm.get('gender')!.touched
+      "
+      >Gender is required</span
+    >
+    <span
+      *ngIf="
+        registerForm.get('genderSearch')!.hasError('required') &&
+        registerForm.get('genderSearch')!.touched
+      "
+      >Gender Search is required</span
+    >
+    <span
+      *ngIf="
+        registerForm.get('relationshipType')!.hasError('required') &&
+        registerForm.get('relationshipType')!.touched
+      "
+      >Relationship Type is required</span
+    >
   </div>
   <mat-form-field>
     <mat-label>Birth Date</mat-label>
-    <input matInput [matDatepicker]="picker" disabled [max]="minDate" (dateInput)="addBirthDate($event)">
+    <input
+      matInput
+      [matDatepicker]="picker"
+      disabled
+      [max]="minDate"
+      (dateInput)="addBirthDate($event)"
+    />
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker color="accent" [startAt]="startDate" disabled="false"></mat-datepicker>
+    <mat-datepicker
+      #picker
+      color="accent"
+      [startAt]="startDate"
+      disabled="false"
+    ></mat-datepicker>
   </mat-form-field>
   <span *ngIf="!birthDateExists">Birth Date is required</span>
-  <input type="password" class="user-form-text" placeholder="Password" formControlName="password">
-  <span *ngIf="registerForm.get('password')!.hasError('required') && registerForm.get('password')!.touched">Password is required</span>
-  <span *ngIf="registerForm.get('password')!.hasError('minlength')">Password is too short</span>
-  <span *ngIf="registerForm.get('password')!.hasError('maxlength')">Password is too long</span>
+  <input
+    type="password"
+    class="user-form-text"
+    placeholder="Password"
+    formControlName="password"
+  />
+  <span
+    *ngIf="
+      registerForm.get('password')!.hasError('required') &&
+      registerForm.get('password')!.touched
+    "
+    >Password is required</span
+  >
+  <span *ngIf="registerForm.get('password')!.hasError('minlength')"
+    >Password is too short</span
+  >
+  <span *ngIf="registerForm.get('password')!.hasError('maxlength')"
+    >Password is too long</span
+  >
   <div class="button-container">
-      <button class="validButton" title="register" *ngIf="registerForm.valid && birthDateExists" type="submit">Register</button>
+    <button
+      class="validButton"
+      title="register"
+      *ngIf="registerForm.valid && birthDateExists"
+      type="submit"
+    >
+      Register
+    </button>
   </div>
 </form>
 

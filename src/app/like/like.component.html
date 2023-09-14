@@ -1,28 +1,32 @@
 <app-header [title]="'Like'"></app-header>
 <div class="main-container" *ngIf="users.length !== 0">
-    <div class="container">
-        <div class="content" *ngFor="let user of users">
-            <a class="like" title="like" (click)="like(user)"><i class='bx bxs-like'></i></a>
-            <div class="card">
-                <div class="picture-container">
-                    <img [src]="user.mainPicture" [alt]="user.nickname">
-                </div>
-                <div class="text">
-                    <a class="more" title="more info" (click)="moreInfo(user.id)">More Info</a>
-                </div>
-            </div>
+  <div class="container">
+    <div class="content" *ngFor="let user of users">
+      <a class="like" title="like" (click)="like(user)"
+        ><i class="bx bxs-like"></i
+      ></a>
+      <div class="card">
+        <div class="picture-container">
+          <img [src]="user.mainPicture" [alt]="user.nickname" />
         </div>
+        <div class="text">
+          <a class="more" title="more info" (click)="moreInfo(user.id)"
+            >More Info</a
+          >
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="match-container" *ngIf="notification">
-    <div class="match-message">
-        <span class="pre-message">MATCH with</span>
-        <span class="notification">{{notification}}</span>
-        <i class='bx bxs-flame'></i>
-    </div>
+  <div class="match-message">
+    <span class="pre-message">MATCH with</span>
+    <span class="notification">{{ notification }}</span>
+    <i class="bx bxs-flame"></i>
+  </div>
 </div>
 
 <div class="loader-wrapper" id="loaderWrapper">
-    <span class="loader"><span class="loader-inner"></span></span>
+  <span class="loader"><span class="loader-inner"></span></span>
 </div>

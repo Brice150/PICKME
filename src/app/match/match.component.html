@@ -1,42 +1,70 @@
 <app-header [title]="'Match'"></app-header>
 <div class="main-container">
-    <input type="search" (ngModelChange)="search(key.value)" #key="ngModel" ngModel name="key" class="text-research" placeholder="Search">
-    <div class="container" *ngIf="users.length !== 0">
-        <swiper [config]="config">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide" *ngFor="let user of users">
-                    <div class="inner-content">
-                        <a *ngIf="user.id === selectedUser.id" class="card selected-user" title="send message" (click)="viewMessage(user)">
-                            <div class="picture-container">
-                                <img [src]="user.mainPicture" [alt]="user.nickname">
-                            </div>
-                            <div class="text">
-                                <h2>{{user.nickname}}</h2>
-                            </div>
-                            <div class="messages-number">
-                                <h2 *ngIf="user.messagesNumber != 0">{{user.messagesNumber}}</h2>
-                            </div>
-                        </a>
-                        <a *ngIf="user.id !== selectedUser.id" class="card" title="send message" (click)="viewMessage(user)">
-                            <div class="picture-container">
-                                <img [src]="user.mainPicture" [alt]="user.nickname">
-                            </div>
-                            <div class="text">
-                                <h2>{{user.nickname}}</h2>
-                            </div>
-                            <div class="messages-number">
-                                <h2 *ngIf="user.messagesNumber != 0">{{user.messagesNumber}}</h2>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-pagination"></div>
-        </swiper>
-    </div>
-    <app-message *ngIf="selectedUser" [loggedInUser]="loggedInUser" [selectedUser]="selectedUser" [messages]="messages" (onRefresh)="refreshUserMessages($event)"></app-message>
+  <input
+    type="search"
+    (ngModelChange)="search(key.value)"
+    #key="ngModel"
+    ngModel
+    name="key"
+    class="text-research"
+    placeholder="Search"
+  />
+  <div class="container" *ngIf="users.length !== 0">
+    <swiper [config]="config">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide" *ngFor="let user of users">
+          <div class="inner-content">
+            <a
+              *ngIf="user.id === selectedUser.id"
+              class="card selected-user"
+              title="send message"
+              (click)="viewMessage(user)"
+            >
+              <div class="picture-container">
+                <img [src]="user.mainPicture" [alt]="user.nickname" />
+              </div>
+              <div class="text">
+                <h2>{{ user.nickname }}</h2>
+              </div>
+              <div class="messages-number">
+                <h2 *ngIf="user.messagesNumber != 0">
+                  {{ user.messagesNumber }}
+                </h2>
+              </div>
+            </a>
+            <a
+              *ngIf="user.id !== selectedUser.id"
+              class="card"
+              title="send message"
+              (click)="viewMessage(user)"
+            >
+              <div class="picture-container">
+                <img [src]="user.mainPicture" [alt]="user.nickname" />
+              </div>
+              <div class="text">
+                <h2>{{ user.nickname }}</h2>
+              </div>
+              <div class="messages-number">
+                <h2 *ngIf="user.messagesNumber != 0">
+                  {{ user.messagesNumber }}
+                </h2>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+    </swiper>
+  </div>
+  <app-message
+    *ngIf="selectedUser"
+    [loggedInUser]="loggedInUser"
+    [selectedUser]="selectedUser"
+    [messages]="messages"
+    (onRefresh)="refreshUserMessages($event)"
+  ></app-message>
 </div>
 
 <div class="loader-wrapper" id="loaderWrapper">
-    <span class="loader"><span class="loader-inner"></span></span>
+  <span class="loader"><span class="loader-inner"></span></span>
 </div>

@@ -4,15 +4,9 @@ import { MessageComponent } from './message.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
-
-
 @NgModule({
   declarations: [MessageComponent],
-  imports: [
-    CommonModule,
-    SharedModule,
-    ReactiveFormsModule
-  ],
-  exports: [MessageComponent]
+  imports: [CommonModule, SharedModule, ReactiveFormsModule],
+  exports: [MessageComponent],
 })
-export class MessageModule { }
+export class MessageModule {}

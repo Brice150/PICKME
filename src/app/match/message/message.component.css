@@ -1,340 +1,340 @@
 .container {
-    margin: 10px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 20px;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.22);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
 }
 
 .container .content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
 }
 
 .container .content .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    width: 100%;
-    flex-wrap: wrap;
-    margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  flex-wrap: wrap;
+  margin: 10px;
 }
 
 .dislike {
-    margin: 0 10px;
-    position: relative;
-    color: white;
-    font-size: 30px;
-    border-radius: 10px;
-    overflow: hidden;
-    padding: 5px;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    transition: 0.5s;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-} 
+  margin: 0 10px;
+  position: relative;
+  color: white;
+  font-size: 30px;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: 0.5s;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
+}
 
 .dislike::before {
-    content: '';
-    position: absolute;
-    background-color: white;
-    height: 0%;
-    top: 0;
-    left: 0;
-    width: 100%;
-    transition: 0.5s;
-    z-index: -1;
+  content: "";
+  position: absolute;
+  background-color: white;
+  height: 0%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: 0.5s;
+  z-index: -1;
 }
 
 .dislike:hover {
-    color: black;
+  color: black;
 }
 
 .dislike:hover::before {
-    height: 100%;
-    border-radius: 10px;
+  height: 100%;
+  border-radius: 10px;
 }
 
 .more {
-    margin: 0 10px;
-    position: relative;
-    text-decoration: none;
-    color: black;
-    padding: 15px 30px;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 1px;
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: 0.5s;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
+  margin: 0 10px;
+  position: relative;
+  text-decoration: none;
+  color: black;
+  padding: 15px 30px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.5s;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
 }
 
 .more::before {
-    content: '';
-    position: absolute;
-    background-color: black;
-    height: 0%;
-    top: 0;
-    left: 0;
-    width: 100%;
-    transition: 0.5s;
-    z-index: -1;
+  content: "";
+  position: absolute;
+  background-color: black;
+  height: 0%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: 0.5s;
+  z-index: -1;
 }
 
 .more:hover {
-    color: white;
+  color: white;
 }
 
 .more:hover::before {
-    height: 100%;
-    border-radius: 10px;
+  height: 100%;
+  border-radius: 10px;
 }
 
 .header .picture-container {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    padding: 5px;
-    margin: 0 10px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  padding: 5px;
+  margin: 0 10px;
 }
 
 .header .picture-container img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .header .text {
-    margin: 0 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    color: white;
+  margin: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: white;
 }
 
 .header h2 {
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin: 0;
 }
 
 .container .content .messages-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.22);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
 }
 
 .messages-container .message {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;  
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .messages-container .inner-message-container {
-    width: 100%;
-    display: flex;
-    align-items: center;  
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .left {
-    justify-content: left;
+  justify-content: left;
 }
 
 .right {
-    justify-content: right;
+  justify-content: right;
 }
 
 .messages-container .message .inner-message {
-    background: rgba(255, 255, 255, 0.22);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-    width: 45%;
-    max-width: 450px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    border-radius: 10px;
-    margin: 10px;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
+  width: 45%;
+  max-width: 450px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 10px;
+  margin: 10px;
 }
 
 .inner-message .header-message {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    border-radius: 10px 10px 0 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 10px 10px 0 0;
 }
 
-.messages-container .message .left .inner-message .header-message{
-    background-color: rgb(161, 33, 33);
+.messages-container .message .left .inner-message .header-message {
+  background-color: rgb(161, 33, 33);
 }
 
-.messages-container .message .right .inner-message .header-message{
-    background-color: black;
+.messages-container .message .right .inner-message .header-message {
+  background-color: black;
 }
 
 .messages-container .message .right .inner-message {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .inner-message .message-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: justify;
-    width: 95%;
-    padding: 5px;
-    border-radius: 10px 10px 0 0;
-    font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: justify;
+  width: 95%;
+  padding: 5px;
+  border-radius: 10px 10px 0 0;
+  font-size: 17px;
 }
 
 .delete {
-    position: relative;
-    color: white;
-    font-size: 30px;
-    border-radius: 10px;
-    overflow: hidden;
-    padding: 5px;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    transition: 0.5s;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-} 
+  position: relative;
+  color: white;
+  font-size: 30px;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: 0.5s;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
+}
 
 .delete::before {
-    content: '';
-    position: absolute;
-    background-color: white;
-    height: 0%;
-    top: 0;
-    left: 0;
-    width: 100%;
-    transition: 0.5s;
-    z-index: -1;
+  content: "";
+  position: absolute;
+  background-color: white;
+  height: 0%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: 0.5s;
+  z-index: -1;
 }
 
 .delete:hover {
-    color: black;
+  color: black;
 }
 
 .delete:hover::before {
-    height: 100%;
-    border-radius: 10px;
+  height: 100%;
+  border-radius: 10px;
 }
 
 form {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 90%;
 }
 
 textarea::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 textarea {
-    color: black;
-    font-size: 16px;
-    font-family:Arial, Helvetica, sans-serif;
-    resize: vertical;
-    background: transparent;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    margin: 16px 0;
-    border: 0;
-    padding: 20px 40px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-    outline: none;
-    border-radius: 10px;
+  color: black;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  resize: vertical;
+  background: transparent;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 16px 0;
+  border: 0;
+  padding: 20px 40px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
+  outline: none;
+  border-radius: 10px;
 }
 
 ::placeholder {
-    color: black;
+  color: black;
 }
 
 form span {
-    color: black;
-    font-size: 14px;
-    font-weight: 600;
+  color: black;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .button-container {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
 .button-container button {
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    text-decoration: none;
-    color: black;
-    padding: 15px 30px;
-    margin: 10px;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 1px;
-    overflow: hidden;
-    border-radius: 10px;
-    transition: 0.5s;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-    font-weight: 700;
-    font-size: 15px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  padding: 15px 30px;
+  margin: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  overflow: hidden;
+  border-radius: 10px;
+  transition: 0.5s;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
+  font-weight: 700;
+  font-size: 15px;
 }
 
 .button-container button::before {
-    content: '';
-    position: absolute;
-    background-color: black;
-    height: 0%;
-    top: 0;
-    left: 0;
-    width: 100%;
-    transition: 0.5s;
-    z-index: -1;
+  content: "";
+  position: absolute;
+  background-color: black;
+  height: 0%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: 0.5s;
+  z-index: -1;
 }
 
 .button-container button:hover {
-    color: white;
+  color: white;
 }
 
 .button-container button:hover::before {
-    height: 100%;
-    border-radius: 10px;
+  height: 100%;
+  border-radius: 10px;
 }

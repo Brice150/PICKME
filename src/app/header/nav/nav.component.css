@@ -1,102 +1,102 @@
 .nav {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    top: 5px;
-    right: 5px;
-    color: white;
-    font-size: 30px;
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: 0.5s;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-} 
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 5px;
+  right: 5px;
+  color: white;
+  font-size: 30px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.5s;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
+}
 
 .nav::before {
-    content: '';
-    position: absolute;
-    background-color: white;
-    height: 100%;
-    top: 0;
-    right: 0;
-    width: 0%;
-    transition: 0.5s;
-    z-index: -1;
+  content: "";
+  position: absolute;
+  background-color: white;
+  height: 100%;
+  top: 0;
+  right: 0;
+  width: 0%;
+  transition: 0.5s;
+  z-index: -1;
 }
 
 .nav:hover {
-    color: black;
+  color: black;
 }
 
 .nav:hover .buttons.active .menu-link {
-    color: black;
+  color: black;
 }
 
 .nav:hover::before {
-    width: 40px;
-    border-radius: 10px;
+  width: 40px;
+  border-radius: 10px;
 }
 
 .nav .menu {
-    padding: 5px;
-    width: 30px;
-    height: 30px;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
 }
 
 .nav .buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
 }
 
 .nav .buttons a {
-    display: none;
-    border-radius: 10px;
-    padding: 5px;
-    text-decoration: none;
+  display: none;
+  border-radius: 10px;
+  padding: 5px;
+  text-decoration: none;
 }
 
 .nav .buttons.active {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
 .nav .buttons.active a {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: white;
-    padding: 5px;
-    margin-right: 10px;
-    transition: 0.5s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  padding: 5px;
+  margin-right: 10px;
+  transition: 0.5s;
 }
 
 .nav a span {
-    margin-left: 7px;
-    font-size: 25px;
+  margin-left: 7px;
+  font-size: 25px;
 }
 
 .nav .buttons.active a.active-link {
-    background-color: white;
-    color: black;
+  background-color: white;
+  color: black;
 }
 
 .nav .buttons.active a:hover {
-    background-color: white;
-    color: black;
+  background-color: white;
+  color: black;
 }
 
 @media only screen and (max-width: 940px) {
-    .nav a span {
-        display: none;
-    }
+  .nav a span {
+    display: none;
+  }
 }
 
 @media only screen and (max-width: 500px) {
-    .nav .buttons.active a {
-        margin-right: 0;
-    }
+  .nav .buttons.active a {
+    margin-right: 0;
+  }
 }

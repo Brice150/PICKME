@@ -5,15 +5,9 @@ import { HeaderModule } from '../header/header.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 
-
 @NgModule({
   declarations: [ProfileComponent],
-  imports: [
-    CommonModule,
-    HeaderModule,
-    ReactiveFormsModule,
-    MatChipsModule
-  ],
-  exports: [ProfileComponent]
+  imports: [CommonModule, HeaderModule, ReactiveFormsModule, MatChipsModule],
+  exports: [ProfileComponent],
 })
-export class ProfileModule { }
+export class ProfileModule {}

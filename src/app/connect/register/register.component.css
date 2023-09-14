@@ -1,190 +1,192 @@
 .user-form {
-    width: 80%;
-    margin: auto;
-    padding: 0 10px;
-    overflow: hidden;
+  width: 80%;
+  margin: auto;
+  padding: 0 10px;
+  overflow: hidden;
 }
 
 .user-form span {
-    color: black;
-    font-size: 14px;
-    font-weight: 600;
+  color: black;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .user-form-text {
-    background: transparent;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    margin: 16px 0;
-    border: 0;
-    padding: 20px 40px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-    outline: none;
-    border-radius: 10px;
+  background: transparent;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 16px 0;
+  border: 0;
+  padding: 20px 40px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
+  outline: none;
+  border-radius: 10px;
 }
 
 input {
-    color: white;
-    font-size: 1em;
+  color: white;
+  font-size: 1em;
 }
 
 select {
-    color: white;
-    font-size: 1em;
-    appearance: none;
-    cursor: pointer;
+  color: white;
+  font-size: 1em;
+  appearance: none;
+  cursor: pointer;
 }
 
 select option {
-    color: black;
+  color: black;
 }
 
 ::placeholder {
-    color: white;
-    font-size: 1em;
+  color: white;
+  font-size: 1em;
 }
 
 mat-form-field {
-    background: transparent;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    margin: 16px 0;
-    border: 0;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-    outline: none;
-    border-radius: 10px;
+  background: transparent;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 16px 0;
+  border: 0;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
+  outline: none;
+  border-radius: 10px;
 }
 
 mat-form-field mat-label {
-    color: white;
-    font-size: 1em;
+  color: white;
+  font-size: 1em;
 }
 
 ::ng-deep .mdc-text-field--filled.mdc-text-field--disabled {
-    background-color: transparent;
-    border-radius: 10px;
-    padding: 0 40px;
+  background-color: transparent;
+  border-radius: 10px;
+  padding: 0 40px;
 }
 
 ::ng-deep .mdc-text-field.mdc-text-field--disabled .mdc-text-field__input {
-    color: white;
-    font-size: 1em;
+  color: white;
+  font-size: 1em;
 }
 
 ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-    display: none;
+  display: none;
 }
 
-::ng-deep .mdc-text-field--filled.mdc-text-field--disabled .mdc-line-ripple::before {
-    display: none;
+::ng-deep
+  .mdc-text-field--filled.mdc-text-field--disabled
+  .mdc-line-ripple::before {
+  display: none;
 }
 
 mat-form-field mat-datepicker-toggle {
-    color: white;
-    transition: 0.5s;
+  color: white;
+  transition: 0.5s;
 }
 
 mat-form-field mat-datepicker-toggle:hover {
-    color: black;
+  color: black;
 }
 
 .button-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .user-form .button-container .validButton {
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    text-decoration: none;
-    color: black;
-    padding: 15px 30px;
-    margin: 10px;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 1px;
-    overflow: hidden;
-    border-radius: 10px;
-    transition: 0.5s;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-    font-weight: 700;
-    font-size: 15px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  padding: 15px 30px;
+  margin: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  overflow: hidden;
+  border-radius: 10px;
+  transition: 0.5s;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
+  font-weight: 700;
+  font-size: 15px;
 }
 
 .user-form .button-container .validButton::before {
-    content: '';
-    position: absolute;
-    background-color: black;
-    height: 0%;
-    top: 0;
-    left: 0;
-    width: 100%;
-    transition: 0.5s;
-    z-index: -1;
+  content: "";
+  position: absolute;
+  background-color: black;
+  height: 0%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: 0.5s;
+  z-index: -1;
 }
 
 .user-form .button-container .validButton:hover::before {
-    height: 100%;
-    border-radius: 10px;
+  height: 100%;
+  border-radius: 10px;
 }
 
 .user-form .button-container .validButton:hover {
-    color: white;
+  color: white;
 }
 
 .container {
-    margin-top: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .container p {
-    font-size: 20px;
-    font-weight: 600;
-    color: white;
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
 }
 
 .flex {
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .flex select {
-    margin: 0 10px;
+  margin: 0 10px;
 }
 
 .flex .user-form-text {
-    padding: 20px 10px;
+  padding: 20px 10px;
 }
 
 .flex .inbetween {
-    text-align: center;
-    color: black;
-    font-size: 14px;
-    font-weight: 500;
+  text-align: center;
+  color: black;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .span-container {
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: left;
-    flex-direction: column;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: left;
+  flex-direction: column;
 }
 
 @media only screen and (max-width: 520px) {
-    .flex {
-        flex-wrap: wrap;
-    }
+  .flex {
+    flex-wrap: wrap;
+  }
 }

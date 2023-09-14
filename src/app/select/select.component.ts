@@ -14,9 +14,9 @@ import { Subscription } from 'rxjs/internal/Subscription';
 @Component({
   selector: 'app-select',
   templateUrl: './select.component.html',
-  styleUrls: ['./select.component.css']
+  styleUrls: ['./select.component.css'],
 })
-export class SelectComponent implements OnInit, OnDestroy{
+export class SelectComponent implements OnInit, OnDestroy {
   notification!: string | null;
   imagePath: string = environment.imagePath;
   users: User[] = [];
@@ -27,29 +27,29 @@ export class SelectComponent implements OnInit, OnDestroy{
     grabCursor: true,
     speed: 1500,
     loop: false,
-    pagination: { 
-      el: '.swiper-pagination', 
-      clickable: true, 
-      dynamicBullets: true
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+      dynamicBullets: true,
     },
     spaceBetween: 80,
     breakpoints: {
       0: {
-        slidesPerView: 1
+        slidesPerView: 1,
       },
       500: {
-        slidesPerView: 2
+        slidesPerView: 2,
       },
       800: {
-        slidesPerView: 3
+        slidesPerView: 3,
       },
       1400: {
-        slidesPerView: 4
+        slidesPerView: 4,
       },
       2000: {
-        slidesPerView: 5
-      }
-    }
+        slidesPerView: 5,
+      },
+    },
   };
   getLoggedInUserSubscription!: Subscription;
   getUsersSubscription!: Subscription;
@@ -62,7 +62,8 @@ export class SelectComponent implements OnInit, OnDestroy{
     private likeService: LikeService,
     private router: Router,
     private agePipe: AgePipe,
-    private toastr: ToastrService) {}
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() {
     this.getLoggedInUser();
@@ -70,37 +71,43 @@ export class SelectComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy() {
-    this.getLoggedInUserSubscription && this.getLoggedInUserSubscription.unsubscribe();
+    this.getLoggedInUserSubscription &&
+      this.getLoggedInUserSubscription.unsubscribe();
     this.getUsersSubscription && this.getUsersSubscription.unsubscribe();
-    this.getMainPictureSubscription && this.getMainPictureSubscription.unsubscribe();
+    this.getMainPictureSubscription &&
+      this.getMainPictureSubscription.unsubscribe();
     this.likeSubscription && this.likeSubscription.unsubscribe();
   }
 
   getLoggedInUser() {
-    this.getLoggedInUserSubscription = this.userService.getConnectedUser().subscribe({
-      next: (response: User) => {
-        this.loggedInUser = response;
-        if (this.agePipe.transform(response.birthDate) + 5 <= 100) {
-          this.maxAge = this.agePipe.transform(response.birthDate) + 5;
-        }
-        else {
-          this.maxAge = 100;
-        }
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, "Server error", {
-          positionClass: "toast-bottom-center" 
-        })
-      }
-    })
+    this.getLoggedInUserSubscription = this.userService
+      .getConnectedUser()
+      .subscribe({
+        next: (response: User) => {
+          this.loggedInUser = response;
+          if (this.agePipe.transform(response.birthDate) + 5 <= 100) {
+            this.maxAge = this.agePipe.transform(response.birthDate) + 5;
+          } else {
+            this.maxAge = 100;
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          this.toastr.error(error.message, 'Server error', {
+            positionClass: 'toast-bottom-center',
+          });
+        },
+      });
   }
 
   getUsers() {
     this.getUsersSubscription = this.userService.getAllUsers().subscribe({
       next: (response: User[]) => {
-        this.users= response;
-        this.users = this.users.filter(user => this.minAge <= this.agePipe.transform(user.birthDate)
-                      && this.agePipe.transform(user.birthDate) <= this.maxAge);
+        this.users = response;
+        this.users = this.users.filter(
+          (user) =>
+            this.minAge <= this.agePipe.transform(user.birthDate) &&
+            this.agePipe.transform(user.birthDate) <= this.maxAge
+        );
         for (let user of this.users) {
           this.getMainPicture(user);
         }
@@ -108,70 +115,73 @@ export class SelectComponent implements OnInit, OnDestroy{
         loaderWrapper!.style.display = 'none';
       },
       error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, "Server error", {
-          positionClass: "toast-bottom-center" 
-        })
-      }
-    })
+        this.toastr.error(error.message, 'Server error', {
+          positionClass: 'toast-bottom-center',
+        });
+      },
+    });
   }
 
   getMainPicture(user: User) {
     let reader = new FileReader();
     if (user.mainPicture) {
-      this.getMainPictureSubscription = this.pictureService.getPicture(user.mainPicture.toString()).subscribe({
-        next: event => {
-        if (event.type === HttpEventType.Response) {
-          if (event.body instanceof Array) {
-
-          }
-          else {
-            let image = new File([event.body!], user.mainPicture!.toString());
-            reader.readAsDataURL(image);
-            reader.onloadend = (loaded) => {
-              user.mainPicture = reader.result!;
+      this.getMainPictureSubscription = this.pictureService
+        .getPicture(user.mainPicture.toString())
+        .subscribe({
+          next: (event) => {
+            if (event.type === HttpEventType.Response) {
+              if (event.body instanceof Array) {
+              } else {
+                let image = new File(
+                  [event.body!],
+                  user.mainPicture!.toString()
+                );
+                reader.readAsDataURL(image);
+                reader.onloadend = (loaded) => {
+                  user.mainPicture = reader.result!;
+                };
+              }
             }
-          }
-        }
-        },
-        error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.message, "Server error", {
-            positionClass: "toast-bottom-center" 
-          })
-        }
-      })
-    }
-    else {
-      user.mainPicture = this.imagePath + "No-Image.png";
+          },
+          error: (error: HttpErrorResponse) => {
+            this.toastr.error(error.message, 'Server error', {
+              positionClass: 'toast-bottom-center',
+            });
+          },
+        });
+    } else {
+      user.mainPicture = this.imagePath + 'No-Image.png';
     }
   }
 
   like(user: User) {
     let like: any = {
-      "date": null, 
-      "fkSender": {"id": this.loggedInUser.id}, 
-      "fkReceiver": {"id": user.id}};
-      this.likeSubscription = this.likeService.addLike(like).subscribe({
+      date: null,
+      fkSender: { id: this.loggedInUser.id },
+      fkReceiver: { id: user.id },
+    };
+    this.likeSubscription = this.likeService.addLike(like).subscribe({
       next: (response: string) => {
         this.getUsers();
-        this.toastr.success("Liked "+user.nickname, "Like", {
-          positionClass: "toast-bottom-center" 
-        })
-        if (response !== "") {
+        this.toastr.success('Liked ' + user.nickname, 'Like', {
+          positionClass: 'toast-bottom-center',
+        });
+        if (response !== '') {
           this.notification = response;
-          this.toastr.success("Match with "+response, "Match", {
-            positionClass: "toast-bottom-center" 
-          })
+          this.toastr.success('Match with ' + response, 'Match', {
+            positionClass: 'toast-bottom-center',
+          });
           setTimeout(() => {
             this.notification = null;
-          }, 3000)
+          }, 3000);
         }
       },
       error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, "Server error", {
-          positionClass: "toast-bottom-center" 
-        })
-      }
-    })
+        this.toastr.error(error.message, 'Server error', {
+          positionClass: 'toast-bottom-center',
+        });
+      },
+    });
   }
 
   moreInfo(id: number) {

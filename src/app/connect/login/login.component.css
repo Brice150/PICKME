@@ -1,101 +1,101 @@
 .user-form {
-    width: 80%;
-    margin: auto;
-    padding: 0 10px;
-    overflow: hidden;
-    animation: none;
+  width: 80%;
+  margin: auto;
+  padding: 0 10px;
+  overflow: hidden;
+  animation: none;
 }
 
 .user-form.invalidLogin {
-    animation-name: invalidLogin;
-    animation-duration: 0.1s;
-    animation-direction: alternate;
-    animation-iteration-count: 8;
+  animation-name: invalidLogin;
+  animation-duration: 0.1s;
+  animation-direction: alternate;
+  animation-iteration-count: 8;
 }
 
 @keyframes invalidLogin {
-    from {
-        transform: translateX(-5px);
-    }
-    to {
-        transform: translateX(5px);
-    }
+  from {
+    transform: translateX(-5px);
+  }
+  to {
+    transform: translateX(5px);
+  }
 }
 
 .user-form span {
-    color: black;
-    font-size: 14px;
-    font-weight: 600;
+  color: black;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .user-form-text {
-    background: transparent;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    margin: 16px 0;
-    border: 0;
-    padding: 20px 40px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-    outline: none;
-    border-radius: 10px;
+  background: transparent;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 16px 0;
+  border: 0;
+  padding: 20px 40px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
+  outline: none;
+  border-radius: 10px;
 }
 
 input {
-    color: white;
-    font-size: 1em;
+  color: white;
+  font-size: 1em;
 }
 
 ::placeholder {
-    color: white;
-    font-size: 1em;
+  color: white;
+  font-size: 1em;
 }
 
 .button-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .user-form .button-container .validButton {
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    text-decoration: none;
-    color: black;
-    padding: 15px 30px;
-    margin: 10px;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 1px;
-    overflow: hidden;
-    border-radius: 10px;
-    transition: 0.5s;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.6px);
-    font-weight: 700;
-    font-size: 15px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  padding: 15px 30px;
+  margin: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  overflow: hidden;
+  border-radius: 10px;
+  transition: 0.5s;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.6px);
+  font-weight: 700;
+  font-size: 15px;
 }
 
 .user-form .button-container .validButton::before {
-    content: '';
-    position: absolute;
-    background-color: black;
-    height: 0%;
-    top: 0;
-    left: 0;
-    width: 100%;
-    transition: 0.5s;
-    z-index: -1;
+  content: "";
+  position: absolute;
+  background-color: black;
+  height: 0%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: 0.5s;
+  z-index: -1;
 }
 
 .user-form .button-container .validButton:hover::before {
-    height: 100%;
-    border-radius: 10px;
+  height: 100%;
+  border-radius: 10px;
 }
 
 .user-form .button-container .validButton:hover {
-    color: white;
+  color: white;
 }
