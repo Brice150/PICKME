@@ -53,7 +53,6 @@ swiper {
 
 swiper .swiper-wrapper {
   width: 100%;
-  padding: 30px 0;
 }
 
 .container .inner-content {
@@ -62,11 +61,10 @@ swiper .swiper-wrapper {
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.22);
   backdrop-filter: blur(3.6px);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
 ::ng-deep .swiper-pagination-bullet-active {
-  background-color: white;
+  background-color: black;
 }
 
 .card {

@@ -104,16 +104,6 @@ export class MessageComponent implements OnInit, OnDestroy {
       });
   }
 
-  isToday(message: Message): boolean {
-    let today: Date = new Date();
-    let messageDate: Date = new Date(message.date);
-    let isToday: boolean =
-      messageDate.getFullYear() === today.getFullYear() &&
-      messageDate.getMonth() === today.getMonth() &&
-      messageDate.getDate() === today.getDate();
-    return isToday;
-  }
-
   sendMessage(message: Message) {
     message.fkReceiver = { id: this.selectedUser?.id };
     message.fkSender = { id: this.loggedInUser?.id };
@@ -173,11 +163,12 @@ export class MessageComponent implements OnInit, OnDestroy {
       });
   }
 
-  deleteMessage(message: Message) {
+  deleteMessage(messageId: number) {
     this.deleteMessageSubscription = this.messageService
-      .deleteMessage(message.id)
+      .deleteMessage(messageId)
       .subscribe({
         next: (response: void) => {
+          this.unmodifyMessage();
           this.onRefresh.emit(this.selectedUser);
         },
         error: (error: HttpErrorResponse) => {
@@ -193,12 +184,12 @@ export class MessageComponent implements OnInit, OnDestroy {
       });
   }
 
-  openDialog(message: Message) {
+  openDialog(messageId: number) {
     const dialogRef = this.dialog.open(DialogComponent);
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.deleteMessage(message);
+        this.deleteMessage(messageId);
       }
     });
   }

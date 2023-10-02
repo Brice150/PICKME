@@ -143,6 +143,8 @@
   background: rgba(255, 255, 255, 0.22);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(3.6px);
+  max-height: 450px;
+  overflow-y: scroll;
 }
 
 .messages-container .message {
@@ -167,11 +169,10 @@
 }
 
 .messages-container .message .inner-message {
-  background: rgba(255, 255, 255, 0.22);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(3.6px);
-  width: 45%;
-  max-width: 450px;
+  width: 70%;
+  max-width: 650px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -183,23 +184,37 @@
 .inner-message .header-message {
   width: 100%;
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  color: white;
+  color: black;
   font-size: 14px;
   font-weight: 500;
-  border-radius: 10px 10px 0 0;
+  margin-top: 3px;
 }
 
 .messages-container .message .left .inner-message .header-message {
-  background-color: rgb(161, 33, 33);
+  justify-content: left;
+  margin-left: 10px;
+}
+
+.messages-container .message .left .inner-message .header-message span {
+  color: white;
 }
 
 .messages-container .message .right .inner-message .header-message {
+  justify-content: right;
+  margin-right: 10px;
+}
+
+.messages-container .message .left .inner-message {
   background-color: black;
 }
 
+.messages-container .message .left .inner-message .message-content {
+  color: white;
+}
+
 .messages-container .message .right .inner-message {
+  background-color: white;
   cursor: pointer;
 }
 
@@ -212,42 +227,6 @@
   padding: 5px;
   border-radius: 10px 10px 0 0;
   font-size: 17px;
-}
-
-.delete {
-  position: relative;
-  color: white;
-  font-size: 30px;
-  border-radius: 10px;
-  overflow: hidden;
-  padding: 5px;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  transition: 0.5s;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(3.6px);
-}
-
-.delete::before {
-  content: "";
-  position: absolute;
-  background-color: white;
-  height: 0%;
-  top: 0;
-  left: 0;
-  width: 100%;
-  transition: 0.5s;
-  z-index: -1;
-}
-
-.delete:hover {
-  color: black;
-}
-
-.delete:hover::before {
-  height: 100%;
-  border-radius: 10px;
 }
 
 form {
