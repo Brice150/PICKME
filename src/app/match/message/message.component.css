@@ -216,6 +216,16 @@
 .messages-container .message .right .inner-message {
   background-color: white;
   cursor: pointer;
+  transition: 0.5s ease;
+}
+
+.messages-container .message .right .inner-message:hover {
+  background-color: black;
+  color: white;
+}
+
+.messages-container .message .right .inner-message:hover .header-message {
+  color: white;
 }
 
 .inner-message .message-content {
