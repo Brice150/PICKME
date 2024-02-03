@@ -24,9 +24,9 @@ export class SelectComponent implements OnInit, OnDestroy {
   minAge: number = 18;
   maxAge: number = 0;
   config: SwiperOptions = {
-    mousewheel: {},
-    keyboard: {},
-    grabCursor: true,
+    mousewheel: true,
+    keyboard: true,
+    simulateTouch: false,
     loop: false,
     pagination: {
       el: '.swiper-pagination',
