@@ -5,7 +5,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { appRouter } from './app.router';
+import { appRouter } from './app.routes';
 import { SelectModule } from './select/select.module';
 import { ProfileModule } from './profile/profile.module';
 import { MoreinfoModule } from './moreinfo/moreinfo.module';
