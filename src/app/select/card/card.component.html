@@ -1,0 +1,57 @@
+<a
+  class="button left"
+  title="Dislike"
+  (click)="dislike()"
+  @dislikeButtonTrigger
+  *ngIf="display"
+>
+  <i class="bx bxs-dislike"></i>
+</a>
+<a
+  class="button right"
+  title="Like"
+  [ngClass]="user.gold ? 'gold' : null"
+  (click)="like()"
+  @likeButtonTrigger
+  *ngIf="display"
+>
+  <i class="bx bxs-like"></i>
+</a>
+<div class="picture-container">
+  <img
+    *ngIf="user.mainPicture"
+    [src]="user.mainPicture"
+    [alt]="user.nickname"
+  />
+  <img
+    *ngIf="!user.mainPicture"
+    [src]="imagePath + 'No-Image.png'"
+    [alt]="user.nickname"
+  />
+</div>
+<div
+  class="text-container"
+  title="More Info"
+  (click)="moreInfo()"
+  @textTrigger
+  *ngIf="display"
+>
+  <div class="flex">
+    <div class="left">
+      <h2>{{ user.nickname }}</h2>
+      <h3>{{ user.job }}</h3>
+    </div>
+    <div class="right">
+      <h2 class="age">{{ user.birthDate | age }}</h2>
+      <h3>{{ user.city }}</h3>
+    </div>
+  </div>
+  <span class="description">
+    {{ user.description | description : 150 }}
+  </span>
+</div>
+
+<div class="match-animation" *ngIf="activeMatchAnimation">
+  <span @textMatchTrigger>It's a Match !</span>
+  <i @logoMatchTrigger class="bx bxs-flame"></i>
+</div>

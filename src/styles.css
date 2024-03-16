@@ -1,17 +1,65 @@
 :root {
-  --invalid: #ff0000;
-  --valid: #0fff00;
-  --background: #ffffff;
-  --scrollbar: black;
+  --background: rgb(110, 0, 0);
+  --glass-background: rgba(0, 0, 0, 0.5);
+  --primary: white;
+  --secondary: black;
+  --liked: gold;
+  --error: red;
+
+  /* Swiper JS */
+  --swiper-preloader-color: var(--error);
+  --swiper-navigation-color: var(--error);
+  --swiper-pagination-color: var(--error);
+
+  /* Angular Material */
+  --mat-stepper-container-color: transparent;
+  --mat-stepper-header-selected-state-label-text-color: var(--primary);
+  --mat-stepper-header-selected-state-icon-background-color: var(--primary);
+  --mat-stepper-header-selected-state-icon-foreground-color: var(--secondary);
+  --mat-stepper-header-label-text-color: var(--secondary);
+  --mat-stepper-line-color: var(--primary);
+  --mat-stepper-header-edit-state-icon-background-color: var(--primary);
+  --mat-stepper-header-edit-state-icon-foreground-color: var(--secondary);
+  --mat-stepper-header-done-state-icon-background-color: var(--primary);
+  --mat-stepper-header-done-state-icon-foreground-color: var(--secondary);
+  --mdc-filled-text-field-disabled-container-color: transparent;
+  --mdc-filled-text-field-disabled-input-text-color: var(--primary);
+  --mdc-slider-inactive-track-color: var(--secondary);
+  --mdc-slider-active-track-color: var(--primary);
+  --mdc-slider-handle-color: var(--primary);
+  --mdc-slider-focus-handle-color: var(--primary);
+  --mat-slider-focus-state-layer-color: rgba(185, 185, 185, 0.2);
+  --mat-expansion-container-background-color: transparent;
+  --mat-expansion-container-shape: 20px;
 }
 
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--background);
+  color: var(--primary);
 }
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+.toast-container .ngx-toastr.custom {
+  box-shadow: none;
+  border-radius: 10px;
+  background-color: var(--glass-background);
+}
+
+.toast-container .ngx-toastr.custom.gold {
+  background-color: goldenrod;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }

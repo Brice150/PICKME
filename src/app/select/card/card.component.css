@@ -1,0 +1,179 @@
+:host {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+.picture-container {
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary);
+}
+
+.picture-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.text-container {
+  position: absolute;
+  top: 60%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 40%;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 20px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: 0.5s ease;
+  z-index: 10;
+}
+
+.text-container::before {
+  content: "";
+  position: absolute;
+  background-color: var(--primary);
+  height: 0%;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  transition: 0.5s ease;
+  z-index: -1;
+}
+
+.text-container:hover::before {
+  height: 100%;
+}
+
+.text-container:hover {
+  color: var(--secondary);
+}
+
+.text-container .flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  height: 50%;
+}
+
+.text-container .description {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 50%;
+  text-align: justify;
+}
+
+.text-container .age {
+  text-align: right;
+}
+
+.button {
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: var(--primary);
+  backdrop-filter: blur(2px);
+  padding: 10px;
+  transition: 0.5s ease;
+  cursor: pointer;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.button::before {
+  content: "";
+  position: absolute;
+  background-color: var(--primary);
+  height: 0%;
+  top: 0;
+  right: 0;
+  width: 100%;
+  transition: 0.5s ease;
+  z-index: -1;
+}
+
+.button:hover::before {
+  height: 100%;
+}
+
+.button:hover {
+  color: var(--secondary);
+}
+
+.button.left {
+  left: 0;
+  border-radius: 10px 0 10px 0;
+}
+
+.button.right {
+  right: 0;
+  border-radius: 0 10px 0 10px;
+}
+
+.button.right:hover::before {
+  border-radius: 0 10px 0 10px;
+}
+
+.button.left:hover::before {
+  border-radius: 10px 0 10px 0;
+}
+
+.button i {
+  font-size: 35px;
+}
+
+.button.right.gold {
+  background-color: var(--liked);
+  color: var(--secondary);
+}
+
+.button.right.gold:hover {
+  color: var(--liked);
+}
+
+.match-animation {
+  z-index: 15;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(3px);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.match-animation span {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--liked);
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.match-animation i {
+  margin: 10px;
+  font-size: 30px;
+  color: var(--liked);
+}

@@ -1,70 +1,99 @@
-<app-header [title]="'Match'"></app-header>
-<div class="main-container">
-  <input
-    type="search"
-    (ngModelChange)="search(key.value)"
-    #key="ngModel"
-    ngModel
-    name="key"
-    class="text-research"
-    placeholder="Search"
-  />
-  <div class="container" *ngIf="users.length !== 0">
-    <swiper [config]="config">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide" *ngFor="let user of users">
-          <div class="inner-content">
-            <a
-              *ngIf="user.id === selectedUser.id"
-              class="card selected-user"
-              title="send message"
-              (click)="viewMessage(user)"
-            >
-              <div class="picture-container">
-                <img [src]="user.mainPicture" [alt]="user.nickname" />
-              </div>
-              <div class="text">
-                <h2>{{ user.nickname }}</h2>
-              </div>
-              <div class="messages-number">
-                <h2 *ngIf="user.messagesNumber != 0">
-                  {{ user.messagesNumber }}
-                </h2>
-              </div>
-            </a>
-            <a
-              *ngIf="user.id !== selectedUser.id"
-              class="card"
-              title="send message"
-              (click)="viewMessage(user)"
-            >
-              <div class="picture-container">
-                <img [src]="user.mainPicture" [alt]="user.nickname" />
-              </div>
-              <div class="text">
-                <h2>{{ user.nickname }}</h2>
-              </div>
-              <div class="messages-number">
-                <h2 *ngIf="user.messagesNumber != 0">
-                  {{ user.messagesNumber }}
-                </h2>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="swiper-pagination"></div>
-    </swiper>
+<div class="container" *ngIf="!selectedMatch">
+  <div class="search">
+    <input
+      type="text"
+      placeholder="Search by nickname"
+      [(ngModel)]="search"
+      (ngModelChange)="searchByNickname()"
+    />
   </div>
-  <app-message
-    *ngIf="selectedUser"
-    [loggedInUser]="loggedInUser"
-    [selectedUser]="selectedUser"
-    [messages]="messages"
-    (onRefresh)="refreshUserMessages($event)"
-  ></app-message>
+  <div class="content" *ngIf="matches && matches.length !== 0">
+    <app-match-card
+      *ngFor="let match of filteredMatches"
+      [match]="match"
+      [preview]="
+        match.messages && match.messages.length !== 0
+          ? match.messages[0].content
+          : undefined
+      "
+      (clickEvent)="selectMatch(match)"
+      title="View Messages"
+    ></app-match-card>
+  </div>
+  <div class="content nothing" *ngIf="!matches || matches.length === 0">
+    <span>No match</span>
+  </div>
 </div>
 
-<div class="loader-wrapper" id="loaderWrapper">
-  <span class="loader"><span class="loader-inner"></span></span>
+<div class="container" *ngIf="selectedMatch">
+  <div class="title">
+    <app-match-card
+      [match]="selectedMatch"
+      [preview]="'View ' + selectedMatch.user.nickname + ' profile'"
+      (clickEvent)="moreInfo()"
+      title="More Info"
+      [messageMode]="true"
+    ></app-match-card>
+    <a title="Back" (click)="back()">
+      <i class="bx bx-arrow-back"></i>
+    </a>
+  </div>
+  <div
+    class="content"
+    *ngIf="selectedMatch.messages && selectedMatch.messages.length !== 0"
+  >
+    <app-message
+      *ngFor="let message of selectedMatch.messages"
+      [ngClass]="
+        message.sender === selectedMatch.user.nickname ? 'left' : 'right'
+      "
+      [message]="message"
+      [userName]="selectedMatch.user.nickname"
+      (click)="modifyMessage(message)"
+    ></app-message>
+  </div>
+  <div
+    class="content nothing"
+    *ngIf="!selectedMatch.messages || selectedMatch.messages.length === 0"
+  >
+    <span>No message</span>
+  </div>
+  <form
+    *ngIf="!isModifying"
+    [formGroup]="messageForm"
+    (ngSubmit)="sendMessage(messageForm.value)"
+  >
+    <textarea placeholder="Message" formControlName="content"></textarea>
+    <div class="button-container">
+      <button title="Send" *ngIf="messageForm.valid" type="submit">Send</button>
+    </div>
+  </form>
+  <form
+    *ngIf="isModifying"
+    [formGroup]="messageForm"
+    (ngSubmit)="updateMessage(messageForm.value)"
+  >
+    <textarea
+      ngModel="{{ updatedMessage?.content }}"
+      formControlName="content"
+    ></textarea>
+    <div class="button-container">
+      <button title="Cancel" (click)="unModifyMessage()">Cancel</button>
+      <button
+        title="Update"
+        *ngIf="messageForm.valid && messageForm.dirty"
+        type="submit"
+      >
+        Update
+      </button>
+      <button
+        title="Delete"
+        *ngIf="messageForm.valid && !messageForm.dirty"
+        (click)="openDialog()"
+        type="button"
+      >
+        Delete
+      </button>
+    </div>
+  </form>
 </div>

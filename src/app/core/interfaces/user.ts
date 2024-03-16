@@ -1,47 +1,42 @@
-import { Authority } from './authority';
-import { Like } from './like';
-import { Match } from './match';
-import { Message } from './message';
 import { Picture } from './picture';
-import { Token } from './token';
 
 export interface User {
-  id: number;
+  id?: number;
   email: string;
-  enabled: boolean;
-  nickname: string;
-  locked: boolean;
-  password: string;
-  tokens: Token[];
-  userRole: string;
-  messagesSent: Message[];
-  messagesReceived: Message[];
-  messagesNumber: number;
-  likes: Like[];
-  matches: Match[];
-  picture: Picture[];
-  credentialsNonExpired: boolean;
-  accountNonExpired: boolean;
-  username: string;
-  accountNonLocked: boolean;
-  authorities: Authority[];
-  mainPicture: string | ArrayBuffer | null;
+  password?: string;
+  userRole?: string;
   gender: string;
   genderSearch: string;
-  relationshipType: string;
+  minAge: number;
+  maxAge: number;
+  gold?: boolean;
+
+  // Main
+  nickname: string;
+  job: string;
   birthDate: Date;
   city: string;
-  height: string | null;
-  languages: string | null;
-  job: string | null;
-  description: string | null;
-  smokes: string | null;
-  alcoholDrinking: string | null;
-  organised: string | null;
-  personality: string | null;
-  sportPractice: string | null;
-  animals: string | null;
-  parenthood: string | null;
-  gamer: string | null;
-  activities: string | null;
+  mainPicture?: string | ArrayBuffer;
+
+  // Description
+  description?: string;
+
+  // Chips
+  height?: number;
+  alcoholDrinking?: string;
+  smokes?: string;
+  organised?: string;
+  personality?: string;
+  sportPractice?: string;
+  animals?: string;
+  parenthood?: string;
+  gamer?: string;
+
+  // Attached to a user
+  pictures?: Picture[];
+
+  // Stats
+  totalDislikes?: number;
+  totalLikes?: number;
+  totalMatches?: number;
 }

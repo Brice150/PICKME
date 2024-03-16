@@ -1,0 +1,12 @@
+<form [formGroup]="descriptionForm" (ngSubmit)="updateDescription()">
+  <textarea placeholder="Description" formControlName="description"></textarea>
+  <div class="button-container">
+    <button
+      title="Update"
+      *ngIf="descriptionForm.valid && this.descriptionForm.dirty"
+      type="submit"
+    >
+      Update
+    </button>
+  </div>
+</form>

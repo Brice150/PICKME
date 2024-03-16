@@ -1,0 +1,110 @@
+.menu-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 5px;
+  background: var(--glass-background);
+  backdrop-filter: blur(2px);
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  z-index: 15;
+  color: var(--primary);
+  transition: 0.5s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.menu-button i {
+  font-size: 40px;
+}
+
+.menu-button:hover {
+  color: var(--secondary);
+}
+
+.menu-button::before {
+  content: "";
+  position: absolute;
+  background-color: var(--primary);
+  height: 0%;
+  top: 0;
+  right: 0;
+  width: 100%;
+  transition: 0.5s ease;
+  z-index: -1;
+}
+
+.menu-button:hover::before {
+  height: 100%;
+  border-radius: 10px;
+}
+
+.container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 60%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 10;
+  border-radius: 20px 0 0 20px;
+  background: var(--glass-background);
+  backdrop-filter: blur(2px);
+}
+
+.container a {
+  margin: 35px 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-decoration: none;
+  color: var(--primary);
+  border-radius: 10px;
+  backdrop-filter: blur(2px);
+  padding: 10px;
+  width: 140px;
+  transition: 0.5s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.container a::before {
+  content: "";
+  position: absolute;
+  background-color: var(--primary);
+  height: 0%;
+  top: 0;
+  right: 0;
+  width: 100%;
+  transition: 0.5s ease;
+  z-index: -1;
+}
+
+.container a:hover::before {
+  height: 100%;
+  border-radius: 10px;
+}
+
+.container a:hover {
+  color: var(--secondary);
+}
+
+.container a.active {
+  background-color: var(--primary);
+  color: var(--secondary);
+}
+
+.container a i {
+  font-size: 25px;
+  margin-right: 10px;
+}
+
+.container a span {
+  font-size: 20px;
+  text-transform: uppercase;
+  font-weight: 800;
+}

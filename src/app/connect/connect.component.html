@@ -1,38 +1,20 @@
-<div class="main-container">
-  <div class="container">
-    <div class="content">
-      <div class="btn-container">
-        <a
-          *ngIf="isRegistering"
-          (click)="onRegister()"
-          title="register"
-          class="active"
-          >Register</a
-        >
-        <a
-          *ngIf="!isRegistering"
-          (click)="onRegister()"
-          title="register"
-          class="unactive"
-          >Register</a
-        >
-        <a
-          *ngIf="isRegistering"
-          (click)="onLogin()"
-          title="login"
-          class="unactive"
-          >Login</a
-        >
-        <a
-          *ngIf="!isRegistering"
-          (click)="onLogin()"
-          title="login"
-          class="active"
-          >Login</a
-        >
-      </div>
-      <app-login *ngIf="!isRegistering"></app-login>
-      <app-register *ngIf="isRegistering"></app-register>
-    </div>
+<div class="container">
+  <div class="btn-container">
+    <a
+      (click)="toggleLoginOrRegister('register')"
+      title="Register"
+      [ngClass]="isRegistering ? 'active' : 'unactive'"
+      >Register</a
+    >
+    <a
+      (click)="toggleLoginOrRegister('login')"
+      title="Login"
+      [ngClass]="!isRegistering ? 'active' : 'unactive'"
+      >Login</a
+    >
+  </div>
+  <div class="content">
+    <app-login *ngIf="!isRegistering"></app-login>
+    <app-register *ngIf="isRegistering"></app-register>
   </div>
 </div>

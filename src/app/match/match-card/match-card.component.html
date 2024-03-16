@@ -1,0 +1,25 @@
+<div class="container" (click)="click()">
+  <img
+    [src]="match.user.mainPicture"
+    [alt]="match.user.nickname"
+    *ngIf="match.user.mainPicture"
+  />
+  <img
+    [src]="imagePath + 'No-Image.png'"
+    [alt]="match.user.nickname"
+    *ngIf="!match.user.mainPicture"
+  />
+  <div class="infos-container">
+    <span class="nickname">{{ match.user.nickname }}</span>
+    <span
+      *ngIf="preview"
+      class="messages gold"
+      [ngClass]="{ gold: isLastMessageFromMatch() }"
+    >
+      {{ preview | description : 30 }}
+    </span>
+    <span class="messages" *ngIf="!preview">
+      Send a message to {{ match.user.nickname }}
+    </span>
+  </div>
+</div>

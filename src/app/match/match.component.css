@@ -1,215 +1,190 @@
-.main-container {
-  padding-top: 60px;
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 700px;
+  background: var(--glass-background);
+  backdrop-filter: blur(2px);
+  border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
-.container {
+.container .search {
+  margin-top: 10px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
   width: 100%;
+  max-width: 500px;
 }
 
-.no-profile-container {
-  display: none;
-}
-
-.no-profile-container span {
-  font-size: 18px;
-  font-weight: 500;
-  color: white;
-}
-
-.text-research {
-  margin: 10px;
-  min-width: 170px;
-  width: 30%;
+.container .search input {
+  background: transparent;
+  backdrop-filter: blur(2px);
+  width: 200px;
   border: 0;
-  background: rgba(255, 255, 255, 0.22);
-  padding: 10px 20px;
+  padding: 20px 40px;
   outline: none;
-  color: white;
-  border-radius: 50px;
-  transition: 0.5s;
-}
-
-.text-research::placeholder {
-  color: white;
-  text-align: center;
+  border-radius: 10px;
+  color: var(--primary);
   font-size: 15px;
   font-weight: 600;
 }
 
-input[type="search"]::-webkit-search-cancel-button {
-  display: none;
-}
-
-swiper {
-  width: 100%;
-}
-
-swiper .swiper-wrapper {
-  width: 100%;
-}
-
-.container .inner-content {
-  overflow: hidden;
-  width: 100%;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.22);
-  backdrop-filter: blur(3.6px);
-}
-
-::ng-deep .swiper-pagination-bullet-active {
-  background-color: black;
-}
-
-.card {
+form {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
+  flex-direction: column;
   width: 100%;
-  cursor: pointer;
-  transition: 0.5s;
-  border-radius: 20px;
 }
 
-.card.selected-user {
-  background-color: white;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+form textarea {
+  background: transparent;
+  backdrop-filter: blur(2px);
+  width: 200px;
+  margin: 16px 0;
+  border: 0;
+  padding: 20px 40px;
+  outline: none;
+  border-radius: 10px;
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 600;
+  width: 80%;
+  resize: none;
+  text-align: justify;
 }
 
-.container .card:hover {
-  background-color: white;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+::placeholder {
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 600;
 }
 
-.card .picture-container {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  padding: 5px;
-}
-
-.card .picture-container img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.card .text {
+.container .content {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  color: white;
-  transition: 0.5s;
+  flex-wrap: wrap;
+  max-height: 500px;
+  overflow: scroll;
+  margin-bottom: 10px;
 }
 
-.card.selected-user .text {
-  color: black;
+.container .content.nothing {
+  margin: 20px;
 }
 
-.container .card:hover .text {
-  color: black;
+.container .content.nothing span {
+  font-size: 15px;
+  font-weight: 600;
 }
 
-.card h2 {
-  font-size: 20px;
+.container .title {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.container a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: var(--primary);
+  backdrop-filter: blur(2px);
+  padding: 10px;
+  margin: 5px;
+  transition: 0.5s ease;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.container a::before {
+  content: "";
+  position: absolute;
+  background-color: var(--primary);
+  height: 0%;
+  top: 0;
+  right: 0;
+  width: 100%;
+  transition: 0.5s ease;
+  z-index: -1;
+}
+
+.container a:hover::before {
+  height: 100%;
+}
+
+.container a:hover {
+  color: var(--secondary);
+}
+
+.container a i {
+  font-size: 30px;
+}
+
+app-message.left {
+  margin-right: 40px;
+}
+
+app-message.right {
+  margin-left: 40px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+form .button-container button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--primary);
+  padding: 15px 30px;
+  margin: 10px;
+  text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 1px;
-  margin: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  transition: 0.5s ease;
+  backdrop-filter: blur(2px);
+  font-size: 14px;
+  font-family: Roboto, sans-serif;
 }
 
-.card .messages-number {
-  color: white;
-  transition: 0.5s;
-}
-
-.card.selected-user .messages-number {
-  color: black;
-}
-
-.container .card:hover .messages-number {
-  color: black;
-}
-
-.loader-wrapper {
-  width: 100%;
-  height: 100%;
+form .button-container button::before {
+  content: "";
   position: absolute;
+  background-color: var(--primary);
+  height: 0%;
   top: 0;
   left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.loader {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  position: relative;
-  border: 4px solid white;
-  animation: loader 2s infinite ease;
-}
-
-.loader-inner {
-  vertical-align: top;
-  display: inline-block;
   width: 100%;
-  background-color: #fff;
-  animation: loader-inner 2s infinite ease-in;
+  transition: 0.5s ease;
+  z-index: -1;
 }
 
-@keyframes loader {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  25% {
-    transform: rotate(180deg);
-  }
-
-  50% {
-    transform: rotate(180deg);
-  }
-
-  75% {
-    transform: rotate(360deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+form .button-container button:hover::before {
+  height: 100%;
+  border-radius: 10px;
 }
 
-@keyframes loader-inner {
-  0% {
-    height: 0%;
-  }
-
-  25% {
-    height: 0%;
-  }
-
-  50% {
-    height: 100%;
-  }
-
-  75% {
-    height: 100%;
-  }
-
-  100% {
-    height: 0%;
-  }
-}
-
-app-message {
-  width: 95%;
+form .button-container button:hover {
+  color: var(--secondary);
 }

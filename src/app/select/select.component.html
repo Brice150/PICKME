@@ -1,59 +1,16 @@
-<app-header [title]="'Select'"></app-header>
-<div class="main-container">
-  <div class="age-container">
-    <span>Age</span>
-  </div>
-  <mat-slider min="18" max="100" discrete (change)="getUsers()">
-    <input matSliderStartThumb [(ngModel)]="minAge" />
-    <input matSliderEndThumb [(ngModel)]="maxAge" />
-  </mat-slider>
-  <div class="container" *ngIf="users.length !== 0">
-    <swiper [config]="config">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide" *ngFor="let user of users">
-          <div class="inner-content">
-            <a class="like" title="like" (click)="like(user)"
-              ><i class="bx bxs-like"></i
-            ></a>
-            <div class="card">
-              <div class="picture-container">
-                <img [src]="user.mainPicture" [alt]="user.nickname" />
-              </div>
-              <div class="text">
-                <div class="flex">
-                  <div class="left">
-                    <h2>{{ user?.nickname }}</h2>
-                    <h3>{{ user?.job }}</h3>
-                  </div>
-                  <div class="right">
-                    <h4>{{ user.birthDate | age }}</h4>
-                    <h5>{{ user?.city }}</h5>
-                  </div>
-                </div>
-                <p class="description">
-                  {{ user.description | description : 150 }}
-                </p>
-                <a class="more" title="more info" (click)="moreInfo(user.id)"
-                  >More Info</a
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="swiper-pagination"></div>
-    </swiper>
-  </div>
-</div>
-
-<div class="match-container" *ngIf="notification">
-  <div class="match-message">
-    <span class="pre-message">MATCH with</span>
-    <span class="notification">{{ notification }}</span>
-    <i class="bx bxs-flame"></i>
-  </div>
-</div>
-
-<div class="loader-wrapper" id="loaderWrapper">
-  <span class="loader"><span class="loader-inner"></span></span>
-</div>
+<swiper-container
+  effect="cards"
+  mousewheel="true"
+  (swiperslidechange)="onSlideChange()"
+  *ngIf="users.length !== 0"
+>
+  <swiper-slide lazy="true" *ngFor="let user of users">
+    <app-card
+      loading="true"
+      [user]="user"
+      [display]="isCurrentView(user)"
+      (likeEvent)="like($event, user!)"
+      (dislikeEvent)="dislike(user!)"
+    ></app-card>
+  </swiper-slide>
+</swiper-container>

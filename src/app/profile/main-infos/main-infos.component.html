@@ -1,0 +1,70 @@
+<form [formGroup]="mainInfosForm" (ngSubmit)="updateMainInfos()">
+  <div class="input-container">
+    <span class="title">Nickname</span>
+    <input placeholder="Nickname" formControlName="nickname" />
+    <span
+      *ngIf="
+        mainInfosForm.get('nickname')!.hasError('required') &&
+        mainInfosForm.get('nickname')!.touched
+      "
+      >Nickname is required</span
+    >
+    <span *ngIf="mainInfosForm.get('nickname')!.hasError('maxlength')"
+      >Nickname is too long</span
+    >
+    <span *ngIf="mainInfosForm.get('nickname')!.hasError('minlength')"
+      >Nickname is too short</span
+    >
+  </div>
+  <div class="input-container">
+    <span class="title">Job</span>
+    <input placeholder="Job" formControlName="job" />
+    <span
+      *ngIf="
+        mainInfosForm.get('job')!.hasError('required') &&
+        mainInfosForm.get('job')!.touched
+      "
+      >Job is required</span
+    >
+    <span *ngIf="mainInfosForm.get('job')!.hasError('minlength')"
+      >Job is too short</span
+    >
+    <span *ngIf="mainInfosForm.get('job')!.hasError('maxlength')"
+      >Job is too long</span
+    >
+  </div>
+  <div class="input-container">
+    <span class="title">City</span>
+    <input placeholder="City" formControlName="city" />
+    <span
+      *ngIf="
+        mainInfosForm.get('city')!.hasError('required') &&
+        mainInfosForm.get('city')!.touched
+      "
+      >City is required</span
+    >
+    <span *ngIf="mainInfosForm.get('city')!.hasError('minlength')"
+      >City is too short</span
+    >
+    <span *ngIf="mainInfosForm.get('city')!.hasError('maxlength')"
+      >City is too long</span
+    >
+  </div>
+  <div class="slide-container">
+    <span>Height</span>
+    <mat-slider min="120" max="220" discrete (change)="slideHeight($event)">
+      <input matSliderThumb [value]="user?.height" />
+    </mat-slider>
+  </div>
+  <div class="button-container">
+    <button
+      title="Update"
+      *ngIf="
+        mainInfosForm.valid && (this.mainInfosForm.dirty || this.heightChange)
+      "
+      type="submit"
+    >
+      Update
+    </button>
+  </div>
+</form>

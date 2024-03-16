@@ -1,6 +1,7 @@
+import { Message } from './message';
+import { User } from './user';
+
 export interface Match {
-  id: number;
-  date: Date;
-  fkReceiver: number;
-  fkSender: number;
+  user: User;
+  messages: Message[];
 }

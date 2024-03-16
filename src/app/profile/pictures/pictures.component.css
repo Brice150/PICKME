@@ -1,0 +1,116 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.container .picture-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+swiper-container {
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  border-radius: 20px;
+}
+
+swiper-slide {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.container .button-container label {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--primary);
+  padding: 15px 30px;
+  margin: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  overflow: hidden;
+  border-radius: 10px;
+  transition: 0.5s ease;
+  backdrop-filter: blur(2px);
+  font-size: 14px;
+  font-family: Roboto, sans-serif;
+}
+
+.container .button-container label::before {
+  content: "";
+  position: absolute;
+  background-color: var(--primary);
+  height: 0%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: 0.5s ease;
+  z-index: -1;
+}
+
+.container .button-container label:hover::before {
+  height: 100%;
+  border-radius: 10px;
+}
+
+.container .button-container label:hover {
+  color: var(--secondary);
+}
+
+.container .button-container input {
+  display: none;
+}
+
+img {
+  background-color: var(--primary);
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 640px) {
+  swiper-container {
+    max-width: 450px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  swiper-container {
+    max-width: 400px;
+    height: 350px;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  swiper-container {
+    max-width: 350px;
+    height: 300px;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  swiper-container {
+    max-width: 300px;
+    height: 250px;
+  }
+}

@@ -1,0 +1,86 @@
+<form [formGroup]="connectionInfosForm" (ngSubmit)="updateConnectionInfos()">
+  <div class="input-container">
+    <span class="title">Email</span>
+    <input placeholder="Email" formControlName="email" />
+    <span
+      *ngIf="
+        connectionInfosForm.get('email')!.hasError('required') &&
+        connectionInfosForm.get('email')!.touched
+      "
+      >Email is required</span
+    >
+    <span *ngIf="connectionInfosForm.get('email')!.hasError('email')"
+      >Email is invalid</span
+    >
+    <span *ngIf="connectionInfosForm.get('email')!.hasError('maxlength')"
+      >Email is too long</span
+    >
+  </div>
+  <div class="input-container">
+    <span class="title">Password</span>
+    <input type="password" placeholder="Password" formControlName="password" />
+    <span
+      *ngIf="
+        connectionInfosForm.get('password')!.hasError('required') &&
+        connectionInfosForm.get('password')!.touched
+      "
+      >Password is required</span
+    >
+    <span *ngIf="connectionInfosForm.get('password')!.hasError('minlength')"
+      >Password is too short</span
+    >
+    <span *ngIf="connectionInfosForm.get('password')!.hasError('maxlength')"
+      >Password is too long</span
+    >
+  </div>
+  <div class="input-container">
+    <span class="title">Password Confirmation</span>
+    <input
+      type="password"
+      placeholder="Password Confirmation"
+      formControlName="passwordDuplicate"
+    />
+    <span
+      *ngIf="
+        connectionInfosForm.get('passwordDuplicate')!.hasError('required') &&
+        connectionInfosForm.get('passwordDuplicate')!.touched
+      "
+      >Password is required</span
+    >
+    <span
+      *ngIf="
+        connectionInfosForm.get('passwordDuplicate')!.hasError('minlength')
+      "
+      >Password is too short</span
+    >
+    <span
+      *ngIf="
+        connectionInfosForm.get('passwordDuplicate')!.hasError('maxlength')
+      "
+      >Password is too long</span
+    >
+    <span
+      *ngIf="
+        connectionInfosForm.get('password')!.valid &&
+        connectionInfosForm.get('passwordDuplicate')!.valid &&
+        connectionInfosForm.get('password')?.value !==
+          connectionInfosForm.get('passwordDuplicate')?.value
+      "
+      >Passwords don't match</span
+    >
+  </div>
+  <div class="button-container">
+    <button
+      title="Update"
+      *ngIf="
+        connectionInfosForm.valid &&
+        connectionInfosForm.get('password')?.value ===
+          connectionInfosForm.get('passwordDuplicate')?.value &&
+        this.connectionInfosForm.dirty
+      "
+      type="submit"
+    >
+      Update
+    </button>
+  </div>
+</form>
