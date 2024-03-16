@@ -30,12 +30,6 @@ Backend : Spring Boot
 - Add pictures and select main profile picture
 - Delete your account (needs confirmation)
 
-### Like
-
-- View profiles that liked you
-- Like a profile
-- View more information about a profile
-
 ### Match
 
 - View profiles that matched with you
