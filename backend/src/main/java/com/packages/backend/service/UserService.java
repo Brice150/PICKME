@@ -5,7 +5,7 @@ import com.packages.backend.model.Match;
 import com.packages.backend.model.user.User;
 import com.packages.backend.model.user.UserDTO;
 import com.packages.backend.model.user.UserDTOMapper;
-import com.packages.backend.model.user.UserDTOMapperHiddenRole;
+import com.packages.backend.model.user.UserDTOMapperRestricted;
 import com.packages.backend.repository.LikeRepository;
 import com.packages.backend.repository.MessageRepository;
 import com.packages.backend.repository.UserRepository;
@@ -30,16 +30,16 @@ public class UserService implements UserDetailsService {
   private final MessageRepository messageRepository;
   private final LikeRepository likeRepository;
   private final UserDTOMapper userDTOMapper;
-  private final UserDTOMapperHiddenRole userDTOMapperHiddenRole;
+  private final UserDTOMapperRestricted userDTOMapperRestricted;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  public UserService(UserRepository userRepository, MessageRepository messageRepository, LikeRepository likeRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperHiddenRole userDTOMapperHiddenRole) {
+  public UserService(UserRepository userRepository, MessageRepository messageRepository, LikeRepository likeRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperRestricted userDTOMapperRestricted) {
     this.userRepository = userRepository;
     this.messageRepository = messageRepository;
     this.likeRepository = likeRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDTOMapper = userDTOMapper;
-    this.userDTOMapperHiddenRole = userDTOMapperHiddenRole;
+    this.userDTOMapperRestricted = userDTOMapperRestricted;
   }
 
   @Override
@@ -99,12 +99,12 @@ public class UserService implements UserDetailsService {
       .thenComparing((User user) -> compareAttributes(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking()))
       .thenComparing((User user) -> compareAttributes(connectedUser.getGamer(), user.getGamer()));
     users.sort(usersSort);
-    return users.stream().map(userDTOMapperHiddenRole).toList();
+    return users.stream().map(userDTOMapperRestricted).toList();
   }
 
   public List<Match> getAllUserMatches() {
     User connectedUser = getConnectedUser();
-    List<UserDTO> users = userRepository.getAllUserMatches(connectedUser.getId()).stream().map(userDTOMapperHiddenRole).toList();
+    List<UserDTO> users = userRepository.getAllUserMatches(connectedUser.getId()).stream().map(userDTOMapperRestricted).toList();
     return users.stream()
       .map(user -> new Match(user, messageRepository.getUserMessagesByFk(connectedUser.getId(), user.id()))).toList();
   }

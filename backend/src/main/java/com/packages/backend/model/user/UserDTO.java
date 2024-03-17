@@ -29,6 +29,9 @@ public record UserDTO(
   String sportPractice,
   String animals,
   String parenthood,
-  String gamer
+  String gamer,
+  Long totalDislikes,
+  Long totalLikes,
+  Long totalMatches
 ) {
 }

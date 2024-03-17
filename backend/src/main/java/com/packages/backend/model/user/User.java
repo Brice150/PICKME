@@ -67,6 +67,12 @@ public class User implements UserDetails {
   private String parenthood;
   private String gamer;
 
+
+  // Stats
+  private Long totalDislikes;
+  private Long totalLikes;
+  private Long totalMatches;
+
   public User() {
   }
 
@@ -318,5 +324,29 @@ public class User implements UserDetails {
 
   public void setGamer(String gamer) {
     this.gamer = gamer;
+  }
+
+  public Long getTotalDislikes() {
+    return totalDislikes;
+  }
+
+  public void setTotalDislikes(Long totalDislikes) {
+    this.totalDislikes = totalDislikes;
+  }
+
+  public Long getTotalLikes() {
+    return totalLikes;
+  }
+
+  public void setTotalLikes(Long totalLikes) {
+    this.totalLikes = totalLikes;
+  }
+
+  public Long getTotalMatches() {
+    return totalMatches;
+  }
+
+  public void setTotalMatches(Long totalMatches) {
+    this.totalMatches = totalMatches;
   }
 }
