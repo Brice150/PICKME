@@ -2,27 +2,34 @@ import { Picture } from './picture';
 
 export interface User {
   id?: number;
-  email: string;
-  password?: string;
   userRole?: string;
+  birthDate: Date;
+  gold?: boolean;
+
+  // Pictures
+  pictures?: Picture[];
+  mainPicture?: string | ArrayBuffer;
+
+  // Main Infos
+  nickname: string;
+  job: string;
+  city: string;
+  height?: number;
+
+  // Gender and Age
   gender: string;
   genderSearch: string;
   minAge: number;
   maxAge: number;
-  gold?: boolean;
 
-  // Main
-  nickname: string;
-  job: string;
-  birthDate: Date;
-  city: string;
-  mainPicture?: string | ArrayBuffer;
+  // Connection Infos
+  email: string;
+  password?: string;
 
   // Description
   description?: string;
 
-  // Chips
-  height?: number;
+  // Preferences
   alcoholDrinking?: string;
   smokes?: string;
   organised?: string;
@@ -31,9 +38,6 @@ export interface User {
   animals?: string;
   parenthood?: string;
   gamer?: string;
-
-  // Attached to a user
-  pictures?: Picture[];
 
   // Stats
   totalDislikes?: number;

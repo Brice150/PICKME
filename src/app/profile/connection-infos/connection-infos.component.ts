@@ -24,10 +24,6 @@ export class ConnectionInfosComponent implements OnInit {
 
   ngOnInit(): void {
     this.connectionInfosForm = this.fb.group({
-      email: [
-        this.user?.email,
-        [Validators.required, Validators.email, Validators.maxLength(30)],
-      ],
       password: [
         '',
         [
@@ -55,7 +51,6 @@ export class ConnectionInfosComponent implements OnInit {
 
   setConnectionInfos() {
     if (this.user) {
-      this.user.email = this.connectionInfosForm.get('email')?.value;
       this.user.password = this.connectionInfosForm.get('password')?.value;
       //TODO : remove after backend saved
     }

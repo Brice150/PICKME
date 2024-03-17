@@ -1,22 +1,5 @@
 <form [formGroup]="connectionInfosForm" (ngSubmit)="updateConnectionInfos()">
   <div class="input-container">
-    <span class="title">Email</span>
-    <input placeholder="Email" formControlName="email" />
-    <span
-      *ngIf="
-        connectionInfosForm.get('email')!.hasError('required') &&
-        connectionInfosForm.get('email')!.touched
-      "
-      >Email is required</span
-    >
-    <span *ngIf="connectionInfosForm.get('email')!.hasError('email')"
-      >Email is invalid</span
-    >
-    <span *ngIf="connectionInfosForm.get('email')!.hasError('maxlength')"
-      >Email is too long</span
-    >
-  </div>
-  <div class="input-container">
     <span class="title">Password</span>
     <input type="password" placeholder="Password" formControlName="password" />
     <span
