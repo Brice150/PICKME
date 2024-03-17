@@ -107,12 +107,29 @@ public class UserService implements UserDetailsService {
   public Optional<UserDTO> updateUser(User user) {
     User connectedUser = getConnectedUser();
     if (connectedUser.getId().equals(user.getId())) {
-      user.setEmail(connectedUser.getEmail());
-      user.setUserRole(connectedUser.getUserRole());
-      String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-      user.setPassword(encodedPassword);
-      user.setIsEnabled(true);
-      return Optional.of(userRepository.save(user)).map(userDTOMapper);
+      connectedUser.setMainPicture(user.getMainPicture() != null ? user.getMainPicture() : connectedUser.getMainPicture());
+      connectedUser.setNickname(user.getNickname() != null ? user.getNickname() : connectedUser.getNickname());
+      connectedUser.setJob(user.getJob() != null ? user.getJob() : connectedUser.getJob());
+      connectedUser.setCity(user.getCity() != null ? user.getCity() : connectedUser.getCity());
+      connectedUser.setHeight(user.getHeight() != null ? user.getHeight() : connectedUser.getHeight());
+      connectedUser.setGender(user.getGender() != null ? user.getGender() : connectedUser.getGender());
+      connectedUser.setGenderSearch(user.getGenderSearch() != null ? user.getGenderSearch() : connectedUser.getGenderSearch());
+      connectedUser.setMinAge(user.getMinAge() != null ? user.getMinAge() : connectedUser.getMinAge());
+      connectedUser.setMaxAge(user.getMaxAge() != null ? user.getMaxAge() : connectedUser.getMaxAge());
+      if (user.getPassword() != null) {
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        connectedUser.setPassword(encodedPassword);
+      }
+      connectedUser.setDescription(user.getDescription() != null ? user.getDescription() : connectedUser.getDescription());
+      connectedUser.setAlcoholDrinking(user.getAlcoholDrinking() != null ? user.getAlcoholDrinking() : connectedUser.getAlcoholDrinking());
+      connectedUser.setSmokes(user.getSmokes() != null ? user.getSmokes() : connectedUser.getSmokes());
+      connectedUser.setOrganised(user.getOrganised() != null ? user.getOrganised() : connectedUser.getOrganised());
+      connectedUser.setPersonality(user.getPersonality() != null ? user.getPersonality() : connectedUser.getPersonality());
+      connectedUser.setSportPractice(user.getSportPractice() != null ? user.getSportPractice() : connectedUser.getSportPractice());
+      connectedUser.setAnimals(user.getAnimals() != null ? user.getAnimals() : connectedUser.getAnimals());
+      connectedUser.setParenthood(user.getParenthood() != null ? user.getParenthood() : connectedUser.getParenthood());
+      connectedUser.setGamer(user.getGamer() != null ? user.getGamer() : connectedUser.getGamer());
+      return Optional.of(userRepository.save(connectedUser)).map(userDTOMapper);
     } else {
       return Optional.empty();
     }
