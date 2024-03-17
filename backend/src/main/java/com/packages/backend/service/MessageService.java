@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -24,8 +25,8 @@ public class MessageService {
 
   public Optional<Message> addMessage(Message message) {
     User connectedUser = userService.getConnectedUser();
-    if (connectedUser.getId().equals(message.getFkSender().getId())
-      && !connectedUser.getId().equals(message.getFkReceiver().getId())) {
+    if (Objects.equals(connectedUser.getId(), message.getFkSender())
+      && !Objects.equals(connectedUser.getId(), message.getFkReceiver())) {
       message.setDate(new Date());
       Message newMessage = messageRepository.save(message);
       return Optional.of(newMessage);
@@ -36,7 +37,7 @@ public class MessageService {
 
   public Optional<Message> updateMessage(Message message) {
     User connectedUser = userService.getConnectedUser();
-    if (connectedUser.getId().equals(message.getFkSender().getId())) {
+    if (Objects.equals(connectedUser.getId(), message.getFkSender())) {
       message.setDate(getMessageById(message.getId()).getDate());
       Message updateMessage = messageRepository.save(message);
       return Optional.of(updateMessage);
@@ -54,7 +55,7 @@ public class MessageService {
   public String deleteMessageById(Long messageId) {
     User connectedUser = userService.getConnectedUser();
     Message message = getMessageById(messageId);
-    if (connectedUser.getId().equals(message.getFkSender().getId())) {
+    if (Objects.equals(connectedUser.getId(), message.getFkSender())) {
       messageRepository.deleteMessageById(messageId);
       return "OK";
     } else {

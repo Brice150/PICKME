@@ -1,6 +1,7 @@
 package com.packages.backend.service;
 
 import com.packages.backend.exception.UserNotFoundException;
+import com.packages.backend.model.Match;
 import com.packages.backend.model.user.User;
 import com.packages.backend.model.user.UserDTO;
 import com.packages.backend.model.user.UserDTOMapper;
@@ -90,6 +91,11 @@ public class UserService implements UserDetailsService {
     return users.stream().map(userDTOMapper).toList();
   }
 
+  public List<Match> getAllUserMatches() {
+    User connectedUser = getConnectedUser();
+    return userRepository.getAllUserMatches(connectedUser.getId());
+  }
+
   public Optional<UserDTO> updateUser(User user) {
     User connectedUser = getConnectedUser();
     if (connectedUser.getId().equals(user.getId())) {
@@ -130,7 +136,6 @@ public class UserService implements UserDetailsService {
     User connectedUser = getConnectedUser();
     userRepository.deleteUserPicturesByFk(connectedUser.getId());
     userRepository.deleteUserLikesByFk(connectedUser.getId());
-    userRepository.deleteUserMatchesByFk(connectedUser.getId());
     userRepository.deleteUserDislikesByFk(connectedUser.getId());
     userRepository.deleteUserMessagesByFk(connectedUser.getId());
     userRepository.deleteUserByEmail(connectedUser.getEmail());
@@ -141,7 +146,6 @@ public class UserService implements UserDetailsService {
     User selectedUser = getUserById(userId);
     userRepository.deleteUserPicturesByFk(selectedUser.getId());
     userRepository.deleteUserLikesByFk(selectedUser.getId());
-    userRepository.deleteUserMatchesByFk(selectedUser.getId());
     userRepository.deleteUserDislikesByFk(selectedUser.getId());
     userRepository.deleteUserMessagesByFk(selectedUser.getId());
     userRepository.deleteUserByEmail(selectedUser.getEmail());

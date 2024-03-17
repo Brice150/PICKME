@@ -235,8 +235,8 @@ export class MatchService {
 
   constructor(private http: HttpClient) {}
 
-  public getAllMatches(): Observable<Match[]> {
-    return this.http.get<Match[]>(`${this.apiServerUrl}/match`, {
+  public getAllUserMatches(): Observable<Match[]> {
+    return this.http.get<Match[]>(`${this.apiServerUrl}/match/all`, {
       withCredentials: true,
     });
   }

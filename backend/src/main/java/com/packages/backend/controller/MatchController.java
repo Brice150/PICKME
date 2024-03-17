@@ -1,7 +1,7 @@
 package com.packages.backend.controller;
 
 import com.packages.backend.model.Match;
-import com.packages.backend.service.MatchService;
+import com.packages.backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,15 +15,15 @@ import java.util.List;
 @RequestMapping("/match")
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 public class MatchController {
-  private final MatchService matchService;
+  private final UserService userService;
 
-  public MatchController(MatchService matchService) {
-    this.matchService = matchService;
+  public MatchController(UserService userService) {
+    this.userService = userService;
   }
 
   @GetMapping("/all")
   public ResponseEntity<List<Match>> getAllUserMatches() {
-    return new ResponseEntity<>(matchService.getAllUserMatches(), HttpStatus.OK);
+    return new ResponseEntity<>(userService.getAllUserMatches(), HttpStatus.OK);
   }
 }
 

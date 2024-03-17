@@ -8,7 +8,6 @@ public class Match {
   private User user;
   private List<Message> messages;
 
-
   public Match() {
   }
 
@@ -33,4 +32,3 @@ public class Match {
     this.messages = messages;
   }
 }
-

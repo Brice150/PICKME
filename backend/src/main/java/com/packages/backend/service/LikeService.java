@@ -34,7 +34,7 @@ public class LikeService {
     if (previousReceiverLike.isPresent()) {
       notification = likedUser.getNickname();
     }
-    Like like = new Like(new Date(), connectedUser, likedUser);
+    Like like = new Like(new Date(), connectedUser.getId(), likedUser.getId());
     like.setDate(new Date());
     likeRepository.save(like);
     return notification;

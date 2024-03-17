@@ -20,6 +20,12 @@ export class ProfileService {
     });
   }
 
+  public selectMainPicture(pictureId: number): Observable<void> {
+    return this.http.put<void>(`${this.apiServerUrl}/picture/${pictureId}`, {
+      withCredentials: true,
+    });
+  }
+
   public deletePicture(pictureId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/picture/${pictureId}`, {
       withCredentials: true,

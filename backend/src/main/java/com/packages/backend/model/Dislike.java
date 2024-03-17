@@ -1,8 +1,5 @@
 package com.packages.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.packages.backend.model.user.User;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -15,17 +12,13 @@ public class Dislike implements Serializable {
   @Column(nullable = false, updatable = false)
   private Long id;
   private Date date;
-  @ManyToOne(optional = false)
-  @JsonBackReference(value = "likesSent")
-  private User fkSender;
-  @ManyToOne(optional = false)
-  @JsonBackReference(value = "likesReceived")
-  private User fkReceiver;
+  private Long fkSender;
+  private Long fkReceiver;
 
   public Dislike() {
   }
 
-  public Dislike(Date date, User fkSender, User fkReceiver) {
+  public Dislike(Date date, Long fkSender, Long fkReceiver) {
     this.date = date;
     this.fkSender = fkSender;
     this.fkReceiver = fkReceiver;
@@ -47,19 +40,19 @@ public class Dislike implements Serializable {
     this.date = date;
   }
 
-  public User getFkSender() {
+  public Long getFkSender() {
     return fkSender;
   }
 
-  public void setFkSender(User fkSender) {
+  public void setFkSender(Long fkSender) {
     this.fkSender = fkSender;
   }
 
-  public User getFkReceiver() {
+  public Long getFkReceiver() {
     return fkReceiver;
   }
 
-  public void setFkReceiver(User fkReceiver) {
+  public void setFkReceiver(Long fkReceiver) {
     this.fkReceiver = fkReceiver;
   }
 }

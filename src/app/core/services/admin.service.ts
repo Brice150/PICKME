@@ -194,13 +194,13 @@ export class AdminService {
   constructor(private http: HttpClient) {}
 
   public getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiServerUrl}/admin/user`, {
+    return this.http.get<User[]>(`${this.apiServerUrl}/admin/all`, {
       withCredentials: true,
     });
   }
 
   public deleteUser(userId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiServerUrl}/admin/user/${userId}`, {
+    return this.http.delete<void>(`${this.apiServerUrl}/admin/${userId}`, {
       withCredentials: true,
     });
   }

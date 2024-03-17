@@ -175,20 +175,20 @@ export class SelectService {
 
   constructor(private http: HttpClient) {}
 
-  public getAllUsers(): Observable<User[]> {
+  public getAllSelectedUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiServerUrl}/user`, {
       withCredentials: true,
     });
   }
 
-  public like(userId: number): Observable<any> {
+  public addLike(userId: number): Observable<any> {
     return this.http.post<string>(`${this.apiServerUrl}/like/${userId}`, {
       withCredentials: true,
       responseType: 'text' as 'json',
     });
   }
 
-  public dislike(userId: number): Observable<void> {
+  public addDislike(userId: number): Observable<void> {
     return this.http.post<void>(`${this.apiServerUrl}/dislike/${userId}`, {
       withCredentials: true,
     });

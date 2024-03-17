@@ -1,8 +1,5 @@
 package com.packages.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.packages.backend.model.user.User;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -17,17 +14,13 @@ public class Message implements Serializable {
   private String content;
   private Date date;
   private String sender;
-  @ManyToOne(optional = false)
-  @JsonBackReference(value = "messagesSent")
-  private User fkSender;
-  @ManyToOne(optional = false)
-  @JsonBackReference(value = "messagesReceived")
-  private User fkReceiver;
+  private Long fkSender;
+  private Long fkReceiver;
 
   public Message() {
   }
 
-  public Message(String content, Date date, String sender, User fkSender, User fkReceiver) {
+  public Message(String content, Date date, String sender, Long fkSender, Long fkReceiver) {
     this.content = content;
     this.date = date;
     this.sender = sender;
@@ -67,19 +60,19 @@ public class Message implements Serializable {
     this.sender = sender;
   }
 
-  public User getFkSender() {
+  public Long getFkSender() {
     return fkSender;
   }
 
-  public void setFkSender(User fkSender) {
+  public void setFkSender(Long fkSender) {
     this.fkSender = fkSender;
   }
 
-  public User getFkReceiver() {
+  public Long getFkReceiver() {
     return fkReceiver;
   }
 
-  public void setFkReceiver(User fkReceiver) {
+  public void setFkReceiver(Long fkReceiver) {
     this.fkReceiver = fkReceiver;
   }
 }
