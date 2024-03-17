@@ -29,6 +29,13 @@ public class PictureController {
     return addedPicture.map(picture -> new ResponseEntity<>(picture, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
   }
 
+  @PutMapping("/{pictureId}")
+  public ResponseEntity<Void> selectMainPicture(@PathVariable("pictureId") Long pictureId) {
+    return "OK".equals(pictureService.selectMainPictureById(pictureId)) ?
+      new ResponseEntity<>(HttpStatus.OK) :
+      new ResponseEntity<>(HttpStatus.FORBIDDEN);
+  }
+
   @DeleteMapping("/{pictureId}")
   public ResponseEntity<Void> deletePicture(@PathVariable("pictureId") Long pictureId) {
     return "OK".equals(pictureService.deletePictureById(pictureId)) ?

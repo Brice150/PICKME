@@ -66,6 +66,24 @@ public class PictureService {
       .orElseThrow(() -> new PictureNotFoundException("Picture by id " + pictureId + " was not found"));
   }
 
+  public List<Picture> getUserPicturesByFk(Long fkUser) {
+    return pictureRepository.getUserPicturesByFk(fkUser)
+      .orElseThrow(() -> new PictureNotFoundException("User pictures were not found"));
+  }
+
+  public String selectMainPictureById(Long pictureId) {
+    User connectedUser = userService.getConnectedUser();
+    Picture picture = getPictureById(pictureId);
+    if (connectedUser.getId().equals(picture.getFkUser().getId())) {
+      List<Picture> userPictures = getUserPicturesByFk(connectedUser.getId());
+      userPictures.forEach(userPicture -> userPicture.setMainPicture(Objects.equals(userPicture.getId(), picture.getId())));
+      pictureRepository.saveAll(userPictures);
+      return "OK";
+    } else {
+      return "FORBIDDEN";
+    }
+  }
+
   @Transactional
   public String deletePictureById(Long pictureId) {
     User connectedUser = userService.getConnectedUser();
