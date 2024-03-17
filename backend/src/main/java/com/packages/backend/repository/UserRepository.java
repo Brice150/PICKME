@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   @Transactional
   @Modifying
-  @Query("DELETE FROM Picture p WHERE p.fkUser = :fkUser")
+  @Query("DELETE FROM Picture p WHERE p.fkUser.id = :fkUser")
   void deleteUserPicturesByFk(@Param("fkUser") Long fkUser);
 
   @Transactional
