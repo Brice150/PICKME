@@ -5,6 +5,8 @@ import com.packages.backend.model.Match;
 import com.packages.backend.model.user.User;
 import com.packages.backend.model.user.UserDTO;
 import com.packages.backend.model.user.UserDTOMapper;
+import com.packages.backend.model.user.UserDTOMapperHiddenRole;
+import com.packages.backend.repository.MessageRepository;
 import com.packages.backend.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,13 +26,17 @@ public class UserService implements UserDetailsService {
 
   private static final String USER_EMAIL_NOT_FOUND_MSG = "user with email %s not found";
   private final UserRepository userRepository;
+  private final MessageRepository messageRepository;
   private final UserDTOMapper userDTOMapper;
+  private final UserDTOMapperHiddenRole userDTOMapperHiddenRole;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper) {
+  public UserService(UserRepository userRepository, MessageRepository messageRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperHiddenRole userDTOMapperHiddenRole) {
     this.userRepository = userRepository;
+    this.messageRepository = messageRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDTOMapper = userDTOMapper;
+    this.userDTOMapperHiddenRole = userDTOMapperHiddenRole;
   }
 
   @Override
@@ -76,7 +82,7 @@ public class UserService implements UserDetailsService {
 
   public List<UserDTO> getAllSelectedUsers() {
     User connectedUser = getConnectedUser();
-    List<User> users = userRepository.getAllUsers(connectedUser.getGenderSearch(), connectedUser.getGender(), connectedUser.getMinAge(), connectedUser.getMaxAge(), connectedUser.getId());
+    List<User> users = userRepository.getAllUsers(connectedUser.getGenderSearch(), connectedUser.getGender(), connectedUser.getMinAge().intValue(), connectedUser.getMaxAge().intValue(), connectedUser.getId());
     Comparator<User> usersSort = Comparator
       .comparing((User user) -> compareAttributes(connectedUser.getCity(), user.getCity()))
       .thenComparing((User user) -> compareAttributes(connectedUser.getPersonality(), user.getPersonality()))
@@ -88,12 +94,14 @@ public class UserService implements UserDetailsService {
       .thenComparing((User user) -> compareAttributes(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking()))
       .thenComparing((User user) -> compareAttributes(connectedUser.getGamer(), user.getGamer()));
     users.sort(usersSort);
-    return users.stream().map(userDTOMapper).toList();
+    return users.stream().map(userDTOMapperHiddenRole).toList();
   }
 
   public List<Match> getAllUserMatches() {
     User connectedUser = getConnectedUser();
-    return userRepository.getAllUserMatches(connectedUser.getId());
+    List<UserDTO> users = userRepository.getAllUserMatches(connectedUser.getId()).stream().map(userDTOMapperHiddenRole).toList();
+    return users.stream()
+      .map(user -> new Match(user, messageRepository.getUserMessagesByFk(connectedUser.getId(), user.id()))).toList();
   }
 
   public Optional<UserDTO> updateUser(User user) {

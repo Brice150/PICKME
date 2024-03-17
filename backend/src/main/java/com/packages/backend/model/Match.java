@@ -1,26 +1,26 @@
 package com.packages.backend.model;
 
-import com.packages.backend.model.user.User;
+import com.packages.backend.model.user.UserDTO;
 
 import java.util.List;
 
 public class Match {
-  private User user;
+  private UserDTO user;
   private List<Message> messages;
 
   public Match() {
   }
 
-  public Match(User user, List<Message> messages) {
+  public Match(UserDTO user, List<Message> messages) {
     this.user = user;
     this.messages = messages;
   }
 
-  public User getUser() {
+  public UserDTO getUser() {
     return user;
   }
 
-  public void setUser(User user) {
+  public void setUser(UserDTO user) {
     this.user = user;
   }
 

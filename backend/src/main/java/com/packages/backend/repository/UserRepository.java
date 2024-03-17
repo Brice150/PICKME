@@ -1,6 +1,5 @@
 package com.packages.backend.repository;
 
-import com.packages.backend.model.Match;
 import com.packages.backend.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -48,27 +47,20 @@ public interface UserRepository extends JpaRepository<User, Long> {
     "SELECT DISTINCT u FROM User u" +
       " LEFT JOIN Like l ON u.id = l.fkReceiver" +
       " LEFT JOIN Dislike d ON u.id = d.fkReceiver" +
-      " WHERE u.genderSearch = :genderSearch" +
-      " AND u.gender = :gender" +
-      " AND u.minAge > :minAge" +
-      " AND u.maxAge < :maxAge" +
+      " WHERE u.genderSearch = :gender" +
+      " AND u.gender = :genderSearch" +
+      " AND EXTRACT(YEAR FROM AGE(CURRENT_DATE, u.birthDate)) BETWEEN :minAge AND :maxAge" +
       " AND u.id != :connectedId" +
       " AND (l.fkSender IS NULL OR l.fkSender != :connectedId)" +
       " AND (d.fkSender IS NULL OR d.fkSender != :connectedId)"
   )
-  List<User> getAllUsers(@Param("genderSearch") String genderSearch, @Param("gender") String gender, @Param("minAge") Long minAge, @Param("maxAge") Long maxAge, @Param("connectedId") Long connectedId);
+  List<User> getAllUsers(@Param("genderSearch") String genderSearch, @Param("gender") String gender, @Param("minAge") Integer minAge, @Param("maxAge") Integer maxAge, @Param("connectedId") Long connectedId);
 
   @Query(
-    "SELECT DISTINCT u, m FROM User u" +
-      " LEFT JOIN Like likeSender ON u.id = likeSender.fkSender" +
-      " LEFT JOIN Like likeReceiver ON u.id = likeReceiver.fkReceiver" +
-      " LEFT JOIN Message m ON (u.id = m.fkSender OR u.id = m.fkReceiver)" +
-      " WHERE u.id != :connectedId" +
-      " AND (" +
-      " (likeSender.fkSender = :connectedId AND likeSender.fkReceiver = u.id)" +
-      " AND" +
-      " (likeReceiver.fkSender = u.id AND likeReceiver.fkReceiver = :connectedId)" +
-      " )"
+    "SELECT DISTINCT u FROM User u" +
+      " INNER JOIN Like likeSender ON u.id = likeSender.fkSender" +
+      " INNER JOIN Like likeReceiver ON u.id = likeReceiver.fkReceiver" +
+      " WHERE u.id != :connectedId"
   )
-  List<Match> getAllUserMatches(@Param("connectedId") Long connectedId);
+  List<User> getAllUserMatches(@Param("connectedId") Long connectedId);
 }

@@ -13,18 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/like")
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 public class LikeController {
-    private final LikeService likeService;
+  private final LikeService likeService;
 
-    public LikeController(LikeService likeService) {
-        this.likeService = likeService;
-    }
+  public LikeController(LikeService likeService) {
+    this.likeService = likeService;
+  }
 
-    @PostMapping()
-    public ResponseEntity<String> addLike(@PathVariable("userId") Long userId) {
-        String notification = likeService.addLike(userId);
-        return !"FORBIDDEN".equals(notification) ?
-                new ResponseEntity<>(notification, HttpStatus.CREATED) :
-                new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
+  @PostMapping("/{userId}")
+  public ResponseEntity<String> addLike(@PathVariable("userId") Long userId) {
+    String notification = likeService.addLike(userId);
+    return !"FORBIDDEN".equals(notification) ?
+      new ResponseEntity<>(notification, HttpStatus.CREATED) :
+      new ResponseEntity<>(HttpStatus.FORBIDDEN);
+  }
 }
 

@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface LikeRepository extends JpaRepository<Like, Long> {
   void deleteLikeById(Long id);
 
-  @Query("SELECT l FROM Like l WHERE l.fkReceiver.id = :fkReceiver AND l.fkSender.id = :fkSender")
+  @Query("SELECT l FROM Like l WHERE l.fkReceiver = :fkReceiver AND l.fkSender = :fkSender")
   Optional<Like> getLikeByFk(@Param("fkSender") Long fkSender, @Param("fkReceiver") Long fkReceiver);
 }

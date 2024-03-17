@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface DislikeRepository extends JpaRepository<Dislike, Long> {
-  @Query("SELECT d FROM Dislike d WHERE d.fkReceiver.id = :fkReceiver AND d.fkSender.id = :fkSender")
+  @Query("SELECT d FROM Dislike d WHERE d.fkReceiver = :fkReceiver AND d.fkSender = :fkSender")
   Optional<Dislike> getDislikeByFk(@Param("fkSender") Long fkSender, @Param("fkReceiver") Long fkReceiver);
 }
