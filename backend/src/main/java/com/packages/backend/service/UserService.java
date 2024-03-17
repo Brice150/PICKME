@@ -6,6 +6,7 @@ import com.packages.backend.model.user.User;
 import com.packages.backend.model.user.UserDTO;
 import com.packages.backend.model.user.UserDTOMapper;
 import com.packages.backend.model.user.UserDTOMapperHiddenRole;
+import com.packages.backend.repository.LikeRepository;
 import com.packages.backend.repository.MessageRepository;
 import com.packages.backend.repository.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -27,13 +28,15 @@ public class UserService implements UserDetailsService {
   private static final String USER_EMAIL_NOT_FOUND_MSG = "user with email %s not found";
   private final UserRepository userRepository;
   private final MessageRepository messageRepository;
+  private final LikeRepository likeRepository;
   private final UserDTOMapper userDTOMapper;
   private final UserDTOMapperHiddenRole userDTOMapperHiddenRole;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  public UserService(UserRepository userRepository, MessageRepository messageRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperHiddenRole userDTOMapperHiddenRole) {
+  public UserService(UserRepository userRepository, MessageRepository messageRepository, LikeRepository likeRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperHiddenRole userDTOMapperHiddenRole) {
     this.userRepository = userRepository;
     this.messageRepository = messageRepository;
+    this.likeRepository = likeRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDTOMapper = userDTOMapper;
     this.userDTOMapperHiddenRole = userDTOMapperHiddenRole;
@@ -83,6 +86,8 @@ public class UserService implements UserDetailsService {
   public List<UserDTO> getAllSelectedUsers() {
     User connectedUser = getConnectedUser();
     List<User> users = userRepository.getAllUsers(connectedUser.getGenderSearch(), connectedUser.getGender(), connectedUser.getMinAge().intValue(), connectedUser.getMaxAge().intValue(), connectedUser.getId());
+    List<Long> goldUserId = likeRepository.getGoldByConnectedUserId(connectedUser.getId());
+    users.forEach(user -> user.setGold(goldUserId.contains(user.getId())));
     Comparator<User> usersSort = Comparator
       .comparing((User user) -> compareAttributes(connectedUser.getCity(), user.getCity()))
       .thenComparing((User user) -> compareAttributes(connectedUser.getPersonality(), user.getPersonality()))
