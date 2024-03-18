@@ -22,6 +22,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { User } from '../../core/interfaces/user';
 import { ConnectService } from '../../core/services/connect.service';
+import { Gender } from '../../core/enums/gender';
 
 @Component({
   selector: 'app-register',
@@ -58,6 +59,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   minDate: Date;
   minAge: number = 18;
   maxAge: number = 80;
+  genders: string[] = Object.values(Gender);
 
   constructor(
     private fb: FormBuilder,

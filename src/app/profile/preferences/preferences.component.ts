@@ -3,6 +3,13 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { User } from '../../core/interfaces/user';
 import { MatChipsModule } from '@angular/material/chips';
+import { AlcoholDrinking } from '../../core/enums/alcohol-drinking';
+import { Smokes } from '../../core/enums/smokes';
+import { Parenthood } from '../../core/enums/parenthood';
+import { Gamer } from '../../core/enums/gamer';
+import { Animals } from '../../core/enums/animals';
+import { Organised } from '../../core/enums/organised';
+import { Personality } from '../../core/enums/personality';
 
 @Component({
   selector: 'app-preferences',
@@ -16,30 +23,14 @@ export class PreferencesComponent implements OnInit {
   preferencesForm!: FormGroup;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
-  alcoholDrinking: string[] = [
-    'Never drinks alcohol',
-    'Drinks sometimes alcohol',
-    'Drinks a lot alcohol',
-  ];
-  smokes: string[] = ['Never smokes', 'Smokes sometimes', 'Smokes a lot'];
-  sportPractice: string[] = [
-    'Never practice sport',
-    'Practices sport sometimes',
-    'Athlete',
-  ];
-  parenthood: string[] = [
-    "Doesn't want children",
-    'Will want children someday',
-    'Has children',
-  ];
-  gamer: string[] = [
-    'Never play video games',
-    'Play video games sometimes',
-    'Play video games a lot',
-  ];
-  animals: string[] = ["Doesn't like animals", 'Likes animals', 'Has animals'];
-  organised: string[] = ['Messy', 'Reasonably organised', 'Very organised'];
-  personality: string[] = ['Introvert', 'Ambivert', 'Extravert'];
+  alcoholDrinking: string[] = Object.values(AlcoholDrinking);
+  smokes: string[] = Object.values(Smokes);
+  sportPractice: string[] = Object.values(Smokes);
+  parenthood: string[] = Object.values(Parenthood);
+  gamer: string[] = Object.values(Gamer);
+  animals: string[] = Object.values(Animals);
+  organised: string[] = Object.values(Organised);
+  personality: string[] = Object.values(Personality);
 
   constructor(private fb: FormBuilder) {}
 

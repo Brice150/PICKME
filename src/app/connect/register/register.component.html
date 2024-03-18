@@ -80,9 +80,9 @@
       <ng-template matStepLabel>Gender and Age</ng-template>
       <select formControlName="gender">
         <option value="" disabled selected hidden>Gender</option>
-        <option value="Man">Man</option>
-        <option value="Woman">Woman</option>
-        <option value="Other">Other</option>
+        <option [value]="gender" *ngFor="let gender of genders">
+          {{ gender }}
+        </option>
       </select>
       <span
         *ngIf="
@@ -93,9 +93,9 @@
       >
       <select formControlName="genderSearch">
         <option value="" disabled selected hidden>Gender Search</option>
-        <option value="Man">Man</option>
-        <option value="Woman">Woman</option>
-        <option value="Other">Other</option>
+        <option [value]="gender" *ngFor="let gender of genders">
+          {{ gender }}
+        </option>
       </select>
       <span
         *ngIf="
