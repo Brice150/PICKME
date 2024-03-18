@@ -6,7 +6,7 @@ import com.packages.backend.model.user.User;
 import com.packages.backend.model.user.UserDTO;
 import com.packages.backend.model.user.UserDTOMapper;
 import com.packages.backend.model.user.UserDTOMapperRestricted;
-import com.packages.backend.model.user.enums.*;
+import com.packages.backend.model.user.enums.Gender;
 import com.packages.backend.repository.LikeRepository;
 import com.packages.backend.repository.MessageRepository;
 import com.packages.backend.repository.UserRepository;
@@ -19,9 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -85,22 +83,25 @@ public class UserService implements UserDetailsService {
   }
 
   public List<UserDTO> getAllSelectedUsers() {
+    Map<Long, Double> mapAverageScoreByUserId = new HashMap<>();
     User connectedUser = getConnectedUser();
     List<User> users = userRepository.getAllUsers(connectedUser.getGenderSearch(), connectedUser.getGender(), connectedUser.getMinAge().intValue(), connectedUser.getMaxAge().intValue(), connectedUser.getId());
     List<Long> goldUserId = likeRepository.getGoldByConnectedUserId(connectedUser.getId());
-    users.forEach(user -> user.setGold(goldUserId.contains(user.getId())));
-    Comparator<User> usersSort = Comparator
-      .comparing((User user) -> compareAttributes(connectedUser.getCity(), user.getCity()))
-      .thenComparing((User user) -> compareAttributes(Personality.getDescriptionNullSafe(connectedUser.getPersonality()), Personality.getDescriptionNullSafe(user.getPersonality())))
-      .thenComparing((User user) -> compareAttributes(Parenthood.getDescriptionNullSafe(connectedUser.getParenthood()), Parenthood.getDescriptionNullSafe(user.getParenthood())))
-      .thenComparing((User user) -> compareAttributes(Smokes.getDescriptionNullSafe(connectedUser.getSmokes()), Smokes.getDescriptionNullSafe(user.getSmokes())))
-      .thenComparing((User user) -> compareAttributes(Organised.getDescriptionNullSafe(connectedUser.getOrganised()), Organised.getDescriptionNullSafe(user.getOrganised())))
-      .thenComparing((User user) -> compareAttributes(SportPractice.getDescriptionNullSafe(connectedUser.getSportPractice()), SportPractice.getDescriptionNullSafe(user.getSportPractice())))
-      .thenComparing((User user) -> compareAttributes(Animals.getDescriptionNullSafe(connectedUser.getAnimals()), Animals.getDescriptionNullSafe(user.getAnimals())))
-      .thenComparing((User user) -> compareAttributes(AlcoholDrinking.getDescriptionNullSafe(connectedUser.getAlcoholDrinking()), AlcoholDrinking.getDescriptionNullSafe(user.getAlcoholDrinking())))
-      .thenComparing((User user) -> compareAttributes(Gamer.getDescriptionNullSafe(connectedUser.getGamer()), Gamer.getDescriptionNullSafe(user.getGamer())));
-    users.sort(usersSort);
-    return users.stream().map(userDTOMapperRestricted).toList();
+    users.forEach(user -> {
+      user.setGold(goldUserId.contains(user.getId()));
+      mapAverageScoreByUserId.put(user.getId(), calculateScore(connectedUser, user));
+    });
+    return users.stream()
+      .sorted((Comparator.comparing(User::getCity)
+        .thenComparingDouble(user -> mapAverageScoreByUserId.get(user.getId())))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getPersonality(), user.getPersonality()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getParenthood(), user.getParenthood()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getSmokes(), user.getSmokes()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getOrganised(), user.getOrganised()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getSportPractice(), user.getSportPractice()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getAnimals(), user.getAnimals()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getGamer(), user.getGamer()))).map(userDTOMapperRestricted).toList();
   }
 
   public List<Match> getAllUserMatches() {
@@ -182,15 +183,34 @@ public class UserService implements UserDetailsService {
     userRepository.deleteUserByEmail(selectedUser.getEmail());
   }
 
-  public static int compareAttributes(String attribute1, String attribute2) {
-    if ((attribute1 == null || attribute2 == null)) {
+  private Double calculateScore(User connectedUser, User user) {
+    int totalDifference = 0;
+    int totalAttributes = 8;
+
+    totalDifference += calculateDifference(connectedUser.getPersonality(), user.getPersonality());
+    totalDifference += calculateDifference(connectedUser.getParenthood(), user.getParenthood());
+    totalDifference += calculateDifference(connectedUser.getSmokes(), user.getSmokes());
+    totalDifference += calculateDifference(connectedUser.getOrganised(), user.getOrganised());
+    totalDifference += calculateDifference(connectedUser.getSportPractice(), user.getSportPractice());
+    totalDifference += calculateDifference(connectedUser.getAnimals(), user.getAnimals());
+    totalDifference += calculateDifference(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking());
+    totalDifference += calculateDifference(connectedUser.getGamer(), user.getGamer());
+
+    return (double) totalDifference / totalAttributes;
+  }
+
+  private int calculateDifference(Enum<?> enum1, Enum<?> enum2) {
+    return Math.abs(enum1.ordinal() - enum2.ordinal());
+  }
+
+  private int compareAttribute(Enum<?> enum1, Enum<?> enum2) {
+    int difference = calculateDifference(enum1, enum2);
+    if (difference == 2) {
+      return 1;
+    } else if (difference == 1) {
       return 0;
     } else {
-      if (attribute1.equals(attribute2)) {
-        return -1;
-      } else {
-        return 1;
-      }
+      return -1;
     }
   }
 }
