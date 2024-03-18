@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { User } from '../../core/interfaces/user';
 import { MatSliderModule } from '@angular/material/slider';
+import { Gender } from '../../core/enums/gender';
 
 @Component({
   selector: 'app-gender-age',
@@ -22,6 +23,7 @@ export class GenderAgeComponent implements OnInit {
   minAge: number = 18;
   maxAge: number = 80;
   ageChange: boolean = false;
+  genders: string[] = Object.values(Gender);
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(private fb: FormBuilder) {}

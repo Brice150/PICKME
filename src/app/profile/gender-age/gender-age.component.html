@@ -3,9 +3,9 @@
     <span class="title">Gender</span>
     <select formControlName="gender">
       <option value="" disabled selected hidden>Gender</option>
-      <option value="Man">Man</option>
-      <option value="Woman">Woman</option>
-      <option value="Other">Other</option>
+      <option [value]="gender" *ngFor="let gender of genders">
+        {{ gender }}
+      </option>
     </select>
     <span
       *ngIf="
@@ -19,9 +19,9 @@
     <span class="title">Gender Search</span>
     <select formControlName="genderSearch">
       <option value="" disabled selected hidden>Gender Search</option>
-      <option value="Man">Man</option>
-      <option value="Woman">Woman</option>
-      <option value="Other">Other</option>
+      <option [value]="gender" *ngFor="let gender of genders">
+        {{ gender }}
+      </option>
     </select>
     <span
       *ngIf="
