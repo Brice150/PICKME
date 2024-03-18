@@ -1,11 +1,11 @@
 package com.packages.backend.repository;
 
 import com.packages.backend.model.user.User;
-import com.packages.backend.model.user.UserStats;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.persistence.Tuple;
 import java.util.List;
 
 public interface AdminRepository extends JpaRepository<User, Long> {
@@ -17,12 +17,16 @@ public interface AdminRepository extends JpaRepository<User, Long> {
   List<User> getAllUsers(@Param("connectedId") Long connectedId);
 
   @Query(
-    "SELECT u.id, count(d) as totalDislikes, count(l) as totalLikes, 0 as totalMatches" +
+    "SELECT DISTINCT u.id as id, count(d) as totalDislikes, count(l) as totalLikes, count(likeReceiver) as totalMatches" +
       " FROM User u " +
       " LEFT JOIN Dislike d ON u.id = d.fkReceiver" +
       " LEFT JOIN Like l ON u.id = l.fkReceiver" +
+      " LEFT JOIN Like likeSender ON u.id = likeSender.fkSender" +
+      " LEFT JOIN Like likeReceiver ON u.id = likeReceiver.fkReceiver" +
+      " AND likeReceiver.id IS NOT NULL" +
+      " AND likeSender.id IS NOT NULL" +
       " WHERE u.id != :connectedId" +
       " GROUP BY u.id"
   )
-  List<UserStats> getAllUsersStats(@Param("connectedId") Long connectedId);
+  List<Tuple> getAllUsersStats(@Param("connectedId") Long connectedId);
 }
