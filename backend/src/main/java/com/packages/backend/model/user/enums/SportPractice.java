@@ -1,7 +1,7 @@
 package com.packages.backend.model.user.enums;
 
 public enum SportPractice {
-  NO("Never practice sport"),
+  NO("Never practices sport"),
   MAYBE("Practices sport sometimes"),
   YES("Athlete");
 

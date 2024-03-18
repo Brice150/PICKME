@@ -1,7 +1,7 @@
 package com.packages.backend.model.user.enums;
 
 public enum Parenthood {
-  NO("Doesn't want children"),
+  NO("Does not want children"),
   MAYBE("Will want children someday"),
   YES("Has children");
 

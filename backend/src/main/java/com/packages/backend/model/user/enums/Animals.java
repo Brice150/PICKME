@@ -1,7 +1,7 @@
 package com.packages.backend.model.user.enums;
 
 public enum Animals {
-  NO("Doesn't like animals"),
+  NO("Does not like animals"),
   MAYBE("Likes animals"),
   YES("Has animals");
 
