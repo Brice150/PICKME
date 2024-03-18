@@ -1,6 +1,7 @@
 package com.packages.backend.repository;
 
 import com.packages.backend.model.user.User;
+import com.packages.backend.model.user.enums.Gender;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -54,7 +55,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
       " AND (l.fkSender IS NULL OR l.fkSender != :connectedId)" +
       " AND (d.fkSender IS NULL OR d.fkSender != :connectedId)"
   )
-  List<User> getAllUsers(@Param("genderSearch") String genderSearch, @Param("gender") String gender, @Param("minAge") Integer minAge, @Param("maxAge") Integer maxAge, @Param("connectedId") Long connectedId);
+  List<User> getAllUsers(@Param("genderSearch") Gender genderSearch, @Param("gender") Gender gender, @Param("minAge") Integer minAge, @Param("maxAge") Integer maxAge, @Param("connectedId") Long connectedId);
 
   @Query(
     "SELECT DISTINCT u FROM User u" +

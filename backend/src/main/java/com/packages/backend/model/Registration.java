@@ -1,5 +1,7 @@
 package com.packages.backend.model;
 
+import com.packages.backend.model.user.enums.Gender;
+
 import java.util.Date;
 
 public class Registration {
@@ -7,14 +9,14 @@ public class Registration {
   private final String job;
   private final String city;
   private final Date birthDate;
-  private final String gender;
-  private final String genderSearch;
+  private final Gender gender;
+  private final Gender genderSearch;
   private final Long minAge;
   private final Long maxAge;
   private final String email;
   private final String password;
 
-  public Registration(String nickname, String job, String city, Date birthDate, String gender, String genderSearch, Long minAge, Long maxAge, String email, String password) {
+  public Registration(String nickname, String job, String city, Date birthDate, Gender gender, Gender genderSearch, Long minAge, Long maxAge, String email, String password) {
     this.nickname = nickname;
     this.job = job;
     this.city = city;
@@ -43,11 +45,11 @@ public class Registration {
     return birthDate;
   }
 
-  public String getGender() {
+  public Gender getGender() {
     return gender;
   }
 
-  public String getGenderSearch() {
+  public Gender getGenderSearch() {
     return genderSearch;
   }
 

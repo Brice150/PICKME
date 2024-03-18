@@ -1,5 +1,6 @@
 package com.packages.backend.model.user;
 
+import com.packages.backend.model.user.enums.*;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
@@ -19,20 +20,20 @@ public class UserDTOMapperRestricted implements Function<User, UserDTO> {
       user.getJob(),
       user.getCity(),
       user.getHeight(),
-      user.getGender(),
-      user.getGenderSearch(),
+      Gender.getDescriptionNullSafe(user.getGender()),
+      Gender.getDescriptionNullSafe(user.getGenderSearch()),
       user.getMinAge(),
       user.getMaxAge(),
       user.getEmail(),
       user.getDescription(),
-      user.getAlcoholDrinking(),
-      user.getSmokes(),
-      user.getOrganised(),
-      user.getPersonality(),
-      user.getSportPractice(),
-      user.getAnimals(),
-      user.getParenthood(),
-      user.getGamer(),
+      AlcoholDrinking.getDescriptionNullSafe(user.getAlcoholDrinking()),
+      Smokes.getDescriptionNullSafe(user.getSmokes()),
+      Organised.getDescriptionNullSafe(user.getOrganised()),
+      Personality.getDescriptionNullSafe(user.getPersonality()),
+      SportPractice.getDescriptionNullSafe(user.getSportPractice()),
+      Animals.getDescriptionNullSafe(user.getAnimals()),
+      Parenthood.getDescriptionNullSafe(user.getParenthood()),
+      Gamer.getDescriptionNullSafe(user.getGamer()),
       null,
       null,
       null

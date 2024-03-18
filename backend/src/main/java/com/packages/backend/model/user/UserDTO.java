@@ -1,6 +1,7 @@
 package com.packages.backend.model.user;
 
 import com.packages.backend.model.Picture;
+import com.packages.backend.model.user.enums.UserRole;
 
 import java.util.Date;
 import java.util.List;

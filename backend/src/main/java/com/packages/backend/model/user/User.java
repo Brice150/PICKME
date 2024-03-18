@@ -2,6 +2,7 @@ package com.packages.backend.model.user;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.packages.backend.model.Picture;
+import com.packages.backend.model.user.enums.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,8 +43,10 @@ public class User implements UserDetails {
 
 
   // Gender and Age
-  private String gender;
-  private String genderSearch;
+  @Enumerated(EnumType.STRING)
+  private Gender gender;
+  @Enumerated(EnumType.STRING)
+  private Gender genderSearch;
   private Long minAge;
   private Long maxAge;
 
@@ -58,14 +61,22 @@ public class User implements UserDetails {
 
 
   // Preferences
-  private String alcoholDrinking;
-  private String smokes;
-  private String organised;
-  private String personality;
-  private String sportPractice;
-  private String animals;
-  private String parenthood;
-  private String gamer;
+  @Enumerated(EnumType.STRING)
+  private AlcoholDrinking alcoholDrinking;
+  @Enumerated(EnumType.STRING)
+  private Smokes smokes;
+  @Enumerated(EnumType.STRING)
+  private Organised organised;
+  @Enumerated(EnumType.STRING)
+  private Personality personality;
+  @Enumerated(EnumType.STRING)
+  private SportPractice sportPractice;
+  @Enumerated(EnumType.STRING)
+  private Animals animals;
+  @Enumerated(EnumType.STRING)
+  private Parenthood parenthood;
+  @Enumerated(EnumType.STRING)
+  private Gamer gamer;
 
 
   // Stats
@@ -76,7 +87,7 @@ public class User implements UserDetails {
   public User() {
   }
 
-  public User(UserRole userRole, Date birthDate, String nickname, String job, String city, String gender, String genderSearch, Long minAge, Long maxAge, String email, String password) {
+  public User(UserRole userRole, Date birthDate, String nickname, String job, String city, Gender gender, Gender genderSearch, Long minAge, Long maxAge, String email, String password) {
     this.userRole = userRole;
     this.birthDate = birthDate;
     this.nickname = nickname;
@@ -210,19 +221,19 @@ public class User implements UserDetails {
     this.height = height;
   }
 
-  public String getGender() {
+  public Gender getGender() {
     return gender;
   }
 
-  public void setGender(String gender) {
+  public void setGender(Gender gender) {
     this.gender = gender;
   }
 
-  public String getGenderSearch() {
+  public Gender getGenderSearch() {
     return genderSearch;
   }
 
-  public void setGenderSearch(String genderSearch) {
+  public void setGenderSearch(Gender genderSearch) {
     this.genderSearch = genderSearch;
   }
 
@@ -262,67 +273,67 @@ public class User implements UserDetails {
     this.description = description;
   }
 
-  public String getAlcoholDrinking() {
+  public AlcoholDrinking getAlcoholDrinking() {
     return alcoholDrinking;
   }
 
-  public void setAlcoholDrinking(String alcoholDrinking) {
+  public void setAlcoholDrinking(AlcoholDrinking alcoholDrinking) {
     this.alcoholDrinking = alcoholDrinking;
   }
 
-  public String getSmokes() {
+  public Smokes getSmokes() {
     return smokes;
   }
 
-  public void setSmokes(String smokes) {
+  public void setSmokes(Smokes smokes) {
     this.smokes = smokes;
   }
 
-  public String getOrganised() {
+  public Organised getOrganised() {
     return organised;
   }
 
-  public void setOrganised(String organised) {
+  public void setOrganised(Organised organised) {
     this.organised = organised;
   }
 
-  public String getPersonality() {
+  public Personality getPersonality() {
     return personality;
   }
 
-  public void setPersonality(String personality) {
+  public void setPersonality(Personality personality) {
     this.personality = personality;
   }
 
-  public String getSportPractice() {
+  public SportPractice getSportPractice() {
     return sportPractice;
   }
 
-  public void setSportPractice(String sportPractice) {
+  public void setSportPractice(SportPractice sportPractice) {
     this.sportPractice = sportPractice;
   }
 
-  public String getAnimals() {
+  public Animals getAnimals() {
     return animals;
   }
 
-  public void setAnimals(String animals) {
+  public void setAnimals(Animals animals) {
     this.animals = animals;
   }
 
-  public String getParenthood() {
+  public Parenthood getParenthood() {
     return parenthood;
   }
 
-  public void setParenthood(String parenthood) {
+  public void setParenthood(Parenthood parenthood) {
     this.parenthood = parenthood;
   }
 
-  public String getGamer() {
+  public Gamer getGamer() {
     return gamer;
   }
 
-  public void setGamer(String gamer) {
+  public void setGamer(Gamer gamer) {
     this.gamer = gamer;
   }
 

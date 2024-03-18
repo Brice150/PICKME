@@ -6,6 +6,7 @@ import com.packages.backend.model.user.User;
 import com.packages.backend.model.user.UserDTO;
 import com.packages.backend.model.user.UserDTOMapper;
 import com.packages.backend.model.user.UserDTOMapperRestricted;
+import com.packages.backend.model.user.enums.*;
 import com.packages.backend.repository.LikeRepository;
 import com.packages.backend.repository.MessageRepository;
 import com.packages.backend.repository.UserRepository;
@@ -60,9 +61,9 @@ public class UserService implements UserDetailsService {
       signUpMessage = "City" + emptyPhrase;
     } else if (user.getBirthDate() == null) {
       signUpMessage = "Birth date" + emptyPhrase;
-    } else if (user.getGender() == null || user.getGender().isBlank()) {
+    } else if (user.getGender() == null || Gender.getDescriptionNullSafe(user.getGender()).isBlank()) {
       signUpMessage = "Gender" + emptyPhrase;
-    } else if (user.getGenderSearch() == null || user.getGenderSearch().isBlank()) {
+    } else if (user.getGenderSearch() == null || Gender.getDescriptionNullSafe(user.getGenderSearch()).isBlank()) {
       signUpMessage = "Gender search" + emptyPhrase;
     } else if (user.getMinAge() == null) {
       signUpMessage = "Min age" + emptyPhrase;
@@ -90,14 +91,14 @@ public class UserService implements UserDetailsService {
     users.forEach(user -> user.setGold(goldUserId.contains(user.getId())));
     Comparator<User> usersSort = Comparator
       .comparing((User user) -> compareAttributes(connectedUser.getCity(), user.getCity()))
-      .thenComparing((User user) -> compareAttributes(connectedUser.getPersonality(), user.getPersonality()))
-      .thenComparing((User user) -> compareAttributes(connectedUser.getParenthood(), user.getParenthood()))
-      .thenComparing((User user) -> compareAttributes(connectedUser.getSmokes(), user.getSmokes()))
-      .thenComparing((User user) -> compareAttributes(connectedUser.getOrganised(), user.getOrganised()))
-      .thenComparing((User user) -> compareAttributes(connectedUser.getSportPractice(), user.getSportPractice()))
-      .thenComparing((User user) -> compareAttributes(connectedUser.getAnimals(), user.getAnimals()))
-      .thenComparing((User user) -> compareAttributes(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking()))
-      .thenComparing((User user) -> compareAttributes(connectedUser.getGamer(), user.getGamer()));
+      .thenComparing((User user) -> compareAttributes(Personality.getDescriptionNullSafe(connectedUser.getPersonality()), Personality.getDescriptionNullSafe(user.getPersonality())))
+      .thenComparing((User user) -> compareAttributes(Parenthood.getDescriptionNullSafe(connectedUser.getParenthood()), Parenthood.getDescriptionNullSafe(user.getParenthood())))
+      .thenComparing((User user) -> compareAttributes(Smokes.getDescriptionNullSafe(connectedUser.getSmokes()), Smokes.getDescriptionNullSafe(user.getSmokes())))
+      .thenComparing((User user) -> compareAttributes(Organised.getDescriptionNullSafe(connectedUser.getOrganised()), Organised.getDescriptionNullSafe(user.getOrganised())))
+      .thenComparing((User user) -> compareAttributes(SportPractice.getDescriptionNullSafe(connectedUser.getSportPractice()), SportPractice.getDescriptionNullSafe(user.getSportPractice())))
+      .thenComparing((User user) -> compareAttributes(Animals.getDescriptionNullSafe(connectedUser.getAnimals()), Animals.getDescriptionNullSafe(user.getAnimals())))
+      .thenComparing((User user) -> compareAttributes(AlcoholDrinking.getDescriptionNullSafe(connectedUser.getAlcoholDrinking()), AlcoholDrinking.getDescriptionNullSafe(user.getAlcoholDrinking())))
+      .thenComparing((User user) -> compareAttributes(Gamer.getDescriptionNullSafe(connectedUser.getGamer()), Gamer.getDescriptionNullSafe(user.getGamer())));
     users.sort(usersSort);
     return users.stream().map(userDTOMapperRestricted).toList();
   }
