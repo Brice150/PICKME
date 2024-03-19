@@ -39,18 +39,6 @@
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          <i class="bx bx-lock"></i>
-          <span>Connection Infos</span>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <app-connection-infos
-        [user]="user"
-        (updateEvent)="updateUser($event)"
-      ></app-connection-infos>
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
           <i class="bx bx-image"></i>
           <span>Description</span>
         </mat-panel-title>
@@ -71,6 +59,18 @@
         [user]="user"
         (updateEvent)="updateUser($event)"
       ></app-preferences>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="bx bx-lock"></i>
+          <span>Password</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-password
+        [user]="user"
+        (updateEvent)="updateUser($event)"
+      ></app-password>
     </mat-expansion-panel>
     <mat-expansion-panel>
       <mat-expansion-panel-header>

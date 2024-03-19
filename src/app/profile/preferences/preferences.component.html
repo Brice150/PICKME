@@ -56,7 +56,7 @@
     </mat-chip-listbox>
   </div>
   <div class="chip-container">
-    <span>Gaming</span>
+    <span>Gamer</span>
     <mat-chip-listbox formControlName="gamer">
       <mat-chip-option
         *ngFor="let attribute of gamer"
@@ -109,8 +109,16 @@
   </div>
   <div class="button-container">
     <button
+      *ngIf="preferencesForm.dirty"
+      type="button"
+      title="Cancel"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+    <button
       title="Update"
-      *ngIf="preferencesForm.valid && this.preferencesForm.dirty"
+      *ngIf="preferencesForm.valid && preferencesForm.dirty"
       type="submit"
     >
       Update

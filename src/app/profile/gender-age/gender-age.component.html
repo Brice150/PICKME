@@ -40,10 +40,16 @@
   </div>
   <div class="button-container">
     <button
+      *ngIf="genderAgeForm.dirty || ageChange"
+      type="button"
+      title="Cancel"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+    <button
       title="Update"
-      *ngIf="
-        genderAgeForm.valid && (this.genderAgeForm.dirty || this.ageChange)
-      "
+      *ngIf="genderAgeForm.valid && (genderAgeForm.dirty || ageChange)"
       type="submit"
     >
       Update

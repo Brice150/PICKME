@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { User } from '../../core/interfaces/user';
+import { ConnectService } from '../../core/services/connect.service';
 
 @Component({
   selector: 'app-description',
@@ -15,7 +16,10 @@ export class DescriptionComponent implements OnInit {
   descriptionForm!: FormGroup;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private connectService: ConnectService
+  ) {}
 
   ngOnInit(): void {
     this.descriptionForm = this.fb.group({
@@ -26,12 +30,20 @@ export class DescriptionComponent implements OnInit {
   updateDescription(): void {
     this.setDescription();
     this.updateEvent.emit('Description Updated');
-    this.descriptionForm.markAsPristine();
   }
 
-  setDescription() {
+  setDescription(): void {
     if (this.user) {
       this.user.description = this.descriptionForm.get('description')?.value;
+      this.descriptionForm.markAsPristine();
+    }
+  }
+
+  cancel(): void {
+    if (this.user) {
+      this.user.description = this.connectService.connectedUser?.description;
+      this.descriptionForm.get('description')?.setValue(this.user.description);
+      this.descriptionForm.markAsPristine();
     }
   }
 }

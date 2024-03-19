@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { User } from '../core/interfaces/user';
 import { ConnectService } from '../core/services/connect.service';
-import { ConnectionInfosComponent } from './connection-infos/connection-infos.component';
+import { PasswordComponent } from './password/password.component';
 import { DeleteAccountComponent } from './delete-account/delete-account.component';
 import { DescriptionComponent } from './description/description.component';
 import { GenderAgeComponent } from './gender-age/gender-age.component';
@@ -21,7 +21,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   imports: [
     CommonModule,
     MatExpansionModule,
-    ConnectionInfosComponent,
+    PasswordComponent,
     DescriptionComponent,
     GenderAgeComponent,
     MainInfosComponent,
@@ -45,7 +45,7 @@ export class ProfileComponent {
   updateUser(message: string): void {
     this.profileService.updateUser(this.user!).subscribe({
       next: (updatedUser: User) => {
-        this.user = updatedUser;
+        this.user!.password = undefined;
         this.connectService.connectedUser = updatedUser;
       },
       error: (error: HttpErrorResponse) => {

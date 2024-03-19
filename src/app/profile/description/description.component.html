@@ -2,8 +2,16 @@
   <textarea placeholder="Description" formControlName="description"></textarea>
   <div class="button-container">
     <button
+      *ngIf="descriptionForm.dirty"
+      type="button"
+      title="Cancel"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+    <button
       title="Update"
-      *ngIf="descriptionForm.valid && this.descriptionForm.dirty"
+      *ngIf="descriptionForm.valid && descriptionForm.dirty"
       type="submit"
     >
       Update

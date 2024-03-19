@@ -7,23 +7,27 @@ import {
   Validators,
 } from '@angular/forms';
 import { User } from '../../core/interfaces/user';
+import { ConnectService } from '../../core/services/connect.service';
 
 @Component({
-  selector: 'app-connection-infos',
+  selector: 'app-password',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './connection-infos.component.html',
-  styleUrl: './connection-infos.component.css',
+  templateUrl: './password.component.html',
+  styleUrl: './password.component.css',
 })
-export class ConnectionInfosComponent implements OnInit {
+export class PasswordComponent implements OnInit {
   @Input() user?: User;
-  connectionInfosForm!: FormGroup;
+  passwordForm!: FormGroup;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private connectService: ConnectService
+  ) {}
 
   ngOnInit(): void {
-    this.connectionInfosForm = this.fb.group({
+    this.passwordForm = this.fb.group({
       password: [
         '',
         [
@@ -46,13 +50,24 @@ export class ConnectionInfosComponent implements OnInit {
   updateConnectionInfos(): void {
     this.setConnectionInfos();
     this.updateEvent.emit('Connection Infos Updated');
-    this.connectionInfosForm.markAsPristine();
   }
 
-  setConnectionInfos() {
+  setConnectionInfos(): void {
     if (this.user) {
-      this.user.password = this.connectionInfosForm.get('password')?.value;
-      //TODO : remove after backend saved
+      this.user.password = this.passwordForm.get('password')?.value;
+      this.passwordForm.markAsPristine();
+    }
+  }
+
+  cancel(): void {
+    if (this.user) {
+      this.user.password = this.connectService.connectedUser?.password;
+      this.passwordForm.patchValue({
+        password: null,
+        passwordDuplicate: null,
+      });
+      this.passwordForm.markAsUntouched();
+      this.passwordForm.markAsPristine();
     }
   }
 }

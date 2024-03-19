@@ -1,8 +1,13 @@
 package com.packages.backend.model.user.enums;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum SportPractice {
+  @JsonProperty("Never practices sport")
   NO("Never practices sport"),
+  @JsonProperty("Practices sport sometimes")
   MAYBE("Practices sport sometimes"),
+  @JsonProperty("Athlete")
   YES("Athlete");
 
   private final String description;

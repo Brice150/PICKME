@@ -1,8 +1,13 @@
 package com.packages.backend.model.user.enums;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum Gender {
+  @JsonProperty("Man")
   MAN("Man"),
+  @JsonProperty("Woman")
   WOMAN("Woman"),
+  @JsonProperty("Other")
   OTHER("Other");
 
   private final String description;

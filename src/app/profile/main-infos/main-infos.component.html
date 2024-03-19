@@ -58,10 +58,16 @@
   </div>
   <div class="button-container">
     <button
+      *ngIf="mainInfosForm.dirty || heightChange"
+      type="button"
+      title="Cancel"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+    <button
       title="Update"
-      *ngIf="
-        mainInfosForm.valid && (this.mainInfosForm.dirty || this.heightChange)
-      "
+      *ngIf="mainInfosForm.valid && (mainInfosForm.dirty || heightChange)"
       type="submit"
     >
       Update

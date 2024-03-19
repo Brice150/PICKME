@@ -9,6 +9,7 @@ import {
 import { User } from '../../core/interfaces/user';
 import { MatSliderModule } from '@angular/material/slider';
 import { Gender } from '../../core/enums/gender';
+import { ConnectService } from '../../core/services/connect.service';
 
 @Component({
   selector: 'app-gender-age',
@@ -26,7 +27,10 @@ export class GenderAgeComponent implements OnInit {
   genders: string[] = Object.values(Gender);
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private connectService: ConnectService
+  ) {}
 
   ngOnInit(): void {
     this.genderAgeForm = this.fb.group({
@@ -38,16 +42,31 @@ export class GenderAgeComponent implements OnInit {
   updateGenderAge(): void {
     this.setGenderAge();
     this.updateEvent.emit('Gender and Age Updated');
-    this.genderAgeForm.markAsPristine();
-    this.ageChange = false;
   }
 
-  setGenderAge() {
+  setGenderAge(): void {
     if (this.user) {
       this.user.gender = this.genderAgeForm.get('gender')?.value;
       this.user.genderSearch = this.genderAgeForm.get('genderSearch')?.value;
       this.user.minAge = this.minAge;
       this.user.maxAge = this.maxAge;
+      this.genderAgeForm.markAsPristine();
+      this.ageChange = false;
+    }
+  }
+
+  cancel(): void {
+    if (this.user) {
+      this.user.gender = this.connectService.connectedUser?.gender!;
+      this.user.genderSearch = this.connectService.connectedUser?.genderSearch!;
+      this.user.minAge = this.connectService.connectedUser?.minAge!;
+      this.user.maxAge = this.connectService.connectedUser?.maxAge!;
+      this.genderAgeForm.patchValue({
+        gender: this.user.gender,
+        genderSearch: this.user.genderSearch,
+      });
+      this.genderAgeForm.markAsPristine();
+      this.ageChange = false;
     }
   }
 

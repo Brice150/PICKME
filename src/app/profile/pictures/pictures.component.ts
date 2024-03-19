@@ -35,7 +35,7 @@ export class PicturesComponent {
     private profileService: ProfileService
   ) {}
 
-  addPicture(files: File[]) {
+  addPicture(files: File[]): void {
     let mainPictureExists: boolean = false;
     if (this.user?.mainPicture) {
       mainPictureExists = true;

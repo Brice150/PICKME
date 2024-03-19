@@ -114,7 +114,6 @@ public class UserService implements UserDetailsService {
   public Optional<UserDTO> updateUser(User user) {
     User connectedUser = getConnectedUser();
     if (connectedUser.getId().equals(user.getId())) {
-      connectedUser.setMainPicture(user.getMainPicture() != null ? user.getMainPicture() : connectedUser.getMainPicture());
       connectedUser.setNickname(user.getNickname() != null ? user.getNickname() : connectedUser.getNickname());
       connectedUser.setJob(user.getJob() != null ? user.getJob() : connectedUser.getJob());
       connectedUser.setCity(user.getCity() != null ? user.getCity() : connectedUser.getCity());

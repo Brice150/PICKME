@@ -1,8 +1,13 @@
 package com.packages.backend.model.user.enums;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum Personality {
+  @JsonProperty("Introvert")
   INTROVERT("Introvert"),
+  @JsonProperty("Ambivert")
   AMBIVERT("Ambivert"),
+  @JsonProperty("Extravert")
   EXTRAVERT("Extravert");
 
   private final String description;

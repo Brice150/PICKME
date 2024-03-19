@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { User } from '../../core/interfaces/user';
 import { MatSliderModule } from '@angular/material/slider';
+import { ConnectService } from '../../core/services/connect.service';
 
 @Component({
   selector: 'app-main-infos',
@@ -23,7 +24,10 @@ export class MainInfosComponent implements OnInit {
   heightChange: boolean = false;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private connectService: ConnectService
+  ) {}
 
   ngOnInit(): void {
     this.mainInfosForm = this.fb.group({
@@ -57,16 +61,32 @@ export class MainInfosComponent implements OnInit {
   updateMainInfos(): void {
     this.setMainInfos();
     this.updateEvent.emit('Main Infos Updated');
-    this.mainInfosForm.markAsPristine();
-    this.heightChange = false;
   }
 
-  setMainInfos() {
+  setMainInfos(): void {
     if (this.user) {
       this.user.nickname = this.mainInfosForm.get('nickname')?.value;
       this.user.job = this.mainInfosForm.get('job')?.value;
       this.user.city = this.mainInfosForm.get('city')?.value;
       this.user.height = this.height;
+      this.mainInfosForm.markAsPristine();
+      this.heightChange = false;
+    }
+  }
+
+  cancel(): void {
+    if (this.user) {
+      this.user.nickname = this.connectService.connectedUser?.nickname!;
+      this.user.job = this.connectService.connectedUser?.job!;
+      this.user.city = this.connectService.connectedUser?.city!;
+      this.user.height = this.connectService.connectedUser?.height!;
+      this.mainInfosForm.patchValue({
+        nickname: this.user.nickname,
+        job: this.user.job,
+        city: this.user.city,
+      });
+      this.mainInfosForm.markAsPristine();
+      this.heightChange = false;
     }
   }
 
