@@ -23,7 +23,7 @@ public class DislikeController {
   public ResponseEntity<String> addDislike(@PathVariable("userId") Long userId) {
     String status = dislikeService.addDislike(userId);
     return !"FORBIDDEN".equals(status) ?
-      new ResponseEntity<>(status, HttpStatus.CREATED) :
+      new ResponseEntity<>(HttpStatus.CREATED) :
       new ResponseEntity<>(HttpStatus.FORBIDDEN);
   }
 }

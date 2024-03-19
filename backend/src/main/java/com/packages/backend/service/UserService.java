@@ -199,6 +199,9 @@ public class UserService implements UserDetailsService {
   }
 
   private int calculateDifference(Enum<?> enum1, Enum<?> enum2) {
+    if (null == enum1 || null == enum2) {
+      return 0;
+    }
     return Math.abs(enum1.ordinal() - enum2.ordinal());
   }
 

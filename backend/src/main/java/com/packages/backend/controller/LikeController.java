@@ -21,9 +21,9 @@ public class LikeController {
 
   @PostMapping("/{userId}")
   public ResponseEntity<String> addLike(@PathVariable("userId") Long userId) {
-    String notification = likeService.addLike(userId);
-    return !"FORBIDDEN".equals(notification) ?
-      new ResponseEntity<>(notification, HttpStatus.CREATED) :
+    String matchNotification = likeService.addLike(userId);
+    return !"FORBIDDEN".equals(matchNotification) ?
+      new ResponseEntity<>(matchNotification, HttpStatus.CREATED) :
       new ResponseEntity<>(HttpStatus.FORBIDDEN);
   }
 }

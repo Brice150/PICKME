@@ -152,8 +152,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
         .register(user)
         .pipe(takeUntil(this.destroyed$))
         .subscribe({
-          next: (response: User) => {
-            this.loginUser(response);
+          next: () => {
+            this.loginUser(user);
           },
           error: (error: HttpErrorResponse) => {
             this.toastr.error(error.message, 'Error', {

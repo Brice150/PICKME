@@ -23,7 +23,7 @@ public class LikeService {
   }
 
   public String addLike(Long userId) {
-    String notification = null;
+    String matchNotification = null;
     User connectedUser = userService.getConnectedUser();
     User likedUser = userService.getUserById(userId);
     Optional<Like> previousSenderLike = likeRepository.getLikeByFk(connectedUser.getId(), likedUser.getId());
@@ -32,12 +32,12 @@ public class LikeService {
     }
     Optional<Like> previousReceiverLike = likeRepository.getLikeByFk(likedUser.getId(), connectedUser.getId());
     if (previousReceiverLike.isPresent()) {
-      notification = likedUser.getNickname();
+      matchNotification = likedUser.getNickname();
     }
     Like like = new Like(new Date(), connectedUser.getId(), likedUser.getId());
     like.setDate(new Date());
     likeRepository.save(like);
-    return notification;
+    return matchNotification;
   }
 
   @Transactional
