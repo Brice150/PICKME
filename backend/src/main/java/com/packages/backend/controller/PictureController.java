@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -24,9 +21,9 @@ public class PictureController {
   }
 
   @PostMapping()
-  public ResponseEntity<Picture> addPicture(@RequestParam("content") List<MultipartFile> multipartImages) throws IOException {
-    Optional<Picture> addedPicture = pictureService.addPicture(multipartImages);
-    return addedPicture.map(picture -> new ResponseEntity<>(picture, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
+  public ResponseEntity<Picture> addPicture(@RequestBody Picture picture) {
+    Optional<Picture> addedPicture = pictureService.addPicture(picture);
+    return addedPicture.map(newPicture -> new ResponseEntity<>(newPicture, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
   }
 
   @PutMapping("/{pictureId}")
