@@ -23,9 +23,13 @@ export class ProfileService {
   }
 
   public selectMainPicture(pictureId: number): Observable<void> {
-    return this.http.put<void>(`${this.apiServerUrl}/picture/${pictureId}`, {
-      withCredentials: true,
-    });
+    return this.http.put<void>(
+      `${this.apiServerUrl}/picture/${pictureId}`,
+      null,
+      {
+        withCredentials: true,
+      }
+    );
   }
 
   public deletePicture(pictureId: number): Observable<void> {

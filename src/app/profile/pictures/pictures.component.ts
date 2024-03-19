@@ -123,6 +123,9 @@ export class PicturesComponent {
           (picture: Picture) => picture.id === pictureId
         );
         if (pictureIndex !== -1) {
+          this.user?.pictures?.forEach(
+            (picture: Picture) => (picture.isMainPicture = false)
+          );
           this.user!.pictures![pictureIndex].isMainPicture = true;
         }
         this.refreshEvent.emit('Main Picture Selected');

@@ -106,6 +106,14 @@ export class MatchComponent implements OnInit, OnDestroy {
         if (matchIndex !== -1) {
           this.matches.splice(matchIndex, 1);
           this.searchByNickname();
+          this.toastr.success(
+            'You have disliked ' + this.selectedMatch!.user.nickname,
+            'Disliked ' + this.selectedMatch!.user.nickname,
+            {
+              positionClass: 'toast-bottom-center',
+              toastClass: 'ngx-toastr custom',
+            }
+          );
           this.selectedMatch = undefined;
         }
       },
@@ -114,16 +122,6 @@ export class MatchComponent implements OnInit, OnDestroy {
           positionClass: 'toast-bottom-center',
           toastClass: 'ngx-toastr custom',
         });
-      },
-      complete: () => {
-        this.toastr.success(
-          'You have disliked ' + this.selectedMatch!.user.nickname,
-          'Disliked ' + this.selectedMatch!.user.nickname,
-          {
-            positionClass: 'toast-bottom-center',
-            toastClass: 'ngx-toastr custom',
-          }
-        );
       },
     });
   }

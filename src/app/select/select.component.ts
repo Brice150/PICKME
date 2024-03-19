@@ -83,6 +83,7 @@ export class SelectComponent implements OnInit, OnDestroy {
             );
           }, 2000);
         } else {
+          this.removeSlide(user.id!);
           this.toastr.success(
             'You have liked ' + user.nickname,
             'Liked ' + user.nickname,

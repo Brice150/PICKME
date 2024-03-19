@@ -19,15 +19,19 @@ export class SelectService {
   }
 
   public addLike(userId: number): Observable<any> {
-    return this.http.post<string>(`${this.apiServerUrl}/like/${userId}`, {
+    return this.http.post<string>(`${this.apiServerUrl}/like/${userId}`, null, {
       withCredentials: true,
       responseType: 'text' as 'json',
     });
   }
 
   public addDislike(userId: number): Observable<void> {
-    return this.http.post<void>(`${this.apiServerUrl}/dislike/${userId}`, {
-      withCredentials: true,
-    });
+    return this.http.post<void>(
+      `${this.apiServerUrl}/dislike/${userId}`,
+      null,
+      {
+        withCredentials: true,
+      }
+    );
   }
 }
