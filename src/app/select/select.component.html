@@ -2,15 +2,19 @@
   effect="cards"
   mousewheel="true"
   (swiperslidechange)="onSlideChange()"
-  *ngIf="users.length !== 0"
+  *ngIf="users && users.length !== 0"
 >
   <swiper-slide lazy="true" *ngFor="let user of users">
     <app-card
       loading="true"
       [user]="user"
-      [display]="isCurrentView(user)"
-      (likeEvent)="like($event, user!)"
+      [display]="isCurrentView(user) && !activeMatchAnimation"
+      [activeMatchAnimation]="activeMatchAnimation"
+      (likeEvent)="like(user!)"
       (dislikeEvent)="dislike(user!)"
     ></app-card>
   </swiper-slide>
 </swiper-container>
+<div class="container" *ngIf="!users || users.length === 0">
+  <span>No user</span>
+</div>

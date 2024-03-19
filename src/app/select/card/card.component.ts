@@ -1,19 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { filter } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User } from '../../core/interfaces/user';
 import { MoreInfoComponent } from '../../shared/components/more-info/more-info.component';
 import { AgePipe } from '../../shared/pipes/age.pipe';
 import { DescriptionPipe } from '../../shared/pipes/description.pipe';
 import {
+  DislikeButtonAnimation,
   LikeButtonAnimation,
   LogoMatchAnimation,
-  TextMatchAnimation,
-  DislikeButtonAnimation,
   TextAnimation,
+  TextMatchAnimation,
 } from './card-animation';
-import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-card',
@@ -33,9 +33,9 @@ export class CardComponent {
   imagePath: string = environment.imagePath;
   @Input() user!: User;
   @Input() display: boolean = false;
-  @Output() likeEvent: EventEmitter<string> = new EventEmitter<string>();
+  @Output() likeEvent: EventEmitter<void> = new EventEmitter<void>();
   @Output() dislikeEvent: EventEmitter<void> = new EventEmitter<void>();
-  activeMatchAnimation: boolean = false;
+  @Input() activeMatchAnimation: boolean = false;
 
   constructor(public dialog: MatDialog) {}
 
@@ -57,16 +57,7 @@ export class CardComponent {
   }
 
   like(): void {
-    if (this.user.gold) {
-      this.activeMatchAnimation = true;
-      this.display = false;
-      setTimeout(() => {
-        this.activeMatchAnimation = false;
-        this.likeEvent.emit('match');
-      }, 2000);
-    } else {
-      this.likeEvent.emit('like');
-    }
+    this.likeEvent.emit();
   }
 
   dislike(): void {

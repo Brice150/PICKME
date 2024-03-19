@@ -19,3 +19,15 @@ swiper-slide {
   border-radius: 20px;
   cursor: grab;
 }
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container span {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary);
+}

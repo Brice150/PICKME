@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Match } from '../core/interfaces/match';
 import { CommonModule } from '@angular/common';
 import {
@@ -13,11 +13,12 @@ import { ToastrService } from 'ngx-toastr';
 import { MessageComponent } from './message/message.component';
 import { Message } from '../core/interfaces/message';
 import { MoreInfoComponent } from '../shared/components/more-info/more-info.component';
-import { filter } from 'rxjs';
+import { Subject, filter, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ConnectService } from '../core/services/connect.service';
 import { MatchService } from '../core/services/match.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-match',
@@ -32,14 +33,15 @@ import { MatchService } from '../core/services/match.service';
   templateUrl: './match.component.html',
   styleUrl: './match.component.css',
 })
-export class MatchComponent implements OnInit {
+export class MatchComponent implements OnInit, OnDestroy {
   search!: string;
   messageForm!: FormGroup;
   isModifying: boolean = false;
   updatedMessage?: Message;
-  matches: Match[] = this.matchService.matches;
-  filteredMatches: Match[] = [...this.matches];
+  matches: Match[] = [];
+  filteredMatches: Match[] = [];
   selectedMatch?: Match;
+  destroyed$: Subject<void> = new Subject<void>();
 
   constructor(
     private toastr: ToastrService,
@@ -60,6 +62,27 @@ export class MatchComponent implements OnInit {
         ],
       ],
     });
+
+    this.matchService
+      .getAllUserMatches()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (matches: Match[]) => {
+          this.matches = matches;
+          this.searchByNickname();
+        },
+        error: (error: HttpErrorResponse) => {
+          this.toastr.error(error.message, 'Error', {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
+          });
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   searchByNickname(): void {

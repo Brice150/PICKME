@@ -1,9 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { User } from '../core/interfaces/user';
 import { CardComponent } from './card/card.component';
 import { ToastrService } from 'ngx-toastr';
 import { SelectService } from '../core/services/select.service';
+import { Subject, takeUntil } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-select',
@@ -13,13 +20,38 @@ import { SelectService } from '../core/services/select.service';
   styleUrl: './select.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class SelectComponent {
-  users: User[] = this.selectService.users;
+export class SelectComponent implements OnInit, OnDestroy {
+  users: User[] = [];
+  destroyed$: Subject<void> = new Subject<void>();
+  activeMatchAnimation: boolean = false;
 
   constructor(
     private toastr: ToastrService,
     private selectService: SelectService
   ) {}
+
+  ngOnInit(): void {
+    this.selectService
+      .getAllSelectedUsers()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (users: User[]) => {
+          this.users = users;
+          console.log(users);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.toastr.error(error.message, 'Error', {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
+          });
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 
   isCurrentView(user: User): boolean {
     const index: number | undefined =
@@ -34,28 +66,41 @@ export class SelectComponent {
     // Needed to update isCurrentView when we slide
   }
 
-  like(message: string, user: User): void {
-    // TODO : likeUser in the backend
-    this.removeSlide(user.id!);
-    if (message && message === 'match') {
-      this.toastr.success(
-        'You have a match with ' + user.nickname,
-        'Matched ' + user.nickname,
-        {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom gold',
+  like(user: User): void {
+    this.selectService.addLike(user.id!).subscribe({
+      next: (matchNotification: string) => {
+        this.removeSlide(user.id!);
+        if (matchNotification && matchNotification !== '') {
+          this.activeMatchAnimation = true;
+          setTimeout(() => {
+            this.activeMatchAnimation = false;
+            this.toastr.success(
+              'You have a match with ' + matchNotification,
+              'Matched ' + matchNotification,
+              {
+                positionClass: 'toast-bottom-center',
+                toastClass: 'ngx-toastr custom gold',
+              }
+            );
+          }, 2000);
+        } else {
+          this.toastr.success(
+            'You have liked ' + user.nickname,
+            'Liked ' + user.nickname,
+            {
+              positionClass: 'toast-bottom-center',
+              toastClass: 'ngx-toastr custom',
+            }
+          );
         }
-      );
-    } else {
-      this.toastr.success(
-        'You have liked ' + user.nickname,
-        'Liked ' + user.nickname,
-        {
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
           positionClass: 'toast-bottom-center',
           toastClass: 'ngx-toastr custom',
-        }
-      );
-    }
+        });
+      },
+    });
   }
 
   dislike(user: User): void {

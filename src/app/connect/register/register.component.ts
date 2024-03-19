@@ -205,9 +205,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
       job: this.registerForm.get('firstFormGroup.job')?.value as string,
       city: this.registerForm.get('firstFormGroup.city')?.value as string,
       birthDate: this.birthDate,
-      gender: this.registerForm.get('secondFormGroup.gender')?.value as string,
+      gender: this.registerForm.get('secondFormGroup.gender')?.value as Gender,
       genderSearch: this.registerForm.get('secondFormGroup.genderSearch')
-        ?.value as string,
+        ?.value as Gender,
       minAge: this.minAge,
       maxAge: this.maxAge,
       email: this.registerForm.get('thirdFormGroup.email')?.value as string,

@@ -1,3 +1,12 @@
+import { AlcoholDrinking } from '../enums/alcohol-drinking';
+import { Animals } from '../enums/animals';
+import { Gamer } from '../enums/gamer';
+import { Gender } from '../enums/gender';
+import { Organised } from '../enums/organised';
+import { Parenthood } from '../enums/parenthood';
+import { Personality } from '../enums/personality';
+import { Smokes } from '../enums/smokes';
+import { SportPractice } from '../enums/sport-practice';
 import { Picture } from './picture';
 
 export interface User {
@@ -17,8 +26,8 @@ export interface User {
   height?: number;
 
   // Gender and Age
-  gender: string;
-  genderSearch: string;
+  gender: Gender;
+  genderSearch: Gender;
   minAge: number;
   maxAge: number;
 
@@ -30,14 +39,14 @@ export interface User {
   description?: string;
 
   // Preferences
-  alcoholDrinking?: string;
-  smokes?: string;
-  organised?: string;
-  personality?: string;
-  sportPractice?: string;
-  animals?: string;
-  parenthood?: string;
-  gamer?: string;
+  alcoholDrinking?: AlcoholDrinking;
+  smokes?: Smokes;
+  organised?: Organised;
+  personality?: Personality;
+  sportPractice?: SportPractice;
+  animals?: Animals;
+  parenthood?: Parenthood;
+  gamer?: Gamer;
 
   // Stats
   totalDislikes?: number;
