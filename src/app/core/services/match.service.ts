@@ -19,7 +19,7 @@ export class MatchService {
     });
   }
 
-  public addMessage(message: string): Observable<Message> {
+  public addMessage(message: Message): Observable<Message> {
     return this.http.post<Message>(`${this.apiServerUrl}/message`, message, {
       withCredentials: true,
     });

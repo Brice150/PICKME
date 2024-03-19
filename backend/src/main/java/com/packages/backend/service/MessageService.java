@@ -25,9 +25,10 @@ public class MessageService {
 
   public Optional<Message> addMessage(Message message) {
     User connectedUser = userService.getConnectedUser();
-    if (Objects.equals(connectedUser.getId(), message.getFkSender())
-      && !Objects.equals(connectedUser.getId(), message.getFkReceiver())) {
+    if (!Objects.equals(connectedUser.getId(), message.getFkReceiver())) {
       message.setDate(new Date());
+      message.setSender(connectedUser.getNickname());
+      message.setFkSender(connectedUser.getId());
       Message newMessage = messageRepository.save(message);
       return Optional.of(newMessage);
     } else {
@@ -37,9 +38,10 @@ public class MessageService {
 
   public Optional<Message> updateMessage(Message message) {
     User connectedUser = userService.getConnectedUser();
-    if (Objects.equals(connectedUser.getId(), message.getFkSender())) {
-      message.setDate(getMessageById(message.getId()).getDate());
-      Message updateMessage = messageRepository.save(message);
+    Message previousMessage = getMessageById(message.getId());
+    if (Objects.equals(connectedUser.getId(), previousMessage.getFkSender())) {
+      previousMessage.setContent(message.getContent());
+      Message updateMessage = messageRepository.save(previousMessage);
       return Optional.of(updateMessage);
     } else {
       return Optional.empty();

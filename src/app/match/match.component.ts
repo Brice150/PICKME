@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Match } from '../core/interfaces/match';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -8,18 +8,17 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatchCardComponent } from './match-card/match-card.component';
-import { ToastrService } from 'ngx-toastr';
-import { MessageComponent } from './message/message.component';
-import { Message } from '../core/interfaces/message';
-import { MoreInfoComponent } from '../shared/components/more-info/more-info.component';
-import { Subject, filter, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from '../shared/components/confirmation-dialog/confirmation-dialog.component';
-import { ConnectService } from '../core/services/connect.service';
+import { ToastrService } from 'ngx-toastr';
+import { Subject, filter, takeUntil } from 'rxjs';
+import { Match } from '../core/interfaces/match';
+import { Message } from '../core/interfaces/message';
 import { MatchService } from '../core/services/match.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { SelectService } from '../core/services/select.service';
+import { ConfirmationDialogComponent } from '../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MoreInfoComponent } from '../shared/components/more-info/more-info.component';
+import { MatchCardComponent } from './match-card/match-card.component';
+import { MessageComponent } from './message/message.component';
 
 @Component({
   selector: 'app-match',
@@ -48,7 +47,6 @@ export class MatchComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     public dialog: MatDialog,
     private fb: FormBuilder,
-    private connectService: ConnectService,
     private matchService: MatchService,
     private selectService: SelectService
   ) {}
@@ -170,7 +168,8 @@ export class MatchComponent implements OnInit, OnDestroy {
   }
 
   sendMessage(message: Message): void {
-    this.matchService.addMessage(message.content).subscribe({
+    message.fkReceiver = this.selectedMatch?.user.id;
+    this.matchService.addMessage(message).subscribe({
       next: (newMessage: Message) => {
         this.selectedMatch!.messages.push(newMessage);
         this.unModifyMessage();
@@ -191,7 +190,8 @@ export class MatchComponent implements OnInit, OnDestroy {
   }
 
   updateMessage(message: Message): void {
-    this.matchService.updateMessage(message).subscribe({
+    this.updatedMessage!.content = message.content;
+    this.matchService.updateMessage(this.updatedMessage!).subscribe({
       next: (updatedMessage: Message) => {
         this.selectedMatch!.messages.find(
           (message: Message) => message.id === this.updatedMessage?.id

@@ -3,4 +3,5 @@ export interface Message {
   content: string;
   date: Date;
   sender: string;
+  fkReceiver?: number;
 }
