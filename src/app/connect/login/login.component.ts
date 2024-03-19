@@ -60,8 +60,7 @@ export class LoginComponent {
         .login(user)
         .pipe(takeUntil(this.destroyed$))
         .subscribe({
-          next: (response: User) => {
-            this.connectService.connectedUser = response;
+          next: () => {
             this.router.navigate(['/select']);
           },
           error: (error: HttpErrorResponse) => {

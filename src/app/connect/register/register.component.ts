@@ -153,8 +153,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroyed$))
         .subscribe({
           next: (response: User) => {
-            this.connectService.connectedUser = response;
-            this.router.navigate(['/select']);
+            this.loginUser(response);
           },
           error: (error: HttpErrorResponse) => {
             this.toastr.error(error.message, 'Error', {
@@ -174,6 +173,29 @@ export class RegisterComponent implements OnInit, OnDestroy {
           },
         });
     }
+  }
+
+  loginUser(user: User): void {
+    this.connectService
+      .login(user)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/select']);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.toastr.error(error.message, 'Error', {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
+          });
+        },
+        complete: () => {
+          this.toastr.success('You are logged in !', 'Logged In', {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom gold',
+          });
+        },
+      });
   }
 
   setUser(): User {

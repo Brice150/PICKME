@@ -27,7 +27,7 @@ export class NavComponent {
   }
 
   logout() {
-    this.connectService.connectedUser = undefined;
+    this.connectService.logout();
     this.router.navigate(['/']);
     this.toggleMenu();
     this.toastr.success('You are logged out', 'Logged Out', {

@@ -77,3 +77,7 @@
 .container .stats .stat i {
   font-size: 20px;
 }
+
+.container .stats .stat i.gold {
+  color: var(--liked);
+}
