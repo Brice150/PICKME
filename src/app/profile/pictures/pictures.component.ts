@@ -13,6 +13,8 @@ import { Picture } from '../../core/interfaces/picture';
 import { User } from '../../core/interfaces/user';
 import { PictureComponent } from './picture/picture.component';
 import { ToastrService } from 'ngx-toastr';
+import { ProfileService } from '../../core/services/profile.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-pictures',
@@ -25,10 +27,13 @@ import { ToastrService } from 'ngx-toastr';
 export class PicturesComponent {
   imagePath: string = environment.imagePath;
   @Input() user?: User;
-  @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
+  @Output() refreshEvent: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('imageInput') imageInput!: ElementRef;
 
-  constructor(private toastr: ToastrService) {}
+  constructor(
+    private toastr: ToastrService,
+    private profileService: ProfileService
+  ) {}
 
   addPicture(files: File[]) {
     let mainPictureExists: boolean = false;
@@ -60,59 +65,74 @@ export class PicturesComponent {
             }
           );
         } else {
-          const newPicture: Picture = {
-            id: Math.random(),
-            content: event.target.result,
-            isMainPicture: !mainPictureExists,
-          };
-          if (!mainPictureExists) {
-            this.user!.mainPicture = newPicture.content;
-          }
-          if (!this.user?.pictures || this.user?.pictures?.length === 0) {
-            this.user!.pictures = [];
-          }
-          this.user?.pictures?.unshift(newPicture);
-          setTimeout(() => {
-            document.querySelector('swiper-container')?.swiper.update();
-            document.querySelector('swiper-container')?.swiper.slideTo(0);
-            this.imageInput.nativeElement.value = '';
-            this.updateEvent.emit('Picture Added');
-          }, 0);
+          this.profileService.addPicture(event.target.result).subscribe({
+            next: (picture: Picture) => {
+              this.user?.pictures?.unshift(picture);
+              setTimeout(() => {
+                document.querySelector('swiper-container')?.swiper.update();
+                document.querySelector('swiper-container')?.swiper.slideTo(0);
+                this.imageInput.nativeElement.value = '';
+                this.refreshEvent.emit('Picture Added');
+              }, 0);
+            },
+            error: (error: HttpErrorResponse) => {
+              this.toastr.error(error.message, 'Error', {
+                positionClass: 'toast-bottom-center',
+                toastClass: 'ngx-toastr custom',
+              });
+            },
+          });
         }
       };
     }
   }
 
   deletePicture(pictureId: number): void {
-    let isMainPictureDeleted: boolean = false;
-    const pictureIndex = this.user!.pictures!.findIndex(
-      (picture: Picture) => picture.id === pictureId
-    );
-    if (pictureIndex !== -1) {
-      isMainPictureDeleted = this.user!.pictures![pictureIndex].isMainPicture;
-      document
-        .querySelector('swiper-container')
-        ?.swiper.removeSlide(pictureIndex);
-      this.user!.pictures!.splice(pictureIndex, 1);
-      if (isMainPictureDeleted && this.user?.pictures?.length !== 0) {
-        this.user!.pictures![0].isMainPicture = true;
-        this.user!.mainPicture = this.user!.pictures![0].content;
-      } else {
-        this.user!.mainPicture = undefined;
-      }
-      this.updateEvent.emit('Picture Deleted');
-    }
+    this.profileService.deletePicture(pictureId).subscribe({
+      next: () => {
+        let isMainPictureDeleted: boolean = false;
+        const pictureIndex = this.user!.pictures!.findIndex(
+          (picture: Picture) => picture.id === pictureId
+        );
+        if (pictureIndex !== -1) {
+          isMainPictureDeleted =
+            this.user!.pictures![pictureIndex].isMainPicture;
+          document
+            .querySelector('swiper-container')
+            ?.swiper.removeSlide(pictureIndex);
+          this.user!.pictures!.splice(pictureIndex, 1);
+          if (isMainPictureDeleted && this.user?.pictures?.length !== 0) {
+            this.user!.pictures![0].isMainPicture = true;
+          }
+          this.refreshEvent.emit('Picture Deleted');
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+    });
   }
 
   selectMainPicture(pictureId: number): void {
-    this.user?.pictures?.forEach((picture: Picture) => {
-      if (pictureId === picture.id) {
-        picture.isMainPicture = true;
-        this.user!.mainPicture = picture.content;
-      } else {
-        picture.isMainPicture = false;
-      }
+    this.profileService.selectMainPicture(pictureId).subscribe({
+      next: () => {
+        const pictureIndex = this.user!.pictures!.findIndex(
+          (picture: Picture) => picture.id === pictureId
+        );
+        if (pictureIndex !== -1) {
+          this.user!.pictures![pictureIndex].isMainPicture = true;
+        }
+        this.refreshEvent.emit('Main Picture Selected');
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
     });
-    this.updateEvent.emit('Main Picture Selected');
   }
 }

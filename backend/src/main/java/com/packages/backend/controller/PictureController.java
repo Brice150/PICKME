@@ -21,8 +21,8 @@ public class PictureController {
   }
 
   @PostMapping()
-  public ResponseEntity<Picture> addPicture(@RequestBody Picture picture) {
-    Optional<Picture> addedPicture = pictureService.addPicture(picture);
+  public ResponseEntity<Picture> addPicture(@RequestBody String pictureContent) {
+    Optional<Picture> addedPicture = pictureService.addPicture(pictureContent);
     return addedPicture.map(newPicture -> new ResponseEntity<>(newPicture, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
   }
 

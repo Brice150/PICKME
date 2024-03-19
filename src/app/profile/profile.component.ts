@@ -12,6 +12,8 @@ import { GenderAgeComponent } from './gender-age/gender-age.component';
 import { MainInfosComponent } from './main-infos/main-infos.component';
 import { PicturesComponent } from './pictures/pictures.component';
 import { PreferencesComponent } from './preferences/preferences.component';
+import { ProfileService } from '../core/services/profile.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',
@@ -36,47 +38,86 @@ export class ProfileComponent {
   constructor(
     private connectService: ConnectService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private profileService: ProfileService
   ) {}
 
   updateUser(message: string): void {
-    this.connectService.connectedUser = this.user;
-    //TODO: backend saved
-    this.connectService.connectedUser!.password = undefined;
-    this.user!.password = undefined;
-    console.log(message);
+    this.profileService.updateUser(this.user!).subscribe({
+      next: (updatedUser: User) => {
+        this.user = updatedUser;
+        this.connectService.connectedUser = updatedUser;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+      complete: () => {
+        this.toastr.success('Your profile has been updated', message, {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+    });
+  }
 
-    if (message && message === 'Main Picture Selected') {
-      this.toastr.success('Your main picture has been selected', message, {
-        positionClass: 'toast-bottom-center',
-        toastClass: 'ngx-toastr custom gold',
-      });
-    } else if (message && message === 'Picture Deleted') {
-      this.toastr.success('Picture has been deleted', message, {
-        positionClass: 'toast-bottom-center',
-        toastClass: 'ngx-toastr custom',
-      });
-    } else if (message && message === 'Picture Added') {
-      this.toastr.success('Picture has been added', message, {
-        positionClass: 'toast-bottom-center',
-        toastClass: 'ngx-toastr custom',
-      });
-    } else {
-      this.toastr.success('Your profile has been updated', message, {
-        positionClass: 'toast-bottom-center',
-        toastClass: 'ngx-toastr custom',
-      });
-    }
+  refreshUser(message: string): void {
+    this.profileService.getConnectedUser().subscribe({
+      next: (user: User) => {
+        this.connectService.connectedUser = user;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+      complete: () => {
+        if (message && message === 'Main Picture Selected') {
+          this.toastr.success('Your main picture has been selected', message, {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom gold',
+          });
+        } else if (message && message === 'Picture Deleted') {
+          this.toastr.success('Picture has been deleted', message, {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
+          });
+        } else if (message && message === 'Picture Added') {
+          this.toastr.success('Picture has been added', message, {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
+          });
+        }
+      },
+    });
   }
 
   deleteAccount(): void {
-    this.connectService.connectedUser = undefined;
-    this.user = undefined;
-    //TODO: backend saved
-    this.toastr.success('Your account has been deleted', 'Account Deleted', {
-      positionClass: 'toast-bottom-center',
-      toastClass: 'ngx-toastr custom',
+    this.profileService.deleteConnectedUser().subscribe({
+      next: () => {
+        this.connectService.connectedUser = undefined;
+        this.user = undefined;
+        this.router.navigate(['/']);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+      complete: () => {
+        this.toastr.success(
+          'Your account has been deleted',
+          'Account Deleted',
+          {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
+          }
+        );
+      },
     });
-    this.router.navigate(['/']);
   }
 }

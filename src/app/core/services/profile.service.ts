@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { User } from '../interfaces/user';
+import { Picture } from '../interfaces/picture';
 
 @Injectable({
   providedIn: 'root',
@@ -11,13 +12,14 @@ export class ProfileService {
   private apiServerUrl = environment.apiBaseUrl;
   constructor(private http: HttpClient) {}
 
-  public addPicture(formData: FormData): Observable<HttpEvent<string[]>> {
-    //TODO: change
-    return this.http.post<string[]>(`${this.apiServerUrl}/picture`, formData, {
-      reportProgress: true,
-      observe: 'events',
-      withCredentials: true,
-    });
+  public addPicture(pictureContent: string): Observable<Picture> {
+    return this.http.post<Picture>(
+      `${this.apiServerUrl}/picture`,
+      pictureContent,
+      {
+        withCredentials: true,
+      }
+    );
   }
 
   public selectMainPicture(pictureId: number): Observable<void> {
@@ -28,6 +30,12 @@ export class ProfileService {
 
   public deletePicture(pictureId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/picture/${pictureId}`, {
+      withCredentials: true,
+    });
+  }
+
+  public getConnectedUser(): Observable<User> {
+    return this.http.get<User>(`${this.apiServerUrl}/user`, {
       withCredentials: true,
     });
   }

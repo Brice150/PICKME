@@ -44,11 +44,11 @@ public class Picture implements Serializable {
     this.content = content;
   }
 
-  public Boolean getMainPicture() {
+  public Boolean getIsMainPicture() {
     return isMainPicture;
   }
 
-  public void setMainPicture(Boolean mainPicture) {
+  public void setIsMainPicture(Boolean mainPicture) {
     isMainPicture = mainPicture;
   }
 

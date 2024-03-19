@@ -19,6 +19,7 @@ import { ConfirmationDialogComponent } from '../shared/components/confirmation-d
 import { ConnectService } from '../core/services/connect.service';
 import { MatchService } from '../core/services/match.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SelectService } from '../core/services/select.service';
 
 @Component({
   selector: 'app-match',
@@ -48,7 +49,8 @@ export class MatchComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private fb: FormBuilder,
     private connectService: ConnectService,
-    private matchService: MatchService
+    private matchService: MatchService,
+    private selectService: SelectService
   ) {}
 
   ngOnInit(): void {
@@ -98,22 +100,34 @@ export class MatchComponent implements OnInit, OnDestroy {
   }
 
   dislike(): void {
-    const matchIndex = this.matches.findIndex(
-      (match: Match) => match.user.id === this.selectedMatch!.user.id
-    );
-    if (matchIndex !== -1) {
-      this.matches.splice(matchIndex, 1);
-      this.searchByNickname();
-      this.toastr.success(
-        'You have disliked ' + this.selectedMatch!.user.nickname,
-        'Disliked ' + this.selectedMatch!.user.nickname,
-        {
+    this.selectService.addDislike(this.selectedMatch?.user.id!).subscribe({
+      next: () => {
+        const matchIndex = this.matches.findIndex(
+          (match: Match) => match.user.id === this.selectedMatch!.user.id
+        );
+        if (matchIndex !== -1) {
+          this.matches.splice(matchIndex, 1);
+          this.searchByNickname();
+          this.selectedMatch = undefined;
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
           positionClass: 'toast-bottom-center',
           toastClass: 'ngx-toastr custom',
-        }
-      );
-      this.selectedMatch = undefined;
-    }
+        });
+      },
+      complete: () => {
+        this.toastr.success(
+          'You have disliked ' + this.selectedMatch!.user.nickname,
+          'Disliked ' + this.selectedMatch!.user.nickname,
+          {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
+          }
+        );
+      },
+    });
   }
 
   selectMatch(match: Match): void {
@@ -156,43 +170,81 @@ export class MatchComponent implements OnInit, OnDestroy {
   }
 
   sendMessage(message: Message): void {
-    const newMessage: Message = {
-      id: 100,
-      content: message.content,
-      date: new Date(),
-      sender: this.connectService.connectedUser!.nickname,
-    };
-    this.selectedMatch!.messages.push(newMessage);
-    this.unModifyMessage();
-    this.toastr.success('You have sent a message', 'Message Sent', {
-      positionClass: 'toast-bottom-center',
-      toastClass: 'ngx-toastr custom',
+    this.matchService.addMessage(message.content).subscribe({
+      next: (newMessage: Message) => {
+        this.selectedMatch!.messages.push(newMessage);
+        this.unModifyMessage();
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+      complete: () => {
+        this.toastr.success('You have sent a message', 'Message Sent', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
     });
   }
 
   updateMessage(message: Message): void {
-    this.selectedMatch!.messages.find(
-      (message: Message) => message.id === this.updatedMessage?.id
-    )!.content = message.content;
-    this.unModifyMessage();
-    this.toastr.success('You have updated your message', 'Message Updated', {
-      positionClass: 'toast-bottom-center',
-      toastClass: 'ngx-toastr custom',
+    this.matchService.updateMessage(message).subscribe({
+      next: (updatedMessage: Message) => {
+        this.selectedMatch!.messages.find(
+          (message: Message) => message.id === this.updatedMessage?.id
+        )!.content = updatedMessage.content;
+        this.unModifyMessage();
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+      complete: () => {
+        this.toastr.success(
+          'You have updated your message',
+          'Message Updated',
+          {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
+          }
+        );
+      },
     });
   }
 
   deleteMessage(messageId: number): void {
-    const messageIndex = this.selectedMatch!.messages.findIndex(
-      (message: Message) => message.id === messageId
-    );
-    if (messageIndex !== -1) {
-      this.selectedMatch?.messages.splice(messageIndex, 1);
-      this.unModifyMessage();
-      this.toastr.success('You have deleted your message', 'Message Deleted', {
-        positionClass: 'toast-bottom-center',
-        toastClass: 'ngx-toastr custom',
-      });
-    }
+    this.matchService.deleteMessage(messageId).subscribe({
+      next: () => {
+        const messageIndex = this.selectedMatch!.messages.findIndex(
+          (message: Message) => message.id === messageId
+        );
+        if (messageIndex !== -1) {
+          this.selectedMatch?.messages.splice(messageIndex, 1);
+          this.unModifyMessage();
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+      complete: () => {
+        this.toastr.success(
+          'You have deleted your message',
+          'Message Deleted',
+          {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
+          }
+        );
+      },
+    });
   }
 
   openDialog(): void {

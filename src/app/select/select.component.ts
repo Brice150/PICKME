@@ -37,7 +37,6 @@ export class SelectComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (users: User[]) => {
           this.users = users;
-          console.log(users);
         },
         error: (error: HttpErrorResponse) => {
           this.toastr.error(error.message, 'Error', {
@@ -69,11 +68,11 @@ export class SelectComponent implements OnInit, OnDestroy {
   like(user: User): void {
     this.selectService.addLike(user.id!).subscribe({
       next: (matchNotification: string) => {
-        this.removeSlide(user.id!);
         if (matchNotification && matchNotification !== '') {
           this.activeMatchAnimation = true;
           setTimeout(() => {
             this.activeMatchAnimation = false;
+            this.removeSlide(user.id!);
             this.toastr.success(
               'You have a match with ' + matchNotification,
               'Matched ' + matchNotification,
@@ -104,16 +103,27 @@ export class SelectComponent implements OnInit, OnDestroy {
   }
 
   dislike(user: User): void {
-    // TODO : dislikeUser in the backend
-    this.removeSlide(user.id!);
-    this.toastr.success(
-      'You have disliked ' + user.nickname,
-      'Disliked ' + user.nickname,
-      {
-        positionClass: 'toast-bottom-center',
-        toastClass: 'ngx-toastr custom',
-      }
-    );
+    this.selectService.addDislike(user.id!).subscribe({
+      next: () => {
+        this.removeSlide(user.id!);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+      complete: () => {
+        this.toastr.success(
+          'You have disliked ' + user.nickname,
+          'Disliked ' + user.nickname,
+          {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
+          }
+        );
+      },
+    });
   }
 
   removeSlide(userId: number): void {
