@@ -30,6 +30,7 @@ public class User implements UserDetails {
 
   // Pictures
   @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL)
+  @OrderBy("id DESC")
   @JsonManagedReference(value = "pictures")
   private List<Picture> pictures;
   private String mainPicture;
