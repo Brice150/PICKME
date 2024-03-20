@@ -1,20 +1,24 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 
 @Component({
   selector: 'app-connect',
+  standalone: true,
+  imports: [CommonModule, LoginComponent, RegisterComponent],
   templateUrl: './connect.component.html',
-  styleUrls: ['./connect.component.css'],
+  styleUrl: './connect.component.css',
 })
 export class ConnectComponent {
-  imagePath: string = environment.imagePath;
   isRegistering: boolean = false;
 
-  onRegister() {
-    this.isRegistering = true;
-  }
-
-  onLogin() {
-    this.isRegistering = false;
+  toggleLoginOrRegister(page: string) {
+    if (
+      (page === 'login' && this.isRegistering) ||
+      (page === 'register' && !this.isRegistering)
+    ) {
+      this.isRegistering = !this.isRegistering;
+    }
   }
 }

@@ -1,0 +1,12 @@
+<a class="top-button left" title="Delete" (click)="openDialog()">
+  <i class="bx bxs-trash-alt"></i>
+</a>
+<a
+  class="top-button right"
+  title="Select Main Picture"
+  [ngClass]="picture.isMainPicture ? 'gold' : null"
+  (click)="selectMainPicture()"
+>
+  <i class="bx bxs-user-rectangle"></i>
+</a>
+<img [src]="picture.content" [alt]="picture" />

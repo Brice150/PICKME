@@ -1,7 +1,6 @@
 package com.packages.backend.security.config;
 
-import com.packages.backend.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.packages.backend.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,48 +15,48 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserService userService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Autowired
-    private MyBasicAuthenticationEntryPoint authenticationEntryPoint;
+  private final UserService userService;
+  private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final MyBasicAuthenticationEntryPoint authenticationEntryPoint;
 
-    public WebSecurityConfig(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userService = userService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
+  public WebSecurityConfig(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, MyBasicAuthenticationEntryPoint authenticationEntryPoint) {
+    this.userService = userService;
+    this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    this.authenticationEntryPoint = authenticationEntryPoint;
+  }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-          .cors().and()
-          .csrf().disable()
-          .authorizeRequests()
-          .antMatchers(
-            "/registration/**",
-            "/logout")
-          .permitAll()
-          .anyRequest()
-          .authenticated()
-          .and()
-          .httpBasic()
-          .authenticationEntryPoint(authenticationEntryPoint)
-          .and()
-          .logout()
-          .invalidateHttpSession(true)
-          .clearAuthentication(true)
-          .deleteCookies("JSESSIONID");
-    }
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http
+      .cors().and()
+      .csrf().disable()
+      .authorizeRequests()
+      .antMatchers(
+        "/registration/**",
+        "/logout")
+      .permitAll()
+      .anyRequest()
+      .authenticated()
+      .and()
+      .httpBasic()
+      .authenticationEntryPoint(authenticationEntryPoint)
+      .and()
+      .logout()
+      .invalidateHttpSession(true)
+      .clearAuthentication(true)
+      .deleteCookies("JSESSIONID");
+  }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(daoAuthenticationProvider());
-    }
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) {
+    auth.authenticationProvider(daoAuthenticationProvider());
+  }
 
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(bCryptPasswordEncoder);
-        provider.setUserDetailsService(userService);
-        return provider;
-    }
+  @Bean
+  public DaoAuthenticationProvider daoAuthenticationProvider() {
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+    provider.setPasswordEncoder(bCryptPasswordEncoder);
+    provider.setUserDetailsService(userService);
+    return provider;
+  }
 }

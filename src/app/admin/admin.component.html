@@ -1,39 +1,43 @@
-<app-header [title]="'Admin'"></app-header>
-<div class="main-container">
-  <div class="container">
-    <div class="btn-container">
+<div class="container">
+  <div class="search">
+    <input
+      type="text"
+      placeholder="Search by nickname"
+      [(ngModel)]="search"
+      (ngModelChange)="searchByNickname('')"
+    />
+    <div class="sort">
       <a
-        *ngIf="activeUsers"
-        (click)="onUsers()"
-        title="users"
-        class="active-content"
-        >Users</a
+        title="Sort By Max Dislike"
+        (click)="sortByDislike()"
+        [ngClass]="isSortingByDislike ? 'active' : null"
       >
+        <i class="bx bxs-dislike"></i>
+      </a>
       <a
-        *ngIf="!activeUsers"
-        (click)="onUsers()"
-        title="users"
-        class="unactive-content"
-        >Users</a
+        title="Sort By Max Like"
+        (click)="sortByLike()"
+        [ngClass]="isSortingByLike ? 'active' : null"
       >
+        <i class="bx bxs-like"></i>
+      </a>
       <a
-        *ngIf="activeMessages"
-        (click)="onMessages()"
-        title="messages"
-        class="active-content"
-        >Messages</a
+        title="Sort By Max Match"
+        (click)="sortByMatch()"
+        [ngClass]="isSortingByMatch ? 'active' : null"
       >
-      <a
-        *ngIf="!activeMessages"
-        (click)="onMessages()"
-        title="messages"
-        class="unactive-content"
-        >Messages</a
-      >
+        <i class="bx bxs-flame"></i>
+      </a>
     </div>
-    <div class="content">
-      <app-admin-users *ngIf="activeUsers"></app-admin-users>
-      <app-admin-messages *ngIf="activeMessages"></app-admin-messages>
-    </div>
+  </div>
+  <div class="content" *ngIf="users && users.length !== 0">
+    <app-admin-card
+      *ngFor="let user of filteredUsers"
+      [user]="user"
+      (deleteEvent)="deleteUser(user)"
+    ></app-admin-card>
+  </div>
+  <div class="content nothing" *ngIf="!users || users.length === 0">
+    <span>No user</span>
   </div>
 </div>

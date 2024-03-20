@@ -1,9 +1,9 @@
 <form
-  [className]="invalidLogin ? 'user-form invalidLogin' : 'user-form'"
+  [ngClass]="invalidLogin ? 'invalidLogin' : null"
   [formGroup]="loginForm"
   (ngSubmit)="loginUser(loginForm.value)"
 >
-  <input class="user-form-text" placeholder="Email" formControlName="email" />
+  <input placeholder="Email" formControlName="email" />
   <span
     *ngIf="
       loginForm.get('email')!.hasError('required') &&
@@ -17,12 +17,7 @@
   <span *ngIf="loginForm.get('email')!.hasError('maxlength')"
     >Email is too long</span
   >
-  <input
-    type="password"
-    class="user-form-text"
-    placeholder="Password"
-    formControlName="password"
-  />
+  <input type="password" placeholder="Password" formControlName="password" />
   <span
     *ngIf="
       loginForm.get('password')!.hasError('required') &&
@@ -38,13 +33,8 @@
   >
   <span *ngIf="invalidLogin">Wrong Email or Password</span>
   <div class="button-container">
-    <button
-      class="validButton"
-      title="login"
-      *ngIf="loginForm.valid"
-      type="submit"
-    >
-      Login
+    <button title="Let's Go" *ngIf="loginForm.valid" type="submit">
+      Let's Go
     </button>
   </div>
 </form>

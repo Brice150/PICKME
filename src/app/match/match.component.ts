@@ -1,273 +1,260 @@
-import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
-import { Like } from '../core/interfaces/like';
-import { User } from '../core/interfaces/user';
-import { LikeService } from '../core/services/like.service';
-import { PictureService } from '../core/services/picture.service';
-import { UserService } from '../core/services/user.service';
-import { MessageService } from '../core/services/message.service';
-import { Message } from '../core/interfaces/message';
-import { SwiperOptions } from 'swiper';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { Subject, filter, takeUntil } from 'rxjs';
+import { Match } from '../core/interfaces/match';
+import { Message } from '../core/interfaces/message';
+import { MatchService } from '../core/services/match.service';
+import { SelectService } from '../core/services/select.service';
+import { ConfirmationDialogComponent } from '../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MoreInfoComponent } from '../shared/components/more-info/more-info.component';
+import { MatchCardComponent } from './match-card/match-card.component';
+import { MessageComponent } from './message/message.component';
 
 @Component({
   selector: 'app-match',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatchCardComponent,
+    MessageComponent,
+    ReactiveFormsModule,
+  ],
   templateUrl: './match.component.html',
-  styleUrls: ['./match.component.css'],
+  styleUrl: './match.component.css',
 })
 export class MatchComponent implements OnInit, OnDestroy {
-  imagePath: string = environment.imagePath;
-  users: User[] = [];
-  selectedUser!: User;
-  loggedInUser!: User;
-  messagesNumber: number = 1;
-  messages: Message[] = [];
-  config: SwiperOptions = {
-    grabCursor: true,
-    speed: 1500,
-    loop: false,
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-      dynamicBullets: true,
-    },
-    spaceBetween: 80,
-    breakpoints: {
-      0: {
-        slidesPerView: 1,
-      },
-      500: {
-        slidesPerView: 2,
-      },
-      800: {
-        slidesPerView: 3,
-      },
-      1400: {
-        slidesPerView: 4,
-      },
-      2000: {
-        slidesPerView: 5,
-      },
-    },
-  };
-  getLoggedInUserSubscription!: Subscription;
-  getUsersSubscription!: Subscription;
-  getMainPictureSubscription!: Subscription;
-  getUserMessagesNumberSubscription!: Subscription;
-  getLikeByFkSubscription!: Subscription;
-  deleteLikeSubscription!: Subscription;
-  getSelectedUserMessagesSubscription!: Subscription;
-  getMessageSenderSubscription!: Subscription;
+  search!: string;
+  messageForm!: FormGroup;
+  isModifying: boolean = false;
+  updatedMessage?: Message;
+  matches: Match[] = [];
+  filteredMatches: Match[] = [];
+  selectedMatch?: Match;
+  destroyed$: Subject<void> = new Subject<void>();
 
   constructor(
-    private userService: UserService,
-    private pictureService: PictureService,
-    private likeService: LikeService,
-    private messageService: MessageService,
-    private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public dialog: MatDialog,
+    private fb: FormBuilder,
+    private matchService: MatchService,
+    private selectService: SelectService
   ) {}
 
-  ngOnInit() {
-    this.getLoggedInUser();
-    this.getUsers();
-  }
+  ngOnInit(): void {
+    this.messageForm = this.fb.group({
+      content: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(500),
+          Validators.minLength(5),
+        ],
+      ],
+    });
 
-  ngOnDestroy() {
-    this.getLoggedInUserSubscription &&
-      this.getLoggedInUserSubscription.unsubscribe();
-    this.getUsersSubscription && this.getUsersSubscription.unsubscribe();
-    this.getMainPictureSubscription &&
-      this.getMainPictureSubscription.unsubscribe();
-    this.getUserMessagesNumberSubscription &&
-      this.getUserMessagesNumberSubscription.unsubscribe();
-    this.getLikeByFkSubscription && this.getLikeByFkSubscription.unsubscribe();
-    this.deleteLikeSubscription && this.deleteLikeSubscription.unsubscribe();
-    this.getSelectedUserMessagesSubscription &&
-      this.getSelectedUserMessagesSubscription.unsubscribe();
-    this.getMessageSenderSubscription &&
-      this.getMessageSenderSubscription.unsubscribe();
-  }
-
-  getLoggedInUser() {
-    this.getLoggedInUserSubscription = this.userService
-      .getConnectedUser()
+    this.matchService
+      .getAllUserMatches()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe({
-        next: (response: User) => {
-          this.loggedInUser = response;
+        next: (matches: Match[]) => {
+          this.matches = matches;
+          this.searchByNickname();
         },
         error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.message, 'Server error', {
+          this.toastr.error(error.message, 'Error', {
             positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
           });
         },
       });
   }
 
-  getUsers() {
-    this.getUsersSubscription = this.userService
-      .getAllUsersThatMatched()
-      .subscribe({
-        next: (response: User[]) => {
-          this.users = response;
-          if (this.users.length !== 0) {
-            this.selectedUser = this.users[0];
-            this.getSelectedUserMessages(this.selectedUser.id);
-          }
-          for (let user of this.users) {
-            this.getMainPicture(user);
-            this.getUserMessagesNumber(user);
-          }
-          const loaderWrapper = document.getElementById('loaderWrapper');
-          loaderWrapper!.style.display = 'none';
-        },
-        error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.message, 'Server error', {
-            positionClass: 'toast-bottom-center',
-          });
-        },
-      });
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
-  getMainPicture(user: User) {
-    let reader = new FileReader();
-    if (user.mainPicture) {
-      this.getMainPictureSubscription = this.pictureService
-        .getPicture(user.mainPicture.toString())
-        .subscribe({
-          next: (event) => {
-            if (event.type === HttpEventType.Response) {
-              if (event.body instanceof Array) {
-              } else {
-                let image = new File(
-                  [event.body!],
-                  user.mainPicture!.toString()
-                );
-                reader.readAsDataURL(image);
-                reader.onloadend = (loaded) => {
-                  user.mainPicture = reader.result!;
-                };
-              }
-            }
-          },
-          error: (error: HttpErrorResponse) => {
-            this.toastr.error(error.message, 'Server error', {
-              positionClass: 'toast-bottom-center',
-            });
-          },
-        });
+  searchByNickname(): void {
+    if (!this.search || this.search === '') {
+      this.filteredMatches = [...this.matches];
     } else {
-      user.mainPicture = this.imagePath + 'No-Image.png';
+      this.filteredMatches = [...this.matches].filter((match: Match) =>
+        match.user.nickname
+          .toLocaleLowerCase()
+          .includes(this.search.toLocaleLowerCase())
+      );
     }
   }
 
-  getUserMessagesNumber(user: User) {
-    this.getUserMessagesNumberSubscription = this.messageService
-      .getUserMessagesNumber(user.id)
-      .subscribe({
-        next: (response: number) => {
-          user.messagesNumber = response;
-        },
-        error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.message, 'Server error', {
-            positionClass: 'toast-bottom-center',
-          });
-        },
+  dislike(): void {
+    this.selectService.addDislike(this.selectedMatch?.user.id!).subscribe({
+      next: () => {
+        const matchIndex = this.matches.findIndex(
+          (match: Match) => match.user.id === this.selectedMatch!.user.id
+        );
+        if (matchIndex !== -1) {
+          this.matches.splice(matchIndex, 1);
+          this.searchByNickname();
+          this.toastr.success(
+            'You have disliked ' + this.selectedMatch!.user.nickname,
+            'Disliked ' + this.selectedMatch!.user.nickname,
+            {
+              positionClass: 'toast-bottom-center',
+              toastClass: 'ngx-toastr custom',
+            }
+          );
+          this.selectedMatch = undefined;
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+    });
+  }
+
+  selectMatch(match: Match): void {
+    this.selectedMatch = match;
+  }
+
+  moreInfo(): void {
+    const dialogRef = this.dialog.open(MoreInfoComponent, {
+      data: {
+        user: this.selectedMatch!.user,
+        adminMode: false,
+        matchMode: true,
+      },
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(filter((res: boolean) => res))
+      .subscribe(() => {
+        this.dislike();
       });
   }
 
-  dislike(user: User) {
-    this.getLikeByFkSubscription = this.likeService
-      .getLikeByFk(this.loggedInUser.id, user.id)
-      .subscribe({
-        next: (like: Like) => {
-          this.deleteLikeSubscription = this.likeService
-            .deleteLike(like.id)
-            .subscribe({
-              next: (response: void) => {
-                this.getUsers();
-              },
-              error: (error: HttpErrorResponse) => {
-                this.toastr.error(error.message, 'Server error', {
-                  positionClass: 'toast-bottom-center',
-                });
-              },
-              complete: () => {
-                this.toastr.success('Disliked ' + user.nickname, 'Dislike', {
-                  positionClass: 'toast-bottom-center',
-                });
-              },
-            });
-        },
-        error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.message, 'Server error', {
+  back(): void {
+    this.selectedMatch = undefined;
+  }
+
+  modifyMessage(message: Message): void {
+    if (message.sender !== this.selectedMatch?.user.nickname) {
+      this.updatedMessage = message;
+      this.isModifying = true;
+    }
+  }
+
+  unModifyMessage(): void {
+    this.messageForm.get('content')?.reset();
+    this.messageForm.markAsPristine();
+    this.updatedMessage = undefined;
+    this.isModifying = false;
+  }
+
+  sendMessage(message: Message): void {
+    message.fkReceiver = this.selectedMatch?.user.id;
+    this.matchService.addMessage(message).subscribe({
+      next: (newMessage: Message) => {
+        this.selectedMatch!.messages.push(newMessage);
+        this.unModifyMessage();
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+      complete: () => {
+        this.toastr.success('You have sent a message', 'Message Sent', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+    });
+  }
+
+  updateMessage(message: Message): void {
+    this.updatedMessage!.content = message.content;
+    this.matchService.updateMessage(this.updatedMessage!).subscribe({
+      next: (updatedMessage: Message) => {
+        this.selectedMatch!.messages.find(
+          (message: Message) => message.id === this.updatedMessage?.id
+        )!.content = updatedMessage.content;
+        this.unModifyMessage();
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+      complete: () => {
+        this.toastr.success(
+          'You have updated your message',
+          'Message Updated',
+          {
             positionClass: 'toast-bottom-center',
-          });
-        },
-      });
-  }
-
-  moreInfo(id: any) {
-    this.router.navigate(['moreinfo', id, 'match']);
-  }
-
-  viewMessage(user: User) {
-    this.selectedUser = user;
-    this.getSelectedUserMessages(user.id);
-  }
-
-  refreshUserMessages(user: User) {
-    this.selectedUser = user;
-    this.getSelectedUserMessages(user.id);
-    this.getUserMessagesNumber(user);
-  }
-
-  getSelectedUserMessages(userId: number) {
-    this.getSelectedUserMessagesSubscription = this.messageService
-      .getAllUserMessages(userId)
-      .subscribe({
-        next: (response: Message[]) => {
-          this.messages = response;
-          for (let message of this.messages) {
-            this.getMessageSender(message);
+            toastClass: 'ngx-toastr custom',
           }
-        },
-        error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.message, 'Server error', {
-            positionClass: 'toast-bottom-center',
-          });
-        },
-      });
+        );
+      },
+    });
   }
 
-  getMessageSender(message: Message) {
-    this.getMessageSenderSubscription = this.messageService
-      .getMessageSender(message.id)
-      .subscribe({
-        next: (response: User) => {
-          message.sender = response.nickname;
-        },
-        error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.message, 'Server error', {
+  deleteMessage(messageId: number): void {
+    this.matchService.deleteMessage(messageId).subscribe({
+      next: () => {
+        const messageIndex = this.selectedMatch!.messages.findIndex(
+          (message: Message) => message.id === messageId
+        );
+        if (messageIndex !== -1) {
+          this.selectedMatch?.messages.splice(messageIndex, 1);
+          this.unModifyMessage();
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+      complete: () => {
+        this.toastr.success(
+          'You have deleted your message',
+          'Message Deleted',
+          {
             positionClass: 'toast-bottom-center',
-          });
-        },
-      });
+            toastClass: 'ngx-toastr custom',
+          }
+        );
+      },
+    });
   }
 
-  search(key: string) {
-    let results: User[] = [];
-    for (let user of this.users) {
-      if (user.nickname.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
-        results.push(user);
-      }
-    }
-    this.users = results;
-    if (results.length === 0 || !key) {
-      this.getUsers();
-    }
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: 'delete your message',
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(filter((res: boolean) => res))
+      .subscribe(() => {
+        this.deleteMessage(this.updatedMessage!.id);
+      });
   }
 }

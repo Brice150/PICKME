@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="picture-container">
+    <swiper-container
+      effect="cube"
+      mousewheel="true"
+      pagination="true"
+      navigation="true"
+      speed="800"
+      *ngIf="user?.pictures?.length !== 0"
+    >
+      <swiper-slide lazy="true" *ngFor="let picture of user?.pictures">
+        <app-picture
+          loading="true"
+          [picture]="picture"
+          (deleteEvent)="deletePicture(picture.id)"
+          (selectMainEvent)="selectMainPicture(picture.id)"
+        ></app-picture>
+      </swiper-slide>
+    </swiper-container>
+    <img
+      *ngIf="!user?.pictures || user?.pictures?.length === 0"
+      [src]="imagePath + 'No-Image.png'"
+      [alt]="user?.nickname"
+    />
+  </div>
+  <div class="button-container">
+    <label for="image" class="add" title="Add Picture"> Add picture</label>
+    <input
+      #imageInput
+      type="file"
+      id="image"
+      (change)="addPicture($any($event.target).files)"
+      name="files"
+    />
+  </div>
+</div>

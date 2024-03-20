@@ -3,6 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'customDate',
+  standalone: true,
 })
 export class CustomDatePipe implements PipeTransform {
   private datePipe: DatePipe = new DatePipe('en-FR');
@@ -18,7 +19,7 @@ export class CustomDatePipe implements PipeTransform {
       frontDate.getMonth() === today.getMonth() &&
       frontDate.getDate() === today.getDate();
     if (isToday) {
-      return this.datePipe.transform(date, 'hh:mm');
+      return this.datePipe.transform(date, 'HH:mm');
     }
     return this.datePipe.transform(date, 'dd/MM/yyyy');
   }

@@ -1,0 +1,47 @@
+<div class="menu-button" title="Menu" *ngIf="connectService.connectedUser">
+  <i class="bx bx-menu" (click)="toggleMenu()" *ngIf="!isMenuActive"></i>
+  <i class="bx bx-x" (click)="toggleMenu()" *ngIf="isMenuActive"></i>
+</div>
+<div class="container" @menuTrigger *ngIf="isMenuActive">
+  <a
+    routerLink="select"
+    routerLinkActive="active"
+    title="Select"
+    (click)="toggleMenu()"
+  >
+    <i class="bx bx-search"></i>
+    <span>Select</span>
+  </a>
+  <a
+    routerLink="profile"
+    routerLinkActive="active"
+    title="Profile"
+    (click)="toggleMenu()"
+  >
+    <i class="bx bxs-user"></i>
+    <span>Profile</span>
+  </a>
+  <a
+    routerLink="match"
+    routerLinkActive="active"
+    title="Match"
+    (click)="toggleMenu()"
+  >
+    <i class="bx bxs-flame"></i>
+    <span>Match</span>
+  </a>
+  <a
+    *ngIf="connectService.connectedUser?.userRole === 'ROLE_ADMIN'"
+    routerLink="admin"
+    routerLinkActive="active"
+    title="Admin"
+    (click)="toggleMenu()"
+  >
+    <i class="bx bxs-key"></i>
+    <span>Admin</span>
+  </a>
+  <a title="Logout" (click)="logout()">
+    <i class="bx bxs-log-out"></i>
+    <span>Logout</span>
+  </a>
+</div>

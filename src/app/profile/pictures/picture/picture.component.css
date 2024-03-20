@@ -1,0 +1,102 @@
+.top-button {
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: var(--primary);
+  backdrop-filter: blur(2px);
+  padding: 10px;
+  transition: 0.5s ease;
+  cursor: pointer;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.top-button::before {
+  content: "";
+  position: absolute;
+  background-color: var(--primary);
+  height: 0%;
+  top: 0;
+  right: 0;
+  width: 100%;
+  transition: 0.5s ease;
+  z-index: -1;
+}
+
+.top-button:hover::before {
+  height: 100%;
+}
+
+.top-button:hover {
+  color: var(--secondary);
+}
+
+.top-button.left {
+  left: 0;
+  border-radius: 10px 0 10px 0;
+}
+
+.top-button.right {
+  right: 0;
+  border-radius: 0 10px 0 10px;
+}
+
+.top-button.right:hover::before {
+  border-radius: 0 10px 0 10px;
+}
+
+.top-button.left:hover::before {
+  border-radius: 10px 0 10px 0;
+}
+
+.top-button i {
+  font-size: 35px;
+}
+
+.top-button.right.gold {
+  background-color: var(--liked);
+  color: var(--secondary);
+}
+
+.top-button.right.gold:hover {
+  color: var(--liked);
+}
+
+img {
+  background-color: var(--primary);
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 640px) {
+  img {
+    max-width: 450px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  img {
+    max-width: 400px;
+    height: 350px;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  img {
+    max-width: 350px;
+    height: 300px;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  img {
+    max-width: 300px;
+    height: 250px;
+  }
+}

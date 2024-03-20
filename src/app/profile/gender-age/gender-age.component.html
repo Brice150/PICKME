@@ -1,0 +1,58 @@
+<form [formGroup]="genderAgeForm" (ngSubmit)="updateGenderAge()">
+  <div class="input-container">
+    <span class="title">Gender</span>
+    <select formControlName="gender">
+      <option value="" disabled selected hidden>Gender</option>
+      <option [value]="gender" *ngFor="let gender of genders">
+        {{ gender }}
+      </option>
+    </select>
+    <span
+      *ngIf="
+        genderAgeForm.get('gender')!.hasError('required') &&
+        genderAgeForm.get('gender')!.touched
+      "
+      >Gender is required</span
+    >
+  </div>
+  <div class="input-container">
+    <span class="title">Gender Search</span>
+    <select formControlName="genderSearch">
+      <option value="" disabled selected hidden>Gender Search</option>
+      <option [value]="gender" *ngFor="let gender of genders">
+        {{ gender }}
+      </option>
+    </select>
+    <span
+      *ngIf="
+        genderAgeForm.get('genderSearch')!.hasError('required') &&
+        genderAgeForm.get('genderSearch')!.touched
+      "
+      >Gender Search is required</span
+    >
+  </div>
+  <div class="slide-container">
+    <span>Age</span>
+    <mat-slider min="18" max="80" discrete (change)="slideAge($event)">
+      <input matSliderStartThumb [value]="user?.minAge" />
+      <input matSliderEndThumb [value]="user?.maxAge" />
+    </mat-slider>
+  </div>
+  <div class="button-container">
+    <button
+      *ngIf="genderAgeForm.dirty || ageChange"
+      type="button"
+      title="Cancel"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+    <button
+      title="Update"
+      *ngIf="genderAgeForm.valid && (genderAgeForm.dirty || ageChange)"
+      type="submit"
+    >
+      Update
+    </button>
+  </div>
+</form>

@@ -1,359 +1,88 @@
-<app-header [title]="'Profile'"></app-header>
-<div class="main-container">
-  <div class="container">
-    <div class="content">
-      <a class="delete" title="delete account" (click)="openDialog()"
-        ><i class="bx bx-x"></i
-      ></a>
-      <div class="main-picture-container">
-        <div class="main-picture">
-          <img [src]="loggedInUser?.mainPicture" />
-        </div>
-      </div>
-      <div class="picture-container">
-        <div class="pictures">
-          <div class="picture" *ngFor="let picture of pictures">
-            <img [src]="picture.content" />
-            <div class="under">
-              <a
-                (click)="pickMainPicture(picture)"
-                title="pick main-picture"
-                class="in-picture"
-                ><i class="bx bx-image-alt"></i
-              ></a>
-              <a
-                (click)="deletePicture(picture.id)"
-                title="delete picture"
-                class="in-picture"
-                ><i class="bx bxs-trash"></i
-              ></a>
-            </div>
-          </div>
-          <div class="add-container">
-            <label for="image" class="add" title="add picture"
-              ><i class="bx bx-plus"></i
-            ></label>
-            <input
-              type="file"
-              id="image"
-              (change)="addPicture($any($event.target).files)"
-              name="files"
-            />
-          </div>
-        </div>
-      </div>
-      <form
-        class="user-form"
-        [formGroup]="updateForm"
-        (ngSubmit)="updateUser(updateForm.value)"
-      >
-        <input
-          class="user-form-text"
-          type="hidden"
-          formControlName="id"
-          ngModel="{{ loggedInUser?.id }}"
-        />
-        <input
-          class="user-form-text"
-          type="hidden"
-          formControlName="userRole"
-          ngModel="{{ loggedInUser?.userRole }}"
-        />
-        <input
-          class="user-form-text"
-          type="hidden"
-          formControlName="enabled"
-          ngModel="{{ loggedInUser?.enabled }}"
-        />
-        <input
-          class="user-form-text"
-          type="hidden"
-          formControlName="locked"
-          ngModel="{{ loggedInUser?.locked }}"
-        />
-        <input
-          class="user-form-text"
-          type="hidden"
-          formControlName="birthDate"
-          ngModel="{{ loggedInUser?.birthDate }}"
-        />
-        <input
-          class="user-form-text"
-          placeholder="Nickname"
-          formControlName="nickname"
-          ngModel="{{ loggedInUser?.nickname }}"
-        />
-        <span
-          *ngIf="
-            updateForm.get('nickname')!.hasError('required') &&
-            updateForm.get('nickname')!.touched
-          "
-          >Nickname is required</span
-        >
-        <span *ngIf="updateForm.get('nickname')!.hasError('maxlength')"
-          >Nickname is too long</span
-        >
-        <span *ngIf="updateForm.get('nickname')!.hasError('minlength')"
-          >Nickname is too short</span
-        >
-        <input
-          class="user-form-text"
-          placeholder="City"
-          formControlName="city"
-          ngModel="{{ loggedInUser?.city }}"
-        />
-        <span
-          *ngIf="
-            updateForm.get('city')!.hasError('required') &&
-            updateForm.get('city')!.touched
-          "
-          >City is required</span
-        >
-        <span *ngIf="updateForm.get('city')!.hasError('minlength')"
-          >City is too short</span
-        >
-        <span *ngIf="updateForm.get('city')!.hasError('maxlength')"
-          >City is too long</span
-        >
-        <input
-          class="user-form-text"
-          placeholder="Job"
-          formControlName="job"
-          ngModel="{{ loggedInUser?.job }}"
-        />
-        <span *ngIf="updateForm.get('job')!.hasError('maxlength')"
-          >Job is too long</span
-        >
-        <input
-          class="user-form-text"
-          placeholder="Height"
-          formControlName="height"
-          ngModel="{{ loggedInUser?.height }}"
-        />
-        <span *ngIf="updateForm.get('height')!.hasError('pattern')"
-          >Height must be an Integer in centimeters</span
-        >
-        <textarea
-          class="user-form-text"
-          placeholder="Languages"
-          formControlName="languages"
-          ngModel="{{ loggedInUser?.languages }}"
-        ></textarea>
-        <textarea
-          class="user-form-text"
-          placeholder="Activities"
-          formControlName="activities"
-          ngModel="{{ loggedInUser?.activities }}"
-        ></textarea>
-        <textarea
-          class="user-form-text"
-          placeholder="Description"
-          formControlName="description"
-          ngModel="{{ loggedInUser?.description }}"
-        ></textarea>
-        <div class="flex">
-          <select
-            class="user-form-text"
-            formControlName="gender"
-            ngModel="{{ loggedInUser?.gender }}"
-          >
-            <option value="" disabled selected hidden>Gender</option>
-            <option value="Man">Man</option>
-            <option value="Woman">Woman</option>
-            <option value="Other">Other</option>
-          </select>
-          <div class="inbetween">Who search</div>
-          <select
-            class="user-form-text"
-            formControlName="genderSearch"
-            ngModel="{{ loggedInUser?.genderSearch }}"
-          >
-            <option value="" disabled selected hidden>Gender Search</option>
-            <option value="Man">Man</option>
-            <option value="Woman">Woman</option>
-            <option value="Other">Other</option>
-          </select>
-          <div class="inbetween">For</div>
-          <select
-            class="user-form-text"
-            formControlName="relationshipType"
-            ngModel="{{ loggedInUser?.relationshipType }}"
-          >
-            <option value="" disabled selected hidden>Relationship</option>
-            <option value="Serious">Serious</option>
-            <option value="Unserious">Unserious</option>
-            <option value="Friendship">Friendship</option>
-          </select>
-        </div>
-        <div class="span-container">
-          <span
-            *ngIf="
-              updateForm.get('gender')!.hasError('required') &&
-              updateForm.get('gender')!.touched
-            "
-            >Gender is required</span
-          >
-          <span
-            *ngIf="
-              updateForm.get('genderSearch')!.hasError('required') &&
-              updateForm.get('genderSearch')!.touched
-            "
-            >Gender Search is required</span
-          >
-          <span
-            *ngIf="
-              updateForm.get('relationshipType')!.hasError('required') &&
-              updateForm.get('relationshipType')!.touched
-            "
-            >Relationship Type is required</span
-          >
-        </div>
-        <div class="chip-container">
-          <span>Alcohol Drinking</span>
-          <mat-chip-listbox>
-            <mat-chip-option
-              color="accent"
-              *ngFor="let attribute of alcoholDrinking"
-              [selected]="isSelected(attribute, 'alcoholDrinking')"
-              (click)="select(attribute, 'alcoholDrinking')"
-            >
-              <i class="bx bxs-drink" matChipAvatar></i>
-              {{ attribute }}
-            </mat-chip-option>
-          </mat-chip-listbox>
-        </div>
-        <div class="chip-container">
-          <span>Smoking</span>
-          <mat-chip-listbox>
-            <mat-chip-option
-              color="accent"
-              *ngFor="let attribute of smokes"
-              [selected]="isSelected(attribute, 'smokes')"
-              (click)="select(attribute, 'smokes')"
-            >
-              <i class="bx bx-wind" matChipAvatar></i>
-              {{ attribute }}
-            </mat-chip-option>
-          </mat-chip-listbox>
-        </div>
-        <div class="chip-container">
-          <span>Sport Pratice</span>
-          <mat-chip-listbox>
-            <mat-chip-option
-              color="accent"
-              *ngFor="let attribute of sportPractice"
-              [selected]="isSelected(attribute, 'sportPractice')"
-              (click)="select(attribute, 'sportPractice')"
-            >
-              <i class="bx bx-dumbbell" matChipAvatar></i>
-              {{ attribute }}
-            </mat-chip-option>
-          </mat-chip-listbox>
-        </div>
-        <div class="chip-container">
-          <span>Parenthood</span>
-          <mat-chip-listbox>
-            <mat-chip-option
-              color="accent"
-              *ngFor="let attribute of parenthood"
-              [selected]="isSelected(attribute, 'parenthood')"
-              (click)="select(attribute, 'parenthood')"
-            >
-              <i class="bx bx-child" matChipAvatar></i>
-              {{ attribute }}
-            </mat-chip-option>
-          </mat-chip-listbox>
-        </div>
-        <div class="chip-container">
-          <span>Gaming</span>
-          <mat-chip-listbox>
-            <mat-chip-option
-              color="accent"
-              *ngFor="let attribute of gamer"
-              [selected]="isSelected(attribute, 'gamer')"
-              (click)="select(attribute, 'gamer')"
-            >
-              <i class="bx bxs-joystick" matChipAvatar></i>
-              {{ attribute }}
-            </mat-chip-option>
-          </mat-chip-listbox>
-        </div>
-        <div class="chip-container">
-          <span>Animals</span>
-          <mat-chip-listbox>
-            <mat-chip-option
-              color="accent"
-              *ngFor="let attribute of animals"
-              [selected]="isSelected(attribute, 'animals')"
-              (click)="select(attribute, 'animals')"
-            >
-              <i class="bx bxs-cat" matChipAvatar></i>
-              {{ attribute }}
-            </mat-chip-option>
-          </mat-chip-listbox>
-        </div>
-        <div class="chip-container">
-          <span>Organised</span>
-          <mat-chip-listbox>
-            <mat-chip-option
-              color="accent"
-              *ngFor="let attribute of organised"
-              [selected]="isSelected(attribute, 'organised')"
-              (click)="select(attribute, 'organised')"
-            >
-              <i class="bx bxs-layer" matChipAvatar></i>
-              {{ attribute }}
-            </mat-chip-option>
-          </mat-chip-listbox>
-        </div>
-        <div class="chip-container">
-          <span>Personality</span>
-          <mat-chip-listbox>
-            <mat-chip-option
-              color="accent"
-              *ngFor="let attribute of personality"
-              [selected]="isSelected(attribute, 'personality')"
-              (click)="select(attribute, 'personality')"
-            >
-              <i class="bx bxs-user-voice" matChipAvatar></i>
-              {{ attribute }}
-            </mat-chip-option>
-          </mat-chip-listbox>
-        </div>
-        <input
-          type="password"
-          class="user-form-text"
-          placeholder="Old/New Password"
-          formControlName="password"
-        />
-        <span
-          *ngIf="
-            updateForm.get('password')!.hasError('required') &&
-            updateForm.get('password')!.touched
-          "
-          >A password is required</span
-        >
-        <span *ngIf="updateForm.get('password')!.hasError('minlength')"
-          >Password is too short</span
-        >
-        <span *ngIf="updateForm.get('password')!.hasError('maxlength')"
-          >Password is too long</span
-        >
-        <div class="button-container">
-          <button
-            class="validButton"
-            title="update account"
-            *ngIf="updateForm.valid"
-            type="submit"
-          >
-            Update
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="loader-wrapper" id="loaderWrapper">
-  <span class="loader"><span class="loader-inner"></span></span>
+<div class="container">
+  <mat-accordion>
+    <mat-expansion-panel expanded="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="bx bx-image"></i>
+          <span>Pictures</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-pictures
+        [user]="user"
+        (refreshEvent)="refreshUser($event)"
+      ></app-pictures>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="bx bx-info-circle"></i>
+          <span>Main Infos</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-main-infos
+        [user]="user"
+        (updateEvent)="updateUser($event)"
+      ></app-main-infos>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="bx bx-male-female"></i>
+          <span>Gender and Age</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-gender-age
+        [user]="user"
+        (updateEvent)="updateUser($event)"
+      ></app-gender-age>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="bx bx-image"></i>
+          <span>Description</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-description
+        [user]="user"
+        (updateEvent)="updateUser($event)"
+      ></app-description>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="bx bx-heart"></i>
+          <span>Preferences</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-preferences
+        [user]="user"
+        (updateEvent)="updateUser($event)"
+      ></app-preferences>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="bx bx-lock"></i>
+          <span>Password</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-password
+        [user]="user"
+        (updateEvent)="updateUser($event)"
+      ></app-password>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="bx bxs-trash-alt"></i>
+          <span>Delete Account</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-delete-account
+        [user]="user"
+        (deleteEvent)="deleteAccount()"
+      ></app-delete-account>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>

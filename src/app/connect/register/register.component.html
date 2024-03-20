@@ -1,149 +1,201 @@
-<form
-  *ngIf="!successfulRegistration"
-  class="user-form"
-  [formGroup]="registerForm"
-  (ngSubmit)="registerUser(registerForm.value)"
->
-  <input
-    class="user-form-text"
-    placeholder="Nickname"
-    formControlName="nickname"
-  />
-  <span
-    *ngIf="
-      registerForm.get('nickname')!.hasError('required') &&
-      registerForm.get('nickname')!.touched
-    "
-    >Nickname is required</span
+<form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+  <mat-stepper
+    orientation="vertical"
+    [linear]="true"
+    #stepper
+    background="none"
   >
-  <span *ngIf="registerForm.get('nickname')!.hasError('maxlength')"
-    >Nickname is too long</span
-  >
-  <span *ngIf="registerForm.get('nickname')!.hasError('minlength')"
-    >Nickname is too short</span
-  >
-  <input class="user-form-text" placeholder="Email" formControlName="email" />
-  <span
-    *ngIf="
-      registerForm.get('email')!.hasError('required') &&
-      registerForm.get('email')!.touched
-    "
-    >Email is required</span
-  >
-  <span *ngIf="registerForm.get('email')!.hasError('email')"
-    >Email is invalid</span
-  >
-  <span *ngIf="registerForm.get('email')!.hasError('maxlength')"
-    >Email is too long</span
-  >
-  <input class="user-form-text" placeholder="City" formControlName="city" />
-  <span
-    *ngIf="
-      registerForm.get('city')!.hasError('required') &&
-      registerForm.get('city')!.touched
-    "
-    >City is required</span
-  >
-  <span *ngIf="registerForm.get('city')!.hasError('minlength')"
-    >City is too short</span
-  >
-  <span *ngIf="registerForm.get('city')!.hasError('maxlength')"
-    >City is too long</span
-  >
-  <div class="flex">
-    <select class="user-form-text" formControlName="gender">
-      <option value="" disabled selected hidden>Gender</option>
-      <option value="Man">Man</option>
-      <option value="Woman">Woman</option>
-      <option value="Other">Other</option>
-    </select>
-    <div class="inbetween">Who search</div>
-    <select class="user-form-text" formControlName="genderSearch">
-      <option value="" disabled selected hidden>Gender Search</option>
-      <option value="Man">Man</option>
-      <option value="Woman">Woman</option>
-      <option value="Other">Other</option>
-    </select>
-    <div class="inbetween">For</div>
-    <select class="user-form-text" formControlName="relationshipType">
-      <option value="" disabled selected hidden>Relationship</option>
-      <option value="Serious">Serious</option>
-      <option value="Unserious">Unserious</option>
-      <option value="Friendship">Friendship</option>
-    </select>
-  </div>
-  <div class="span-container">
-    <span
-      *ngIf="
-        registerForm.get('gender')!.hasError('required') &&
-        registerForm.get('gender')!.touched
-      "
-      >Gender is required</span
+    <mat-step [stepControl]="firstFormGroup" [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Main Infos</ng-template>
+      <input placeholder="Nickname" formControlName="nickname" />
+      <span
+        *ngIf="
+          firstFormGroup.get('nickname')!.hasError('required') &&
+          firstFormGroup.get('nickname')!.touched
+        "
+        >Nickname is required</span
+      >
+      <span *ngIf="firstFormGroup.get('nickname')!.hasError('maxlength')"
+        >Nickname is too long</span
+      >
+      <span *ngIf="firstFormGroup.get('nickname')!.hasError('minlength')"
+        >Nickname is too short</span
+      >
+      <input placeholder="Job" formControlName="job" />
+      <span
+        *ngIf="
+          firstFormGroup.get('job')!.hasError('required') &&
+          firstFormGroup.get('job')!.touched
+        "
+        >Job is required</span
+      >
+      <span *ngIf="firstFormGroup.get('job')!.hasError('minlength')"
+        >Job is too short</span
+      >
+      <span *ngIf="firstFormGroup.get('job')!.hasError('maxlength')"
+        >Job is too long</span
+      >
+      <input placeholder="City" formControlName="city" />
+      <span
+        *ngIf="
+          firstFormGroup.get('city')!.hasError('required') &&
+          firstFormGroup.get('city')!.touched
+        "
+        >City is required</span
+      >
+      <span *ngIf="firstFormGroup.get('city')!.hasError('minlength')"
+        >City is too short</span
+      >
+      <span *ngIf="firstFormGroup.get('city')!.hasError('maxlength')"
+        >City is too long</span
+      >
+      <mat-form-field>
+        <mat-label>Birth Date</mat-label>
+        <input
+          class="date"
+          matInput
+          [matDatepicker]="picker"
+          disabled
+          [max]="minDate"
+          (dateInput)="addBirthDate($event)"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker
+          #picker
+          color="accent"
+          [startAt]="startDate"
+          disabled="false"
+        ></mat-datepicker>
+      </mat-form-field>
+      <span *ngIf="!birthDateExists">Birth Date is required</span>
+    </mat-step>
+    <mat-step
+      [stepControl]="secondFormGroup"
+      [formGroup]="secondFormGroup"
+      [state]="firstFormGroup.valid && birthDateExists ? 'number' : 'disabled'"
     >
-    <span
-      *ngIf="
-        registerForm.get('genderSearch')!.hasError('required') &&
-        registerForm.get('genderSearch')!.touched
-      "
-      >Gender Search is required</span
+      <ng-template matStepLabel>Gender and Age</ng-template>
+      <select formControlName="gender">
+        <option value="" disabled selected hidden>Gender</option>
+        <option [value]="gender" *ngFor="let gender of genders">
+          {{ gender }}
+        </option>
+      </select>
+      <span
+        *ngIf="
+          secondFormGroup.get('gender')!.hasError('required') &&
+          secondFormGroup.get('gender')!.touched
+        "
+        >Gender is required</span
+      >
+      <select formControlName="genderSearch">
+        <option value="" disabled selected hidden>Gender Search</option>
+        <option [value]="gender" *ngFor="let gender of genders">
+          {{ gender }}
+        </option>
+      </select>
+      <span
+        *ngIf="
+          secondFormGroup.get('genderSearch')!.hasError('required') &&
+          secondFormGroup.get('genderSearch')!.touched
+        "
+        >Gender Search is required</span
+      >
+      <div class="age-container">
+        <span>Age</span>
+        <mat-slider min="18" max="80" discrete (change)="slide($event)">
+          <input matSliderStartThumb />
+          <input matSliderEndThumb />
+        </mat-slider>
+      </div>
+    </mat-step>
+    <mat-step
+      [stepControl]="thirdFormGroup"
+      [formGroup]="thirdFormGroup"
+      [state]="secondFormGroup.valid ? 'number' : 'disabled'"
     >
-    <span
-      *ngIf="
-        registerForm.get('relationshipType')!.hasError('required') &&
-        registerForm.get('relationshipType')!.touched
-      "
-      >Relationship Type is required</span
-    >
-  </div>
-  <mat-form-field>
-    <mat-label>Birth Date</mat-label>
-    <input
-      matInput
-      [matDatepicker]="picker"
-      disabled
-      [max]="minDate"
-      (dateInput)="addBirthDate($event)"
-    />
-    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker
-      #picker
-      color="accent"
-      [startAt]="startDate"
-      disabled="false"
-    ></mat-datepicker>
-  </mat-form-field>
-  <span *ngIf="!birthDateExists">Birth Date is required</span>
-  <input
-    type="password"
-    class="user-form-text"
-    placeholder="Password"
-    formControlName="password"
-  />
-  <span
-    *ngIf="
-      registerForm.get('password')!.hasError('required') &&
-      registerForm.get('password')!.touched
-    "
-    >Password is required</span
-  >
-  <span *ngIf="registerForm.get('password')!.hasError('minlength')"
-    >Password is too short</span
-  >
-  <span *ngIf="registerForm.get('password')!.hasError('maxlength')"
-    >Password is too long</span
-  >
-  <div class="button-container">
-    <button
-      class="validButton"
-      title="register"
-      *ngIf="registerForm.valid && birthDateExists"
-      type="submit"
-    >
-      Register
-    </button>
-  </div>
+      <ng-template matStepLabel>Connection Infos</ng-template>
+      <input placeholder="Email" formControlName="email" />
+      <span
+        *ngIf="
+          thirdFormGroup.get('email')!.hasError('required') &&
+          thirdFormGroup.get('email')!.touched
+        "
+        >Email is required</span
+      >
+      <span *ngIf="thirdFormGroup.get('email')!.hasError('email')"
+        >Email is invalid</span
+      >
+      <span *ngIf="thirdFormGroup.get('email')!.hasError('maxlength')"
+        >Email is too long</span
+      >
+      <input
+        type="password"
+        placeholder="Password"
+        formControlName="password"
+      />
+      <span
+        *ngIf="
+          thirdFormGroup.get('password')!.hasError('required') &&
+          thirdFormGroup.get('password')!.touched
+        "
+        >Password is required</span
+      >
+      <span *ngIf="thirdFormGroup.get('password')!.hasError('minlength')"
+        >Password is too short</span
+      >
+      <span *ngIf="thirdFormGroup.get('password')!.hasError('maxlength')"
+        >Password is too long</span
+      >
+      <input
+        type="password"
+        placeholder="Password Confirmation"
+        formControlName="passwordDuplicate"
+      />
+      <span
+        *ngIf="
+          thirdFormGroup.get('passwordDuplicate')!.hasError('required') &&
+          thirdFormGroup.get('passwordDuplicate')!.touched
+        "
+        >Password is required</span
+      >
+      <span
+        *ngIf="thirdFormGroup.get('passwordDuplicate')!.hasError('minlength')"
+        >Password is too short</span
+      >
+      <span
+        *ngIf="thirdFormGroup.get('passwordDuplicate')!.hasError('maxlength')"
+        >Password is too long</span
+      >
+      <span
+        *ngIf="
+          thirdFormGroup.get('password')!.valid &&
+          thirdFormGroup.get('passwordDuplicate')!.valid &&
+          thirdFormGroup.get('password')?.value !==
+            thirdFormGroup.get('passwordDuplicate')?.value
+        "
+        >Passwords don't match</span
+      >
+      <div class="button-container">
+        <button
+          title="Register"
+          *ngIf="
+            registerForm.valid &&
+            birthDateExists &&
+            thirdFormGroup.get('password')?.value ===
+              thirdFormGroup.get('passwordDuplicate')?.value
+          "
+          type="submit"
+        >
+          Register
+        </button>
+      </div>
+    </mat-step>
+    <ng-template matStepperIcon="disabled">
+      <i class="bx bx-block"></i>
+    </ng-template>
+  </mat-stepper>
 </form>
-
-<div *ngIf="successfulRegistration" class="container">
-  <p>Please login !</p>
-</div>

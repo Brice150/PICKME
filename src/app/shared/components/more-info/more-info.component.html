@@ -1,0 +1,98 @@
+<div mat-dialog-content class="container">
+  <a
+    class="button left"
+    title="Dislike"
+    (click)="dislike()"
+    @dislikeButtonTrigger
+    *ngIf="!adminMode"
+  >
+    <i class="bx bxs-dislike"></i>
+  </a>
+  <a
+    class="button left"
+    title="Delete User"
+    (click)="deleteUser()"
+    @dislikeButtonTrigger
+    *ngIf="adminMode"
+  >
+    <i class="bx bxs-trash"></i>
+  </a>
+  <a
+    class="button right"
+    title="Like"
+    [ngClass]="user.gold ? 'gold' : null"
+    (click)="like()"
+    @likeButtonTrigger
+    *ngIf="!adminMode && !matchMode"
+  >
+    <i class="bx bxs-like"></i>
+  </a>
+  <div class="title">
+    <span class="larger">{{ user.nickname }}</span>
+    <span class="subtitle">
+      A {{ user.birthDate | age }} years old {{ user.job | lowercase }} at
+      {{ user.city }}
+    </span>
+  </div>
+  <div class="picture-container">
+    <swiper-container
+      effect="cube"
+      mousewheel="true"
+      pagination="true"
+      navigation="true"
+      speed="800"
+      *ngIf="user.pictures?.length !== 0"
+    >
+      <swiper-slide lazy="true" *ngFor="let picture of user.pictures">
+        <img [src]="picture.content" [alt]="picture" loading="true" />
+      </swiper-slide>
+    </swiper-container>
+    <img
+      *ngIf="!user?.pictures || user.pictures?.length === 0"
+      [src]="imagePath + 'No-Image.png'"
+      [alt]="user.nickname"
+    />
+  </div>
+  <div class="main-infos-container">
+    <span>{{ user.description }}</span>
+  </div>
+  <mat-chip-listbox>
+    <mat-chip color="accent" *ngIf="user?.height">
+      <i class="bx bx-sort-up" matChipAvatar></i>
+      {{ user.height }}
+    </mat-chip>
+    <mat-chip color="accent" *ngIf="user?.alcoholDrinking">
+      <i class="bx bxs-drink" matChipAvatar></i>
+      {{ user.alcoholDrinking }}
+    </mat-chip>
+    <mat-chip color="accent" *ngIf="user?.smokes">
+      <i class="bx bx-wind" matChipAvatar></i>
+      {{ user.smokes }}
+    </mat-chip>
+    <mat-chip color="accent" *ngIf="user?.sportPractice">
+      <i class="bx bx-dumbbell" matChipAvatar></i>
+      {{ user.sportPractice }}
+    </mat-chip>
+    <mat-chip color="accent" *ngIf="user?.parenthood">
+      <i class="bx bx-child" matChipAvatar></i>
+      {{ user.parenthood }}
+    </mat-chip>
+    <mat-chip color="accent" *ngIf="user?.gamer">
+      <i class="bx bxs-joystick" matChipAvatar></i>
+      {{ user.gamer }}
+    </mat-chip>
+    <mat-chip color="accent" *ngIf="user?.animals">
+      <i class="bx bxs-cat" matChipAvatar></i>
+      {{ user.animals }}
+    </mat-chip>
+    <mat-chip color="accent" *ngIf="user?.organised">
+      <i class="bx bxs-layer" matChipAvatar></i>
+      {{ user.organised }}
+    </mat-chip>
+    <mat-chip color="accent" *ngIf="user?.personality">
+      <i class="bx bxs-user-voice" matChipAvatar></i>
+      {{ user.personality }}
+    </mat-chip>
+  </mat-chip-listbox>
+  <a class="close-button" title="Close" (click)="close()">Close</a>
+</div>

@@ -1,191 +1,137 @@
-import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/environments/environment';
-import { SwiperOptions } from 'swiper';
+import { CommonModule } from '@angular/common';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { User } from '../core/interfaces/user';
-import { LikeService } from '../core/services/like.service';
-import { PictureService } from '../core/services/picture.service';
-import { UserService } from '../core/services/user.service';
-import { AgePipe } from '../shared/pipes/age.pipe';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { CardComponent } from './card/card.component';
+import { ToastrService } from 'ngx-toastr';
+import { SelectService } from '../core/services/select.service';
+import { Subject, takeUntil } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-select',
+  standalone: true,
+  imports: [CommonModule, CardComponent],
   templateUrl: './select.component.html',
-  styleUrls: ['./select.component.css'],
+  styleUrl: './select.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SelectComponent implements OnInit, OnDestroy {
-  notification!: string | null;
-  imagePath: string = environment.imagePath;
   users: User[] = [];
-  loggedInUser!: User;
-  minAge: number = 18;
-  maxAge: number = 0;
-  config: SwiperOptions = {
-    mousewheel: true,
-    keyboard: true,
-    simulateTouch: false,
-    loop: false,
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-      dynamicBullets: true,
-    },
-    spaceBetween: 80,
-    breakpoints: {
-      0: {
-        slidesPerView: 1,
-      },
-      500: {
-        slidesPerView: 2,
-      },
-      800: {
-        slidesPerView: 3,
-      },
-      1400: {
-        slidesPerView: 4,
-      },
-      2000: {
-        slidesPerView: 5,
-      },
-    },
-  };
-  getLoggedInUserSubscription!: Subscription;
-  getUsersSubscription!: Subscription;
-  getMainPictureSubscription!: Subscription;
-  likeSubscription!: Subscription;
+  destroyed$: Subject<void> = new Subject<void>();
+  activeMatchAnimation: boolean = false;
 
   constructor(
-    private userService: UserService,
-    private pictureService: PictureService,
-    private likeService: LikeService,
-    private router: Router,
-    private agePipe: AgePipe,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private selectService: SelectService
   ) {}
 
-  ngOnInit() {
-    this.getLoggedInUser();
-    this.getUsers();
-  }
-
-  ngOnDestroy() {
-    this.getLoggedInUserSubscription &&
-      this.getLoggedInUserSubscription.unsubscribe();
-    this.getUsersSubscription && this.getUsersSubscription.unsubscribe();
-    this.getMainPictureSubscription &&
-      this.getMainPictureSubscription.unsubscribe();
-    this.likeSubscription && this.likeSubscription.unsubscribe();
-  }
-
-  getLoggedInUser() {
-    this.getLoggedInUserSubscription = this.userService
-      .getConnectedUser()
+  ngOnInit(): void {
+    this.selectService
+      .getAllSelectedUsers()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe({
-        next: (response: User) => {
-          this.loggedInUser = response;
-          if (this.agePipe.transform(response.birthDate) + 5 <= 100) {
-            this.maxAge = this.agePipe.transform(response.birthDate) + 5;
-          } else {
-            this.maxAge = 100;
-          }
+        next: (users: User[]) => {
+          this.users = users;
         },
         error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.message, 'Server error', {
+          this.toastr.error(error.message, 'Error', {
             positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
           });
         },
       });
   }
 
-  getUsers() {
-    this.getUsersSubscription = this.userService.getAllUsers().subscribe({
-      next: (response: User[]) => {
-        this.users = response;
-        this.users = this.users.filter(
-          (user) =>
-            this.minAge <= this.agePipe.transform(user.birthDate) &&
-            this.agePipe.transform(user.birthDate) <= this.maxAge
-        );
-        for (let user of this.users) {
-          this.getMainPicture(user);
-        }
-        const loaderWrapper = document.getElementById('loaderWrapper');
-        loaderWrapper!.style.display = 'none';
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Server error', {
-          positionClass: 'toast-bottom-center',
-        });
-      },
-    });
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
-  getMainPicture(user: User) {
-    let reader = new FileReader();
-    if (user.mainPicture) {
-      this.getMainPictureSubscription = this.pictureService
-        .getPicture(user.mainPicture.toString())
-        .subscribe({
-          next: (event) => {
-            if (event.type === HttpEventType.Response) {
-              if (event.body instanceof Array) {
-              } else {
-                let image = new File(
-                  [event.body!],
-                  user.mainPicture!.toString()
-                );
-                reader.readAsDataURL(image);
-                reader.onloadend = (loaded) => {
-                  user.mainPicture = reader.result!;
-                };
-              }
-            }
-          },
-          error: (error: HttpErrorResponse) => {
-            this.toastr.error(error.message, 'Server error', {
-              positionClass: 'toast-bottom-center',
-            });
-          },
-        });
-    } else {
-      user.mainPicture = this.imagePath + 'No-Image.png';
+  isCurrentView(user: User): boolean {
+    const index: number | undefined =
+      document.querySelector('swiper-container')?.swiper.activeIndex;
+    if (index === undefined) {
+      return false;
     }
+    return user.id === this.users[index].id;
   }
 
-  like(user: User) {
-    let like: any = {
-      date: null,
-      fkSender: { id: this.loggedInUser.id },
-      fkReceiver: { id: user.id },
-    };
-    this.likeSubscription = this.likeService.addLike(like).subscribe({
-      next: (response: string) => {
-        this.getUsers();
-        this.toastr.success('Liked ' + user.nickname, 'Like', {
-          positionClass: 'toast-bottom-center',
-        });
-        if (response !== '') {
-          this.notification = response;
-          this.toastr.success('Match with ' + response, 'Match', {
-            positionClass: 'toast-bottom-center',
-          });
+  onSlideChange(): void {
+    // Needed to update isCurrentView when we slide
+  }
+
+  like(user: User): void {
+    this.selectService.addLike(user.id!).subscribe({
+      next: (matchNotification: string) => {
+        if (matchNotification && matchNotification !== '') {
+          this.activeMatchAnimation = true;
           setTimeout(() => {
-            this.notification = null;
-          }, 3000);
+            this.activeMatchAnimation = false;
+            this.removeSlide(user.id!);
+            this.toastr.success(
+              'You have a match with ' + matchNotification,
+              'Matched ' + matchNotification,
+              {
+                positionClass: 'toast-bottom-center',
+                toastClass: 'ngx-toastr custom gold',
+              }
+            );
+          }, 2000);
+        } else {
+          this.removeSlide(user.id!);
+          this.toastr.success(
+            'You have liked ' + user.nickname,
+            'Liked ' + user.nickname,
+            {
+              positionClass: 'toast-bottom-center',
+              toastClass: 'ngx-toastr custom',
+            }
+          );
         }
       },
       error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Server error', {
+        this.toastr.error(error.message, 'Error', {
           positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
         });
       },
     });
   }
 
-  moreInfo(id: number) {
-    this.router.navigate(['moreinfo', id, 'select']);
+  dislike(user: User): void {
+    this.selectService.addDislike(user.id!).subscribe({
+      next: () => {
+        this.removeSlide(user.id!);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Error', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom',
+        });
+      },
+      complete: () => {
+        this.toastr.success(
+          'You have disliked ' + user.nickname,
+          'Disliked ' + user.nickname,
+          {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
+          }
+        );
+      },
+    });
+  }
+
+  removeSlide(userId: number): void {
+    const userIndex = this.users.findIndex((user: User) => user.id === userId);
+    if (userIndex !== -1) {
+      document.querySelector('swiper-container')?.swiper.removeSlide(userIndex);
+      this.users.splice(userIndex, 1);
+    }
   }
 }

@@ -1,12 +1,14 @@
-.user-form {
-  width: 80%;
-  margin: auto;
-  padding: 0 10px;
-  overflow: hidden;
+form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
   animation: none;
 }
 
-.user-form.invalidLogin {
+form.invalidLogin {
   animation-name: invalidLogin;
   animation-duration: 0.1s;
   animation-direction: alternate;
@@ -22,49 +24,44 @@
   }
 }
 
-.user-form span {
-  color: black;
+form span {
+  color: red;
   font-size: 14px;
   font-weight: 600;
 }
 
-.user-form-text {
+input {
   background: transparent;
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
+  backdrop-filter: blur(2px);
+  width: 200px;
   margin: 16px 0;
   border: 0;
   padding: 20px 40px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(3.6px);
   outline: none;
   border-radius: 10px;
-}
-
-input {
-  color: white;
-  font-size: 1em;
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 600;
 }
 
 ::placeholder {
-  color: white;
-  font-size: 1em;
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .button-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
 }
 
-.user-form .button-container .validButton {
+form .button-container button {
   border: none;
   background-color: transparent;
   cursor: pointer;
   text-decoration: none;
-  color: black;
+  color: var(--primary);
   padding: 15px 30px;
   margin: 10px;
   text-transform: uppercase;
@@ -72,30 +69,35 @@ input {
   letter-spacing: 1px;
   overflow: hidden;
   border-radius: 10px;
-  transition: 0.5s;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(3.6px);
-  font-weight: 700;
-  font-size: 15px;
+  transition: 0.5s ease;
+  backdrop-filter: blur(2px);
+  font-size: 14px;
+  font-family: Roboto, sans-serif;
 }
 
-.user-form .button-container .validButton::before {
+form .button-container button::before {
   content: "";
   position: absolute;
-  background-color: black;
+  background-color: var(--liked);
   height: 0%;
   top: 0;
   left: 0;
   width: 100%;
-  transition: 0.5s;
+  transition: 0.5s ease;
   z-index: -1;
 }
 
-.user-form .button-container .validButton:hover::before {
+form .button-container button:hover::before {
   height: 100%;
   border-radius: 10px;
 }
 
-.user-form .button-container .validButton:hover {
-  color: white;
+form .button-container button:hover {
+  color: var(--secondary);
+}
+
+@media screen and (max-width: 375px) {
+  form input {
+    width: 160px;
+  }
 }
