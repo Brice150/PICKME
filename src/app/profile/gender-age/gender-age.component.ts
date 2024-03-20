@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -21,8 +22,6 @@ import { ConnectService } from '../../core/services/connect.service';
 export class GenderAgeComponent implements OnInit {
   @Input() user?: User;
   genderAgeForm!: FormGroup;
-  minAge: number = 18;
-  maxAge: number = 80;
   ageChange: boolean = false;
   genders: string[] = Object.values(Gender);
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
@@ -36,6 +35,8 @@ export class GenderAgeComponent implements OnInit {
     this.genderAgeForm = this.fb.group({
       gender: [this.user?.gender, [Validators.required]],
       genderSearch: [this.user?.genderSearch, [Validators.required]],
+      minAge: [this.user?.minAge, [Validators.required]],
+      maxAge: [this.user?.maxAge, [Validators.required]],
     });
   }
 
@@ -48,8 +49,8 @@ export class GenderAgeComponent implements OnInit {
     if (this.user) {
       this.user.gender = this.genderAgeForm.get('gender')?.value;
       this.user.genderSearch = this.genderAgeForm.get('genderSearch')?.value;
-      this.user.minAge = this.minAge;
-      this.user.maxAge = this.maxAge;
+      this.user.minAge = this.genderAgeForm.get('minAge')?.value;
+      this.user.maxAge = this.genderAgeForm.get('maxAge')?.value;
       this.genderAgeForm.markAsPristine();
       this.ageChange = false;
     }
@@ -64,6 +65,8 @@ export class GenderAgeComponent implements OnInit {
       this.genderAgeForm.patchValue({
         gender: this.user.gender,
         genderSearch: this.user.genderSearch,
+        minAge: this.user.minAge,
+        maxAge: this.user.maxAge,
       });
       this.genderAgeForm.markAsPristine();
       this.ageChange = false;
@@ -71,15 +74,6 @@ export class GenderAgeComponent implements OnInit {
   }
 
   slideAge(event: Event) {
-    const sliderValue = (event.target as HTMLInputElement).value;
-    const isMaxAge = (event.target as HTMLInputElement).classList.contains(
-      'mat-slider__right-input'
-    );
-    if (isMaxAge) {
-      this.maxAge = parseInt(sliderValue);
-    } else {
-      this.minAge = parseInt(sliderValue);
-    }
     this.ageChange = true;
   }
 }

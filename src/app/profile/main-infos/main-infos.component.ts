@@ -20,7 +20,6 @@ import { ConnectService } from '../../core/services/connect.service';
 export class MainInfosComponent implements OnInit {
   @Input() user?: User;
   mainInfosForm!: FormGroup;
-  height: number = 160;
   heightChange: boolean = false;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
@@ -55,6 +54,7 @@ export class MainInfosComponent implements OnInit {
           Validators.minLength(2),
         ],
       ],
+      height: [this.user?.height, Validators.required],
     });
   }
 
@@ -68,7 +68,7 @@ export class MainInfosComponent implements OnInit {
       this.user.nickname = this.mainInfosForm.get('nickname')?.value;
       this.user.job = this.mainInfosForm.get('job')?.value;
       this.user.city = this.mainInfosForm.get('city')?.value;
-      this.user.height = this.height;
+      this.user.height = this.mainInfosForm.get('height')?.value;
       this.mainInfosForm.markAsPristine();
       this.heightChange = false;
     }
@@ -79,11 +79,11 @@ export class MainInfosComponent implements OnInit {
       this.user.nickname = this.connectService.connectedUser?.nickname!;
       this.user.job = this.connectService.connectedUser?.job!;
       this.user.city = this.connectService.connectedUser?.city!;
-      this.user.height = this.connectService.connectedUser?.height!;
       this.mainInfosForm.patchValue({
         nickname: this.user.nickname,
         job: this.user.job,
         city: this.user.city,
+        height: this.user.height,
       });
       this.mainInfosForm.markAsPristine();
       this.heightChange = false;
@@ -91,8 +91,6 @@ export class MainInfosComponent implements OnInit {
   }
 
   slideHeight(event: Event) {
-    const sliderValue = (event.target as HTMLInputElement).value;
-    this.height = parseInt(sliderValue);
     this.heightChange = true;
   }
 }

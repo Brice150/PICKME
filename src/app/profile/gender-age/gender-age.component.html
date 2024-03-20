@@ -34,8 +34,8 @@
   <div class="slide-container">
     <span>Age</span>
     <mat-slider min="18" max="80" discrete (change)="slideAge($event)">
-      <input matSliderStartThumb [value]="user?.minAge" />
-      <input matSliderEndThumb [value]="user?.maxAge" />
+      <input matSliderStartThumb formControlName="minAge" />
+      <input matSliderEndThumb formControlName="maxAge" />
     </mat-slider>
   </div>
   <div class="button-container">

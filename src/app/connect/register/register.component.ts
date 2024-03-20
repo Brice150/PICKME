@@ -57,8 +57,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
   birthDate!: Date;
   startDate: Date = new Date(1990, 0, 1);
   minDate: Date;
-  minAge: number = 18;
-  maxAge: number = 80;
   genders: string[] = Object.values(Gender);
 
   constructor(
@@ -108,6 +106,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.secondFormGroup = this.fb.group({
       gender: ['', [Validators.required]],
       genderSearch: ['', [Validators.required]],
+      minAge: [18, Validators.required],
+      maxAge: [40, Validators.required],
     });
 
     this.thirdFormGroup = this.fb.group({
@@ -208,8 +208,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
       gender: this.registerForm.get('secondFormGroup.gender')?.value as Gender,
       genderSearch: this.registerForm.get('secondFormGroup.genderSearch')
         ?.value as Gender,
-      minAge: this.minAge,
-      maxAge: this.maxAge,
+      minAge: this.registerForm.get('secondFormGroup.minAge')?.value,
+      maxAge: this.registerForm.get('secondFormGroup.maxAge')?.value,
       email: this.registerForm.get('thirdFormGroup.email')?.value as string,
       password: this.registerForm.get('thirdFormGroup.password')
         ?.value as string,
@@ -221,18 +221,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
     if (event.value != null) {
       this.birthDate = event.value;
       this.birthDateExists = true;
-    }
-  }
-
-  slide(event: Event) {
-    const sliderValue = (event.target as HTMLInputElement).value;
-    const isMaxAge = (event.target as HTMLInputElement).classList.contains(
-      'mat-slider__right-input'
-    );
-    if (isMaxAge) {
-      this.maxAge = parseInt(sliderValue);
-    } else {
-      this.minAge = parseInt(sliderValue);
     }
   }
 }

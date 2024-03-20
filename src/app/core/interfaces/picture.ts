@@ -1,5 +1,5 @@
 export interface Picture {
   id: number;
-  content: string | ArrayBuffer;
+  content: string;
   isMainPicture: boolean;
 }

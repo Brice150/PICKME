@@ -106,9 +106,9 @@
       >
       <div class="age-container">
         <span>Age</span>
-        <mat-slider min="18" max="80" discrete (change)="slide($event)">
-          <input matSliderStartThumb />
-          <input matSliderEndThumb />
+        <mat-slider min="18" max="80" discrete>
+          <input matSliderStartThumb formControlName="minAge" />
+          <input matSliderEndThumb formControlName="maxAge" />
         </mat-slider>
       </div>
     </mat-step>
