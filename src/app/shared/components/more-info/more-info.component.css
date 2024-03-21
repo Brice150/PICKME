@@ -161,8 +161,8 @@
 .container .picture-container img {
   background-color: var(--primary);
   width: 100%;
-  max-width: 600px;
-  height: 400px;
+  max-width: 450px;
+  height: 450px;
   object-fit: cover;
   border-radius: 10px;
 }
@@ -195,8 +195,8 @@
 swiper-container {
   position: absolute;
   width: 100%;
-  max-width: 600px;
-  height: 400px;
+  max-width: 450px;
+  height: 450px;
   border-radius: 20px;
 }
 
@@ -207,60 +207,50 @@ swiper-slide {
 
 @media screen and (min-width: 440px) {
   .picture-container {
-    min-height: 400px;
-  }
-}
-
-@media screen and (max-width: 640px) {
-  swiper-container {
-    max-width: 450px;
-  }
-
-  .container .picture-container img {
-    max-width: 450px;
+    min-height: 450px;
   }
 }
 
 @media screen and (max-width: 540px) {
   swiper-container {
-    max-width: 400px;
-    height: 350px;
+    max-width: 380px;
+    height: 380px;
   }
 
   .container .picture-container img {
-    max-width: 400px;
-    height: 350px;
+    max-width: 380px;
+    height: 380px;
   }
 }
 
 @media screen and (max-width: 440px) {
   .picture-container {
-    min-height: 300px;
+    min-height: 330px;
   }
 
   swiper-container {
-    max-width: 350px;
-    height: 300px;
+    max-width: 330px;
+    height: 330px;
   }
 
   .container .picture-container img {
-    max-width: 350px;
-    height: 300px;
+    max-width: 330px;
+    height: 330px;
   }
 }
 
 @media screen and (max-width: 380px) {
   .picture-container {
-    min-height: 275px;
+    min-height: 280px;
   }
 
   swiper-container {
-    max-width: 300px;
-    height: 250px;
+    max-width: 280px;
+    height: 280px;
   }
 
   .container .picture-container img {
-    max-width: 300px;
-    height: 250px;
+    max-width: 280px;
+    height: 280px;
   }
 }

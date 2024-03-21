@@ -9,8 +9,8 @@
 
 swiper-container {
   width: 80%;
-  height: 500px;
-  max-width: 700px;
+  height: 600px;
+  max-width: 600px;
   border-radius: 20px;
 }
 
@@ -30,4 +30,11 @@ swiper-slide {
   font-size: 16px;
   font-weight: 600;
   color: var(--primary);
+}
+
+@media screen and (max-width: 540px) {
+  swiper-container {
+    max-width: 500px;
+    height: 500px;
+  }
 }

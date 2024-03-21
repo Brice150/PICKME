@@ -48,7 +48,6 @@ form {
 form textarea {
   background: transparent;
   backdrop-filter: blur(2px);
-  width: 200px;
   margin: 16px 0;
   border: 0;
   padding: 20px 40px;

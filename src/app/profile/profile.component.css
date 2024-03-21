@@ -13,7 +13,7 @@
 }
 
 ::ng-deep .mat-expansion-panel-body {
-  max-height: 500px;
+  max-height: 550px;
   overflow-y: scroll;
 }
 
