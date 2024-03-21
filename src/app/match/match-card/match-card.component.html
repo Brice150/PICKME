@@ -1,13 +1,13 @@
 <div class="container" (click)="click()">
   <img
-    [src]="match.user.mainPicture"
+    [src]="match.user.pictures[0].content"
     [alt]="match.user.nickname"
-    *ngIf="match.user.mainPicture"
+    *ngIf="match.user.pictures && match.user.pictures.length !== 0"
   />
   <img
     [src]="imagePath + 'No-Image.png'"
     [alt]="match.user.nickname"
-    *ngIf="!match.user.mainPicture"
+    *ngIf="!match.user.pictures || match.user.pictures.length === 0"
   />
   <div class="infos-container">
     <span class="nickname">{{ match.user.nickname }}</span>

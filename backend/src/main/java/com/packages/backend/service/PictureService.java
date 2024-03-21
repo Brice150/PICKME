@@ -33,10 +33,6 @@ public class PictureService {
       return Optional.empty();
     }
     Picture newPicture = new Picture(pictureContent, pictures.isEmpty(), connectedUser);
-    if (connectedUser.getMainPicture() == null) {
-      connectedUser.setMainPicture(newPicture.getContent());
-      userService.updateUser(connectedUser);
-    }
     pictureRepository.save(newPicture);
     return Optional.of(newPicture);
   }
@@ -53,8 +49,6 @@ public class PictureService {
       List<Picture> userPictures = connectedUser.getPictures();
       userPictures.forEach(userPicture -> userPicture.setIsMainPicture(Objects.equals(userPicture.getId(), picture.getId())));
       pictureRepository.saveAll(userPictures);
-      connectedUser.setMainPicture(picture.getContent());
-      userService.updateUser(connectedUser);
       return "OK";
     } else {
       return "FORBIDDEN";
@@ -67,16 +61,6 @@ public class PictureService {
     Picture picture = getPictureById(pictureId);
     if (connectedUser.getId().equals(picture.getFkUser().getId())) {
       pictureRepository.deletePictureById(pictureId);
-      connectedUser.getPictures().remove(picture);
-      if (Boolean.TRUE.equals(picture.getIsMainPicture())) {
-        if (!connectedUser.getPictures().isEmpty()) {
-          connectedUser.getPictures().get(0).setIsMainPicture(true);
-          connectedUser.setMainPicture(connectedUser.getPictures().get(0).getContent());
-        } else {
-          connectedUser.setMainPicture(null);
-        }
-        userRepository.save(connectedUser);
-      }
       return "OK";
     } else {
       return "FORBIDDEN";

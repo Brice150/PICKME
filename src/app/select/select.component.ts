@@ -11,11 +11,12 @@ import { ToastrService } from 'ngx-toastr';
 import { SelectService } from '../core/services/select.service';
 import { Subject, takeUntil } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LoadingComponent } from '../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-select',
   standalone: true,
-  imports: [CommonModule, CardComponent],
+  imports: [CommonModule, CardComponent, LoadingComponent],
   templateUrl: './select.component.html',
   styleUrl: './select.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -24,6 +25,7 @@ export class SelectComponent implements OnInit, OnDestroy {
   users: User[] = [];
   destroyed$: Subject<void> = new Subject<void>();
   activeMatchAnimation: boolean = false;
+  loading: boolean = true;
 
   constructor(
     private toastr: ToastrService,
@@ -37,6 +39,7 @@ export class SelectComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (users: User[]) => {
           this.users = users;
+          this.loading = false;
         },
         error: (error: HttpErrorResponse) => {
           this.toastr.error(error.message, 'Error', {

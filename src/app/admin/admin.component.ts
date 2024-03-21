@@ -7,11 +7,12 @@ import { AdminCardComponent } from './admin-card/admin-card.component';
 import { AdminService } from '../core/services/admin.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
+import { LoadingComponent } from '../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, AdminCardComponent, FormsModule],
+  imports: [CommonModule, AdminCardComponent, FormsModule, LoadingComponent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',
 })
@@ -23,6 +24,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   users: User[] = [];
   filteredUsers: User[] = [];
   destroyed$: Subject<void> = new Subject<void>();
+  loading: boolean = true;
 
   constructor(
     private toastr: ToastrService,
@@ -37,6 +39,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         next: (users: User[]) => {
           this.users = users;
           this.sortByLike();
+          this.loading = false;
         },
         error: (error: HttpErrorResponse) => {
           this.toastr.error(error.message, 'Error', {

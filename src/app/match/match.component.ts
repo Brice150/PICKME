@@ -19,6 +19,7 @@ import { ConfirmationDialogComponent } from '../shared/components/confirmation-d
 import { MoreInfoComponent } from '../shared/components/more-info/more-info.component';
 import { MatchCardComponent } from './match-card/match-card.component';
 import { MessageComponent } from './message/message.component';
+import { LoadingComponent } from '../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-match',
@@ -29,6 +30,7 @@ import { MessageComponent } from './message/message.component';
     MatchCardComponent,
     MessageComponent,
     ReactiveFormsModule,
+    LoadingComponent,
   ],
   templateUrl: './match.component.html',
   styleUrl: './match.component.css',
@@ -42,6 +44,7 @@ export class MatchComponent implements OnInit, OnDestroy {
   filteredMatches: Match[] = [];
   selectedMatch?: Match;
   destroyed$: Subject<void> = new Subject<void>();
+  loading: boolean = true;
 
   constructor(
     private toastr: ToastrService,
@@ -70,6 +73,7 @@ export class MatchComponent implements OnInit, OnDestroy {
         next: (matches: Match[]) => {
           this.matches = matches;
           this.searchByNickname();
+          this.loading = false;
         },
         error: (error: HttpErrorResponse) => {
           this.toastr.error(error.message, 'Error', {

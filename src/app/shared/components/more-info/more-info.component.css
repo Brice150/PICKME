@@ -159,7 +159,7 @@
 }
 
 .container .picture-container img {
-  background-color: var(--primary);
+  background-color: var(--secondary);
   width: 100%;
   max-width: 450px;
   height: 450px;

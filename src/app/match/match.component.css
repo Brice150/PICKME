@@ -74,12 +74,17 @@ form textarea {
   justify-content: center;
   flex-wrap: wrap;
   max-height: 500px;
+  min-height: 80px;
   overflow: scroll;
   margin-bottom: 10px;
 }
 
 .container .content.nothing {
   margin: 20px;
+}
+
+.container .content.loading {
+  position: relative;
 }
 
 .container .content.nothing span {

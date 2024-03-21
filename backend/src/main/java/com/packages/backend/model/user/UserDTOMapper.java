@@ -15,7 +15,6 @@ public class UserDTOMapper implements Function<User, UserDTO> {
       user.getBirthDate(),
       user.getGold(),
       user.getPictures(),
-      user.getMainPicture(),
       user.getNickname(),
       user.getJob(),
       user.getCity(),

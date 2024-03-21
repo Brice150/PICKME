@@ -2,7 +2,7 @@
   effect="cards"
   mousewheel="true"
   (swiperslidechange)="onSlideChange()"
-  *ngIf="users && users.length !== 0"
+  *ngIf="users && users.length !== 0 && !loading"
 >
   <swiper-slide lazy="true" *ngFor="let user of users">
     <app-card
@@ -15,6 +15,7 @@
     ></app-card>
   </swiper-slide>
 </swiper-container>
-<div class="container" *ngIf="!users || users.length === 0">
+<div class="container" *ngIf="(!users || users.length === 0) && !loading">
   <span>No user</span>
 </div>
+<app-loading *ngIf="loading"></app-loading>

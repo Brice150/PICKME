@@ -17,7 +17,6 @@ export interface User {
 
   // Pictures
   pictures?: Picture[];
-  mainPicture?: string | ArrayBuffer;
 
   // Main Infos
   nickname: string;

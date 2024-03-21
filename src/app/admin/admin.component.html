@@ -30,14 +30,20 @@
       </a>
     </div>
   </div>
-  <div class="content" *ngIf="users && users.length !== 0">
+  <div class="content" *ngIf="users && users.length !== 0 && !loading">
     <app-admin-card
       *ngFor="let user of filteredUsers"
       [user]="user"
       (deleteEvent)="deleteUser(user)"
     ></app-admin-card>
   </div>
-  <div class="content nothing" *ngIf="!users || users.length === 0">
+  <div class="content loading" *ngIf="loading">
+    <app-loading></app-loading>
+  </div>
+  <div
+    class="content nothing"
+    *ngIf="(!users || users.length === 0) && !loading"
+  >
     <span>No user</span>
   </div>
 </div>

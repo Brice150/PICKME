@@ -7,7 +7,7 @@
       (ngModelChange)="searchByNickname()"
     />
   </div>
-  <div class="content" *ngIf="matches && matches.length !== 0">
+  <div class="content" *ngIf="matches && matches.length !== 0 && !loading">
     <app-match-card
       *ngFor="let match of filteredMatches"
       [match]="match"
@@ -20,7 +20,13 @@
       title="View Messages"
     ></app-match-card>
   </div>
-  <div class="content nothing" *ngIf="!matches || matches.length === 0">
+  <div class="content loading" *ngIf="loading">
+    <app-loading></app-loading>
+  </div>
+  <div
+    class="content nothing"
+    *ngIf="(!matches || matches.length === 0) && !loading"
+  >
     <span>No match</span>
   </div>
 </div>

@@ -12,7 +12,6 @@ public record UserDTO(
   Date birthDate,
   Boolean gold,
   List<Picture> pictures,
-  String mainPicture,
   String nickname,
   String job,
   String city,

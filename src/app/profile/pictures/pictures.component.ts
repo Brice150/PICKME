@@ -36,53 +36,74 @@ export class PicturesComponent {
   ) {}
 
   addPicture(files: File[]): void {
-    let mainPictureExists: boolean = false;
-    if (this.user?.mainPicture) {
-      mainPictureExists = true;
-    }
     if (files) {
       let reader = new FileReader();
       reader.readAsDataURL(files[0]);
       reader.onload = (event: any) => {
-        if (
-          this.user?.pictures?.some(
-            (picture: Picture) => picture.content === event.target.result
-          )
-        ) {
-          this.imageInput.nativeElement.value = '';
-          this.toastr.error('Picture is already in profile', 'Change Picture', {
-            positionClass: 'toast-bottom-center',
-            toastClass: 'ngx-toastr custom',
-          });
-        } else if (this.user!.pictures!.length > 5) {
-          this.imageInput.nativeElement.value = '';
-          this.toastr.error(
-            'You already have 6 pictures',
-            'Max Pictures Number',
-            {
-              positionClass: 'toast-bottom-center',
-              toastClass: 'ngx-toastr custom',
-            }
-          );
-        } else {
-          this.profileService.addPicture(event.target.result).subscribe({
-            next: (picture: Picture) => {
-              this.user?.pictures?.unshift(picture);
-              setTimeout(() => {
-                document.querySelector('swiper-container')?.swiper.update();
-                document.querySelector('swiper-container')?.swiper.slideTo(0);
-                this.imageInput.nativeElement.value = '';
-                this.refreshEvent.emit('Picture Added');
-              }, 0);
-            },
-            error: (error: HttpErrorResponse) => {
-              this.toastr.error(error.message, 'Error', {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          if (
+            this.user?.pictures?.some(
+              (picture: Picture) => picture.content === event.target.result
+            )
+          ) {
+            this.imageInput.nativeElement.value = '';
+            this.toastr.error(
+              'Picture is already in profile',
+              'Change Picture',
+              {
                 positionClass: 'toast-bottom-center',
                 toastClass: 'ngx-toastr custom',
-              });
-            },
-          });
-        }
+              }
+            );
+          } else if (this.user!.pictures!.length > 5) {
+            this.imageInput.nativeElement.value = '';
+            this.toastr.error(
+              'You already have 6 pictures',
+              'Max Pictures Number',
+              {
+                positionClass: 'toast-bottom-center',
+                toastClass: 'ngx-toastr custom',
+              }
+            );
+          } else {
+            const maxSizeInMB = 4;
+            const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const width = img.width;
+            const height = img.height;
+            const aspectRatio = width / height;
+            const newWidth = Math.sqrt(maxSizeInBytes * aspectRatio);
+            const newHeight = Math.sqrt(maxSizeInBytes / aspectRatio);
+            canvas.width = newWidth;
+            canvas.height = newHeight;
+            ctx!.drawImage(img, 0, 0, newWidth, newHeight);
+            let quality = 0.7;
+            let dataURL = canvas.toDataURL('image/jpeg', quality);
+
+            console.log(dataURL.length);
+
+            this.profileService.addPicture(dataURL).subscribe({
+              next: (picture: Picture) => {
+                this.user?.pictures?.unshift(picture);
+                setTimeout(() => {
+                  document.querySelector('swiper-container')?.swiper.update();
+                  document.querySelector('swiper-container')?.swiper.slideTo(0);
+                  this.imageInput.nativeElement.value = '';
+                  this.refreshEvent.emit('Picture Added');
+                }, 0);
+              },
+              error: (error: HttpErrorResponse) => {
+                this.toastr.error(error.message, 'Error', {
+                  positionClass: 'toast-bottom-center',
+                  toastClass: 'ngx-toastr custom',
+                });
+              },
+            });
+          }
+        };
       };
     }
   }

@@ -1,13 +1,13 @@
 <div class="container" title="More Info" (click)="moreInfo()">
   <img
-    [src]="user.mainPicture"
+    [src]="user.pictures[0].content"
     [alt]="user.nickname"
-    *ngIf="user.mainPicture"
+    *ngIf="user.pictures && user.pictures.length !== 0"
   />
   <img
     [src]="imagePath + 'No-Image.png'"
     [alt]="user.nickname"
-    *ngIf="!user.mainPicture"
+    *ngIf="!user.pictures || user.pictures.length === 0"
   />
   <div class="infos-container">
     <span class="nickname">{{ user.nickname }}</span>

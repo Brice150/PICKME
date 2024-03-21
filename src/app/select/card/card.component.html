@@ -19,12 +19,12 @@
 </a>
 <div class="picture-container">
   <img
-    *ngIf="user.mainPicture"
-    [src]="user.mainPicture"
+    *ngIf="user.pictures && user.pictures.length !== 0"
+    [src]="user.pictures[0].content"
     [alt]="user.nickname"
   />
   <img
-    *ngIf="!user.mainPicture"
+    *ngIf="!user.pictures || user.pictures.length === 0"
     [src]="imagePath + 'No-Image.png'"
     [alt]="user.nickname"
   />

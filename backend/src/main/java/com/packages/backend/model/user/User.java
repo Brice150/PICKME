@@ -30,10 +30,9 @@ public class User implements UserDetails {
 
   // Pictures
   @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL)
-  @OrderBy("id DESC")
+  @OrderBy("isMainPicture DESC, id DESC")
   @JsonManagedReference(value = "pictures")
   private List<Picture> pictures;
-  private String mainPicture;
 
 
   // Main Infos
@@ -180,14 +179,6 @@ public class User implements UserDetails {
 
   public void setPictures(List<Picture> pictures) {
     this.pictures = pictures;
-  }
-
-  public String getMainPicture() {
-    return mainPicture;
-  }
-
-  public void setMainPicture(String mainPicture) {
-    this.mainPicture = mainPicture;
   }
 
   public String getNickname() {
