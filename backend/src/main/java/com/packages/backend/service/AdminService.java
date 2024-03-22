@@ -1,5 +1,6 @@
 package com.packages.backend.service;
 
+import com.packages.backend.model.AdminSearch;
 import com.packages.backend.model.user.User;
 import com.packages.backend.model.user.UserDTO;
 import com.packages.backend.model.user.UserDTOMapper;
@@ -26,9 +27,9 @@ public class AdminService {
     this.userDTOMapper = userDTOMapper;
   }
 
-  public List<UserDTO> getAllUsers() {
+  public List<UserDTO> getAllUsers(AdminSearch adminSearch) {
     User connectedUser = userService.getConnectedUser();
-    List<User> users = adminRepository.getAllUsers(connectedUser.getId());
+    List<User> users = adminRepository.getAllUsers(connectedUser.getId(), adminSearch.getNickname(), adminSearch.getGenders(), adminSearch.getMinAge().intValue(), adminSearch.getMaxAge().intValue());
     List<Tuple> userStatsTuples = adminRepository.getAllUsersStats(connectedUser.getId());
     Map<Long, Tuple> userStatsMap = userStatsTuples.stream()
       .collect(Collectors.toMap(tuple -> tuple.get("id", Long.class), Function.identity()));

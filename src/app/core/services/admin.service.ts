@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
+import { AdminSearch } from '../interfaces/admin-search';
 
 @Injectable({
   providedIn: 'root',
@@ -12,10 +13,14 @@ export class AdminService {
 
   constructor(private http: HttpClient) {}
 
-  public getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiServerUrl}/admin/all`, {
-      withCredentials: true,
-    });
+  public getAllUsers(adminSearch: AdminSearch): Observable<User[]> {
+    return this.http.post<User[]>(
+      `${this.apiServerUrl}/admin/all`,
+      adminSearch,
+      {
+        withCredentials: true,
+      }
+    );
   }
 
   public deleteUser(userId: number): Observable<void> {

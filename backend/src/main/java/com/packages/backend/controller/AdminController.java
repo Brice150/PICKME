@@ -1,5 +1,6 @@
 package com.packages.backend.controller;
 
+import com.packages.backend.model.AdminSearch;
 import com.packages.backend.model.user.UserDTO;
 import com.packages.backend.service.AdminService;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,9 @@ public class AdminController {
     this.adminService = adminService;
   }
 
-  @GetMapping("/all")
-  public ResponseEntity<List<UserDTO>> getAllUsers() {
-    return new ResponseEntity<>(adminService.getAllUsers(), HttpStatus.OK);
+  @PostMapping("/all")
+  public ResponseEntity<List<UserDTO>> getAllUsers(@RequestBody AdminSearch adminSearch) {
+    return new ResponseEntity<>(adminService.getAllUsers(adminSearch), HttpStatus.OK);
   }
 
   @DeleteMapping("/{userId}")

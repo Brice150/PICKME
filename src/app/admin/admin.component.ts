@@ -16,6 +16,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { LoadingComponent } from '../shared/components/loading/loading.component';
 import { Gender } from '../core/enums/gender';
 import { MatSliderModule } from '@angular/material/slider';
+import { AdminSearch } from '../core/interfaces/admin-search';
+import { GenderAdmin } from '../core/enums/gender-admin';
 
 @Component({
   selector: 'app-admin',
@@ -35,8 +37,9 @@ export class AdminComponent implements OnInit, OnDestroy {
   destroyed$: Subject<void> = new Subject<void>();
   loading: boolean = false;
   searched: boolean = false;
-  genders: string[] = Object.values(Gender);
+  genders: string[] = Object.values(GenderAdmin);
   adminForm!: FormGroup;
+  adminSearch!: AdminSearch;
 
   constructor(
     private toastr: ToastrService,
@@ -46,33 +49,51 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.adminForm = this.fb.group({
-      nickname: ['', [Validators.required]],
-      gender: ['', [Validators.required]],
+      nickname: [''],
+      genders: [[]],
       minAge: [18, [Validators.required]],
       maxAge: [80, [Validators.required]],
     });
   }
 
   search(): void {
-    console.log(this.adminForm.value);
+    if (this.adminForm.valid) {
+      this.loading = true;
+      this.setAdminForm();
+      this.adminService
+        .getAllUsers(this.adminSearch)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe({
+          next: (users: User[]) => {
+            this.users = users;
+            this.loading = false;
+            this.searched = true;
+          },
+          error: (error: HttpErrorResponse) => {
+            this.loading = false;
+            this.toastr.error(error.message, 'Error', {
+              positionClass: 'toast-bottom-center',
+              toastClass: 'ngx-toastr custom',
+            });
+          },
+        });
+    }
+  }
 
-    this.loading = true;
-    this.adminService
-      .getAllUsers()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (users: User[]) => {
-          this.users = users;
-          this.loading = false;
-          this.searched = true;
-        },
-        error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.message, 'Error', {
-            positionClass: 'toast-bottom-center',
-            toastClass: 'ngx-toastr custom',
-          });
-        },
-      });
+  setAdminForm(): void {
+    this.adminSearch = this.adminForm.value;
+    if (
+      this.adminSearch.genders.length === 0 ||
+      this.adminSearch.genders.includes(GenderAdmin.ALL)
+    ) {
+      this.adminSearch.genders = [
+        GenderAdmin.MAN,
+        GenderAdmin.WOMAN,
+        GenderAdmin.OTHER,
+      ];
+    } else {
+      this.adminSearch.genders = [this.adminForm.get('genders')?.value];
+    }
   }
 
   ngOnDestroy(): void {
