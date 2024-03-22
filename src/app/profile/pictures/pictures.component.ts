@@ -159,4 +159,17 @@ export class PicturesComponent {
       },
     });
   }
+
+  onSlideChange(): void {
+    // Needed to update isCurrentView when we slide
+  }
+
+  isCurrentView(picture: Picture): boolean {
+    const index: number | undefined =
+      document.querySelector('swiper-container')?.swiper.activeIndex;
+    if (index === undefined) {
+      return false;
+    }
+    return picture.id === this.user?.pictures![index].id;
+  }
 }

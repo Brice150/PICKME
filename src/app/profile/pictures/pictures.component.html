@@ -1,17 +1,16 @@
 <div class="container">
   <div class="picture-container">
     <swiper-container
-      effect="cube"
+      effect="cards"
       mousewheel="true"
-      pagination="true"
-      navigation="true"
-      speed="800"
+      (swiperslidechange)="onSlideChange()"
       *ngIf="user?.pictures?.length !== 0"
     >
       <swiper-slide lazy="true" *ngFor="let picture of user?.pictures">
         <app-picture
           loading="true"
           [picture]="picture"
+          [display]="isCurrentView(picture)"
           (deleteEvent)="deletePicture(picture.id)"
           (selectMainEvent)="selectMainPicture(picture.id)"
         ></app-picture>

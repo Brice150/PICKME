@@ -1,4 +1,10 @@
-<a class="top-button left" title="Delete" (click)="openDialog()">
+<a
+  class="top-button left"
+  title="Delete"
+  (click)="openDialog()"
+  *ngIf="display"
+  @dislikeButtonTrigger
+>
   <i class="bx bxs-trash-alt"></i>
 </a>
 <a
@@ -6,6 +12,8 @@
   title="Select Main Picture"
   [ngClass]="picture.isMainPicture ? 'gold' : null"
   (click)="selectMainPicture()"
+  *ngIf="display"
+  @likeButtonTrigger
 >
   <i class="bx bxs-user-rectangle"></i>
 </a>

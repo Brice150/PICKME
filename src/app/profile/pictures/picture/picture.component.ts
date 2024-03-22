@@ -4,6 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
 import { Picture } from '../../../core/interfaces/picture';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import {
+  DislikeButtonAnimation,
+  LikeButtonAnimation,
+} from '../../../select/card/card-animation';
 
 @Component({
   selector: 'app-picture',
@@ -11,9 +15,11 @@ import { ConfirmationDialogComponent } from '../../../shared/components/confirma
   imports: [CommonModule],
   templateUrl: './picture.component.html',
   styleUrl: './picture.component.css',
+  animations: [LikeButtonAnimation, DislikeButtonAnimation],
 })
 export class PictureComponent {
   @Input() picture!: Picture;
+  @Input() display: boolean = false;
   @Output() selectMainEvent: EventEmitter<void> = new EventEmitter<void>();
   @Output() deleteEvent: EventEmitter<void> = new EventEmitter<void>();
 
