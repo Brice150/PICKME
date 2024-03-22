@@ -14,87 +14,6 @@
   flex-direction: column;
 }
 
-.container .search {
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  max-width: 500px;
-}
-
-.container .search input {
-  background: transparent;
-  backdrop-filter: blur(2px);
-  width: 200px;
-  border: 0;
-  padding: 20px 40px;
-  outline: none;
-  border-radius: 10px;
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
-}
-
-::placeholder {
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.container .search .sort {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 250px;
-  margin: 15px;
-}
-
-.container .search .sort a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  color: var(--primary);
-  backdrop-filter: blur(2px);
-  padding: 10px;
-  transition: 0.5s ease;
-  cursor: pointer;
-  overflow: hidden;
-  border-radius: 10px;
-}
-
-.container .search .sort a.active {
-  background-color: var(--primary);
-  color: var(--secondary);
-  cursor: default;
-}
-
-.container .search .sort a::before {
-  content: "";
-  position: absolute;
-  background-color: var(--primary);
-  height: 0%;
-  top: 0;
-  right: 0;
-  width: 100%;
-  transition: 0.5s ease;
-  z-index: -1;
-}
-
-.container .search .sort a:hover::before {
-  height: 100%;
-}
-
-.container .search .sort a:hover {
-  color: var(--secondary);
-}
-
-.container .search .sort a i {
-  font-size: 30px;
-}
-
 .container .content {
   width: 100%;
   display: flex;
@@ -117,4 +36,129 @@
 .container .content.nothing span {
   font-size: 16px;
   font-weight: 600;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+form .input-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 10px;
+}
+
+form .title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+form select,
+input {
+  background: transparent;
+  backdrop-filter: blur(2px);
+  width: 200px;
+  margin-top: 5px;
+  border: 0;
+  padding: 20px 40px;
+  outline: none;
+  border-radius: 10px;
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+form select {
+  width: 280px;
+}
+
+select option {
+  background-color: var(--secondary);
+  color: var(--primary);
+}
+
+::placeholder {
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+form .button-container button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--primary);
+  padding: 15px 30px;
+  margin: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  overflow: hidden;
+  border-radius: 10px;
+  transition: 0.5s ease;
+  backdrop-filter: blur(2px);
+  font-size: 14px;
+  font-family: Roboto, sans-serif;
+}
+
+form .button-container button::before {
+  content: "";
+  position: absolute;
+  background-color: var(--primary);
+  height: 0%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: 0.5s ease;
+  z-index: -1;
+}
+
+form .button-container button:hover::before {
+  height: 100%;
+  border-radius: 10px;
+}
+
+form .button-container button:hover {
+  color: var(--secondary);
+}
+
+form .slide-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+form .slide-container span {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-right: 20px;
+}
+
+::ng-deep form .slide-container .mat-mdc-slider {
+  min-width: 150px;
+}
+
+@media screen and (max-width: 375px) {
+  form select {
+    width: 240px;
+  }
+
+  form input {
+    width: 160px;
+  }
 }

@@ -1,38 +1,32 @@
 <div class="container">
-  <div class="search">
-    <input
-      type="text"
-      placeholder="Search by nickname"
-      [(ngModel)]="search"
-      (ngModelChange)="searchByNickname('')"
-    />
-    <div class="sort">
-      <a
-        title="Sort By Max Dislike"
-        (click)="sortByDislike()"
-        [ngClass]="isSortingByDislike ? 'active' : null"
-      >
-        <i class="bx bxs-dislike"></i>
-      </a>
-      <a
-        title="Sort By Max Like"
-        (click)="sortByLike()"
-        [ngClass]="isSortingByLike ? 'active' : null"
-      >
-        <i class="bx bxs-like"></i>
-      </a>
-      <a
-        title="Sort By Max Match"
-        (click)="sortByMatch()"
-        [ngClass]="isSortingByMatch ? 'active' : null"
-      >
-        <i class="bx bxs-flame"></i>
-      </a>
+  <form [formGroup]="adminForm" (ngSubmit)="search()">
+    <div class="input-container">
+      <span class="title">Nickname</span>
+      <input placeholder="Nickname" formControlName="nickname" />
     </div>
-  </div>
+    <div class="input-container">
+      <span class="title">Gender</span>
+      <select formControlName="gender">
+        <option value="" disabled selected hidden>Gender</option>
+        <option [value]="gender" *ngFor="let gender of genders">
+          {{ gender }}
+        </option>
+      </select>
+    </div>
+    <div class="slide-container">
+      <span>Age</span>
+      <mat-slider min="18" max="80" discrete>
+        <input matSliderStartThumb formControlName="minAge" />
+        <input matSliderEndThumb formControlName="maxAge" />
+      </mat-slider>
+    </div>
+    <div class="button-container">
+      <button title="Search" type="submit">Search</button>
+    </div>
+  </form>
   <div class="content" *ngIf="users && users.length !== 0 && !loading">
     <app-admin-card
-      *ngFor="let user of filteredUsers"
+      *ngFor="let user of users"
       [user]="user"
       (deleteEvent)="deleteUser(user)"
     ></app-admin-card>
@@ -42,7 +36,7 @@
   </div>
   <div
     class="content nothing"
-    *ngIf="(!users || users.length === 0) && !loading"
+    *ngIf="(!users || users.length === 0) && !loading && searched"
   >
     <span>No user</span>
   </div>
