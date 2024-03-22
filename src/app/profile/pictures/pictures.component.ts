@@ -8,13 +8,12 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../environments/environment';
 import { Picture } from '../../core/interfaces/picture';
 import { User } from '../../core/interfaces/user';
-import { PictureComponent } from './picture/picture.component';
-import { ToastrService } from 'ngx-toastr';
 import { ProfileService } from '../../core/services/profile.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { PictureComponent } from './picture/picture.component';
 
 @Component({
   selector: 'app-pictures',
@@ -43,57 +42,38 @@ export class PicturesComponent {
         const img = new Image();
         img.src = event.target.result;
         img.onload = () => {
-          if (
-            this.user?.pictures?.some(
-              (picture: Picture) => picture.content === event.target.result
-            )
-          ) {
-            this.imageInput.nativeElement.value = '';
-            this.toastr.error(
-              'Picture is already in profile',
-              'Change Picture',
-              {
-                positionClass: 'toast-bottom-center',
-                toastClass: 'ngx-toastr custom',
-              }
-            );
-          } else if (this.user!.pictures!.length > 5) {
-            this.imageInput.nativeElement.value = '';
-            this.toastr.error(
-              'You already have 6 pictures',
-              'Max Pictures Number',
-              {
-                positionClass: 'toast-bottom-center',
-                toastClass: 'ngx-toastr custom',
-              }
-            );
-          } else {
-            const maxPixelSize: number = 800;
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const width = img.width;
-            const height = img.height;
-            const aspectRatio = width / height;
-            const newWidth = maxPixelSize * aspectRatio;
-            const newHeight = maxPixelSize / aspectRatio;
-            canvas.width = newWidth;
-            canvas.height = newHeight;
-            ctx!.drawImage(img, 0, 0, newWidth, newHeight);
-            let quality = 0.9;
-            let dataURL = canvas.toDataURL('image/jpeg', quality);
+          const maxDimension = 1200;
+          const width = img.width;
+          const height = img.height;
+          let newWidth, newHeight;
 
-            this.profileService.addPicture(dataURL).subscribe({
-              next: (picture: Picture) => {
-                this.user?.pictures?.unshift(picture);
-                setTimeout(() => {
-                  document.querySelector('swiper-container')?.swiper.update();
-                  document.querySelector('swiper-container')?.swiper.slideTo(0);
-                  this.imageInput.nativeElement.value = '';
-                  this.refreshEvent.emit('Picture Added');
-                }, 0);
-              },
-            });
+          if (width > height) {
+            newWidth = Math.min(width, maxDimension);
+            newHeight = (height / width) * newWidth;
+          } else {
+            newHeight = Math.min(height, maxDimension);
+            newWidth = (width / height) * newHeight;
           }
+
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = newWidth;
+          canvas.height = newHeight;
+          ctx!.drawImage(img, 0, 0, newWidth, newHeight);
+          let quality = 0.7;
+          let dataURL = canvas.toDataURL('image/jpeg', quality);
+
+          this.profileService.addPicture(dataURL).subscribe({
+            next: (picture: Picture) => {
+              this.user?.pictures?.unshift(picture);
+              setTimeout(() => {
+                document.querySelector('swiper-container')?.swiper.update();
+                document.querySelector('swiper-container')?.swiper.slideTo(0);
+                this.imageInput.nativeElement.value = '';
+                this.refreshEvent.emit('Picture Added');
+              }, 0);
+            },
+          });
         };
       };
     }
