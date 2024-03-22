@@ -95,12 +95,6 @@ export class PicturesComponent {
                   this.refreshEvent.emit('Picture Added');
                 }, 0);
               },
-              error: (error: HttpErrorResponse) => {
-                this.toastr.error(error.message, 'Error', {
-                  positionClass: 'toast-bottom-center',
-                  toastClass: 'ngx-toastr custom',
-                });
-              },
             });
           }
         };
@@ -128,12 +122,6 @@ export class PicturesComponent {
           this.refreshEvent.emit('Picture Deleted');
         }
       },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Error', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom',
-        });
-      },
     });
   }
 
@@ -150,12 +138,6 @@ export class PicturesComponent {
           this.user!.pictures![pictureIndex].isMainPicture = true;
         }
         this.refreshEvent.emit('Main Picture Selected');
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Error', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom',
-        });
       },
     });
   }

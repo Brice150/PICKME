@@ -64,14 +64,14 @@ export class LoginComponent {
             this.router.navigate(['/select']);
           },
           error: (error: HttpErrorResponse) => {
-            if (error.message.includes('Bad credentials')) {
+            if (!error.error.error && error.error.includes('Bad credentials')) {
               this.invalidLogin = true;
               this.toastr.error(
                 'Wrong email or password !',
                 'Bad Credentials',
                 {
                   positionClass: 'toast-bottom-center',
-                  toastClass: 'ngx-toastr custom',
+                  toastClass: 'ngx-toastr custom error',
                 }
               );
               setTimeout(() => {
@@ -80,7 +80,7 @@ export class LoginComponent {
             } else {
               this.toastr.error(error.message, 'Error', {
                 positionClass: 'toast-bottom-center',
-                toastClass: 'ngx-toastr custom',
+                toastClass: 'ngx-toastr custom error',
               });
             }
           },

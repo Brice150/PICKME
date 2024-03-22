@@ -48,12 +48,6 @@ export class ProfileComponent {
         this.user!.password = undefined;
         this.connectService.connectedUser = updatedUser;
       },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Error', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom',
-        });
-      },
       complete: () => {
         this.toastr.success('Your profile has been updated', message, {
           positionClass: 'toast-bottom-center',
@@ -67,12 +61,6 @@ export class ProfileComponent {
     this.profileService.getConnectedUser().subscribe({
       next: (user: User) => {
         this.connectService.connectedUser = user;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Error', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom',
-        });
       },
       complete: () => {
         if (message && message === 'Main Picture Selected') {
@@ -101,12 +89,6 @@ export class ProfileComponent {
         this.connectService.connectedUser = undefined;
         this.user = undefined;
         this.router.navigate(['/']);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Error', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom',
-        });
       },
       complete: () => {
         this.toastr.success(

@@ -69,13 +69,6 @@ export class AdminComponent implements OnInit, OnDestroy {
             this.loading = false;
             this.searched = true;
           },
-          error: (error: HttpErrorResponse) => {
-            this.loading = false;
-            this.toastr.error(error.message, 'Error', {
-              positionClass: 'toast-bottom-center',
-              toastClass: 'ngx-toastr custom',
-            });
-          },
         });
     }
   }
@@ -114,12 +107,6 @@ export class AdminComponent implements OnInit, OnDestroy {
             toastClass: 'ngx-toastr custom',
           });
         }
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Error', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom',
-        });
       },
     });
   }

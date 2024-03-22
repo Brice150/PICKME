@@ -41,12 +41,6 @@ export class SelectComponent implements OnInit, OnDestroy {
           this.users = users;
           this.loading = false;
         },
-        error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.message, 'Error', {
-            positionClass: 'toast-bottom-center',
-            toastClass: 'ngx-toastr custom',
-          });
-        },
       });
   }
 
@@ -97,12 +91,6 @@ export class SelectComponent implements OnInit, OnDestroy {
           );
         }
       },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Error', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom',
-        });
-      },
     });
   }
 
@@ -110,12 +98,6 @@ export class SelectComponent implements OnInit, OnDestroy {
     this.selectService.addDislike(user.id!).subscribe({
       next: () => {
         this.removeSlide(user.id!);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Error', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom',
-        });
       },
       complete: () => {
         this.toastr.success(

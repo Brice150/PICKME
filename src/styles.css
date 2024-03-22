@@ -55,6 +55,10 @@ body {
   background-color: goldenrod;
 }
 
+.toast-container .ngx-toastr.custom.error {
+  background-color: var(--error);
+}
+
 html,
 body {
   height: 100%;

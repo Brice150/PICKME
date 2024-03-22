@@ -155,12 +155,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
           next: () => {
             this.loginUser(user);
           },
-          error: (error: HttpErrorResponse) => {
-            this.toastr.error(error.message, 'Error', {
-              positionClass: 'toast-bottom-center',
-              toastClass: 'ngx-toastr custom',
-            });
-          },
           complete: () => {
             this.toastr.success(
               'You are now registered !',
@@ -182,12 +176,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.router.navigate(['/select']);
-        },
-        error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.message, 'Error', {
-            positionClass: 'toast-bottom-center',
-            toastClass: 'ngx-toastr custom',
-          });
         },
         complete: () => {
           this.toastr.success('You are logged in !', 'Logged In', {

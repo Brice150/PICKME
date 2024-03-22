@@ -75,12 +75,6 @@ export class MatchComponent implements OnInit, OnDestroy {
           this.searchByNickname();
           this.loading = false;
         },
-        error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.message, 'Error', {
-            positionClass: 'toast-bottom-center',
-            toastClass: 'ngx-toastr custom',
-          });
-        },
       });
   }
 
@@ -120,12 +114,6 @@ export class MatchComponent implements OnInit, OnDestroy {
           );
           this.selectedMatch = undefined;
         }
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Error', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom',
-        });
       },
     });
   }
@@ -176,12 +164,6 @@ export class MatchComponent implements OnInit, OnDestroy {
         this.selectedMatch!.messages.push(newMessage);
         this.unModifyMessage();
       },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Error', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom',
-        });
-      },
       complete: () => {
         this.toastr.success('You have sent a message', 'Message Sent', {
           positionClass: 'toast-bottom-center',
@@ -199,12 +181,6 @@ export class MatchComponent implements OnInit, OnDestroy {
           (message: Message) => message.id === this.updatedMessage?.id
         )!.content = updatedMessage.content;
         this.unModifyMessage();
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Error', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom',
-        });
       },
       complete: () => {
         this.toastr.success(
@@ -229,12 +205,6 @@ export class MatchComponent implements OnInit, OnDestroy {
           this.selectedMatch?.messages.splice(messageIndex, 1);
           this.unModifyMessage();
         }
-      },
-      error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.message, 'Error', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom',
-        });
       },
       complete: () => {
         this.toastr.success(
