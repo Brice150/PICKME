@@ -46,14 +46,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   @Query(
     "SELECT DISTINCT u FROM User u" +
-      " LEFT JOIN Like l ON u.id = l.fkReceiver" +
-      " LEFT JOIN Dislike d ON u.id = d.fkReceiver" +
+      " LEFT JOIN Like l ON u.id = l.fkReceiver AND l.fkSender = :connectedId" +
+      " LEFT JOIN Dislike d ON u.id = d.fkReceiver AND d.fkSender = :connectedId" +
       " WHERE u.genderSearch = :gender" +
       " AND u.gender = :genderSearch" +
       " AND EXTRACT(YEAR FROM AGE(CURRENT_DATE, u.birthDate)) BETWEEN :minAge AND :maxAge" +
       " AND u.id != :connectedId" +
-      " AND (l.fkSender IS NULL OR l.fkSender != :connectedId)" +
-      " AND (d.fkSender IS NULL OR d.fkSender != :connectedId)"
+      " AND l.fkSender IS NULL" +
+      " AND d.fkSender IS NULL"
   )
   List<User> getAllUsers(@Param("genderSearch") Gender genderSearch, @Param("gender") Gender gender, @Param("minAge") Integer minAge, @Param("maxAge") Integer maxAge, @Param("connectedId") Long connectedId);
 
