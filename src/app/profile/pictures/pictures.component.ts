@@ -68,22 +68,19 @@ export class PicturesComponent {
               }
             );
           } else {
-            const maxSizeInMB = 4;
-            const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+            const maxPixelSize: number = 800;
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             const width = img.width;
             const height = img.height;
             const aspectRatio = width / height;
-            const newWidth = Math.sqrt(maxSizeInBytes * aspectRatio);
-            const newHeight = Math.sqrt(maxSizeInBytes / aspectRatio);
+            const newWidth = maxPixelSize * aspectRatio;
+            const newHeight = maxPixelSize / aspectRatio;
             canvas.width = newWidth;
             canvas.height = newHeight;
             ctx!.drawImage(img, 0, 0, newWidth, newHeight);
-            let quality = 0.7;
+            let quality = 0.9;
             let dataURL = canvas.toDataURL('image/jpeg', quality);
-
-            console.log(dataURL.length);
 
             this.profileService.addPicture(dataURL).subscribe({
               next: (picture: Picture) => {
