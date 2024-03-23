@@ -25,21 +25,22 @@ import java.util.*;
 public class UserService implements UserDetailsService {
 
   private static final String USER_EMAIL_NOT_FOUND_MSG = "user with email %s not found";
-  private static final double EARTH_RADIUS_KM = 6371.0;
   private final UserRepository userRepository;
   private final MessageRepository messageRepository;
   private final LikeRepository likeRepository;
   private final UserDTOMapper userDTOMapper;
   private final UserDTOMapperRestricted userDTOMapperRestricted;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final DistanceService distanceService;
 
-  public UserService(UserRepository userRepository, MessageRepository messageRepository, LikeRepository likeRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperRestricted userDTOMapperRestricted) {
+  public UserService(UserRepository userRepository, MessageRepository messageRepository, LikeRepository likeRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperRestricted userDTOMapperRestricted, DistanceService distanceService) {
     this.userRepository = userRepository;
     this.messageRepository = messageRepository;
     this.likeRepository = likeRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userDTOMapper = userDTOMapper;
     this.userDTOMapperRestricted = userDTOMapperRestricted;
+    this.distanceService = distanceService;
   }
 
   @Override
@@ -95,16 +96,20 @@ public class UserService implements UserDetailsService {
     users.forEach(user -> {
       user.setGold(goldUserId.contains(user.getId()));
       mapAverageScoreByUserId.put(user.getId(), calculateScore(connectedUser, user));
-      user.setDistance(calculateDistance(connectedUser, user).longValue());
+      user.setDistance(distanceService.calculateDistance(connectedUser, user).longValue());
     });
     return sortUsersByDistanceAndAttributes(users, connectedUser, mapAverageScoreByUserId);
   }
 
   public List<Match> getAllUserMatches() {
     User connectedUser = getConnectedUser();
-    List<UserDTO> users = userRepository.getAllUserMatches(connectedUser.getId()).stream().map(userDTOMapperRestricted).toList();
-    return users.stream()
-      .map(user -> new Match(user, messageRepository.getUserMessagesByFk(connectedUser.getId(), user.id()))).toList();
+    return userRepository.getAllUserMatches(connectedUser.getId()).stream()
+      .map(user -> {
+        user.setDistance(distanceService.calculateDistance(connectedUser, user).longValue());
+        return userDTOMapperRestricted.apply(user);
+      })
+      .map(user -> new Match(user, messageRepository.getUserMessagesByFk(connectedUser.getId(), user.id())))
+      .toList();
   }
 
   public Optional<UserDTO> updateUser(User user) {
@@ -202,20 +207,6 @@ public class UserService implements UserDetailsService {
       return 0;
     }
     return Math.abs(enum1.ordinal() - enum2.ordinal());
-  }
-
-  private Double calculateDistance(User connectedUser, User user) {
-    double latitudeUserRadian = Math.toRadians(Double.parseDouble(user.getLatitude()));
-    double longitudeUserRadian = Math.toRadians(Double.parseDouble(user.getLongitude()));
-    double latitudeConnectedUserRadian = Math.toRadians(Double.parseDouble(connectedUser.getLatitude()));
-    double longitudeConnectedUserRadian = Math.toRadians(Double.parseDouble(connectedUser.getLongitude()));
-
-    // Haversine formula
-    double distanceLongitude = longitudeUserRadian - longitudeConnectedUserRadian;
-    double distanceLatitude = latitudeUserRadian - latitudeConnectedUserRadian;
-    double a = Math.pow(Math.sin(distanceLatitude / 2), 2) + Math.cos(latitudeConnectedUserRadian) * Math.cos(latitudeUserRadian) * Math.pow(Math.sin(distanceLongitude / 2), 2);
-
-    return EARTH_RADIUS_KM * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
   }
 
   private int compareAttribute(Enum<?> enum1, Enum<?> enum2) {

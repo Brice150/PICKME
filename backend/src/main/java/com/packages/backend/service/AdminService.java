@@ -19,12 +19,14 @@ public class AdminService {
   private final AdminRepository adminRepository;
   private final UserService userService;
   private final UserDTOMapper userDTOMapper;
+  private final DistanceService distanceService;
 
   @Autowired
-  public AdminService(AdminRepository adminRepository, UserService userService, UserDTOMapper userDTOMapper) {
+  public AdminService(AdminRepository adminRepository, UserService userService, UserDTOMapper userDTOMapper, DistanceService distanceService) {
     this.adminRepository = adminRepository;
     this.userService = userService;
     this.userDTOMapper = userDTOMapper;
+    this.distanceService = distanceService;
   }
 
   public List<UserDTO> getAllUsers(AdminSearch adminSearch) {
@@ -34,6 +36,7 @@ public class AdminService {
     Map<Long, Tuple> userStatsMap = userStatsTuples.stream()
       .collect(Collectors.toMap(tuple -> tuple.get("id", Long.class), Function.identity()));
     users.forEach(user -> {
+      user.setDistance(distanceService.calculateDistance(connectedUser, user).longValue());
       Tuple userStatsTuple = userStatsMap.get(user.getId());
       if (userStatsTuple != null) {
         user.setTotalDislikes(userStatsTuple.get("totalDislikes", Long.class));
