@@ -35,12 +35,6 @@
       <span *ngIf="firstFormGroup.get('job')!.hasError('maxlength')"
         >Job is too long</span
       >
-      <div class="slide-container">
-        <span>Max Distance</span>
-        <mat-slider min="10" max="500" discrete>
-          <input matSliderThumb formControlName="distanceSearch" />
-        </mat-slider>
-      </div>
       <mat-form-field>
         <mat-label>Birth Date</mat-label>
         <input
@@ -58,11 +52,21 @@
         <mat-datepicker
           #picker
           color="accent"
+          startView="year"
           [startAt]="startDate"
           disabled="false"
+          (closed)="closed()"
         ></mat-datepicker>
       </mat-form-field>
-      <span *ngIf="!birthDateExists">Birth Date is required</span>
+      <span *ngIf="!birthDateExists && birthDateTouched"
+        >Birth Date is required</span
+      >
+      <div class="slide-container">
+        <span>Max Distance</span>
+        <mat-slider min="10" max="500" discrete>
+          <input matSliderThumb formControlName="distanceSearch" />
+        </mat-slider>
+      </div>
     </mat-step>
     <mat-step
       [stepControl]="secondFormGroup"

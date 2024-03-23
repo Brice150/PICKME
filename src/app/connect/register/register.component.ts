@@ -53,6 +53,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   secondFormGroup!: FormGroup;
   thirdFormGroup!: FormGroup;
   birthDateExists: boolean = false;
+  birthDateTouched: boolean = false;
   passwordsMatch: boolean = false;
   birthDate!: Date;
   startDate: Date = new Date(1990, 0, 1);
@@ -213,5 +214,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
       this.birthDate = event.value;
       this.birthDateExists = true;
     }
+  }
+
+  closed(): void {
+    this.birthDateTouched = true;
   }
 }
