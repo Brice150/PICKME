@@ -43,7 +43,12 @@
     </div>
     <div class="right">
       <h2 class="age">{{ user.birthDate | age }}</h2>
-      <h3>{{ user.city }}</h3>
+      <h3>
+        {{ user.city }} ({{
+          user.distance +
+            (user.distance === 1 || user.distance === 0 ? " km" : " kms")
+        }})
+      </h3>
     </div>
   </div>
   <span class="description">

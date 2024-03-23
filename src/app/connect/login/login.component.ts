@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,11 +9,8 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, takeUntil } from 'rxjs';
 import { User } from '../../core/interfaces/user';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectService } from '../../core/services/connect.service';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -20,10 +19,9 @@ import { CommonModule } from '@angular/common';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   invalidLogin: boolean = false;
-  destroyed$: Subject<void> = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -49,48 +47,36 @@ export class LoginComponent {
     });
   }
 
-  ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
-
   loginUser(user: User) {
     if (this.loginForm.valid) {
-      this.connectService
-        .login(user)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe({
-          next: () => {
-            this.router.navigate(['/select']);
-          },
-          error: (error: HttpErrorResponse) => {
-            if (!error.error.error && error.error.includes('Bad credentials')) {
-              this.invalidLogin = true;
-              this.toastr.error(
-                'Wrong email or password !',
-                'Bad Credentials',
-                {
-                  positionClass: 'toast-bottom-center',
-                  toastClass: 'ngx-toastr custom error',
-                }
-              );
-              setTimeout(() => {
-                this.invalidLogin = false;
-              }, 2000);
-            } else {
-              this.toastr.error(error.message, 'Error', {
-                positionClass: 'toast-bottom-center',
-                toastClass: 'ngx-toastr custom error',
-              });
-            }
-          },
-          complete: () => {
-            this.toastr.success('You are logged in !', 'Logged In', {
+      this.connectService.login(user).subscribe({
+        next: () => {
+          this.router.navigate(['/select']);
+        },
+        error: (error: HttpErrorResponse) => {
+          if (!error.error.error && error.error.includes('Bad credentials')) {
+            this.invalidLogin = true;
+            this.toastr.error('Wrong email or password !', 'Bad Credentials', {
               positionClass: 'toast-bottom-center',
-              toastClass: 'ngx-toastr custom gold',
+              toastClass: 'ngx-toastr custom error',
             });
-          },
-        });
+            setTimeout(() => {
+              this.invalidLogin = false;
+            }, 2000);
+          } else {
+            this.toastr.error(error.message, 'Error', {
+              positionClass: 'toast-bottom-center',
+              toastClass: 'ngx-toastr custom error',
+            });
+          }
+        },
+        complete: () => {
+          this.toastr.success('You are logged in !', 'Logged In', {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom gold',
+          });
+        },
+      });
     }
   }
 }

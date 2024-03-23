@@ -31,7 +31,10 @@
     <span class="larger">{{ user.nickname }}</span>
     <span class="subtitle">
       A {{ user.birthDate | age }} years old {{ user.job | lowercase }} at
-      {{ user.city }}
+      {{ user.city }} ({{
+        user.distance +
+          (user.distance === 1 || user.distance === 0 ? " km" : " kms")
+      }})
     </span>
   </div>
   <div class="picture-container">

@@ -3,21 +3,18 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
-import { User } from '../core/interfaces/user';
-import { AdminCardComponent } from './admin-card/admin-card.component';
-import { AdminService } from '../core/services/admin.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Subject, takeUntil } from 'rxjs';
-import { LoadingComponent } from '../shared/components/loading/loading.component';
-import { Gender } from '../core/enums/gender';
 import { MatSliderModule } from '@angular/material/slider';
-import { AdminSearch } from '../core/interfaces/admin-search';
+import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
 import { GenderAdmin } from '../core/enums/gender-admin';
+import { AdminSearch } from '../core/interfaces/admin-search';
+import { User } from '../core/interfaces/user';
+import { AdminService } from '../core/services/admin.service';
+import { LoadingComponent } from '../shared/components/loading/loading.component';
+import { AdminCardComponent } from './admin-card/admin-card.component';
 
 @Component({
   selector: 'app-admin',
@@ -56,6 +53,11 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
   search(): void {
     if (this.adminForm.valid) {
       this.loading = true;
@@ -87,11 +89,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     } else {
       this.adminSearch.genders = [this.adminForm.get('genders')?.value];
     }
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 
   deleteUser(userToDelete: User): void {

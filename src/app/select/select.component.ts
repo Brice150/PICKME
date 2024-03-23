@@ -5,13 +5,12 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { User } from '../core/interfaces/user';
-import { CardComponent } from './card/card.component';
 import { ToastrService } from 'ngx-toastr';
-import { SelectService } from '../core/services/select.service';
 import { Subject, takeUntil } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import { User } from '../core/interfaces/user';
+import { SelectService } from '../core/services/select.service';
 import { LoadingComponent } from '../shared/components/loading/loading.component';
+import { CardComponent } from './card/card.component';
 
 @Component({
   selector: 'app-select',

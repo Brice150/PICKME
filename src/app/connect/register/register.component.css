@@ -132,20 +132,20 @@ mat-form-field mat-datepicker-toggle {
   width: 200px;
 }
 
-form .age-container {
+form .slide-container {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   width: 100%;
 }
 
-form .age-container span {
+form .slide-container span {
   color: var(--primary);
   font-size: 15px;
   font-weight: 600;
 }
 
-::ng-deep form .age-container .mat-mdc-slider {
+::ng-deep form .slide-container .mat-mdc-slider {
   min-width: 150px;
 }
 

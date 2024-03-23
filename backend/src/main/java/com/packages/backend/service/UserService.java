@@ -25,6 +25,7 @@ import java.util.*;
 public class UserService implements UserDetailsService {
 
   private static final String USER_EMAIL_NOT_FOUND_MSG = "user with email %s not found";
+  private static final double EARTH_RADIUS_KM = 6371.0;
   private final UserRepository userRepository;
   private final MessageRepository messageRepository;
   private final LikeRepository likeRepository;
@@ -57,6 +58,10 @@ public class UserService implements UserDetailsService {
       signUpMessage = "Job" + emptyPhrase;
     } else if (user.getCity() == null || user.getCity().isBlank()) {
       signUpMessage = "City" + emptyPhrase;
+    } else if (user.getLatitude() == null || user.getLatitude().isBlank()) {
+      signUpMessage = "Latitude" + emptyPhrase;
+    } else if (user.getLongitude() == null || user.getLongitude().isBlank()) {
+      signUpMessage = "Longitude" + emptyPhrase;
     } else if (user.getBirthDate() == null) {
       signUpMessage = "Birth date" + emptyPhrase;
     } else if (user.getGender() == null || Gender.getDescriptionNullSafe(user.getGender()).isBlank()) {
@@ -83,25 +88,16 @@ public class UserService implements UserDetailsService {
   }
 
   public List<UserDTO> getAllSelectedUsers() {
-    Map<Long, Double> mapAverageScoreByUserId = new HashMap<>();
     User connectedUser = getConnectedUser();
     List<User> users = userRepository.getAllUsers(connectedUser.getGenderSearch(), connectedUser.getGender(), connectedUser.getMinAge().intValue(), connectedUser.getMaxAge().intValue(), connectedUser.getId());
     List<Long> goldUserId = likeRepository.getGoldByConnectedUserId(connectedUser.getId());
+    Map<Long, Double> mapAverageScoreByUserId = new HashMap<>();
     users.forEach(user -> {
       user.setGold(goldUserId.contains(user.getId()));
       mapAverageScoreByUserId.put(user.getId(), calculateScore(connectedUser, user));
+      user.setDistance(calculateDistance(connectedUser, user).longValue());
     });
-    return users.stream()
-      .sorted((Comparator.comparing(User::getCity)
-        .thenComparingDouble(user -> mapAverageScoreByUserId.get(user.getId())))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getPersonality(), user.getPersonality()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getParenthood(), user.getParenthood()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getSmokes(), user.getSmokes()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getOrganised(), user.getOrganised()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getSportPractice(), user.getSportPractice()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getAnimals(), user.getAnimals()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getGamer(), user.getGamer()))).map(userDTOMapperRestricted).toList();
+    return sortUsersByDistanceAndAttributes(users, connectedUser, mapAverageScoreByUserId);
   }
 
   public List<Match> getAllUserMatches() {
@@ -117,6 +113,9 @@ public class UserService implements UserDetailsService {
       connectedUser.setNickname(user.getNickname() != null ? user.getNickname() : connectedUser.getNickname());
       connectedUser.setJob(user.getJob() != null ? user.getJob() : connectedUser.getJob());
       connectedUser.setCity(user.getCity() != null ? user.getCity() : connectedUser.getCity());
+      connectedUser.setLatitude(user.getLatitude() != null ? user.getLatitude() : connectedUser.getLatitude());
+      connectedUser.setLongitude(user.getLongitude() != null ? user.getLongitude() : connectedUser.getLongitude());
+      connectedUser.setDistanceSearch(user.getDistanceSearch() != null ? user.getDistanceSearch() : connectedUser.getDistanceSearch());
       connectedUser.setHeight(user.getHeight() != null ? user.getHeight() : connectedUser.getHeight());
       connectedUser.setGender(user.getGender() != null ? user.getGender() : connectedUser.getGender());
       connectedUser.setGenderSearch(user.getGenderSearch() != null ? user.getGenderSearch() : connectedUser.getGenderSearch());
@@ -205,6 +204,20 @@ public class UserService implements UserDetailsService {
     return Math.abs(enum1.ordinal() - enum2.ordinal());
   }
 
+  private Double calculateDistance(User connectedUser, User user) {
+    double latitudeUserRadian = Math.toRadians(Double.parseDouble(user.getLatitude()));
+    double longitudeUserRadian = Math.toRadians(Double.parseDouble(user.getLongitude()));
+    double latitudeConnectedUserRadian = Math.toRadians(Double.parseDouble(connectedUser.getLatitude()));
+    double longitudeConnectedUserRadian = Math.toRadians(Double.parseDouble(connectedUser.getLongitude()));
+
+    // Haversine formula
+    double distanceLongitude = longitudeUserRadian - longitudeConnectedUserRadian;
+    double distanceLatitude = latitudeUserRadian - latitudeConnectedUserRadian;
+    double a = Math.pow(Math.sin(distanceLatitude / 2), 2) + Math.cos(latitudeConnectedUserRadian) * Math.cos(latitudeUserRadian) * Math.pow(Math.sin(distanceLongitude / 2), 2);
+
+    return EARTH_RADIUS_KM * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+  }
+
   private int compareAttribute(Enum<?> enum1, Enum<?> enum2) {
     int difference = calculateDifference(enum1, enum2);
     if (difference == 2) {
@@ -214,5 +227,24 @@ public class UserService implements UserDetailsService {
     } else {
       return -1;
     }
+  }
+
+  private List<UserDTO> sortUsersByDistanceAndAttributes(List<User> users, User connectedUser, Map<Long, Double> mapAverageScoreByUserId) {
+    return users.stream()
+      .filter((User user) -> user.getDistance() <= connectedUser.getDistanceSearch())
+      .sorted((Comparator.comparing((User user) -> getDistanceGroupIndex(user.getDistance()))
+        .thenComparingDouble((User user) -> mapAverageScoreByUserId.get(user.getId()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getPersonality(), user.getPersonality()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getParenthood(), user.getParenthood()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getSmokes(), user.getSmokes()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getOrganised(), user.getOrganised()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getSportPractice(), user.getSportPractice()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getAnimals(), user.getAnimals()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getGamer(), user.getGamer())))).map(userDTOMapperRestricted).toList();
+  }
+
+  private int getDistanceGroupIndex(double distance) {
+    return (int) (distance / 10);
   }
 }

@@ -3,13 +3,12 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { User } from '../../core/interfaces/user';
 import { MatSliderModule } from '@angular/material/slider';
 import { Gender } from '../../core/enums/gender';
+import { User } from '../../core/interfaces/user';
 import { ConnectService } from '../../core/services/connect.service';
 
 @Component({

@@ -21,6 +21,7 @@ export class MainInfosComponent implements OnInit {
   @Input() user?: User;
   mainInfosForm!: FormGroup;
   heightChange: boolean = false;
+  distanceChange: boolean = false;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
@@ -46,14 +47,7 @@ export class MainInfosComponent implements OnInit {
           Validators.minLength(2),
         ],
       ],
-      city: [
-        this.user?.city,
-        [
-          Validators.required,
-          Validators.maxLength(30),
-          Validators.minLength(2),
-        ],
-      ],
+      distanceSearch: [this.user?.distanceSearch, [Validators.required]],
       height: [this.user?.height, Validators.required],
     });
   }
@@ -67,7 +61,8 @@ export class MainInfosComponent implements OnInit {
     if (this.user) {
       this.user.nickname = this.mainInfosForm.get('nickname')?.value;
       this.user.job = this.mainInfosForm.get('job')?.value;
-      this.user.city = this.mainInfosForm.get('city')?.value;
+      this.user.distanceSearch =
+        this.mainInfosForm.get('distanceSearch')?.value;
       this.user.height = this.mainInfosForm.get('height')?.value;
       this.mainInfosForm.markAsPristine();
       this.heightChange = false;
@@ -78,11 +73,12 @@ export class MainInfosComponent implements OnInit {
     if (this.user) {
       this.user.nickname = this.connectService.connectedUser?.nickname!;
       this.user.job = this.connectService.connectedUser?.job!;
-      this.user.city = this.connectService.connectedUser?.city!;
+      this.user.distanceSearch =
+        this.connectService.connectedUser?.distanceSearch!;
       this.mainInfosForm.patchValue({
         nickname: this.user.nickname,
         job: this.user.job,
-        city: this.user.city,
+        distanceSearch: this.user.distanceSearch,
         height: this.user.height,
       });
       this.mainInfosForm.markAsPristine();
@@ -90,7 +86,11 @@ export class MainInfosComponent implements OnInit {
     }
   }
 
-  slideHeight(event: Event) {
+  slideHeight(event: Event): void {
     this.heightChange = true;
+  }
+
+  slideDistance(event: Event): void {
+    this.distanceChange = true;
   }
 }

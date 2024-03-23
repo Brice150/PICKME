@@ -35,20 +35,12 @@
       <span *ngIf="firstFormGroup.get('job')!.hasError('maxlength')"
         >Job is too long</span
       >
-      <input placeholder="City" formControlName="city" />
-      <span
-        *ngIf="
-          firstFormGroup.get('city')!.hasError('required') &&
-          firstFormGroup.get('city')!.touched
-        "
-        >City is required</span
-      >
-      <span *ngIf="firstFormGroup.get('city')!.hasError('minlength')"
-        >City is too short</span
-      >
-      <span *ngIf="firstFormGroup.get('city')!.hasError('maxlength')"
-        >City is too long</span
-      >
+      <div class="slide-container">
+        <span>Max Distance</span>
+        <mat-slider min="10" max="500" discrete>
+          <input matSliderThumb formControlName="distanceSearch" />
+        </mat-slider>
+      </div>
       <mat-form-field>
         <mat-label>Birth Date</mat-label>
         <input
@@ -104,7 +96,7 @@
         "
         >Gender Search is required</span
       >
-      <div class="age-container">
+      <div class="slide-container">
         <span>Age</span>
         <mat-slider min="18" max="80" discrete>
           <input matSliderStartThumb formControlName="minAge" />

@@ -1,19 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
+import { Geolocation } from '../core/interfaces/geolocation';
 import { User } from '../core/interfaces/user';
 import { ConnectService } from '../core/services/connect.service';
-import { PasswordComponent } from './password/password.component';
+import { ProfileService } from '../core/services/profile.service';
 import { DeleteAccountComponent } from './delete-account/delete-account.component';
 import { DescriptionComponent } from './description/description.component';
 import { GenderAgeComponent } from './gender-age/gender-age.component';
 import { MainInfosComponent } from './main-infos/main-infos.component';
+import { PasswordComponent } from './password/password.component';
 import { PicturesComponent } from './pictures/pictures.component';
 import { PreferencesComponent } from './preferences/preferences.component';
-import { ProfileService } from '../core/services/profile.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',
@@ -32,8 +33,10 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit, OnDestroy {
   user?: User = this.connectService.connectedUser;
+  destroyed$: Subject<void> = new Subject<void>();
+  geolocation: Geolocation = {} as Geolocation;
 
   constructor(
     private connectService: ConnectService,
@@ -42,7 +45,28 @@ export class ProfileComponent {
     private profileService: ProfileService
   ) {}
 
+  ngOnInit(): void {
+    this.connectService
+      .getGeolocation()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (geolocation: Geolocation) => {
+          this.geolocation.city = geolocation.city;
+          this.geolocation.latitude = geolocation.latitude;
+          this.geolocation.longitude = geolocation.longitude;
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
   updateUser(message: string): void {
+    this.user!.city = this.geolocation.city;
+    this.user!.latitude = this.geolocation.latitude;
+    this.user!.longitude = this.geolocation.longitude;
     this.profileService.updateUser(this.user!).subscribe({
       next: (updatedUser: User) => {
         this.user!.password = undefined;

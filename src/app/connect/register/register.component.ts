@@ -1,6 +1,5 @@
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -20,9 +19,10 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
+import { Gender } from '../../core/enums/gender';
+import { Geolocation } from '../../core/interfaces/geolocation';
 import { User } from '../../core/interfaces/user';
 import { ConnectService } from '../../core/services/connect.service';
-import { Gender } from '../../core/enums/gender';
 
 @Component({
   selector: 'app-register',
@@ -58,6 +58,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   startDate: Date = new Date(1990, 0, 1);
   minDate: Date;
   genders: string[] = Object.values(Gender);
+  geolocation: Geolocation = {} as Geolocation;
 
   constructor(
     private fb: FormBuilder,
@@ -93,14 +94,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           Validators.minLength(2),
         ],
       ],
-      city: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(30),
-          Validators.minLength(2),
-        ],
-      ],
+      distanceSearch: [100, [Validators.required]],
     });
 
     this.secondFormGroup = this.fb.group({
@@ -138,6 +132,17 @@ export class RegisterComponent implements OnInit, OnDestroy {
       secondFormGroup: this.secondFormGroup,
       thirdFormGroup: this.thirdFormGroup,
     });
+
+    this.connectService
+      .getGeolocation()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (geolocation: Geolocation) => {
+          this.geolocation.city = geolocation.city;
+          this.geolocation.latitude = geolocation.latitude;
+          this.geolocation.longitude = geolocation.longitude;
+        },
+      });
   }
 
   ngOnDestroy(): void {
@@ -148,42 +153,36 @@ export class RegisterComponent implements OnInit, OnDestroy {
   registerUser() {
     if (this.registerForm.valid) {
       const user: User = this.setUser();
-      this.connectService
-        .register(user)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe({
-          next: () => {
-            this.loginUser(user);
-          },
-          complete: () => {
-            this.toastr.success(
-              'You are now registered !',
-              'Registration Successful',
-              {
-                positionClass: 'toast-bottom-center',
-                toastClass: 'ngx-toastr custom gold',
-              }
-            );
-          },
-        });
+      this.connectService.register(user).subscribe({
+        next: () => {
+          this.loginUser(user);
+        },
+        complete: () => {
+          this.toastr.success(
+            'You are now registered !',
+            'Registration Successful',
+            {
+              positionClass: 'toast-bottom-center',
+              toastClass: 'ngx-toastr custom gold',
+            }
+          );
+        },
+      });
     }
   }
 
   loginUser(user: User): void {
-    this.connectService
-      .login(user)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: () => {
-          this.router.navigate(['/select']);
-        },
-        complete: () => {
-          this.toastr.success('You are logged in !', 'Logged In', {
-            positionClass: 'toast-bottom-center',
-            toastClass: 'ngx-toastr custom gold',
-          });
-        },
-      });
+    this.connectService.login(user).subscribe({
+      next: () => {
+        this.router.navigate(['/select']);
+      },
+      complete: () => {
+        this.toastr.success('You are logged in !', 'Logged In', {
+          positionClass: 'toast-bottom-center',
+          toastClass: 'ngx-toastr custom gold',
+        });
+      },
+    });
   }
 
   setUser(): User {
@@ -191,7 +190,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
       nickname: this.registerForm.get('firstFormGroup.nickname')
         ?.value as string,
       job: this.registerForm.get('firstFormGroup.job')?.value as string,
-      city: this.registerForm.get('firstFormGroup.city')?.value as string,
+      distanceSearch: this.registerForm.get('firstFormGroup.distanceSearch')
+        ?.value as number,
       birthDate: this.birthDate,
       gender: this.registerForm.get('secondFormGroup.gender')?.value as Gender,
       genderSearch: this.registerForm.get('secondFormGroup.genderSearch')
@@ -201,6 +201,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
       email: this.registerForm.get('thirdFormGroup.email')?.value as string,
       password: this.registerForm.get('thirdFormGroup.password')
         ?.value as string,
+      city: this.geolocation.city,
+      latitude: this.geolocation.latitude,
+      longitude: this.geolocation.longitude,
     };
     return user;
   }

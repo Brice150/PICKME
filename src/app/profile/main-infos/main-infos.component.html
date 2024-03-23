@@ -33,22 +33,11 @@
       >Job is too long</span
     >
   </div>
-  <div class="input-container">
-    <span class="title">City</span>
-    <input placeholder="City" formControlName="city" />
-    <span
-      *ngIf="
-        mainInfosForm.get('city')!.hasError('required') &&
-        mainInfosForm.get('city')!.touched
-      "
-      >City is required</span
-    >
-    <span *ngIf="mainInfosForm.get('city')!.hasError('minlength')"
-      >City is too short</span
-    >
-    <span *ngIf="mainInfosForm.get('city')!.hasError('maxlength')"
-      >City is too long</span
-    >
+  <div class="slide-container">
+    <span>Max Distance</span>
+    <mat-slider min="10" max="500" discrete (change)="slideDistance($event)">
+      <input matSliderThumb formControlName="distanceSearch" />
+    </mat-slider>
   </div>
   <div class="slide-container">
     <span>Height</span>

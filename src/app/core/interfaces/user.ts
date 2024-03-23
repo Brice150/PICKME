@@ -15,13 +15,19 @@ export interface User {
   birthDate: Date;
   gold?: boolean;
 
+  // Geolocation
+  city: string;
+  latitude: string;
+  longitude: string;
+  distanceSearch: number;
+  distance?: number;
+
   // Pictures
   pictures?: Picture[];
 
   // Main Infos
   nickname: string;
   job: string;
-  city: string;
   height?: number;
 
   // Gender and Age

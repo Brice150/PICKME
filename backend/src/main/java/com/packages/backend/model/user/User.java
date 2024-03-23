@@ -28,6 +28,13 @@ public class User implements UserDetails {
   private Boolean gold;
 
 
+  // Geolocation
+  private String city;
+  private String latitude;
+  private String longitude;
+  private Long distance;
+
+
   // Pictures
   @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL)
   @OrderBy("isMainPicture DESC, id DESC")
@@ -38,7 +45,7 @@ public class User implements UserDetails {
   // Main Infos
   private String nickname;
   private String job;
-  private String city;
+  private Long distanceSearch;
   private Long height;
 
 
@@ -87,12 +94,15 @@ public class User implements UserDetails {
   public User() {
   }
 
-  public User(UserRole userRole, Date birthDate, String nickname, String job, String city, Gender gender, Gender genderSearch, Long minAge, Long maxAge, String email, String password) {
+  public User(UserRole userRole, Date birthDate, String nickname, String job, Long distanceSearch, String city, String latitude, String longitude, Gender gender, Gender genderSearch, Long minAge, Long maxAge, String email, String password) {
     this.userRole = userRole;
     this.birthDate = birthDate;
     this.nickname = nickname;
     this.job = job;
+    this.distanceSearch = distanceSearch;
     this.city = city;
+    this.latitude = latitude;
+    this.longitude = longitude;
     this.gender = gender;
     this.genderSearch = genderSearch;
     this.minAge = minAge;
@@ -173,6 +183,38 @@ public class User implements UserDetails {
     this.gold = gold;
   }
 
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(String city) {
+    this.city = city;
+  }
+
+  public String getLatitude() {
+    return latitude;
+  }
+
+  public void setLatitude(String latitude) {
+    this.latitude = latitude;
+  }
+
+  public String getLongitude() {
+    return longitude;
+  }
+
+  public void setLongitude(String longitude) {
+    this.longitude = longitude;
+  }
+
+  public Long getDistance() {
+    return distance;
+  }
+
+  public void setDistance(Long distance) {
+    this.distance = distance;
+  }
+
   public List<Picture> getPictures() {
     return pictures;
   }
@@ -197,12 +239,12 @@ public class User implements UserDetails {
     this.job = job;
   }
 
-  public String getCity() {
-    return city;
+  public Long getDistanceSearch() {
+    return distanceSearch;
   }
 
-  public void setCity(String city) {
-    this.city = city;
+  public void setDistanceSearch(Long distanceSearch) {
+    this.distanceSearch = distanceSearch;
   }
 
   public Long getHeight() {

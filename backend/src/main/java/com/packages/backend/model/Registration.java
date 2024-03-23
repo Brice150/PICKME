@@ -8,6 +8,9 @@ public class Registration {
   private final String nickname;
   private final String job;
   private final String city;
+  private final String latitude;
+  private final String longitude;
+  private final Long distanceSearch;
   private final Date birthDate;
   private final Gender gender;
   private final Gender genderSearch;
@@ -16,10 +19,13 @@ public class Registration {
   private final String email;
   private final String password;
 
-  public Registration(String nickname, String job, String city, Date birthDate, Gender gender, Gender genderSearch, Long minAge, Long maxAge, String email, String password) {
+  public Registration(String nickname, String job, String city, String latitude, String longitude, Long distanceSearch, Date birthDate, Gender gender, Gender genderSearch, Long minAge, Long maxAge, String email, String password) {
     this.nickname = nickname;
     this.job = job;
     this.city = city;
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.distanceSearch = distanceSearch;
     this.birthDate = birthDate;
     this.gender = gender;
     this.genderSearch = genderSearch;
@@ -39,6 +45,18 @@ public class Registration {
 
   public String getCity() {
     return city;
+  }
+
+  public String getLatitude() {
+    return latitude;
+  }
+
+  public String getLongitude() {
+    return longitude;
+  }
+
+  public Long getDistanceSearch() {
+    return distanceSearch;
   }
 
   public Date getBirthDate() {

@@ -15,6 +15,8 @@ public record UserDTO(
   String nickname,
   String job,
   String city,
+  Long distance,
+  Long distanceSearch,
   Long height,
   String gender,
   String genderSearch,

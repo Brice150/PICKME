@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -16,10 +15,10 @@ import { Message } from '../core/interfaces/message';
 import { MatchService } from '../core/services/match.service';
 import { SelectService } from '../core/services/select.service';
 import { ConfirmationDialogComponent } from '../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { LoadingComponent } from '../shared/components/loading/loading.component';
 import { MoreInfoComponent } from '../shared/components/more-info/more-info.component';
 import { MatchCardComponent } from './match-card/match-card.component';
 import { MessageComponent } from './message/message.component';
-import { LoadingComponent } from '../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-match',

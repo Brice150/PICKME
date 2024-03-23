@@ -18,6 +18,8 @@ public class UserDTOMapper implements Function<User, UserDTO> {
       user.getNickname(),
       user.getJob(),
       user.getCity(),
+      user.getDistance(),
+      user.getDistanceSearch(),
       user.getHeight(),
       Gender.getDescriptionNullSafe(user.getGender()),
       Gender.getDescriptionNullSafe(user.getGenderSearch()),
