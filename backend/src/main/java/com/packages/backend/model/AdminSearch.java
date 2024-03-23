@@ -9,15 +9,17 @@ public class AdminSearch {
   private Set<Gender> genders;
   private Long minAge;
   private Long maxAge;
+  private Long distance;
 
   public AdminSearch() {
   }
 
-  public AdminSearch(String nickname, Set<Gender> genders, Long minAge, Long maxAge) {
+  public AdminSearch(String nickname, Set<Gender> genders, Long minAge, Long maxAge, Long distance) {
     this.nickname = nickname;
     this.genders = genders;
     this.minAge = minAge;
     this.maxAge = maxAge;
+    this.distance = distance;
   }
 
   public String getNickname() {
@@ -50,5 +52,13 @@ public class AdminSearch {
 
   public void setMaxAge(Long maxAge) {
     this.maxAge = maxAge;
+  }
+
+  public Long getDistance() {
+    return distance;
+  }
+
+  public void setDistance(Long distance) {
+    this.distance = distance;
   }
 }

@@ -5,4 +5,5 @@ export interface AdminSearch {
   genders: GenderAdmin[];
   minAge: number;
   maxAge: number;
+  distance: number;
 }

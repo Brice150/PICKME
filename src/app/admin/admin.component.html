@@ -20,6 +20,13 @@
         <input matSliderEndThumb formControlName="maxAge" />
       </mat-slider>
     </div>
+    <div class="slide-container">
+      <span>Max Distance</span>
+      <mat-slider min="10" max="500" discrete>
+        <input matSliderThumb formControlName="distance" />
+      </mat-slider>
+      <mat-checkbox formControlName="moreDistance">+ 500 kms</mat-checkbox>
+    </div>
     <div class="button-container">
       <button title="Search" type="submit">Search</button>
     </div>

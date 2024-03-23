@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Tuple;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -44,7 +45,10 @@ public class AdminService {
         user.setTotalMatches(userStatsTuple.get("totalMatches", Long.class));
       }
     });
-    return users.stream().map(userDTOMapper).toList();
+    return users.stream()
+      .filter(user -> user.getDistance() <= adminSearch.getDistance())
+      .sorted(Comparator.comparing(User::getTotalLikes).reversed())
+      .map(userDTOMapper).toList();
   }
 
   public void deleteUserById(Long userId) {

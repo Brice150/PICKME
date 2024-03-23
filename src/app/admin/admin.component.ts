@@ -6,6 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSliderModule } from '@angular/material/slider';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
@@ -25,6 +26,7 @@ import { AdminCardComponent } from './admin-card/admin-card.component';
     ReactiveFormsModule,
     LoadingComponent,
     MatSliderModule,
+    MatCheckboxModule,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',
@@ -36,7 +38,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   searched: boolean = false;
   genders: string[] = Object.values(GenderAdmin);
   adminForm!: FormGroup;
-  adminSearch!: AdminSearch;
+  adminSearch: AdminSearch = {} as AdminSearch;
 
   constructor(
     private toastr: ToastrService,
@@ -50,7 +52,22 @@ export class AdminComponent implements OnInit, OnDestroy {
       genders: [[]],
       minAge: [18, [Validators.required]],
       maxAge: [80, [Validators.required]],
+      distance: [500, [Validators.required]],
+      moreDistance: [true],
     });
+
+    this.adminForm
+      .get('distance')
+      ?.valueChanges.pipe(takeUntil(this.destroyed$))
+      .subscribe((value: number) => {
+        if (value === 500) {
+          this.adminForm.get('moreDistance')?.enable();
+          this.adminForm.get('moreDistance')?.setValue(true);
+        } else {
+          this.adminForm.get('moreDistance')?.disable();
+          this.adminForm.get('moreDistance')?.setValue(false);
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -76,10 +93,12 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   setAdminForm(): void {
-    this.adminSearch = this.adminForm.value;
+    this.adminSearch.nickname = this.adminForm.get('nickname')?.value;
+    this.adminSearch.minAge = this.adminForm.get('minAge')?.value;
+    this.adminSearch.maxAge = this.adminForm.get('maxAge')?.value;
     if (
-      this.adminSearch.genders.length === 0 ||
-      this.adminSearch.genders.includes(GenderAdmin.ALL)
+      this.adminForm.get('genders')?.value.length === 0 ||
+      this.adminForm.get('genders')?.value.includes(GenderAdmin.ALL)
     ) {
       this.adminSearch.genders = [
         GenderAdmin.MAN,
@@ -88,6 +107,11 @@ export class AdminComponent implements OnInit, OnDestroy {
       ];
     } else {
       this.adminSearch.genders = [this.adminForm.get('genders')?.value];
+    }
+    if (this.adminForm.get('moreDistance')?.value) {
+      this.adminSearch.distance = 15650;
+    } else {
+      this.adminSearch.distance = this.adminForm.get('distance')?.value;
     }
   }
 
