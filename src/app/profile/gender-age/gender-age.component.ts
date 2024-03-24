@@ -21,7 +21,6 @@ import { ConnectService } from '../../core/services/connect.service';
 export class GenderAgeComponent implements OnInit {
   @Input() user?: User;
   genderAgeForm!: FormGroup;
-  ageChange: boolean = false;
   genders: string[] = Object.values(Gender);
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
@@ -51,7 +50,6 @@ export class GenderAgeComponent implements OnInit {
       this.user.minAge = this.genderAgeForm.get('minAge')?.value;
       this.user.maxAge = this.genderAgeForm.get('maxAge')?.value;
       this.genderAgeForm.markAsPristine();
-      this.ageChange = false;
     }
   }
 
@@ -68,11 +66,6 @@ export class GenderAgeComponent implements OnInit {
         maxAge: this.user.maxAge,
       });
       this.genderAgeForm.markAsPristine();
-      this.ageChange = false;
     }
-  }
-
-  slideAge(event: Event) {
-    this.ageChange = true;
   }
 }

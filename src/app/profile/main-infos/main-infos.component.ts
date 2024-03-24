@@ -20,8 +20,6 @@ import { ConnectService } from '../../core/services/connect.service';
 export class MainInfosComponent implements OnInit {
   @Input() user?: User;
   mainInfosForm!: FormGroup;
-  heightChange: boolean = false;
-  distanceChange: boolean = false;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
@@ -65,7 +63,6 @@ export class MainInfosComponent implements OnInit {
         this.mainInfosForm.get('distanceSearch')?.value;
       this.user.height = this.mainInfosForm.get('height')?.value;
       this.mainInfosForm.markAsPristine();
-      this.heightChange = false;
     }
   }
 
@@ -82,15 +79,6 @@ export class MainInfosComponent implements OnInit {
         height: this.user.height,
       });
       this.mainInfosForm.markAsPristine();
-      this.heightChange = false;
     }
-  }
-
-  slideHeight(event: Event): void {
-    this.heightChange = true;
-  }
-
-  slideDistance(event: Event): void {
-    this.distanceChange = true;
   }
 }

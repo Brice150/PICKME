@@ -33,14 +33,14 @@
   </div>
   <div class="slide-container">
     <span>Age</span>
-    <mat-slider min="18" max="80" discrete (change)="slideAge($event)">
+    <mat-slider min="18" max="80" discrete>
       <input matSliderStartThumb formControlName="minAge" />
       <input matSliderEndThumb formControlName="maxAge" />
     </mat-slider>
   </div>
   <div class="button-container">
     <button
-      *ngIf="genderAgeForm.dirty || ageChange"
+      *ngIf="genderAgeForm.dirty"
       type="button"
       title="Cancel"
       (click)="cancel()"
@@ -49,7 +49,7 @@
     </button>
     <button
       title="Update"
-      *ngIf="genderAgeForm.valid && (genderAgeForm.dirty || ageChange)"
+      *ngIf="genderAgeForm.valid && genderAgeForm.dirty"
       type="submit"
     >
       Update

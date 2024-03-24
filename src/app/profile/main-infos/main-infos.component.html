@@ -35,19 +35,19 @@
   </div>
   <div class="slide-container">
     <span>Max Distance</span>
-    <mat-slider min="10" max="500" discrete (change)="slideDistance($event)">
+    <mat-slider min="10" max="500" discrete>
       <input matSliderThumb formControlName="distanceSearch" />
     </mat-slider>
   </div>
   <div class="slide-container">
     <span>Height</span>
-    <mat-slider min="120" max="220" discrete (change)="slideHeight($event)">
+    <mat-slider min="120" max="220" discrete>
       <input matSliderThumb formControlName="height" />
     </mat-slider>
   </div>
   <div class="button-container">
     <button
-      *ngIf="mainInfosForm.dirty || heightChange"
+      *ngIf="mainInfosForm.dirty"
       type="button"
       title="Cancel"
       (click)="cancel()"
@@ -56,7 +56,7 @@
     </button>
     <button
       title="Update"
-      *ngIf="mainInfosForm.valid && (mainInfosForm.dirty || heightChange)"
+      *ngIf="mainInfosForm.valid && mainInfosForm.dirty"
       type="submit"
     >
       Update

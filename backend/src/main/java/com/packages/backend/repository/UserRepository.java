@@ -61,7 +61,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     "SELECT DISTINCT u FROM User u" +
       " INNER JOIN Like likeSender ON u.id = likeSender.fkSender" +
       " INNER JOIN Like likeReceiver ON u.id = likeReceiver.fkReceiver" +
-      " WHERE u.id != :connectedId"
+      " WHERE u.id != :connectedId" +
+      " AND (likeSender.fkReceiver = :connectedId" +
+      " OR likeReceiver.fkSender = :connectedId)"
   )
   List<User> getAllUserMatches(@Param("connectedId") Long connectedId);
 }
