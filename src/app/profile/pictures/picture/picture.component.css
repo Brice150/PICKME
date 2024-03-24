@@ -26,7 +26,7 @@
   z-index: -1;
 }
 
-.top-button:hover::before {
+.top-button:not(.gold):hover::before {
   height: 100%;
 }
 
@@ -36,20 +36,20 @@
 
 .top-button.left {
   left: 0;
-  border-radius: 10px 0 10px 0;
+  border-radius: 20px 0 10px 0;
 }
 
 .top-button.right {
   right: 0;
-  border-radius: 0 10px 0 10px;
+  border-radius: 0 20px 0 10px;
 }
 
 .top-button.right:hover::before {
-  border-radius: 0 10px 0 10px;
+  border-radius: 0 20px 0 10px;
 }
 
 .top-button.left:hover::before {
-  border-radius: 10px 0 10px 0;
+  border-radius: 20px 0 10px 0;
 }
 
 .top-button i {
@@ -59,10 +59,7 @@
 .top-button.right.gold {
   background-color: var(--liked);
   color: var(--secondary);
-}
-
-.top-button.right.gold:hover {
-  color: var(--liked);
+  cursor: default;
 }
 
 img {

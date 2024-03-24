@@ -45,7 +45,7 @@ public class PictureService {
   public String selectMainPictureById(Long pictureId) {
     User connectedUser = userService.getConnectedUser();
     Picture picture = getPictureById(pictureId);
-    if (connectedUser.getId().equals(picture.getFkUser().getId())) {
+    if (connectedUser.getId().equals(picture.getFkUser().getId()) && Boolean.FALSE.equals(picture.getIsMainPicture())) {
       List<Picture> userPictures = connectedUser.getPictures();
       userPictures.forEach(userPicture -> userPicture.setIsMainPicture(Objects.equals(userPicture.getId(), picture.getId())));
       pictureRepository.saveAll(userPictures);

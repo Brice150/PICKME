@@ -26,7 +26,9 @@ export class PictureComponent {
   constructor(public dialog: MatDialog) {}
 
   selectMainPicture(): void {
-    this.selectMainEvent.emit();
+    if (!this.picture.isMainPicture) {
+      this.selectMainEvent.emit();
+    }
   }
 
   openDialog(): void {

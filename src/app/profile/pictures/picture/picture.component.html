@@ -9,7 +9,7 @@
 </a>
 <a
   class="top-button right"
-  title="Select Main Picture"
+  [title]="!picture.isMainPicture ? 'Select Main Picture' : ''"
   [ngClass]="picture.isMainPicture ? 'gold' : null"
   (click)="selectMainPicture()"
   *ngIf="display"

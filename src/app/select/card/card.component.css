@@ -118,20 +118,20 @@
 
 .button.left {
   left: 0;
-  border-radius: 10px 0 10px 0;
+  border-radius: 20px 0 10px 0;
 }
 
 .button.right {
   right: 0;
-  border-radius: 0 10px 0 10px;
+  border-radius: 0 20px 0 10px;
 }
 
 .button.right:hover::before {
-  border-radius: 0 10px 0 10px;
+  border-radius: 0 20px 0 10px;
 }
 
 .button.left:hover::before {
-  border-radius: 10px 0 10px 0;
+  border-radius: 20px 0 10px 0;
 }
 
 .button i {
