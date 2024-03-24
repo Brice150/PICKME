@@ -1,4 +1,4 @@
 <app-loading *ngIf="loading"></app-loading>
 <div class="container" *ngIf="!loading">
-  <span>No more user</span>
+  <span>No user {{ usersNumber !== 0 ? "left" : "" }}</span>
 </div>

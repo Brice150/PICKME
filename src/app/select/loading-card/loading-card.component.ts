@@ -11,4 +11,5 @@ import { CommonModule } from '@angular/common';
 })
 export class LoadingCardComponent {
   @Input() loading: boolean = true;
+  @Input() usersNumber: number = 0;
 }

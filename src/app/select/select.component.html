@@ -15,9 +15,18 @@
     ></app-card>
   </swiper-slide>
   <swiper-slide>
-    <app-loading-card [loading]="loading"></app-loading-card>
+    <app-loading-card
+      [loading]="loading"
+      [usersNumber]="users.length"
+    ></app-loading-card>
   </swiper-slide>
 </swiper-container>
-<div class="loading-container" *ngIf="initLoading">
-  <app-loading-card [loading]="true"></app-loading-card>
+<div
+  class="loading-container"
+  *ngIf="initLoading || (users && users.length === 0)"
+>
+  <app-loading-card
+    [loading]="initLoading"
+    [usersNumber]="users.length"
+  ></app-loading-card>
 </div>
