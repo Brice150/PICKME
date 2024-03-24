@@ -13,7 +13,7 @@ Backend : Spring Boot
 
 ### Connect
 
-- Register by completing mandatory informations with form control
+- Register by completing mandatory information with form control
 - Login with failure animation for bad credentials
 - Logout is available on menu once logged in
 
