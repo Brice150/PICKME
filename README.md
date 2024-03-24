@@ -13,21 +13,23 @@ Backend : Spring Boot
 
 ### Connect
 
-- Register with email confirmation
-- Login with form control and failure animation
-- Logout is available on any page once logged in
+- Register by completing mandatory informations with form control
+- Login with failure animation for bad credentials
+- Logout is available on menu once logged in
 
 ### Select
 
-- View profiles that are similar to yours
-- Select profile age you want to see
-- Like a profile
+- View profiles that are similar to yours by distance
+- Swipe profiles and go back if you want to
+- Like or Dislike a profile
+- Match animation
 - View more information about a profile
 
 ### Profile
 
+- Add or Delete pictures and Select main profile picture
 - Modify your profile
-- Add pictures and select main profile picture
+- Cancel modifications retrieves previous profile information
 - Delete your account (needs confirmation)
 
 ### Match
@@ -35,16 +37,21 @@ Backend : Spring Boot
 - View profiles that matched with you
 - Search a user
 - Dislike a profile
-- View more information about a profile
-- Send a message, update or delete it
+- View more information about a profile and messages
+- Add, Update or Delete a message
 
 ### Admin
 
 - Admin role needed to view this page
-- Search user or message
-- See all users or messages
+- Search users by nickname, gender, age or max distance
 - View more information about a profile
-- Delete user or message
+- Delete a user
+
+### More Info
+
+- View full user profile
+- Swiper user pictures
+- Like, Dislike or Delete if you are an admin user
 
 </details>
 
@@ -89,12 +96,6 @@ Backend : Spring Boot
   POST /registration
 ```
 
-### Confirm email
-
-```http
-  GET /registration/confirm
-```
-
 ### Login
 
 ```http
@@ -115,19 +116,13 @@ Backend : Spring Boot
 ### Get all users
 
 ```http
-  GET /admin/user/all
+  GET /admin/all
 ```
 
 ### Delete user
 
 ```http
-  DELETE /admin/user/${email}
-```
-
-### Delete message
-
-```http
-  DELETE /admin/message/${messageId}
+  DELETE /admin/${userId}
 ```
 
   </details>
@@ -141,28 +136,10 @@ Backend : Spring Boot
   GET /user/all
 ```
 
-### Get all users that liked
-
-```http
-  GET /user/all/like
-```
-
-### Get all users that matched
-
-```http
-  GET /user/all/match
-```
-
 ### Get connected user
 
 ```http
   GET /user
-```
-
-### Get user by id
-
-```http
-  GET /user/${userId}
 ```
 
 ### Update user
@@ -171,34 +148,16 @@ Backend : Spring Boot
   PUT /user
 ```
 
-### Delete user
+### Delete connected user
 
 ```http
-  DELETE /user/${email}
+  DELETE /user
 ```
 
   </details>
 
   <details>
   <summary>Message</summary>
-
-### Get all user messages
-
-```http
-  GET /message/all/${userId}
-```
-
-### Get message sender
-
-```http
-  GET /message/sender/${messageId}
-```
-
-### Get user messages number
-
-```http
-  GET /message/all/number/${userId}
-```
 
 ### Add message
 
@@ -223,22 +182,21 @@ Backend : Spring Boot
   <details>
   <summary>Like</summary>
 
-### Get like by foreign keys
-
-```http
-  GET /like/${userId1}/${userId2}
-```
-
 ### Add like
 
 ```http
-  POST /like
+  POST /like/${userId}
 ```
 
-### Delete like
+  </details>
+
+  <details>
+  <summary>Dislike</summary>
+
+### Add dislike
 
 ```http
-  DELETE /like/${likeId}
+  POST /dislike/${userId}
 ```
 
   </details>
@@ -246,22 +204,16 @@ Backend : Spring Boot
   <details>
   <summary>Picture</summary>
 
-### Get all user pictures
-
-```http
-  GET /picture/all/${userId}
-```
-
-### Get picture
-
-```http
-  GET /picture/${pictureName}
-```
-
 ### Add picture
 
 ```http
   POST /picture
+```
+
+### Select main picture
+
+```http
+  PUT /picture/${pictureId}
 ```
 
 ### Delete picture
