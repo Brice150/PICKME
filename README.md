@@ -116,7 +116,7 @@ Backend : Spring Boot
 ### Get all users
 
 ```http
-  GET /admin/all
+  GET /admin/all/${page}
 ```
 
 ### Delete user
@@ -130,10 +130,10 @@ Backend : Spring Boot
   <details>
   <summary>User</summary>
 
-### Get all users
+### Get all selected users
 
 ```http
-  GET /user/all
+  GET /user/all/${page}
 ```
 
 ### Get connected user

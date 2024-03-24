@@ -12,8 +12,8 @@ export class SelectService {
 
   constructor(private http: HttpClient) {}
 
-  public getAllSelectedUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiServerUrl}/user/all`, {
+  public getAllSelectedUsers(page: number): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiServerUrl}/user/all/${page}`, {
       withCredentials: true,
     });
   }

@@ -90,8 +90,11 @@ public class UserService implements UserDetailsService {
     return signUpMessage;
   }
 
-  public List<UserDTO> getAllSelectedUsers() {
+  public List<UserDTO> getAllSelectedUsers(Integer page) {
     User connectedUser = getConnectedUser();
+    if (null == page) {
+      page = 0;
+    }
     List<User> users = userRepository.getAllUsers(connectedUser.getGenderSearch(), connectedUser.getGender(), connectedUser.getMinAge().intValue(), connectedUser.getMaxAge().intValue(), connectedUser.getId());
     List<Long> goldUserId = likeRepository.getGoldByConnectedUserId(connectedUser.getId());
     Map<Long, Double> mapAverageScoreByUserId = new HashMap<>();
@@ -100,7 +103,8 @@ public class UserService implements UserDetailsService {
       mapAverageScoreByUserId.put(user.getId(), calculateScore(connectedUser, user));
       user.setDistance(distanceService.calculateDistance(connectedUser, user).longValue());
     });
-    return sortUsersByDistanceAndAttributes(users, connectedUser, mapAverageScoreByUserId);
+    return sortUsersByDistanceAndAttributes(users, connectedUser, mapAverageScoreByUserId)
+      .stream().skip(page * 25L).limit(25).toList();
   }
 
   public List<Match> getAllUserMatches() {

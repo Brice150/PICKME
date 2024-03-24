@@ -36,7 +36,7 @@ public class User implements UserDetails {
 
 
   // Pictures
-  @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @OrderBy("isMainPicture DESC, id DESC")
   @JsonManagedReference(value = "pictures")
   private List<Picture> pictures;

@@ -20,17 +20,11 @@ swiper-slide {
   cursor: grab;
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-.container span {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--primary);
+.loading-container {
+  width: 80%;
+  height: 600px;
+  max-width: 600px;
+  border-radius: 20px;
 }
 
 @media screen and (max-width: 540px) {

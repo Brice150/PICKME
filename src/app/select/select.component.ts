@@ -9,13 +9,13 @@ import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { User } from '../core/interfaces/user';
 import { SelectService } from '../core/services/select.service';
-import { LoadingComponent } from '../shared/components/loading/loading.component';
 import { CardComponent } from './card/card.component';
+import { LoadingCardComponent } from './loading-card/loading-card.component';
 
 @Component({
   selector: 'app-select',
   standalone: true,
-  imports: [CommonModule, CardComponent, LoadingComponent],
+  imports: [CommonModule, CardComponent, LoadingCardComponent],
   templateUrl: './select.component.html',
   styleUrl: './select.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -25,6 +25,9 @@ export class SelectComponent implements OnInit, OnDestroy {
   destroyed$: Subject<void> = new Subject<void>();
   activeMatchAnimation: boolean = false;
   loading: boolean = true;
+  page: number = 0;
+  maxLoadedIndex: number = 0;
+  initLoading: boolean = true;
 
   constructor(
     private toastr: ToastrService,
@@ -32,20 +35,30 @@ export class SelectComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.selectService
-      .getAllSelectedUsers()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (users: User[]) => {
-          this.users = users;
-          this.loading = false;
-        },
-      });
+    this.initLoading = true;
+    this.loadUsers();
   }
 
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+
+  loadUsers(): void {
+    this.loading = true;
+    this.selectService
+      .getAllSelectedUsers(this.page)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (users: User[]) => {
+          this.users.push(...users);
+          this.initLoading = false;
+          this.loading = false;
+          setTimeout(() => {
+            document.querySelector('swiper-container')?.swiper.update();
+          });
+        },
+      });
   }
 
   isCurrentView(user: User): boolean {
@@ -54,11 +67,21 @@ export class SelectComponent implements OnInit, OnDestroy {
     if (index === undefined) {
       return false;
     }
-    return user.id === this.users[index].id;
+    return user.id === this.users[index]?.id;
   }
 
   onSlideChange(): void {
-    // Needed to update isCurrentView when we slide
+    const index: number | undefined =
+      document.querySelector('swiper-container')?.swiper.activeIndex;
+    if (index !== undefined) {
+      const shouldLoadNextPage =
+        index % 15 === 0 && index > this.maxLoadedIndex;
+      if (shouldLoadNextPage) {
+        this.maxLoadedIndex = index;
+        this.page++;
+        this.loadUsers();
+      }
+    }
   }
 
   like(user: User): void {

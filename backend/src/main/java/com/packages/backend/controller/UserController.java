@@ -25,9 +25,9 @@ public class UserController {
     return new ResponseEntity<>(userService.getConnectedUserDTO(), HttpStatus.OK);
   }
 
-  @GetMapping("/user/all")
-  public ResponseEntity<List<UserDTO>> getAllSelectedUsers() {
-    return new ResponseEntity<>(userService.getAllSelectedUsers(), HttpStatus.OK);
+  @GetMapping("/user/all/{page}")
+  public ResponseEntity<List<UserDTO>> getAllSelectedUsers(@PathVariable("page") Integer page) {
+    return new ResponseEntity<>(userService.getAllSelectedUsers(page), HttpStatus.OK);
   }
 
   @GetMapping("/user")
