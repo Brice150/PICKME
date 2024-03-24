@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="adminForm" (ngSubmit)="search()">
+  <form [formGroup]="adminForm" (ngSubmit)="search(0)">
     <div class="input-container">
       <span class="title">Nickname</span>
       <input placeholder="Nickname" formControlName="nickname" />
@@ -31,6 +31,14 @@
       <button title="Search" type="submit">Search</button>
     </div>
   </form>
+  <app-paginator
+    #paginator
+    *ngIf="searched"
+    (handlePageEvent)="handlePageEvent($event)"
+    [loading]="loading"
+    [usersNumber]="users.length"
+  >
+  </app-paginator>
   <div class="content" *ngIf="users && users.length !== 0 && !loading">
     <app-admin-card
       *ngFor="let user of users"

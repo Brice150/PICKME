@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,6 +15,7 @@ import { AdminSearch } from '../core/interfaces/admin-search';
 import { User } from '../core/interfaces/user';
 import { AdminService } from '../core/services/admin.service';
 import { LoadingComponent } from '../shared/components/loading/loading.component';
+import { PaginatorComponent } from '../shared/components/paginator/paginator.component';
 import { AdminCardComponent } from './admin-card/admin-card.component';
 
 @Component({
@@ -27,6 +28,7 @@ import { AdminCardComponent } from './admin-card/admin-card.component';
     LoadingComponent,
     MatSliderModule,
     MatCheckboxModule,
+    PaginatorComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',
@@ -39,6 +41,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   genders: string[] = Object.values(GenderAdmin);
   adminForm!: FormGroup;
   adminSearch: AdminSearch = {} as AdminSearch;
+  @ViewChild('paginator') paginator?: PaginatorComponent;
 
   constructor(
     private toastr: ToastrService,
@@ -75,18 +78,21 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
-  search(): void {
+  search(page: number): void {
     if (this.adminForm.valid) {
       this.loading = true;
       this.setAdminForm();
       this.adminService
-        .getAllUsers(this.adminSearch)
+        .getAllUsers(this.adminSearch, page)
         .pipe(takeUntil(this.destroyed$))
         .subscribe({
           next: (users: User[]) => {
             this.users = users;
             this.loading = false;
             this.searched = true;
+            if (this.paginator && page === 0) {
+              this.paginator.page = page;
+            }
           },
         });
     }
@@ -130,5 +136,9 @@ export class AdminComponent implements OnInit, OnDestroy {
         }
       },
     });
+  }
+
+  handlePageEvent(pageIndex: number) {
+    this.search(pageIndex);
   }
 }

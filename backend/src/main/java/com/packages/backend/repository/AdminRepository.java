@@ -2,6 +2,7 @@ package com.packages.backend.repository;
 
 import com.packages.backend.model.user.User;
 import com.packages.backend.model.user.enums.Gender;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,7 +20,7 @@ public interface AdminRepository extends JpaRepository<User, Long> {
       " AND EXTRACT(YEAR FROM AGE(CURRENT_DATE, u.birthDate)) BETWEEN :minAge AND :maxAge" +
       " ORDER BY u.nickname"
   )
-  List<User> getAllUsers(@Param("connectedId") Long connectedId, @Param("nickname") String nickname, @Param("genders") Set<Gender> genders, @Param("minAge") Integer minAge, @Param("maxAge") Integer maxAge);
+  List<User> getAllUsers(@Param("connectedId") Long connectedId, @Param("nickname") String nickname, @Param("genders") Set<Gender> genders, @Param("minAge") Integer minAge, @Param("maxAge") Integer maxAge, Pageable pageable);
 
   @Query(
     "SELECT DISTINCT u.id as id, count(d) as totalDislikes, count(l) as totalLikes, count(likeReceiver) as totalMatches" +

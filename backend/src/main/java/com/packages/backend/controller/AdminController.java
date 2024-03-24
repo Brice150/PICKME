@@ -20,9 +20,9 @@ public class AdminController {
     this.adminService = adminService;
   }
 
-  @PostMapping("/all")
-  public ResponseEntity<List<UserDTO>> getAllUsers(@RequestBody AdminSearch adminSearch) {
-    return new ResponseEntity<>(adminService.getAllUsers(adminSearch), HttpStatus.OK);
+  @PostMapping("/all/{page}")
+  public ResponseEntity<List<UserDTO>> getAllUsers(@PathVariable("page") Integer page, @RequestBody AdminSearch adminSearch) {
+    return new ResponseEntity<>(adminService.getAllUsers(adminSearch, page), HttpStatus.OK);
   }
 
   @DeleteMapping("/{userId}")

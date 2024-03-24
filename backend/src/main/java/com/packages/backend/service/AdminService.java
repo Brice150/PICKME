@@ -6,6 +6,7 @@ import com.packages.backend.model.user.UserDTO;
 import com.packages.backend.model.user.UserDTOMapper;
 import com.packages.backend.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Tuple;
@@ -31,12 +32,15 @@ public class AdminService {
     this.distanceService = distanceService;
   }
 
-  public List<UserDTO> getAllUsers(AdminSearch adminSearch) {
+  public List<UserDTO> getAllUsers(AdminSearch adminSearch, Integer page) {
     if (null == adminSearch || null == adminSearch.getNickname() || null == adminSearch.getGenders() || null == adminSearch.getMinAge() || null == adminSearch.getMaxAge() || null == adminSearch.getDistance()) {
       return Collections.emptyList();
     }
+    if (null == page) {
+      page = 0;
+    }
     User connectedUser = userService.getConnectedUser();
-    List<User> users = adminRepository.getAllUsers(connectedUser.getId(), adminSearch.getNickname(), adminSearch.getGenders(), adminSearch.getMinAge().intValue(), adminSearch.getMaxAge().intValue());
+    List<User> users = adminRepository.getAllUsers(connectedUser.getId(), adminSearch.getNickname(), adminSearch.getGenders(), adminSearch.getMinAge().intValue(), adminSearch.getMaxAge().intValue(), PageRequest.of(page, 25));
     List<Tuple> userStatsTuples = adminRepository.getAllUsersStats(connectedUser.getId());
     Map<Long, Tuple> userStatsMap = userStatsTuples.stream()
       .collect(Collectors.toMap(tuple -> tuple.get("id", Long.class), Function.identity()));

@@ -13,9 +13,12 @@ export class AdminService {
 
   constructor(private http: HttpClient) {}
 
-  public getAllUsers(adminSearch: AdminSearch): Observable<User[]> {
+  public getAllUsers(
+    adminSearch: AdminSearch,
+    page: number
+  ): Observable<User[]> {
     return this.http.post<User[]>(
-      `${this.apiServerUrl}/admin/all`,
+      `${this.apiServerUrl}/admin/all/${page}`,
       adminSearch,
       {
         withCredentials: true,

@@ -1,0 +1,17 @@
+<div class="container" *ngIf="!(page === 0 && usersNumber < 25) && !loading">
+  <a
+    [title]="page === 0 ? '' : 'Previous'"
+    (click)="previous()"
+    [ngClass]="page === 0 ? 'disabled' : ''"
+  >
+    <i class="bx bx-left-arrow-alt"></i>
+  </a>
+  <span>Page : {{ page + 1 }} ({{ usersNumber }})</span>
+  <a
+    [title]="usersNumber < 25 ? '' : 'Next'"
+    (click)="next()"
+    [ngClass]="usersNumber < 25 ? 'disabled' : ''"
+  >
+    <i class="bx bx-right-arrow-alt"></i>
+  </a>
+</div>
