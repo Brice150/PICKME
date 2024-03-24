@@ -9,7 +9,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping()
@@ -38,8 +37,7 @@ public class UserController {
 
   @PutMapping("/user")
   public ResponseEntity<UserDTO> updateUser(@RequestBody User user) {
-    Optional<UserDTO> updatedUser = userService.updateUser(user);
-    return updatedUser.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
+    return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
   }
 
   @DeleteMapping("/user")

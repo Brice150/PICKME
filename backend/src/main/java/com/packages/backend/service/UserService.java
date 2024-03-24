@@ -63,6 +63,8 @@ public class UserService implements UserDetailsService {
       signUpMessage = "Latitude" + emptyPhrase;
     } else if (user.getLongitude() == null || user.getLongitude().isBlank()) {
       signUpMessage = "Longitude" + emptyPhrase;
+    } else if (user.getDistanceSearch() == null) {
+      signUpMessage = "Max Distance" + emptyPhrase;
     } else if (user.getBirthDate() == null) {
       signUpMessage = "Birth date" + emptyPhrase;
     } else if (user.getGender() == null || Gender.getDescriptionNullSafe(user.getGender()).isBlank()) {
@@ -112,37 +114,33 @@ public class UserService implements UserDetailsService {
       .toList();
   }
 
-  public Optional<UserDTO> updateUser(User user) {
+  public UserDTO updateUser(User user) {
     User connectedUser = getConnectedUser();
-    if (connectedUser.getId().equals(user.getId())) {
-      connectedUser.setNickname(user.getNickname() != null ? user.getNickname() : connectedUser.getNickname());
-      connectedUser.setJob(user.getJob() != null ? user.getJob() : connectedUser.getJob());
-      connectedUser.setCity(user.getCity() != null ? user.getCity() : connectedUser.getCity());
-      connectedUser.setLatitude(user.getLatitude() != null ? user.getLatitude() : connectedUser.getLatitude());
-      connectedUser.setLongitude(user.getLongitude() != null ? user.getLongitude() : connectedUser.getLongitude());
-      connectedUser.setDistanceSearch(user.getDistanceSearch() != null ? user.getDistanceSearch() : connectedUser.getDistanceSearch());
-      connectedUser.setHeight(user.getHeight() != null ? user.getHeight() : connectedUser.getHeight());
-      connectedUser.setGender(user.getGender() != null ? user.getGender() : connectedUser.getGender());
-      connectedUser.setGenderSearch(user.getGenderSearch() != null ? user.getGenderSearch() : connectedUser.getGenderSearch());
-      connectedUser.setMinAge(user.getMinAge() != null ? user.getMinAge() : connectedUser.getMinAge());
-      connectedUser.setMaxAge(user.getMaxAge() != null ? user.getMaxAge() : connectedUser.getMaxAge());
-      if (user.getPassword() != null) {
-        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-        connectedUser.setPassword(encodedPassword);
-      }
-      connectedUser.setDescription(user.getDescription() != null ? user.getDescription() : connectedUser.getDescription());
-      connectedUser.setAlcoholDrinking(user.getAlcoholDrinking() != null ? user.getAlcoholDrinking() : connectedUser.getAlcoholDrinking());
-      connectedUser.setSmokes(user.getSmokes() != null ? user.getSmokes() : connectedUser.getSmokes());
-      connectedUser.setOrganised(user.getOrganised() != null ? user.getOrganised() : connectedUser.getOrganised());
-      connectedUser.setPersonality(user.getPersonality() != null ? user.getPersonality() : connectedUser.getPersonality());
-      connectedUser.setSportPractice(user.getSportPractice() != null ? user.getSportPractice() : connectedUser.getSportPractice());
-      connectedUser.setAnimals(user.getAnimals() != null ? user.getAnimals() : connectedUser.getAnimals());
-      connectedUser.setParenthood(user.getParenthood() != null ? user.getParenthood() : connectedUser.getParenthood());
-      connectedUser.setGamer(user.getGamer() != null ? user.getGamer() : connectedUser.getGamer());
-      return Optional.of(userRepository.save(connectedUser)).map(userDTOMapper);
-    } else {
-      return Optional.empty();
+    connectedUser.setNickname(user.getNickname() != null ? user.getNickname() : connectedUser.getNickname());
+    connectedUser.setJob(user.getJob() != null ? user.getJob() : connectedUser.getJob());
+    connectedUser.setCity(user.getCity() != null ? user.getCity() : connectedUser.getCity());
+    connectedUser.setLatitude(user.getLatitude() != null ? user.getLatitude() : connectedUser.getLatitude());
+    connectedUser.setLongitude(user.getLongitude() != null ? user.getLongitude() : connectedUser.getLongitude());
+    connectedUser.setDistanceSearch(user.getDistanceSearch() != null ? user.getDistanceSearch() : connectedUser.getDistanceSearch());
+    connectedUser.setHeight(user.getHeight() != null ? user.getHeight() : connectedUser.getHeight());
+    connectedUser.setGender(user.getGender() != null ? user.getGender() : connectedUser.getGender());
+    connectedUser.setGenderSearch(user.getGenderSearch() != null ? user.getGenderSearch() : connectedUser.getGenderSearch());
+    connectedUser.setMinAge(user.getMinAge() != null ? user.getMinAge() : connectedUser.getMinAge());
+    connectedUser.setMaxAge(user.getMaxAge() != null ? user.getMaxAge() : connectedUser.getMaxAge());
+    if (user.getPassword() != null) {
+      String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+      connectedUser.setPassword(encodedPassword);
     }
+    connectedUser.setDescription(user.getDescription() != null ? user.getDescription() : connectedUser.getDescription());
+    connectedUser.setAlcoholDrinking(user.getAlcoholDrinking() != null ? user.getAlcoholDrinking() : connectedUser.getAlcoholDrinking());
+    connectedUser.setSmokes(user.getSmokes() != null ? user.getSmokes() : connectedUser.getSmokes());
+    connectedUser.setOrganised(user.getOrganised() != null ? user.getOrganised() : connectedUser.getOrganised());
+    connectedUser.setPersonality(user.getPersonality() != null ? user.getPersonality() : connectedUser.getPersonality());
+    connectedUser.setSportPractice(user.getSportPractice() != null ? user.getSportPractice() : connectedUser.getSportPractice());
+    connectedUser.setAnimals(user.getAnimals() != null ? user.getAnimals() : connectedUser.getAnimals());
+    connectedUser.setParenthood(user.getParenthood() != null ? user.getParenthood() : connectedUser.getParenthood());
+    connectedUser.setGamer(user.getGamer() != null ? user.getGamer() : connectedUser.getGamer());
+    return userDTOMapper.apply(userRepository.save(connectedUser));
   }
 
   public User getUserById(Long userId) {

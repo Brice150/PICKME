@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Tuple;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,9 @@ public class AdminService {
   }
 
   public List<UserDTO> getAllUsers(AdminSearch adminSearch) {
+    if (null == adminSearch || null == adminSearch.getNickname() || null == adminSearch.getGenders() || null == adminSearch.getMinAge() || null == adminSearch.getMaxAge() || null == adminSearch.getDistance()) {
+      return Collections.emptyList();
+    }
     User connectedUser = userService.getConnectedUser();
     List<User> users = adminRepository.getAllUsers(connectedUser.getId(), adminSearch.getNickname(), adminSearch.getGenders(), adminSearch.getMinAge().intValue(), adminSearch.getMaxAge().intValue());
     List<Tuple> userStatsTuples = adminRepository.getAllUsersStats(connectedUser.getId());
