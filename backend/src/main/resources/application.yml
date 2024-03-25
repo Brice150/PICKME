@@ -19,4 +19,4 @@ server:
   port: 5000
   servlet:
     session:
-      timeout: 15m
+      timeout: 30m

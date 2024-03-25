@@ -4,13 +4,14 @@ import { User } from '../interfaces/user';
 import { Observable, of, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Geolocation } from '../interfaces/geolocation';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class ConnectService {
   private apiServerUrl = environment.apiBaseUrl;
   connectedUser?: User;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   public register(user: User): any {
     return this.http.post(`${this.apiServerUrl}/registration`, user, {
@@ -41,6 +42,7 @@ export class ConnectService {
   }
 
   public logout() {
+    this.router.navigate(['/']);
     this.connectedUser = undefined;
   }
 }
