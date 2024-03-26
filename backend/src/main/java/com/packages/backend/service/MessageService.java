@@ -2,8 +2,8 @@ package com.packages.backend.service;
 
 import com.packages.backend.exception.MessageNotFoundException;
 import com.packages.backend.model.Match;
-import com.packages.backend.model.Message;
-import com.packages.backend.model.user.User;
+import com.packages.backend.model.entity.Message;
+import com.packages.backend.model.entity.User;
 import com.packages.backend.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

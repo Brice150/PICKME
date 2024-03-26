@@ -1,9 +1,9 @@
 package com.packages.backend.service;
 
 import com.packages.backend.model.AdminSearch;
-import com.packages.backend.model.user.User;
-import com.packages.backend.model.user.UserDTO;
-import com.packages.backend.model.user.UserDTOMapper;
+import com.packages.backend.model.dto.UserDTO;
+import com.packages.backend.model.dto.UserDTOMapper;
+import com.packages.backend.model.entity.User;
 import com.packages.backend.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -38,9 +38,12 @@ public class AdminService {
     User connectedUser = userService.getConnectedUser();
     List<User> users = adminRepository.getAllUsers(connectedUser.getId(), adminSearch.getNickname(), adminSearch.getGenders(), adminSearch.getMinAge().intValue(), adminSearch.getMaxAge().intValue(), PageRequest.of(page, 25));
     users.forEach(user -> user.getGeolocation().setDistance(distanceService.calculateDistance(connectedUser, user).longValue()));
+    Comparator<User> userComparator = Comparator.comparing((User user) -> user.getStats().getTotalMatches(), Comparator.reverseOrder())
+      .thenComparing((User user) -> user.getStats().getTotalLikes(), Comparator.reverseOrder())
+      .thenComparing((User user) -> user.getStats().getTotalDislikes(), Comparator.reverseOrder());
     return users.stream()
       .filter(user -> user.getGeolocation().getDistance() <= adminSearch.getDistance())
-      .sorted(Comparator.comparing(user -> user.getStats() != null ? user.getStats().getTotalLikes() : 0L, Comparator.reverseOrder()))
+      .sorted(userComparator)
       .map(userDTOMapper)
       .toList();
   }

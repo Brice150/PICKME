@@ -1,7 +1,7 @@
 package com.packages.backend.repository;
 
-import com.packages.backend.model.user.User;
-import com.packages.backend.model.user.enums.Gender;
+import com.packages.backend.model.entity.User;
+import com.packages.backend.model.enums.Gender;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +18,26 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   @Query("SELECT u FROM User u WHERE u.email = :email")
   Optional<User> getUserByEmail(@Param("email") String email);
+
+  @Transactional
+  @Modifying
+  @Query("DELETE FROM Preferences p WHERE p.id = :fkUser")
+  void deleteUserPreferencesByFk(@Param("fkUser") Long fkUser);
+
+  @Transactional
+  @Modifying
+  @Query("DELETE FROM GenderAge g WHERE g.id = :fkUser")
+  void deleteUserGenderAgeByFk(@Param("fkUser") Long fkUser);
+
+  @Transactional
+  @Modifying
+  @Query("DELETE FROM Geolocation g WHERE g.id = :fkUser")
+  void deleteUserGeolocationByFk(@Param("fkUser") Long fkUser);
+
+  @Transactional
+  @Modifying
+  @Query("DELETE FROM Stats s WHERE s.id = :fkUser")
+  void deleteUserStatsByFk(@Param("fkUser") Long fkUser);
 
   @Transactional
   @Modifying
@@ -48,8 +68,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     "SELECT DISTINCT u FROM User u" +
       " LEFT JOIN Like l ON u.id = l.fkReceiver AND l.fkSender = :connectedId" +
       " LEFT JOIN Dislike d ON u.id = d.fkReceiver AND d.fkSender = :connectedId" +
-      " WHERE u.genderSearch = :gender" +
-      " AND u.gender = :genderSearch" +
+      " WHERE u.genderAge.genderSearch = :gender" +
+      " AND u.genderAge.gender = :genderSearch" +
       " AND EXTRACT(YEAR FROM AGE(CURRENT_DATE, u.birthDate)) BETWEEN :minAge AND :maxAge" +
       " AND u.id != :connectedId" +
       " AND l.fkSender IS NULL" +

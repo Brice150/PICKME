@@ -1,7 +1,7 @@
-package com.packages.backend.model.user;
+package com.packages.backend.model.dto;
 
-import com.packages.backend.model.Picture;
-import com.packages.backend.model.user.enums.UserRole;
+import com.packages.backend.model.entity.*;
+import com.packages.backend.model.enums.UserRole;
 
 import java.util.Date;
 import java.util.List;

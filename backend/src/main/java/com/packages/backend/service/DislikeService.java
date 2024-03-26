@@ -1,7 +1,7 @@
 package com.packages.backend.service;
 
-import com.packages.backend.model.Dislike;
-import com.packages.backend.model.user.User;
+import com.packages.backend.model.entity.Dislike;
+import com.packages.backend.model.entity.User;
 import com.packages.backend.repository.DislikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,6 @@ public class DislikeService {
     Dislike dislike = new Dislike(new Date(), connectedUser.getId(), dislikedUser.getId());
     dislike.setDate(new Date());
     dislikeRepository.save(dislike);
-    //TODO: save user stats
     return null;
   }
 }

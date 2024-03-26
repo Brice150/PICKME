@@ -31,9 +31,11 @@
     <span class="larger">{{ user.nickname }}</span>
     <span class="subtitle">
       A {{ user.birthDate | age }} years old {{ user.job | lowercase }} at
-      {{ user.city }} ({{
-        user.distance +
-          (user.distance === 1 || user.distance === 0 ? " km" : " kms")
+      {{ user.geolocation.city }} ({{
+        user.geolocation.distance +
+          (user.geolocation.distance === 1 || user.geolocation.distance === 0
+            ? " km"
+            : " kms")
       }})
     </span>
   </div>
@@ -61,37 +63,37 @@
       <i class="bx bx-sort-up" matChipAvatar></i>
       {{ user.height }}
     </mat-chip>
-    <mat-chip color="accent" *ngIf="user?.alcoholDrinking">
+    <mat-chip color="accent" *ngIf="user.preferences?.alcoholDrinking">
       <i class="bx bxs-drink" matChipAvatar></i>
-      {{ user.alcoholDrinking }}
+      {{ user.preferences?.alcoholDrinking }}
     </mat-chip>
-    <mat-chip color="accent" *ngIf="user?.smokes">
+    <mat-chip color="accent" *ngIf="user.preferences?.smokes">
       <i class="bx bx-wind" matChipAvatar></i>
-      {{ user.smokes }}
+      {{ user.preferences?.smokes }}
     </mat-chip>
-    <mat-chip color="accent" *ngIf="user?.sportPractice">
+    <mat-chip color="accent" *ngIf="user.preferences?.sportPractice">
       <i class="bx bx-dumbbell" matChipAvatar></i>
-      {{ user.sportPractice }}
+      {{ user.preferences?.sportPractice }}
     </mat-chip>
-    <mat-chip color="accent" *ngIf="user?.parenthood">
+    <mat-chip color="accent" *ngIf="user.preferences?.parenthood">
       <i class="bx bx-child" matChipAvatar></i>
-      {{ user.parenthood }}
+      {{ user.preferences?.parenthood }}
     </mat-chip>
-    <mat-chip color="accent" *ngIf="user?.gamer">
+    <mat-chip color="accent" *ngIf="user.preferences?.gamer">
       <i class="bx bxs-joystick" matChipAvatar></i>
-      {{ user.gamer }}
+      {{ user.preferences?.gamer }}
     </mat-chip>
-    <mat-chip color="accent" *ngIf="user?.animals">
+    <mat-chip color="accent" *ngIf="user.preferences?.animals">
       <i class="bx bxs-cat" matChipAvatar></i>
-      {{ user.animals }}
+      {{ user.preferences?.animals }}
     </mat-chip>
-    <mat-chip color="accent" *ngIf="user?.organised">
+    <mat-chip color="accent" *ngIf="user.preferences?.organised">
       <i class="bx bxs-layer" matChipAvatar></i>
-      {{ user.organised }}
+      {{ user.preferences?.organised }}
     </mat-chip>
-    <mat-chip color="accent" *ngIf="user?.personality">
+    <mat-chip color="accent" *ngIf="user.preferences?.personality">
       <i class="bx bxs-user-voice" matChipAvatar></i>
-      {{ user.personality }}
+      {{ user.preferences?.personality }}
     </mat-chip>
   </mat-chip-listbox>
   <a class="close-button" title="Close" (click)="close()">Close</a>

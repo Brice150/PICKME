@@ -17,7 +17,7 @@ import { ConnectService } from '../../core/services/connect.service';
   styleUrl: './password.component.css',
 })
 export class PasswordComponent implements OnInit {
-  @Input() user?: User;
+  @Input() user!: User;
   passwordForm!: FormGroup;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
@@ -61,7 +61,7 @@ export class PasswordComponent implements OnInit {
 
   cancel(): void {
     if (this.user) {
-      this.user.password = this.connectService.connectedUser?.password;
+      this.user.password = this.connectService.connectedUser!.password;
       this.passwordForm.patchValue({
         password: null,
         passwordDuplicate: null,

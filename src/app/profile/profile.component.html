@@ -20,7 +20,7 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <app-main-infos
-        [user]="user"
+        [user]="user!"
         (updateEvent)="updateUser($event)"
       ></app-main-infos>
     </mat-expansion-panel>
@@ -32,7 +32,7 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <app-gender-age
-        [user]="user"
+        [user]="user!"
         (updateEvent)="updateUser($event)"
       ></app-gender-age>
     </mat-expansion-panel>
@@ -44,7 +44,7 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <app-description
-        [user]="user"
+        [user]="user!"
         (updateEvent)="updateUser($event)"
       ></app-description>
     </mat-expansion-panel>
@@ -56,7 +56,7 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <app-preferences
-        [user]="user"
+        [user]="user!"
         (updateEvent)="updateUser($event)"
       ></app-preferences>
     </mat-expansion-panel>
@@ -68,7 +68,7 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <app-password
-        [user]="user"
+        [user]="user!"
         (updateEvent)="updateUser($event)"
       ></app-password>
     </mat-expansion-panel>

@@ -1,7 +1,7 @@
 package com.packages.backend.controller;
 
 import com.packages.backend.model.AdminSearch;
-import com.packages.backend.model.user.UserDTO;
+import com.packages.backend.model.dto.UserDTO;
 import com.packages.backend.service.AdminService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

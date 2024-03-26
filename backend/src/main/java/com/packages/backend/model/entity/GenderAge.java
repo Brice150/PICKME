@@ -1,6 +1,7 @@
-package com.packages.backend.model.user;
+package com.packages.backend.model.entity;
 
-import com.packages.backend.model.user.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.packages.backend.model.enums.Gender;
 
 import javax.persistence.*;
 
@@ -19,16 +20,18 @@ public class GenderAge {
   @OneToOne
   @MapsId
   @JoinColumn(name = "user_id")
-  private User user;
+  @JsonBackReference(value = "genderAge")
+  private User fkUser;
 
   public GenderAge() {
   }
 
-  public GenderAge(Gender gender, Gender genderSearch, Long minAge, Long maxAge) {
+  public GenderAge(Gender gender, Gender genderSearch, Long minAge, Long maxAge, User fkUser) {
     this.gender = gender;
     this.genderSearch = genderSearch;
     this.minAge = minAge;
     this.maxAge = maxAge;
+    this.fkUser = fkUser;
   }
 
   public Long getId() {
@@ -71,11 +74,11 @@ public class GenderAge {
     this.maxAge = maxAge;
   }
 
-  public User getUser() {
-    return user;
+  public User getFkUser() {
+    return fkUser;
   }
 
-  public void setUser(User user) {
-    this.user = user;
+  public void setFkUser(User fkUser) {
+    this.fkUser = fkUser;
   }
 }

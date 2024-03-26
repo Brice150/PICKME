@@ -1,6 +1,7 @@
-package com.packages.backend.model.user;
+package com.packages.backend.model.entity;
 
-import com.packages.backend.model.user.enums.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.packages.backend.model.enums.*;
 
 import javax.persistence.*;
 
@@ -29,12 +30,13 @@ public class Preferences {
   @OneToOne
   @MapsId
   @JoinColumn(name = "user_id")
-  private User user;
+  @JsonBackReference(value = "preferences")
+  private User fkUser;
 
   public Preferences() {
   }
 
-  public Preferences(AlcoholDrinking alcoholDrinking, Smokes smokes, Organised organised, Personality personality, SportPractice sportPractice, Animals animals, Parenthood parenthood, Gamer gamer) {
+  public Preferences(AlcoholDrinking alcoholDrinking, Smokes smokes, Organised organised, Personality personality, SportPractice sportPractice, Animals animals, Parenthood parenthood, Gamer gamer, User fkUser) {
     this.alcoholDrinking = alcoholDrinking;
     this.smokes = smokes;
     this.organised = organised;
@@ -43,6 +45,7 @@ public class Preferences {
     this.animals = animals;
     this.parenthood = parenthood;
     this.gamer = gamer;
+    this.fkUser = fkUser;
   }
 
   public Long getId() {
@@ -117,11 +120,11 @@ public class Preferences {
     this.gamer = gamer;
   }
 
-  public User getUser() {
-    return user;
+  public User getFkUser() {
+    return fkUser;
   }
 
-  public void setUser(User user) {
-    this.user = user;
+  public void setFkUser(User fkUser) {
+    this.fkUser = fkUser;
   }
 }

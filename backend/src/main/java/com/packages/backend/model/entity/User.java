@@ -1,8 +1,7 @@
-package com.packages.backend.model.user;
+package com.packages.backend.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.packages.backend.model.Picture;
-import com.packages.backend.model.user.enums.UserRole;
+import com.packages.backend.model.enums.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,21 +31,25 @@ public class User implements UserDetails {
   private String email;
   private String password;
   private String description;
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "fkUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @PrimaryKeyJoinColumn
+  @JsonManagedReference(value = "genderAge")
   private GenderAge genderAge;
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "fkUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @PrimaryKeyJoinColumn
+  @JsonManagedReference(value = "preferences")
   private Preferences preferences;
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "fkUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @PrimaryKeyJoinColumn
+  @JsonManagedReference(value = "geolocation")
   private Geolocation geolocation;
   @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @OrderBy("isMainPicture DESC, id DESC")
   @JsonManagedReference(value = "pictures")
   private List<Picture> pictures;
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "fkUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @PrimaryKeyJoinColumn
+  @JsonManagedReference(value = "stats")
   private Stats stats;
 
   public User() {

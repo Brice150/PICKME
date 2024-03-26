@@ -1,6 +1,6 @@
 package com.packages.backend.service;
 
-import com.packages.backend.model.user.User;
+import com.packages.backend.model.entity.User;
 import org.springframework.stereotype.Service;
 
 @Service

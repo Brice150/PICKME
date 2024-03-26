@@ -19,7 +19,7 @@ import { ConnectService } from '../../core/services/connect.service';
   styleUrl: './gender-age.component.css',
 })
 export class GenderAgeComponent implements OnInit {
-  @Input() user?: User;
+  @Input() user!: User;
   genderAgeForm!: FormGroup;
   genders: string[] = Object.values(Gender);
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
@@ -31,10 +31,10 @@ export class GenderAgeComponent implements OnInit {
 
   ngOnInit(): void {
     this.genderAgeForm = this.fb.group({
-      gender: [this.user?.gender, [Validators.required]],
-      genderSearch: [this.user?.genderSearch, [Validators.required]],
-      minAge: [this.user?.minAge, [Validators.required]],
-      maxAge: [this.user?.maxAge, [Validators.required]],
+      gender: [this.user.genderAge?.gender, [Validators.required]],
+      genderSearch: [this.user.genderAge?.genderSearch, [Validators.required]],
+      minAge: [this.user.genderAge?.minAge, [Validators.required]],
+      maxAge: [this.user.genderAge?.maxAge, [Validators.required]],
     });
   }
 
@@ -45,25 +45,30 @@ export class GenderAgeComponent implements OnInit {
 
   setGenderAge(): void {
     if (this.user) {
-      this.user.gender = this.genderAgeForm.get('gender')?.value;
-      this.user.genderSearch = this.genderAgeForm.get('genderSearch')?.value;
-      this.user.minAge = this.genderAgeForm.get('minAge')?.value;
-      this.user.maxAge = this.genderAgeForm.get('maxAge')?.value;
+      this.user.genderAge.gender = this.genderAgeForm.get('gender')?.value;
+      this.user.genderAge.genderSearch =
+        this.genderAgeForm.get('genderSearch')?.value;
+      this.user.genderAge.minAge = this.genderAgeForm.get('minAge')?.value;
+      this.user.genderAge.maxAge = this.genderAgeForm.get('maxAge')?.value;
       this.genderAgeForm.markAsPristine();
     }
   }
 
   cancel(): void {
     if (this.user) {
-      this.user.gender = this.connectService.connectedUser?.gender!;
-      this.user.genderSearch = this.connectService.connectedUser?.genderSearch!;
-      this.user.minAge = this.connectService.connectedUser?.minAge!;
-      this.user.maxAge = this.connectService.connectedUser?.maxAge!;
+      this.user.genderAge.gender =
+        this.connectService.connectedUser!.genderAge?.gender!;
+      this.user.genderAge.genderSearch =
+        this.connectService.connectedUser!.genderAge?.genderSearch!;
+      this.user.genderAge.minAge =
+        this.connectService.connectedUser!.genderAge?.minAge!;
+      this.user.genderAge.maxAge =
+        this.connectService.connectedUser!.genderAge?.maxAge!;
       this.genderAgeForm.patchValue({
-        gender: this.user.gender,
-        genderSearch: this.user.genderSearch,
-        minAge: this.user.minAge,
-        maxAge: this.user.maxAge,
+        gender: this.user.genderAge.gender,
+        genderSearch: this.user.genderAge.genderSearch,
+        minAge: this.user.genderAge.minAge,
+        maxAge: this.user.genderAge.maxAge,
       });
       this.genderAgeForm.markAsPristine();
     }

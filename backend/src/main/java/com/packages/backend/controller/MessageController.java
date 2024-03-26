@@ -1,6 +1,6 @@
 package com.packages.backend.controller;
 
-import com.packages.backend.model.Message;
+import com.packages.backend.model.entity.Message;
 import com.packages.backend.service.MessageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

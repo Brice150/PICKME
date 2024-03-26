@@ -12,7 +12,7 @@ import { ConnectService } from '../../core/services/connect.service';
   styleUrl: './description.component.css',
 })
 export class DescriptionComponent implements OnInit {
-  @Input() user?: User;
+  @Input() user!: User;
   descriptionForm!: FormGroup;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
@@ -23,7 +23,7 @@ export class DescriptionComponent implements OnInit {
 
   ngOnInit(): void {
     this.descriptionForm = this.fb.group({
-      description: [this.user?.description],
+      description: [this.user.description],
     });
   }
 
@@ -41,7 +41,7 @@ export class DescriptionComponent implements OnInit {
 
   cancel(): void {
     if (this.user) {
-      this.user.description = this.connectService.connectedUser?.description;
+      this.user.description = this.connectService.connectedUser!.description;
       this.descriptionForm.get('description')?.setValue(this.user.description);
       this.descriptionForm.markAsPristine();
     }

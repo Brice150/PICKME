@@ -1,6 +1,7 @@
 package com.packages.backend.model;
 
-import com.packages.backend.model.user.UserDTO;
+import com.packages.backend.model.entity.Message;
+import com.packages.backend.model.dto.UserDTO;
 
 import java.util.List;
 

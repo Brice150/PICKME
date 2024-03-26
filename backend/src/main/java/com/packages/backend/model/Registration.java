@@ -1,7 +1,7 @@
 package com.packages.backend.model;
 
-import com.packages.backend.model.user.GenderAge;
-import com.packages.backend.model.user.Geolocation;
+import com.packages.backend.model.entity.GenderAge;
+import com.packages.backend.model.entity.Geolocation;
 
 import java.util.Date;
 

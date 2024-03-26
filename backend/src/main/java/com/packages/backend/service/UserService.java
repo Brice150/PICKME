@@ -2,11 +2,13 @@ package com.packages.backend.service;
 
 import com.packages.backend.exception.UserNotFoundException;
 import com.packages.backend.model.Match;
-import com.packages.backend.model.user.User;
-import com.packages.backend.model.user.UserDTO;
-import com.packages.backend.model.user.UserDTOMapper;
-import com.packages.backend.model.user.UserDTOMapperRestricted;
-import com.packages.backend.model.user.enums.Gender;
+import com.packages.backend.model.dto.UserDTO;
+import com.packages.backend.model.dto.UserDTOMapper;
+import com.packages.backend.model.dto.UserDTOMapperRestricted;
+import com.packages.backend.model.entity.Preferences;
+import com.packages.backend.model.entity.Stats;
+import com.packages.backend.model.entity.User;
+import com.packages.backend.model.enums.Gender;
 import com.packages.backend.repository.LikeRepository;
 import com.packages.backend.repository.MessageRepository;
 import com.packages.backend.repository.UserRepository;
@@ -88,7 +90,11 @@ public class UserService implements UserDetailsService {
     } else {
       String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
       user.setPassword(encodedPassword);
-
+      user.getGenderAge().setFkUser(user);
+      user.getGeolocation().setFkUser(user);
+      user.setPreferences(new Preferences());
+      user.getPreferences().setFkUser(user);
+      user.setStats(new Stats(0L, 0L, 0L, user));
       userRepository.save(user);
     }
     return signUpMessage;
@@ -136,7 +142,7 @@ public class UserService implements UserDetailsService {
   }
 
   private void updatePassword(User connectedUser, User user) {
-    if (user.getPassword() != null && !Objects.equals(connectedUser.getPassword(), user.getPassword())) {
+    if (user.getPassword() != null) {
       String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
       connectedUser.setPassword(encodedPassword);
     }
@@ -209,26 +215,27 @@ public class UserService implements UserDetailsService {
     return userDTO.map(userDTOMapper).orElse(null);
   }
 
-  @Transactional
   public void deleteConnectedUser() {
     User connectedUser = getConnectedUser();
-    //TODO: test delete cascade onetoone ?
-    userRepository.deleteUserPicturesByFk(connectedUser.getId());
-    userRepository.deleteUserLikesByFk(connectedUser.getId());
-    userRepository.deleteUserDislikesByFk(connectedUser.getId());
-    userRepository.deleteUserMessagesByFk(connectedUser.getId());
-    userRepository.deleteUserByEmail(connectedUser.getEmail());
+    deleteUser(connectedUser);
+  }
+
+  public void deleteUserById(Long userId) {
+    User selectedUser = getUserById(userId);
+    deleteUser(selectedUser);
   }
 
   @Transactional
-  public void deleteUserById(Long userId) {
-    User selectedUser = getUserById(userId);
-    //TODO: test delete cascade onetoone ?
-    userRepository.deleteUserPicturesByFk(selectedUser.getId());
-    userRepository.deleteUserLikesByFk(selectedUser.getId());
-    userRepository.deleteUserDislikesByFk(selectedUser.getId());
-    userRepository.deleteUserMessagesByFk(selectedUser.getId());
-    userRepository.deleteUserByEmail(selectedUser.getEmail());
+  private void deleteUser(User user) {
+    userRepository.deleteUserGeolocationByFk(user.getId());
+    userRepository.deleteUserPreferencesByFk(user.getId());
+    userRepository.deleteUserGenderAgeByFk(user.getId());
+    userRepository.deleteUserStatsByFk(user.getId());
+    userRepository.deleteUserPicturesByFk(user.getId());
+    userRepository.deleteUserLikesByFk(user.getId());
+    userRepository.deleteUserDislikesByFk(user.getId());
+    userRepository.deleteUserMessagesByFk(user.getId());
+    userRepository.deleteUserByEmail(user.getEmail());
   }
 
   private Double calculateScore(User connectedUser, User user) {

@@ -1,4 +1,4 @@
-package com.packages.backend.model.user.enums;
+package com.packages.backend.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

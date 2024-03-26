@@ -1,8 +1,8 @@
 package com.packages.backend.service;
 
 import com.packages.backend.model.Registration;
-import com.packages.backend.model.user.User;
-import com.packages.backend.model.user.enums.UserRole;
+import com.packages.backend.model.entity.User;
+import com.packages.backend.model.enums.UserRole;
 import org.springframework.stereotype.Service;
 
 @Service

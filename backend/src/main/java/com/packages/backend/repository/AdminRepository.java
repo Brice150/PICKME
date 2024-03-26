@@ -1,15 +1,17 @@
 package com.packages.backend.repository;
 
-import com.packages.backend.model.user.User;
-import com.packages.backend.model.user.enums.Gender;
+import com.packages.backend.model.entity.User;
+import com.packages.backend.model.enums.Gender;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Set;
 
+@Repository
 public interface AdminRepository extends JpaRepository<User, Long> {
   @Query(
     "SELECT u FROM User u " +

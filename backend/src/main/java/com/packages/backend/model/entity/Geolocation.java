@@ -1,4 +1,6 @@
-package com.packages.backend.model.user;
+package com.packages.backend.model.entity;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 
@@ -16,17 +18,19 @@ public class Geolocation {
   @OneToOne
   @MapsId
   @JoinColumn(name = "user_id")
-  private User user;
+  @JsonBackReference(value = "geolocation")
+  private User fkUser;
 
   public Geolocation() {
   }
 
-  public Geolocation(String city, String latitude, String longitude, Long distanceSearch, Long distance) {
+  public Geolocation(String city, String latitude, String longitude, Long distanceSearch, Long distance, User fkUser) {
     this.city = city;
     this.latitude = latitude;
     this.longitude = longitude;
     this.distanceSearch = distanceSearch;
     this.distance = distance;
+    this.fkUser = fkUser;
   }
 
   public Long getId() {
@@ -77,11 +81,11 @@ public class Geolocation {
     this.distance = distance;
   }
 
-  public User getUser() {
-    return user;
+  public User getFkUser() {
+    return fkUser;
   }
 
-  public void setUser(User user) {
-    this.user = user;
+  public void setFkUser(User fkUser) {
+    this.fkUser = fkUser;
   }
 }

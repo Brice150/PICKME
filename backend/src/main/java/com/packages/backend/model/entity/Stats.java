@@ -1,4 +1,6 @@
-package com.packages.backend.model.user;
+package com.packages.backend.model.entity;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 
@@ -14,15 +16,17 @@ public class Stats {
   @OneToOne
   @MapsId
   @JoinColumn(name = "user_id")
-  private User user;
+  @JsonBackReference(value = "stats")
+  private User fkUser;
 
   public Stats() {
   }
 
-  public Stats(Long totalDislikes, Long totalLikes, Long totalMatches) {
+  public Stats(Long totalDislikes, Long totalLikes, Long totalMatches, User fkUser) {
     this.totalDislikes = totalDislikes;
     this.totalLikes = totalLikes;
     this.totalMatches = totalMatches;
+    this.fkUser = fkUser;
   }
 
   public Long getId() {
@@ -57,11 +61,11 @@ public class Stats {
     this.totalMatches = totalMatches;
   }
 
-  public User getUser() {
-    return user;
+  public User getFkUser() {
+    return fkUser;
   }
 
-  public void setUser(User user) {
-    this.user = user;
+  public void setFkUser(User fkUser) {
+    this.fkUser = fkUser;
   }
 }

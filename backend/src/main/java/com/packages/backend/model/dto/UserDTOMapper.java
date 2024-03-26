@@ -1,5 +1,6 @@
-package com.packages.backend.model.user;
+package com.packages.backend.model.dto;
 
+import com.packages.backend.model.entity.User;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;

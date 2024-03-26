@@ -191,20 +191,25 @@ export class RegisterComponent implements OnInit, OnDestroy {
       nickname: this.registerForm.get('firstFormGroup.nickname')
         ?.value as string,
       job: this.registerForm.get('firstFormGroup.job')?.value as string,
-      distanceSearch: this.registerForm.get('firstFormGroup.distanceSearch')
-        ?.value as number,
       birthDate: this.birthDate,
-      gender: this.registerForm.get('secondFormGroup.gender')?.value as Gender,
-      genderSearch: this.registerForm.get('secondFormGroup.genderSearch')
-        ?.value as Gender,
-      minAge: this.registerForm.get('secondFormGroup.minAge')?.value,
-      maxAge: this.registerForm.get('secondFormGroup.maxAge')?.value,
+      genderAge: {
+        gender: this.registerForm.get('secondFormGroup.gender')
+          ?.value as Gender,
+        genderSearch: this.registerForm.get('secondFormGroup.genderSearch')
+          ?.value as Gender,
+        minAge: this.registerForm.get('secondFormGroup.minAge')?.value,
+        maxAge: this.registerForm.get('secondFormGroup.maxAge')?.value,
+      },
       email: this.registerForm.get('thirdFormGroup.email')?.value as string,
       password: this.registerForm.get('thirdFormGroup.password')
         ?.value as string,
-      city: this.geolocation.city,
-      latitude: this.geolocation.latitude,
-      longitude: this.geolocation.longitude,
+      geolocation: {
+        city: this.geolocation.city,
+        latitude: this.geolocation.latitude,
+        longitude: this.geolocation.longitude,
+        distanceSearch: this.registerForm.get('firstFormGroup.distanceSearch')
+          ?.value as number,
+      },
     };
     return user;
   }

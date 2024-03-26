@@ -1,6 +1,6 @@
 package com.packages.backend.controller;
 
-import com.packages.backend.model.Picture;
+import com.packages.backend.model.entity.Picture;
 import com.packages.backend.service.PictureService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
