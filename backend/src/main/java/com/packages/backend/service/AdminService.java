@@ -38,14 +38,17 @@ public class AdminService {
     User connectedUser = userService.getConnectedUser();
     List<User> users = adminRepository.getAllUsers(connectedUser.getId(), adminSearch.getNickname(), adminSearch.getGenders(), adminSearch.getMinAge().intValue(), adminSearch.getMaxAge().intValue(), PageRequest.of(page, 25));
     users.forEach(user -> user.getGeolocation().setDistance(distanceService.calculateDistance(connectedUser, user).longValue()));
-    Comparator<User> userComparator = Comparator.comparing((User user) -> user.getStats().getTotalMatches(), Comparator.reverseOrder())
-      .thenComparing((User user) -> user.getStats().getTotalLikes(), Comparator.reverseOrder())
-      .thenComparing((User user) -> user.getStats().getTotalDislikes(), Comparator.reverseOrder());
     return users.stream()
       .filter(user -> user.getGeolocation().getDistance() <= adminSearch.getDistance())
-      .sorted(userComparator)
+      .sorted(getUserComparator())
       .map(userDTOMapper)
       .toList();
+  }
+
+  private Comparator<User> getUserComparator() {
+    return Comparator.comparing((User user) -> user.getStats().getTotalMatches(), Comparator.reverseOrder())
+      .thenComparing((User user) -> user.getStats().getTotalLikes(), Comparator.reverseOrder())
+      .thenComparing((User user) -> user.getStats().getTotalDislikes(), Comparator.reverseOrder());
   }
 
   public void deleteUserById(Long userId) {

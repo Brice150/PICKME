@@ -88,16 +88,20 @@ public class UserService implements UserDetailsService {
     } else if (user.getGeolocation().getDistanceSearch() == null) {
       signUpMessage = "Max Distance" + emptyPhrase;
     } else {
-      String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-      user.setPassword(encodedPassword);
-      user.getGenderAge().setFkUser(user);
-      user.getGeolocation().setFkUser(user);
-      user.setPreferences(new Preferences());
-      user.getPreferences().setFkUser(user);
-      user.setStats(new Stats(0L, 0L, 0L, user));
-      userRepository.save(user);
+      registerUser(user);
     }
     return signUpMessage;
+  }
+
+  private void registerUser(User user) {
+    String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+    user.setPassword(encodedPassword);
+    user.getGenderAge().setFkUser(user);
+    user.getGeolocation().setFkUser(user);
+    user.setPreferences(new Preferences());
+    user.getPreferences().setFkUser(user);
+    user.setStats(new Stats(0L, 0L, 0L, user));
+    userRepository.save(user);
   }
 
   public List<UserDTO> getAllSelectedUsers(Integer page) {
@@ -275,16 +279,20 @@ public class UserService implements UserDetailsService {
   private List<UserDTO> sortUsersByDistanceAndAttributes(List<User> users, User connectedUser, Map<Long, Double> mapAverageScoreByUserId) {
     return users.stream()
       .filter((User user) -> user.getGeolocation().getDistance() <= connectedUser.getGeolocation().getDistanceSearch())
-      .sorted((Comparator.comparing((User user) -> getDistanceGroupIndex(user.getGeolocation().getDistance()))
-        .thenComparingDouble((User user) -> mapAverageScoreByUserId.get(user.getId()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getPersonality(), user.getPreferences().getPersonality()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getParenthood(), user.getPreferences().getParenthood()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getSmokes(), user.getPreferences().getSmokes()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getOrganised(), user.getPreferences().getOrganised()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getSportPractice(), user.getPreferences().getSportPractice()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getAnimals(), user.getPreferences().getAnimals()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getAlcoholDrinking(), user.getPreferences().getAlcoholDrinking()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getGamer(), user.getPreferences().getGamer())))).map(userDTOMapperRestricted).toList();
+      .sorted((getUserComparator(connectedUser, mapAverageScoreByUserId))).map(userDTOMapperRestricted).toList();
+  }
+
+  private Comparator<User> getUserComparator(User connectedUser, Map<Long, Double> mapAverageScoreByUserId) {
+    return Comparator.comparing((User user) -> getDistanceGroupIndex(user.getGeolocation().getDistance()))
+      .thenComparingDouble((User user) -> mapAverageScoreByUserId.get(user.getId()))
+      .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getPersonality(), user.getPreferences().getPersonality()))
+      .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getParenthood(), user.getPreferences().getParenthood()))
+      .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getSmokes(), user.getPreferences().getSmokes()))
+      .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getOrganised(), user.getPreferences().getOrganised()))
+      .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getSportPractice(), user.getPreferences().getSportPractice()))
+      .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getAnimals(), user.getPreferences().getAnimals()))
+      .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getAlcoholDrinking(), user.getPreferences().getAlcoholDrinking()))
+      .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getGamer(), user.getPreferences().getGamer()));
   }
 
   private int getDistanceGroupIndex(double distance) {

@@ -1,6 +1,5 @@
 package com.packages.backend.service;
 
-import com.packages.backend.model.entity.Dislike;
 import com.packages.backend.model.entity.Like;
 import com.packages.backend.model.entity.Stats;
 import com.packages.backend.model.entity.User;
@@ -34,29 +33,34 @@ public class LikeService {
     String matchNotification = null;
     User connectedUser = userService.getConnectedUser();
     User likedUser = userService.getUserById(userId);
-    Optional<Like> previousSenderLike = likeRepository.getLikeByFk(connectedUser.getId(), likedUser.getId());
-    if (previousSenderLike.isPresent()) {
+
+    if (isForbidden(connectedUser, likedUser)) {
       return FORBIDDEN;
     }
-    Optional<Dislike> previousSenderDislike = dislikeRepository.getDislikeByFk(connectedUser.getId(), likedUser.getId());
-    if (previousSenderDislike.isPresent()) {
-      return FORBIDDEN;
-    }
+
     Stats userStats = statsRepository.getById(likedUser.getId());
     userStats.setTotalLikes(userStats.getTotalLikes() + 1);
     Optional<Like> previousReceiverLike = likeRepository.getLikeByFk(likedUser.getId(), connectedUser.getId());
     if (previousReceiverLike.isPresent()) {
-      matchNotification = likedUser.getNickname();
-      userStats.setTotalMatches(userStats.getTotalMatches() + 1);
-      Stats connectedUserStats = statsRepository.getById(connectedUser.getId());
-      connectedUserStats.setTotalMatches(connectedUserStats.getTotalMatches() + 1);
-      statsRepository.save(connectedUserStats);
+      matchNotification = handleMatch(likedUser, userStats, connectedUser);
     }
     Like like = new Like(new Date(), connectedUser.getId(), likedUser.getId());
     like.setDate(new Date());
     likeRepository.save(like);
     statsRepository.save(userStats);
     return matchNotification;
+  }
+
+  private boolean isForbidden(User connectedUser, User likedUser) {
+    return isSenderAlreadyLiked(connectedUser, likedUser) || isSenderAlreadyDisliked(connectedUser, likedUser);
+  }
+
+  private boolean isSenderAlreadyLiked(User connectedUser, User likedUser) {
+    return likeRepository.getLikeByFk(connectedUser.getId(), likedUser.getId()).isPresent();
+  }
+
+  private boolean isSenderAlreadyDisliked(User connectedUser, User likedUser) {
+    return dislikeRepository.getDislikeByFk(connectedUser.getId(), likedUser.getId()).isPresent();
   }
 
   @Transactional
@@ -67,15 +71,25 @@ public class LikeService {
     userStats.setTotalDislikes(userStats.getTotalDislikes() + 1);
     previousSenderLike.ifPresent(likeSender -> {
       userStats.setTotalLikes(userStats.getTotalLikes() - 1);
-      previousReceiverLike.ifPresent(likeReceiver -> {
-        userStats.setTotalMatches(userStats.getTotalMatches() - 1);
-        Stats connectedUserStats = statsRepository.getById(connectedUserId);
-        connectedUserStats.setTotalMatches(connectedUserStats.getTotalMatches() - 1);
-        statsRepository.save(connectedUserStats);
-      });
+      previousReceiverLike.ifPresent(likeReceiver -> handleDismatch(userStats, connectedUserId));
       likeRepository.deleteLikeById(likeSender.getId());
     });
     statsRepository.save(userStats);
+  }
+
+  private String handleMatch(User likedUser, Stats userStats, User connectedUser) {
+    userStats.setTotalMatches(userStats.getTotalMatches() + 1);
+    Stats connectedUserStats = statsRepository.getById(connectedUser.getId());
+    connectedUserStats.setTotalMatches(connectedUserStats.getTotalMatches() + 1);
+    statsRepository.save(connectedUserStats);
+    return likedUser.getNickname();
+  }
+
+  private void handleDismatch(Stats userStats, Long connectedUserId) {
+    userStats.setTotalMatches(userStats.getTotalMatches() - 1);
+    Stats connectedUserStats = statsRepository.getById(connectedUserId);
+    connectedUserStats.setTotalMatches(connectedUserStats.getTotalMatches() - 1);
+    statsRepository.save(connectedUserStats);
   }
 }
 
