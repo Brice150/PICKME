@@ -20,16 +20,10 @@ public class RegistrationService {
         request.getBirthDate(),
         request.getNickname(),
         request.getJob(),
-        request.getDistanceSearch(),
-        request.getCity(),
-        request.getLatitude(),
-        request.getLongitude(),
-        request.getGender(),
-        request.getGenderSearch(),
-        request.getMinAge(),
-        request.getMaxAge(),
         request.getEmail(),
-        request.getPassword()
+        request.getPassword(),
+        request.getGenderAge(),
+        request.getGeolocation()
       )
     );
   }

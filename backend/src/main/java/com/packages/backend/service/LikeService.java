@@ -37,6 +37,7 @@ public class LikeService {
     Like like = new Like(new Date(), connectedUser.getId(), likedUser.getId());
     like.setDate(new Date());
     likeRepository.save(like);
+    //TODO: save user stats
     return matchNotification;
   }
 

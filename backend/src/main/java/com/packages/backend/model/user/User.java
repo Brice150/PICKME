@@ -2,7 +2,7 @@ package com.packages.backend.model.user;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.packages.backend.model.Picture;
-import com.packages.backend.model.user.enums.*;
+import com.packages.backend.model.user.enums.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,89 +26,41 @@ public class User implements UserDetails {
   private Boolean enabled = true;
   private Date birthDate;
   private Boolean gold;
-
-
-  // Geolocation
-  private String city;
-  private String latitude;
-  private String longitude;
-  private Long distance;
-
-
-  // Pictures
+  private String nickname;
+  private String job;
+  private Long height;
+  private String email;
+  private String password;
+  private String description;
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @PrimaryKeyJoinColumn
+  private GenderAge genderAge;
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @PrimaryKeyJoinColumn
+  private Preferences preferences;
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @PrimaryKeyJoinColumn
+  private Geolocation geolocation;
   @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @OrderBy("isMainPicture DESC, id DESC")
   @JsonManagedReference(value = "pictures")
   private List<Picture> pictures;
-
-
-  // Main Infos
-  private String nickname;
-  private String job;
-  private Long distanceSearch;
-  private Long height;
-
-
-  // Gender and Age
-  @Enumerated(EnumType.STRING)
-  private Gender gender;
-  @Enumerated(EnumType.STRING)
-  private Gender genderSearch;
-  private Long minAge;
-  private Long maxAge;
-
-
-  // Connection Infos
-  private String email;
-  private String password;
-
-
-  // Description
-  private String description;
-
-
-  // Preferences
-  @Enumerated(EnumType.STRING)
-  private AlcoholDrinking alcoholDrinking;
-  @Enumerated(EnumType.STRING)
-  private Smokes smokes;
-  @Enumerated(EnumType.STRING)
-  private Organised organised;
-  @Enumerated(EnumType.STRING)
-  private Personality personality;
-  @Enumerated(EnumType.STRING)
-  private SportPractice sportPractice;
-  @Enumerated(EnumType.STRING)
-  private Animals animals;
-  @Enumerated(EnumType.STRING)
-  private Parenthood parenthood;
-  @Enumerated(EnumType.STRING)
-  private Gamer gamer;
-
-
-  // Stats
-  private Long totalDislikes;
-  private Long totalLikes;
-  private Long totalMatches;
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @PrimaryKeyJoinColumn
+  private Stats stats;
 
   public User() {
   }
 
-  public User(UserRole userRole, Date birthDate, String nickname, String job, Long distanceSearch, String city, String latitude, String longitude, Gender gender, Gender genderSearch, Long minAge, Long maxAge, String email, String password) {
+  public User(UserRole userRole, Date birthDate, String nickname, String job, String email, String password, GenderAge genderAge, Geolocation geolocation) {
     this.userRole = userRole;
     this.birthDate = birthDate;
     this.nickname = nickname;
     this.job = job;
-    this.distanceSearch = distanceSearch;
-    this.city = city;
-    this.latitude = latitude;
-    this.longitude = longitude;
-    this.gender = gender;
-    this.genderSearch = genderSearch;
-    this.minAge = minAge;
-    this.maxAge = maxAge;
     this.email = email;
     this.password = password;
+    this.genderAge = genderAge;
+    this.geolocation = geolocation;
   }
 
   @Override
@@ -183,46 +135,6 @@ public class User implements UserDetails {
     this.gold = gold;
   }
 
-  public String getCity() {
-    return city;
-  }
-
-  public void setCity(String city) {
-    this.city = city;
-  }
-
-  public String getLatitude() {
-    return latitude;
-  }
-
-  public void setLatitude(String latitude) {
-    this.latitude = latitude;
-  }
-
-  public String getLongitude() {
-    return longitude;
-  }
-
-  public void setLongitude(String longitude) {
-    this.longitude = longitude;
-  }
-
-  public Long getDistance() {
-    return distance;
-  }
-
-  public void setDistance(Long distance) {
-    this.distance = distance;
-  }
-
-  public List<Picture> getPictures() {
-    return pictures;
-  }
-
-  public void setPictures(List<Picture> pictures) {
-    this.pictures = pictures;
-  }
-
   public String getNickname() {
     return nickname;
   }
@@ -239,52 +151,12 @@ public class User implements UserDetails {
     this.job = job;
   }
 
-  public Long getDistanceSearch() {
-    return distanceSearch;
-  }
-
-  public void setDistanceSearch(Long distanceSearch) {
-    this.distanceSearch = distanceSearch;
-  }
-
   public Long getHeight() {
     return height;
   }
 
   public void setHeight(Long height) {
     this.height = height;
-  }
-
-  public Gender getGender() {
-    return gender;
-  }
-
-  public void setGender(Gender gender) {
-    this.gender = gender;
-  }
-
-  public Gender getGenderSearch() {
-    return genderSearch;
-  }
-
-  public void setGenderSearch(Gender genderSearch) {
-    this.genderSearch = genderSearch;
-  }
-
-  public Long getMinAge() {
-    return minAge;
-  }
-
-  public void setMinAge(Long minAge) {
-    this.minAge = minAge;
-  }
-
-  public Long getMaxAge() {
-    return maxAge;
-  }
-
-  public void setMaxAge(Long maxAge) {
-    this.maxAge = maxAge;
   }
 
   public String getEmail() {
@@ -307,91 +179,43 @@ public class User implements UserDetails {
     this.description = description;
   }
 
-  public AlcoholDrinking getAlcoholDrinking() {
-    return alcoholDrinking;
+  public GenderAge getGenderAge() {
+    return genderAge;
   }
 
-  public void setAlcoholDrinking(AlcoholDrinking alcoholDrinking) {
-    this.alcoholDrinking = alcoholDrinking;
+  public void setGenderAge(GenderAge genderAge) {
+    this.genderAge = genderAge;
   }
 
-  public Smokes getSmokes() {
-    return smokes;
+  public Preferences getPreferences() {
+    return preferences;
   }
 
-  public void setSmokes(Smokes smokes) {
-    this.smokes = smokes;
+  public void setPreferences(Preferences preferences) {
+    this.preferences = preferences;
   }
 
-  public Organised getOrganised() {
-    return organised;
+  public Geolocation getGeolocation() {
+    return geolocation;
   }
 
-  public void setOrganised(Organised organised) {
-    this.organised = organised;
+  public void setGeolocation(Geolocation geolocation) {
+    this.geolocation = geolocation;
   }
 
-  public Personality getPersonality() {
-    return personality;
+  public List<Picture> getPictures() {
+    return pictures;
   }
 
-  public void setPersonality(Personality personality) {
-    this.personality = personality;
+  public void setPictures(List<Picture> pictures) {
+    this.pictures = pictures;
   }
 
-  public SportPractice getSportPractice() {
-    return sportPractice;
+  public Stats getStats() {
+    return stats;
   }
 
-  public void setSportPractice(SportPractice sportPractice) {
-    this.sportPractice = sportPractice;
-  }
-
-  public Animals getAnimals() {
-    return animals;
-  }
-
-  public void setAnimals(Animals animals) {
-    this.animals = animals;
-  }
-
-  public Parenthood getParenthood() {
-    return parenthood;
-  }
-
-  public void setParenthood(Parenthood parenthood) {
-    this.parenthood = parenthood;
-  }
-
-  public Gamer getGamer() {
-    return gamer;
-  }
-
-  public void setGamer(Gamer gamer) {
-    this.gamer = gamer;
-  }
-
-  public Long getTotalDislikes() {
-    return totalDislikes;
-  }
-
-  public void setTotalDislikes(Long totalDislikes) {
-    this.totalDislikes = totalDislikes;
-  }
-
-  public Long getTotalLikes() {
-    return totalLikes;
-  }
-
-  public void setTotalLikes(Long totalLikes) {
-    this.totalLikes = totalLikes;
-  }
-
-  public Long getTotalMatches() {
-    return totalMatches;
-  }
-
-  public void setTotalMatches(Long totalMatches) {
-    this.totalMatches = totalMatches;
+  public void setStats(Stats stats) {
+    this.stats = stats;
   }
 }

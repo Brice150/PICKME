@@ -57,30 +57,34 @@ public class UserService implements UserDetailsService {
       signUpMessage = "Nickname" + emptyPhrase;
     } else if (user.getJob() == null || user.getJob().isBlank()) {
       signUpMessage = "Job" + emptyPhrase;
-    } else if (user.getCity() == null || user.getCity().isBlank()) {
-      signUpMessage = "City" + emptyPhrase;
-    } else if (user.getLatitude() == null || user.getLatitude().isBlank()) {
-      signUpMessage = "Latitude" + emptyPhrase;
-    } else if (user.getLongitude() == null || user.getLongitude().isBlank()) {
-      signUpMessage = "Longitude" + emptyPhrase;
-    } else if (user.getDistanceSearch() == null) {
-      signUpMessage = "Max Distance" + emptyPhrase;
     } else if (user.getBirthDate() == null) {
       signUpMessage = "Birth date" + emptyPhrase;
-    } else if (user.getGender() == null || Gender.getDescriptionNullSafe(user.getGender()).isBlank()) {
-      signUpMessage = "Gender" + emptyPhrase;
-    } else if (user.getGenderSearch() == null || Gender.getDescriptionNullSafe(user.getGenderSearch()).isBlank()) {
-      signUpMessage = "Gender search" + emptyPhrase;
-    } else if (user.getMinAge() == null) {
-      signUpMessage = "Min age" + emptyPhrase;
-    } else if (user.getMaxAge() == null) {
-      signUpMessage = "Max age" + emptyPhrase;
     } else if (user.getEmail() == null || user.getEmail().isBlank()) {
       signUpMessage = "Email" + emptyPhrase;
     } else if (user.getPassword() == null || user.getPassword().isBlank()) {
       signUpMessage = "Password" + emptyPhrase;
     } else if (userRepository.getUserByEmail(user.getEmail()).isPresent()) {
       signUpMessage = "email already taken";
+    } else if (user.getGenderAge() == null) {
+      signUpMessage = "Gender or Age" + emptyPhrase;
+    } else if (user.getGenderAge().getGender() == null || Gender.getDescriptionNullSafe(user.getGenderAge().getGender()).isBlank()) {
+      signUpMessage = "Gender" + emptyPhrase;
+    } else if (user.getGenderAge().getGenderSearch() == null || Gender.getDescriptionNullSafe(user.getGenderAge().getGenderSearch()).isBlank()) {
+      signUpMessage = "Gender search" + emptyPhrase;
+    } else if (user.getGenderAge().getMinAge() == null) {
+      signUpMessage = "Min age" + emptyPhrase;
+    } else if (user.getGenderAge().getMaxAge() == null) {
+      signUpMessage = "Max age" + emptyPhrase;
+    } else if (user.getGeolocation() == null) {
+      signUpMessage = "Geolocation" + emptyPhrase;
+    } else if (user.getGeolocation().getCity() == null || user.getGeolocation().getCity().isBlank()) {
+      signUpMessage = "City" + emptyPhrase;
+    } else if (user.getGeolocation().getLatitude() == null || user.getGeolocation().getLatitude().isBlank()) {
+      signUpMessage = "Latitude" + emptyPhrase;
+    } else if (user.getGeolocation().getLongitude() == null || user.getGeolocation().getLongitude().isBlank()) {
+      signUpMessage = "Longitude" + emptyPhrase;
+    } else if (user.getGeolocation().getDistanceSearch() == null) {
+      signUpMessage = "Max Distance" + emptyPhrase;
     } else {
       String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
       user.setPassword(encodedPassword);
@@ -95,13 +99,13 @@ public class UserService implements UserDetailsService {
     if (null == page) {
       page = 0;
     }
-    List<User> users = userRepository.getAllUsers(connectedUser.getGenderSearch(), connectedUser.getGender(), connectedUser.getMinAge().intValue(), connectedUser.getMaxAge().intValue(), connectedUser.getId());
+    List<User> users = userRepository.getAllUsers(connectedUser.getGenderAge().getGenderSearch(), connectedUser.getGenderAge().getGender(), connectedUser.getGenderAge().getMinAge().intValue(), connectedUser.getGenderAge().getMaxAge().intValue(), connectedUser.getId());
     List<Long> goldUserId = likeRepository.getGoldByConnectedUserId(connectedUser.getId());
     Map<Long, Double> mapAverageScoreByUserId = new HashMap<>();
     users.forEach(user -> {
       user.setGold(goldUserId.contains(user.getId()));
       mapAverageScoreByUserId.put(user.getId(), calculateScore(connectedUser, user));
-      user.setDistance(distanceService.calculateDistance(connectedUser, user).longValue());
+      user.getGeolocation().setDistance(distanceService.calculateDistance(connectedUser, user).longValue());
     });
     return sortUsersByDistanceAndAttributes(users, connectedUser, mapAverageScoreByUserId)
       .stream().skip(page * 25L).limit(25).toList();
@@ -111,7 +115,7 @@ public class UserService implements UserDetailsService {
     User connectedUser = getConnectedUser();
     return userRepository.getAllUserMatches(connectedUser.getId()).stream()
       .map(user -> {
-        user.setDistance(distanceService.calculateDistance(connectedUser, user).longValue());
+        user.getGeolocation().setDistance(distanceService.calculateDistance(connectedUser, user).longValue());
         return userDTOMapperRestricted.apply(user);
       })
       .map(user -> new Match(user, messageRepository.getUserMessagesByFk(connectedUser.getId(), user.id())))
@@ -120,31 +124,68 @@ public class UserService implements UserDetailsService {
 
   public UserDTO updateUser(User user) {
     User connectedUser = getConnectedUser();
-    connectedUser.setNickname(user.getNickname() != null ? user.getNickname() : connectedUser.getNickname());
-    connectedUser.setJob(user.getJob() != null ? user.getJob() : connectedUser.getJob());
-    connectedUser.setCity(user.getCity() != null ? user.getCity() : connectedUser.getCity());
-    connectedUser.setLatitude(user.getLatitude() != null ? user.getLatitude() : connectedUser.getLatitude());
-    connectedUser.setLongitude(user.getLongitude() != null ? user.getLongitude() : connectedUser.getLongitude());
-    connectedUser.setDistanceSearch(user.getDistanceSearch() != null ? user.getDistanceSearch() : connectedUser.getDistanceSearch());
-    connectedUser.setHeight(user.getHeight() != null ? user.getHeight() : connectedUser.getHeight());
-    connectedUser.setGender(user.getGender() != null ? user.getGender() : connectedUser.getGender());
-    connectedUser.setGenderSearch(user.getGenderSearch() != null ? user.getGenderSearch() : connectedUser.getGenderSearch());
-    connectedUser.setMinAge(user.getMinAge() != null ? user.getMinAge() : connectedUser.getMinAge());
-    connectedUser.setMaxAge(user.getMaxAge() != null ? user.getMaxAge() : connectedUser.getMaxAge());
-    if (user.getPassword() != null) {
+    if (null != user && !Objects.equals(connectedUser, user)) {
+      updateMainInfos(connectedUser, user);
+      updateGenderAge(connectedUser, user);
+      updatePreferences(connectedUser, user);
+      updateGeolocation(connectedUser, user);
+      updatePassword(connectedUser, user);
+      return userDTOMapper.apply(userRepository.save(connectedUser));
+    }
+    return userDTOMapper.apply(connectedUser);
+  }
+
+  private void updatePassword(User connectedUser, User user) {
+    if (user.getPassword() != null && !Objects.equals(connectedUser.getPassword(), user.getPassword())) {
       String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
       connectedUser.setPassword(encodedPassword);
     }
-    connectedUser.setDescription(user.getDescription() != null ? user.getDescription() : connectedUser.getDescription());
-    connectedUser.setAlcoholDrinking(user.getAlcoholDrinking() != null ? user.getAlcoholDrinking() : connectedUser.getAlcoholDrinking());
-    connectedUser.setSmokes(user.getSmokes() != null ? user.getSmokes() : connectedUser.getSmokes());
-    connectedUser.setOrganised(user.getOrganised() != null ? user.getOrganised() : connectedUser.getOrganised());
-    connectedUser.setPersonality(user.getPersonality() != null ? user.getPersonality() : connectedUser.getPersonality());
-    connectedUser.setSportPractice(user.getSportPractice() != null ? user.getSportPractice() : connectedUser.getSportPractice());
-    connectedUser.setAnimals(user.getAnimals() != null ? user.getAnimals() : connectedUser.getAnimals());
-    connectedUser.setParenthood(user.getParenthood() != null ? user.getParenthood() : connectedUser.getParenthood());
-    connectedUser.setGamer(user.getGamer() != null ? user.getGamer() : connectedUser.getGamer());
-    return userDTOMapper.apply(userRepository.save(connectedUser));
+  }
+
+  private void updateGeolocation(User connectedUser, User user) {
+    if (user.getGeolocation() != null && !Objects.equals(connectedUser.getGeolocation(), user.getGeolocation())) {
+      connectedUser.getGeolocation().setCity(user.getGeolocation().getCity() != null ? user.getGeolocation().getCity() : connectedUser.getGeolocation().getCity());
+      connectedUser.getGeolocation().setLatitude(user.getGeolocation().getLatitude() != null ? user.getGeolocation().getLatitude() : connectedUser.getGeolocation().getLatitude());
+      connectedUser.getGeolocation().setLongitude(user.getGeolocation().getLongitude() != null ? user.getGeolocation().getLongitude() : connectedUser.getGeolocation().getLongitude());
+      connectedUser.getGeolocation().setDistanceSearch(user.getGeolocation().getDistanceSearch() != null ? user.getGeolocation().getDistanceSearch() : connectedUser.getGeolocation().getDistanceSearch());
+    }
+  }
+
+  private void updatePreferences(User connectedUser, User user) {
+    if (user.getPreferences() != null && !Objects.equals(connectedUser.getPreferences(), user.getPreferences())) {
+      connectedUser.getPreferences().setAlcoholDrinking(user.getPreferences().getAlcoholDrinking() != null ? user.getPreferences().getAlcoholDrinking() : connectedUser.getPreferences().getAlcoholDrinking());
+      connectedUser.getPreferences().setSmokes(user.getPreferences().getSmokes() != null ? user.getPreferences().getSmokes() : connectedUser.getPreferences().getSmokes());
+      connectedUser.getPreferences().setOrganised(user.getPreferences().getOrganised() != null ? user.getPreferences().getOrganised() : connectedUser.getPreferences().getOrganised());
+      connectedUser.getPreferences().setPersonality(user.getPreferences().getPersonality() != null ? user.getPreferences().getPersonality() : connectedUser.getPreferences().getPersonality());
+      connectedUser.getPreferences().setSportPractice(user.getPreferences().getSportPractice() != null ? user.getPreferences().getSportPractice() : connectedUser.getPreferences().getSportPractice());
+      connectedUser.getPreferences().setAnimals(user.getPreferences().getAnimals() != null ? user.getPreferences().getAnimals() : connectedUser.getPreferences().getAnimals());
+      connectedUser.getPreferences().setParenthood(user.getPreferences().getParenthood() != null ? user.getPreferences().getParenthood() : connectedUser.getPreferences().getParenthood());
+      connectedUser.getPreferences().setGamer(user.getPreferences().getGamer() != null ? user.getPreferences().getGamer() : connectedUser.getPreferences().getGamer());
+    }
+  }
+
+  private void updateGenderAge(User connectedUser, User user) {
+    if (user.getGenderAge() != null && !Objects.equals(connectedUser.getGenderAge(), user.getGenderAge())) {
+      connectedUser.getGenderAge().setGender(user.getGenderAge().getGender() != null ? user.getGenderAge().getGender() : connectedUser.getGenderAge().getGender());
+      connectedUser.getGenderAge().setGenderSearch(user.getGenderAge().getGenderSearch() != null ? user.getGenderAge().getGenderSearch() : connectedUser.getGenderAge().getGenderSearch());
+      connectedUser.getGenderAge().setMinAge(user.getGenderAge().getMinAge() != null ? user.getGenderAge().getMinAge() : connectedUser.getGenderAge().getMinAge());
+      connectedUser.getGenderAge().setMaxAge(user.getGenderAge().getMaxAge() != null ? user.getGenderAge().getMaxAge() : connectedUser.getGenderAge().getMaxAge());
+    }
+  }
+
+  private void updateMainInfos(User connectedUser, User user) {
+    if (user.getNickname() != null && !Objects.equals(connectedUser.getNickname(), user.getNickname())) {
+      connectedUser.setNickname(user.getNickname());
+    }
+    if (user.getJob() != null && !Objects.equals(connectedUser.getJob(), user.getJob())) {
+      connectedUser.setJob(user.getJob());
+    }
+    if (user.getHeight() != null && !Objects.equals(connectedUser.getHeight(), user.getHeight())) {
+      connectedUser.setHeight(user.getHeight());
+    }
+    if (user.getDescription() != null && !Objects.equals(connectedUser.getDescription(), user.getDescription())) {
+      connectedUser.setDescription(user.getDescription());
+    }
   }
 
   public User getUserById(Long userId) {
@@ -171,6 +212,7 @@ public class UserService implements UserDetailsService {
   @Transactional
   public void deleteConnectedUser() {
     User connectedUser = getConnectedUser();
+    //TODO: test delete cascade onetoone ?
     userRepository.deleteUserPicturesByFk(connectedUser.getId());
     userRepository.deleteUserLikesByFk(connectedUser.getId());
     userRepository.deleteUserDislikesByFk(connectedUser.getId());
@@ -181,6 +223,7 @@ public class UserService implements UserDetailsService {
   @Transactional
   public void deleteUserById(Long userId) {
     User selectedUser = getUserById(userId);
+    //TODO: test delete cascade onetoone ?
     userRepository.deleteUserPicturesByFk(selectedUser.getId());
     userRepository.deleteUserLikesByFk(selectedUser.getId());
     userRepository.deleteUserDislikesByFk(selectedUser.getId());
@@ -192,14 +235,14 @@ public class UserService implements UserDetailsService {
     int totalDifference = 0;
     int totalAttributes = 8;
 
-    totalDifference += calculateDifference(connectedUser.getPersonality(), user.getPersonality());
-    totalDifference += calculateDifference(connectedUser.getParenthood(), user.getParenthood());
-    totalDifference += calculateDifference(connectedUser.getSmokes(), user.getSmokes());
-    totalDifference += calculateDifference(connectedUser.getOrganised(), user.getOrganised());
-    totalDifference += calculateDifference(connectedUser.getSportPractice(), user.getSportPractice());
-    totalDifference += calculateDifference(connectedUser.getAnimals(), user.getAnimals());
-    totalDifference += calculateDifference(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking());
-    totalDifference += calculateDifference(connectedUser.getGamer(), user.getGamer());
+    totalDifference += calculateDifference(connectedUser.getPreferences().getPersonality(), user.getPreferences().getPersonality());
+    totalDifference += calculateDifference(connectedUser.getPreferences().getParenthood(), user.getPreferences().getParenthood());
+    totalDifference += calculateDifference(connectedUser.getPreferences().getSmokes(), user.getPreferences().getSmokes());
+    totalDifference += calculateDifference(connectedUser.getPreferences().getOrganised(), user.getPreferences().getOrganised());
+    totalDifference += calculateDifference(connectedUser.getPreferences().getSportPractice(), user.getPreferences().getSportPractice());
+    totalDifference += calculateDifference(connectedUser.getPreferences().getAnimals(), user.getPreferences().getAnimals());
+    totalDifference += calculateDifference(connectedUser.getPreferences().getAlcoholDrinking(), user.getPreferences().getAlcoholDrinking());
+    totalDifference += calculateDifference(connectedUser.getPreferences().getGamer(), user.getPreferences().getGamer());
 
     return (double) totalDifference / totalAttributes;
   }
@@ -224,17 +267,17 @@ public class UserService implements UserDetailsService {
 
   private List<UserDTO> sortUsersByDistanceAndAttributes(List<User> users, User connectedUser, Map<Long, Double> mapAverageScoreByUserId) {
     return users.stream()
-      .filter((User user) -> user.getDistance() <= connectedUser.getDistanceSearch())
-      .sorted((Comparator.comparing((User user) -> getDistanceGroupIndex(user.getDistance()))
+      .filter((User user) -> user.getGeolocation().getDistance() <= connectedUser.getGeolocation().getDistanceSearch())
+      .sorted((Comparator.comparing((User user) -> getDistanceGroupIndex(user.getGeolocation().getDistance()))
         .thenComparingDouble((User user) -> mapAverageScoreByUserId.get(user.getId()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getPersonality(), user.getPersonality()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getParenthood(), user.getParenthood()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getSmokes(), user.getSmokes()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getOrganised(), user.getOrganised()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getSportPractice(), user.getSportPractice()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getAnimals(), user.getAnimals()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getAlcoholDrinking(), user.getAlcoholDrinking()))
-        .thenComparing((User user) -> compareAttribute(connectedUser.getGamer(), user.getGamer())))).map(userDTOMapperRestricted).toList();
+        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getPersonality(), user.getPreferences().getPersonality()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getParenthood(), user.getPreferences().getParenthood()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getSmokes(), user.getPreferences().getSmokes()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getOrganised(), user.getPreferences().getOrganised()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getSportPractice(), user.getPreferences().getSportPractice()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getAnimals(), user.getPreferences().getAnimals()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getAlcoholDrinking(), user.getPreferences().getAlcoholDrinking()))
+        .thenComparing((User user) -> compareAttribute(connectedUser.getPreferences().getGamer(), user.getPreferences().getGamer())))).map(userDTOMapperRestricted).toList();
   }
 
   private int getDistanceGroupIndex(double distance) {

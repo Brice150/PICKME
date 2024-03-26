@@ -34,6 +34,7 @@ public class DislikeService {
     Dislike dislike = new Dislike(new Date(), connectedUser.getId(), dislikedUser.getId());
     dislike.setDate(new Date());
     dislikeRepository.save(dislike);
+    //TODO: save user stats
     return null;
   }
 }
