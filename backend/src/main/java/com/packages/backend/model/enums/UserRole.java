@@ -1,4 +1,4 @@
-package com.packages.backend.model.user.enums;
+package com.packages.backend.model.enums;
 
 public enum UserRole {
   ROLE_USER,

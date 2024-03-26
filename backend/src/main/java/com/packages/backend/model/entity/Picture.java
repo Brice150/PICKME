@@ -1,7 +1,6 @@
-package com.packages.backend.model;
+package com.packages.backend.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.packages.backend.model.user.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,6 +12,7 @@ public class Picture implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false, updatable = false)
   private Long id;
+  @Column(columnDefinition = "VARCHAR", length = -1)
   private String content;
   private Boolean isMainPicture;
   @ManyToOne(optional = false)

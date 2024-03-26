@@ -1,6 +1,6 @@
 package com.packages.backend.model;
 
-import com.packages.backend.model.user.enums.Gender;
+import com.packages.backend.model.enums.Gender;
 
 import java.util.Set;
 

@@ -1,10 +1,9 @@
 package com.packages.backend.service;
 
 import com.packages.backend.exception.PictureNotFoundException;
-import com.packages.backend.model.Picture;
-import com.packages.backend.model.user.User;
+import com.packages.backend.model.entity.Picture;
+import com.packages.backend.model.entity.User;
 import com.packages.backend.repository.PictureRepository;
-import com.packages.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,13 +16,11 @@ import java.util.Optional;
 public class PictureService {
   private final PictureRepository pictureRepository;
   private final UserService userService;
-  private final UserRepository userRepository;
 
   @Autowired
-  public PictureService(PictureRepository pictureRepository, UserService userService, UserRepository userRepository) {
+  public PictureService(PictureRepository pictureRepository, UserService userService) {
     this.pictureRepository = pictureRepository;
     this.userService = userService;
-    this.userRepository = userRepository;
   }
 
   public Optional<Picture> addPicture(String pictureContent) {

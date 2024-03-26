@@ -1,8 +1,8 @@
 package com.packages.backend.service;
 
 import com.packages.backend.model.Registration;
-import com.packages.backend.model.user.User;
-import com.packages.backend.model.user.enums.UserRole;
+import com.packages.backend.model.entity.User;
+import com.packages.backend.model.enums.UserRole;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,16 +20,10 @@ public class RegistrationService {
         request.getBirthDate(),
         request.getNickname(),
         request.getJob(),
-        request.getDistanceSearch(),
-        request.getCity(),
-        request.getLatitude(),
-        request.getLongitude(),
-        request.getGender(),
-        request.getGenderSearch(),
-        request.getMinAge(),
-        request.getMaxAge(),
         request.getEmail(),
-        request.getPassword()
+        request.getPassword(),
+        request.getGenderAge(),
+        request.getGeolocation()
       )
     );
   }

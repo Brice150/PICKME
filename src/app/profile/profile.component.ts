@@ -64,9 +64,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   updateUser(message: string): void {
-    this.user!.city = this.geolocation.city;
-    this.user!.latitude = this.geolocation.latitude;
-    this.user!.longitude = this.geolocation.longitude;
+    this.user!.geolocation.city = this.geolocation.city;
+    this.user!.geolocation.latitude = this.geolocation.latitude;
+    this.user!.geolocation.longitude = this.geolocation.longitude;
     this.profileService.updateUser(this.user!).subscribe({
       next: (updatedUser: User) => {
         this.user!.password = undefined;

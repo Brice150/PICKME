@@ -18,7 +18,7 @@ import { ConnectService } from '../../core/services/connect.service';
   styleUrl: './main-infos.component.css',
 })
 export class MainInfosComponent implements OnInit {
-  @Input() user?: User;
+  @Input() user!: User;
   mainInfosForm!: FormGroup;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
@@ -30,7 +30,7 @@ export class MainInfosComponent implements OnInit {
   ngOnInit(): void {
     this.mainInfosForm = this.fb.group({
       nickname: [
-        this.user?.nickname,
+        this.user.nickname,
         [
           Validators.required,
           Validators.maxLength(30),
@@ -38,15 +38,18 @@ export class MainInfosComponent implements OnInit {
         ],
       ],
       job: [
-        this.user?.job,
+        this.user.job,
         [
           Validators.required,
           Validators.maxLength(30),
           Validators.minLength(2),
         ],
       ],
-      distanceSearch: [this.user?.distanceSearch, [Validators.required]],
-      height: [this.user?.height, Validators.required],
+      distanceSearch: [
+        this.user.geolocation?.distanceSearch,
+        [Validators.required],
+      ],
+      height: [this.user.height, Validators.required],
     });
   }
 
@@ -59,7 +62,7 @@ export class MainInfosComponent implements OnInit {
     if (this.user) {
       this.user.nickname = this.mainInfosForm.get('nickname')?.value;
       this.user.job = this.mainInfosForm.get('job')?.value;
-      this.user.distanceSearch =
+      this.user.geolocation.distanceSearch =
         this.mainInfosForm.get('distanceSearch')?.value;
       this.user.height = this.mainInfosForm.get('height')?.value;
       this.mainInfosForm.markAsPristine();
@@ -68,14 +71,14 @@ export class MainInfosComponent implements OnInit {
 
   cancel(): void {
     if (this.user) {
-      this.user.nickname = this.connectService.connectedUser?.nickname!;
-      this.user.job = this.connectService.connectedUser?.job!;
-      this.user.distanceSearch =
-        this.connectService.connectedUser?.distanceSearch!;
+      this.user.nickname = this.connectService.connectedUser!.nickname;
+      this.user.job = this.connectService.connectedUser!.job;
+      this.user.geolocation.distanceSearch =
+        this.connectService.connectedUser!.geolocation?.distanceSearch;
       this.mainInfosForm.patchValue({
         nickname: this.user.nickname,
         job: this.user.job,
-        distanceSearch: this.user.distanceSearch,
+        distanceSearch: this.user.geolocation.distanceSearch,
         height: this.user.height,
       });
       this.mainInfosForm.markAsPristine();

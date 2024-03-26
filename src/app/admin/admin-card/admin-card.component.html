@@ -13,15 +13,15 @@
     <span class="nickname">{{ user.nickname }}</span>
     <div class="stats">
       <div class="stat">
-        <span>{{ user.totalDislikes }}</span>
+        <span>{{ user.stats?.totalDislikes }}</span>
         <i class="bx bxs-dislike"></i>
       </div>
       <div class="stat">
-        <span>{{ user.totalLikes }}</span>
+        <span>{{ user.stats?.totalLikes }}</span>
         <i class="bx bxs-like"></i>
       </div>
       <div class="stat">
-        <span>{{ user.totalMatches }}</span>
+        <span>{{ user.stats?.totalMatches }}</span>
         <i class="bx bxs-flame gold"></i>
       </div>
     </div>

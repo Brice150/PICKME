@@ -21,7 +21,7 @@ import { SportPractice } from '../../core/enums/sport-practice';
   styleUrl: './preferences.component.css',
 })
 export class PreferencesComponent implements OnInit {
-  @Input() user?: User;
+  @Input() user!: User;
   preferencesForm!: FormGroup;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
@@ -40,15 +40,18 @@ export class PreferencesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (!this.user.preferences) {
+      this.user.preferences = {};
+    }
     this.preferencesForm = this.fb.group({
-      alcoholDrinking: [this.user?.alcoholDrinking],
-      smokes: [this.user?.smokes],
-      organised: [this.user?.organised],
-      personality: [this.user?.personality],
-      sportPractice: [this.user?.sportPractice],
-      animals: [this.user?.animals],
-      parenthood: [this.user?.parenthood],
-      gamer: [this.user?.gamer],
+      alcoholDrinking: [this.user.preferences?.alcoholDrinking],
+      smokes: [this.user.preferences?.smokes],
+      organised: [this.user.preferences?.organised],
+      personality: [this.user.preferences?.personality],
+      sportPractice: [this.user.preferences?.sportPractice],
+      animals: [this.user.preferences?.animals],
+      parenthood: [this.user.preferences?.parenthood],
+      gamer: [this.user.preferences?.gamer],
     });
   }
 
@@ -60,38 +63,47 @@ export class PreferencesComponent implements OnInit {
   isSelected(attribute: string, property: string): boolean {
     let selected: boolean = false;
     if (attribute && this.user) {
-      selected = (this.user as any)[property] === attribute;
+      selected = (this.user.preferences as any)[property] === attribute;
     }
     return selected;
   }
 
   select(attribute: string, property: string): void {
     if (attribute && this.user) {
-      (this.user as any)[property] = attribute;
+      (this.user.preferences as any)[property] = attribute;
     }
   }
 
   cancel(): void {
     if (this.user) {
-      this.user.alcoholDrinking =
-        this.connectService.connectedUser?.alcoholDrinking;
-      this.user.smokes = this.connectService.connectedUser?.smokes;
-      this.user.sportPractice =
-        this.connectService.connectedUser?.sportPractice;
-      this.user.parenthood = this.connectService.connectedUser?.parenthood;
-      this.user.gamer = this.connectService.connectedUser?.gamer;
-      this.user.animals = this.connectService.connectedUser?.animals;
-      this.user.organised = this.connectService.connectedUser?.organised;
-      this.user.personality = this.connectService.connectedUser?.personality;
+      if (!this.user.preferences) {
+        this.user.preferences = {};
+      }
+      this.user.preferences.alcoholDrinking =
+        this.connectService.connectedUser!.preferences?.alcoholDrinking;
+      this.user.preferences.smokes =
+        this.connectService.connectedUser!.preferences?.smokes;
+      this.user.preferences.sportPractice =
+        this.connectService.connectedUser!.preferences?.sportPractice;
+      this.user.preferences.parenthood =
+        this.connectService.connectedUser!.preferences?.parenthood;
+      this.user.preferences.gamer =
+        this.connectService.connectedUser!.preferences?.gamer;
+      this.user.preferences.animals =
+        this.connectService.connectedUser!.preferences?.animals;
+      this.user.preferences.organised =
+        this.connectService.connectedUser!.preferences?.organised;
+      this.user.preferences.personality =
+        this.connectService.connectedUser!.preferences?.personality;
       this.preferencesForm.patchValue({
-        alcoholDrinking: this.user.alcoholDrinking,
-        smokes: this.user.smokes,
-        sportPractice: this.user.sportPractice,
-        parenthood: this.user.parenthood,
-        gamer: this.user.gamer,
-        animals: this.user.animals,
-        organised: this.user.organised,
-        personality: this.user.personality,
+        alcoholDrinking: this.user.preferences.alcoholDrinking,
+        smokes: this.user.preferences.smokes,
+        sportPractice: this.user.preferences.sportPractice,
+        parenthood: this.user.preferences.parenthood,
+        gamer: this.user.preferences.gamer,
+        animals: this.user.preferences.animals,
+        organised: this.user.preferences.organised,
+        personality: this.user.preferences.personality,
       });
       this.preferencesForm.markAsPristine();
     }
