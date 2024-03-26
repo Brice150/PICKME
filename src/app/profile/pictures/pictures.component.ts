@@ -8,7 +8,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../environments/environment';
 import { Picture } from '../../core/interfaces/picture';
 import { User } from '../../core/interfaces/user';
@@ -29,15 +28,12 @@ export class PicturesComponent {
   @Output() refreshEvent: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('imageInput') imageInput!: ElementRef;
 
-  constructor(
-    private toastr: ToastrService,
-    private profileService: ProfileService
-  ) {}
+  constructor(private profileService: ProfileService) {}
 
   addPicture(files: File[]): void {
-    if (files) {
+    for (let file of files) {
       let reader = new FileReader();
-      reader.readAsDataURL(files[0]);
+      reader.readAsDataURL(file);
       reader.onload = (event: any) => {
         const img = new Image();
         img.src = event.target.result;

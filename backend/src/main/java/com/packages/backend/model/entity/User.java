@@ -30,6 +30,7 @@ public class User implements UserDetails {
   private Long height;
   private String email;
   private String password;
+  @Column(columnDefinition = "VARCHAR", length = -1)
   private String description;
   @OneToOne(mappedBy = "fkUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @PrimaryKeyJoinColumn

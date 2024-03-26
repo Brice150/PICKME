@@ -11,6 +11,7 @@ public class Message implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false, updatable = false)
   private Long id;
+  @Column(columnDefinition = "VARCHAR", length = -1)
   private String content;
   private Date date;
   private String sender;
