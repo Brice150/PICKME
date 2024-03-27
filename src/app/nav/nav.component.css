@@ -40,6 +40,50 @@
   border-radius: 10px;
 }
 
+.menu-button.notification {
+  right: calc(60% - 55px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--secondary);
+}
+
+.menu-button.notification.gold {
+  background-color: var(--liked);
+}
+
+.menu-button.notification i {
+  font-size: 35px;
+  color: var(--primary);
+  transition: 0.5s ease;
+}
+
+.menu-button.notification.gold i {
+  color: var(--secondary);
+}
+
+.menu-button.notification:hover i {
+  color: var(--secondary);
+}
+
+.menu-button.notification.gold:hover i {
+  color: var(--liked);
+}
+
+.menu-button.notification span {
+  position: absolute;
+  top: 0;
+  right: 2px;
+  color: var(--secondary);
+  font-size: 18px;
+  font-weight: 700;
+  transition: 0.5s ease;
+}
+
+.menu-button.notification:hover span {
+  color: var(--liked);
+}
+
 .container {
   position: fixed;
   top: 0;
@@ -56,55 +100,42 @@
   backdrop-filter: blur(2px);
 }
 
-.container a {
-  margin: 35px 0;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  text-decoration: none;
-  color: var(--primary);
-  border-radius: 10px;
-  backdrop-filter: blur(2px);
-  padding: 10px;
-  width: 140px;
-  transition: 0.5s ease;
-  cursor: pointer;
-  overflow: hidden;
+@media screen and (min-width: 600px) {
+  .container {
+    width: 50%;
+  }
+
+  .menu-button.notification {
+    right: calc(50% - 55px);
+  }
 }
 
-.container a::before {
-  content: "";
-  position: absolute;
-  background-color: var(--primary);
-  height: 0%;
-  top: 0;
-  right: 0;
-  width: 100%;
-  transition: 0.5s ease;
-  z-index: -1;
+@media screen and (min-width: 800px) {
+  .container {
+    width: 40%;
+  }
+
+  .menu-button.notification {
+    right: calc(40% - 55px);
+  }
 }
 
-.container a:hover::before {
-  height: 100%;
-  border-radius: 10px;
+@media screen and (min-width: 1400px) {
+  .container {
+    width: 30%;
+  }
+
+  .menu-button.notification {
+    right: calc(30% - 55px);
+  }
 }
 
-.container a:hover {
-  color: var(--secondary);
-}
+@media screen and (max-width: 400px) {
+  .container {
+    width: 70%;
+  }
 
-.container a.active {
-  background-color: var(--primary);
-  color: var(--secondary);
-}
-
-.container a i {
-  font-size: 25px;
-  margin-right: 10px;
-}
-
-.container a span {
-  font-size: 20px;
-  text-transform: uppercase;
-  font-weight: 800;
+  .menu-button.notification {
+    right: calc(70% - 55px);
+  }
 }
