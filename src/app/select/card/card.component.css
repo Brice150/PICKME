@@ -157,8 +157,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   backdrop-filter: blur(3px);
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+.match-animation .flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .match-animation span {
@@ -166,14 +174,25 @@
   font-weight: 800;
   color: var(--liked);
   letter-spacing: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
 }
 
 .match-animation i {
   margin: 10px;
   font-size: 30px;
+  color: var(--liked);
+}
+
+.match-animation a {
+  position: relative;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 10px;
+  background-color: var(--liked);
+  color: var(--secondary);
+  transition: 0.5s ease;
+}
+
+.match-animation a:hover {
   color: var(--liked);
 }

@@ -59,6 +59,11 @@
 </div>
 
 <div class="match-animation" *ngIf="activeMatchAnimation">
-  <span @textMatchTrigger>It's a Match !</span>
-  <i @logoMatchTrigger class="bx bxs-flame"></i>
+  <div class="flex" @textMatchTrigger>
+    <span>It's a Match !</span>
+    <i class="bx bxs-flame"></i>
+  </div>
+  <a class="button" title="View Match" @buttonMatchTrigger (click)="viewMatch()"
+    >View Match</a
+  >
 </div>

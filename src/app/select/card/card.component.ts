@@ -10,15 +10,22 @@ import { DescriptionPipe } from '../../shared/pipes/description.pipe';
 import {
   DislikeButtonAnimation,
   LikeButtonAnimation,
-  LogoMatchAnimation,
+  ButtonMatchAnimation,
   TextAnimation,
   TextMatchAnimation,
 } from './card-animation';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [CommonModule, DescriptionPipe, AgePipe, MatDialogModule],
+  imports: [
+    CommonModule,
+    DescriptionPipe,
+    AgePipe,
+    MatDialogModule,
+    RouterModule,
+  ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
   animations: [
@@ -26,7 +33,7 @@ import {
     LikeButtonAnimation,
     DislikeButtonAnimation,
     TextMatchAnimation,
-    LogoMatchAnimation,
+    ButtonMatchAnimation,
   ],
 })
 export class CardComponent {
@@ -37,7 +44,7 @@ export class CardComponent {
   @Output() dislikeEvent: EventEmitter<void> = new EventEmitter<void>();
   @Input() activeMatchAnimation: boolean = false;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private router: Router) {}
 
   moreInfo(): void {
     const dialogRef = this.dialog.open(MoreInfoComponent, {
@@ -62,5 +69,9 @@ export class CardComponent {
 
   dislike(): void {
     this.dislikeEvent.emit();
+  }
+
+  viewMatch() {
+    this.router.navigate(['match']);
   }
 }

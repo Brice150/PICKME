@@ -92,15 +92,15 @@ export class SelectComponent implements OnInit, OnDestroy {
           setTimeout(() => {
             this.activeMatchAnimation = false;
             this.removeSlide(user.id!);
-            this.toastr.success(
-              'You have a match with ' + matchNotification,
-              'Matched ' + matchNotification,
-              {
-                positionClass: 'toast-bottom-center',
-                toastClass: 'ngx-toastr custom gold',
-              }
-            );
-          }, 2000);
+          }, 3000);
+          this.toastr.success(
+            'You have a match with ' + matchNotification,
+            'Matched ' + matchNotification,
+            {
+              positionClass: 'toast-bottom-center',
+              toastClass: 'ngx-toastr custom gold',
+            }
+          );
         } else {
           this.removeSlide(user.id!);
           this.toastr.success(

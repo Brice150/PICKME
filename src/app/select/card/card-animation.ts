@@ -30,16 +30,16 @@ export const LikeButtonAnimation = trigger('likeButtonTrigger', [
 export const TextMatchAnimation = trigger('textMatchTrigger', [
   transition(':enter', [
     style({
-      transform: 'translateY(300%)',
+      transform: 'translateY(-300%)',
     }),
     animate('1s ease', style({ transform: 'translateY(0%)' })),
   ]),
 ]);
 
-export const LogoMatchAnimation = trigger('logoMatchTrigger', [
+export const ButtonMatchAnimation = trigger('buttonMatchTrigger', [
   transition(':enter', [
     style({
-      transform: 'translateY(-300%)',
+      transform: 'translateY(300%)',
     }),
     animate('1s ease', style({ transform: 'translateY(0%)' })),
   ]),
