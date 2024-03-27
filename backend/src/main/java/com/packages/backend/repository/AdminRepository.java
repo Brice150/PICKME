@@ -19,7 +19,7 @@ public interface AdminRepository extends JpaRepository<User, Long> {
       " AND LOWER(u.nickname) LIKE CONCAT('%', LOWER(:nickname), '%')" +
       " AND u.genderAge.gender IN :genders" +
       " AND EXTRACT(YEAR FROM AGE(CURRENT_DATE, u.birthDate)) BETWEEN :minAge AND :maxAge" +
-      " ORDER BY u.nickname"
+      " ORDER BY u.stats.totalMatches DESC, u.stats.totalLikes DESC, u.stats.totalDislikes DESC"
   )
   List<User> getAllUsers(@Param("connectedId") Long connectedId, @Param("nickname") String nickname, @Param("genders") Set<Gender> genders, @Param("minAge") Integer minAge, @Param("maxAge") Integer maxAge, Pageable pageable);
 }
