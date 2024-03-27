@@ -23,10 +23,18 @@ export class MatchCardComponent {
   }
 
   isLastMessageFromMatch(): boolean {
+    if (!this.match.messages || this.match.messages.length === 0) {
+      return false;
+    }
+    const messagesWithContent = this.match.messages.filter(
+      (message) => message.content
+    );
+    if (messagesWithContent.length === 0) {
+      return false;
+    }
     return (
       !this.messageMode &&
-      this.match.messages?.length !== 0 &&
-      this.match.messages[this.match.messages.length - 1].sender ===
+      messagesWithContent[messagesWithContent.length - 1].sender ===
         this.match.user.nickname
     );
   }

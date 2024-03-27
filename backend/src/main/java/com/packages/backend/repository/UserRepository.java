@@ -78,12 +78,45 @@ public interface UserRepository extends JpaRepository<User, Long> {
   List<User> getAllUsers(@Param("genderSearch") Gender genderSearch, @Param("gender") Gender gender, @Param("minAge") Integer minAge, @Param("maxAge") Integer maxAge, @Param("connectedId") Long connectedId);
 
   @Query(
-    "SELECT DISTINCT u FROM User u" +
-      " INNER JOIN Like likeSender ON u.id = likeSender.fkSender" +
-      " INNER JOIN Like likeReceiver ON u.id = likeReceiver.fkReceiver" +
-      " WHERE u.id != :connectedId" +
-      " AND (likeSender.fkReceiver = :connectedId" +
-      " OR likeReceiver.fkSender = :connectedId)"
+    value =
+      "SELECT u.*" +
+        " FROM users u" +
+        " INNER JOIN (" +
+        "     SELECT fk_receiver, MAX(date) AS max_date" +
+        "     FROM likes" +
+        "     WHERE fk_sender = :connectedId" +
+        "     GROUP BY fk_receiver" +
+        " ) likeSender ON u.id = likeSender.fk_receiver" +
+        " INNER JOIN (" +
+        "     SELECT fk_sender, MAX(date) AS max_date" +
+        "     FROM likes" +
+        "     WHERE fk_receiver = :connectedId" +
+        "     GROUP BY fk_sender" +
+        " ) likeReceiver ON u.id = likeReceiver.fk_sender" +
+        " LEFT JOIN (" +
+        "     SELECT fk_receiver, MAX(date) AS max_date" +
+        "     FROM messages" +
+        "     WHERE fk_sender = :connectedId" +
+        "     GROUP BY fk_receiver" +
+        " ) messageSender ON u.id = messageSender.fk_receiver" +
+        " LEFT JOIN (" +
+        "     SELECT fk_sender, MAX(date) AS max_date" +
+        "     FROM messages" +
+        "     WHERE fk_receiver = :connectedId" +
+        "     GROUP BY fk_sender" +
+        " ) messageReceiver ON u.id = messageReceiver.fk_sender" +
+        " WHERE u.id != :connectedId" +
+        " ORDER BY" +
+        " COALESCE(" +
+        "     GREATEST(" +
+        "         likeSender.max_date," +
+        "         likeReceiver.max_date," +
+        "         COALESCE(messageReceiver.max_date, '0001-01-01')," +
+        "         COALESCE(messageSender.max_date, '0001-01-01')" +
+        "     )," +
+        "     '0001-01-01'" +
+        " ) DESC",
+    nativeQuery = true
   )
   List<User> getAllUserMatches(@Param("connectedId") Long connectedId);
 }

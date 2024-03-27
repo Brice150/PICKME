@@ -1,6 +1,6 @@
 export interface Message {
   id: number;
-  content: string;
+  content?: string;
   date: Date;
   sender: string;
   fkReceiver?: number;

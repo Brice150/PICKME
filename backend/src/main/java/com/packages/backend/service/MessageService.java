@@ -62,7 +62,8 @@ public class MessageService {
     User connectedUser = userService.getConnectedUser();
     Message message = getMessageById(messageId);
     if (Objects.equals(connectedUser.getId(), message.getFkSender())) {
-      messageRepository.deleteMessageById(messageId);
+      message.setContent(null);
+      messageRepository.save(message);
       return "OK";
     } else {
       return "FORBIDDEN";

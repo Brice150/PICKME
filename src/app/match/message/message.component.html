@@ -1,10 +1,17 @@
 <div
   class="container"
-  [ngClass]="message.sender === userName ? 'left' : 'right'"
-  [title]="message.sender !== userName ? 'Update Message' : ''"
+  [ngClass]="{
+    left: message.sender === userName,
+    right: message.sender !== userName,
+    deleted: !message.content
+  }"
+  [title]="
+    message.sender !== userName && message.content ? 'Update Message' : ''
+  "
 >
   <span class="date">{{ message.date | customDate }}</span>
-  <span class="content">
+  <span class="content" *ngIf="message.content">
     {{ message.content }}
   </span>
+  <span class="content" *ngIf="!message.content"> Message deleted </span>
 </div>

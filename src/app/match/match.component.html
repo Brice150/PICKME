@@ -11,11 +11,7 @@
     <app-match-card
       *ngFor="let match of filteredMatches"
       [match]="match"
-      [preview]="
-        match.messages && match.messages.length !== 0
-          ? match.messages[match.messages.length - 1].content
-          : undefined
-      "
+      [preview]="getPreview(match)"
       (clickEvent)="selectMatch(match)"
       title="View Messages"
     ></app-match-card>

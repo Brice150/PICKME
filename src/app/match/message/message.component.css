@@ -10,12 +10,12 @@
   overflow: hidden;
 }
 
-.container:not(.left) {
+.container:not(.left):not(.deleted) {
   cursor: pointer;
   transition: 0.5s ease;
 }
 
-.container:not(.left)::before {
+.container:not(.left):not(.deleted)::before {
   content: "";
   position: absolute;
   background-color: var(--primary);
@@ -27,12 +27,12 @@
   z-index: -1;
 }
 
-.container:not(.left):hover::before {
+.container:not(.left):not(.deleted):hover::before {
   height: 100%;
   border-radius: 10px;
 }
 
-.container:not(.left):hover {
+.container:not(.left):not(.deleted):hover {
   color: var(--secondary);
 }
 
@@ -72,6 +72,11 @@
   text-align: justify;
   font-size: 15px;
   font-weight: 700;
+}
+
+.container.deleted .content {
+  font-style: italic;
+  color: rgb(169, 169, 169);
 }
 
 @media screen and (max-width: 400px) {

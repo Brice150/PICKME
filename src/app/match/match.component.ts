@@ -143,7 +143,10 @@ export class MatchComponent implements OnInit, OnDestroy {
   }
 
   modifyMessage(message: Message): void {
-    if (message.sender !== this.selectedMatch?.user.nickname) {
+    if (
+      message.sender !== this.selectedMatch?.user.nickname &&
+      message.content
+    ) {
       this.updatedMessage = message;
       this.isModifying = true;
     }
@@ -161,6 +164,14 @@ export class MatchComponent implements OnInit, OnDestroy {
     this.matchService.addMessage(message).subscribe({
       next: (newMessage: Message) => {
         this.selectedMatch!.messages.push(newMessage);
+        const index = this.matches.findIndex(
+          (match) => match.user.id === this.selectedMatch!.user.id
+        );
+        if (index !== -1) {
+          const selected = this.matches.splice(index, 1)[0];
+          this.matches.unshift(selected);
+          this.searchByNickname();
+        }
         this.unModifyMessage();
       },
       complete: () => {
@@ -194,14 +205,14 @@ export class MatchComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteMessage(messageId: number): void {
-    this.matchService.deleteMessage(messageId).subscribe({
+  deleteMessage(messageToDelete: Message): void {
+    this.matchService.deleteMessage(messageToDelete.id).subscribe({
       next: () => {
         const messageIndex = this.selectedMatch!.messages.findIndex(
-          (message: Message) => message.id === messageId
+          (message: Message) => message.id === messageToDelete.id
         );
         if (messageIndex !== -1) {
-          this.selectedMatch?.messages.splice(messageIndex, 1);
+          this.selectedMatch!.messages[messageIndex].content = undefined;
           this.unModifyMessage();
         }
       },
@@ -227,7 +238,20 @@ export class MatchComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(filter((res: boolean) => res))
       .subscribe(() => {
-        this.deleteMessage(this.updatedMessage!.id);
+        this.deleteMessage(this.updatedMessage!);
       });
+  }
+
+  getPreview(match: Match): string | undefined {
+    if (!match.messages || match.messages.length === 0) {
+      return undefined;
+    }
+    const messagesWithContent = match.messages.filter(
+      (message) => message.content
+    );
+    if (messagesWithContent.length === 0) {
+      return 'Message deleted';
+    }
+    return messagesWithContent[messagesWithContent.length - 1].content;
   }
 }
