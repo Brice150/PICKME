@@ -5,6 +5,7 @@ import com.packages.backend.model.entity.Stats;
 import com.packages.backend.model.entity.User;
 import com.packages.backend.repository.DislikeRepository;
 import com.packages.backend.repository.LikeRepository;
+import com.packages.backend.repository.MessageRepository;
 import com.packages.backend.repository.StatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,14 +18,16 @@ import java.util.Optional;
 public class LikeService {
   private final LikeRepository likeRepository;
   private final DislikeRepository dislikeRepository;
+  private final MessageRepository messageRepository;
   private final UserService userService;
   private final StatsRepository statsRepository;
   private static final String FORBIDDEN = "FORBIDDEN";
 
   @Autowired
-  public LikeService(LikeRepository likeRepository, DislikeRepository dislikeRepository, UserService userService, StatsRepository statsRepository) {
+  public LikeService(LikeRepository likeRepository, DislikeRepository dislikeRepository, MessageRepository messageRepository, UserService userService, StatsRepository statsRepository) {
     this.likeRepository = likeRepository;
     this.dislikeRepository = dislikeRepository;
+    this.messageRepository = messageRepository;
     this.userService = userService;
     this.statsRepository = statsRepository;
   }
@@ -71,7 +74,7 @@ public class LikeService {
     userStats.setTotalDislikes(userStats.getTotalDislikes() + 1);
     previousSenderLike.ifPresent(likeSender -> {
       userStats.setTotalLikes(userStats.getTotalLikes() - 1);
-      previousReceiverLike.ifPresent(likeReceiver -> handleDismatch(userStats, connectedUserId));
+      previousReceiverLike.ifPresent(likeReceiver -> handleDismatch(userStats, connectedUserId, userId));
       likeRepository.deleteLikeById(likeSender.getId());
     });
     statsRepository.save(userStats);
@@ -85,7 +88,8 @@ public class LikeService {
     return likedUser.getNickname();
   }
 
-  private void handleDismatch(Stats userStats, Long connectedUserId) {
+  private void handleDismatch(Stats userStats, Long connectedUserId, Long userId) {
+    messageRepository.deleteMessagesByFk(connectedUserId, userId);
     userStats.setTotalMatches(userStats.getTotalMatches() - 1);
     Stats connectedUserStats = statsRepository.getById(connectedUserId);
     connectedUserStats.setTotalMatches(connectedUserStats.getTotalMatches() - 1);
