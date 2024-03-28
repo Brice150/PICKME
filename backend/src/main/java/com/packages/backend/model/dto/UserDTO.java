@@ -20,6 +20,7 @@ public record UserDTO(
   Preferences preferences,
   Geolocation geolocation,
   List<Picture> pictures,
-  Stats stats
+  Stats stats,
+  List<Notification> notifications
 ) {
 }

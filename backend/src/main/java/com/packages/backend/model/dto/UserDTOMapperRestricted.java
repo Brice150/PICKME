@@ -24,6 +24,7 @@ public class UserDTOMapperRestricted implements Function<User, UserDTO> {
       user.getPreferences(),
       user.getGeolocation(),
       user.getPictures(),
+      null,
       null
     );
   }

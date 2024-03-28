@@ -53,6 +53,11 @@ public class User implements UserDetails {
   @JsonManagedReference(value = "stats")
   private Stats stats;
 
+  @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OrderBy("date DESC")
+  @JsonManagedReference(value = "notifications")
+  private List<Notification> notifications;
+
   public User() {
   }
 
@@ -221,5 +226,13 @@ public class User implements UserDetails {
 
   public void setStats(Stats stats) {
     this.stats = stats;
+  }
+
+  public List<Notification> getNotifications() {
+    return notifications;
+  }
+
+  public void setNotifications(List<Notification> notifications) {
+    this.notifications = notifications;
   }
 }

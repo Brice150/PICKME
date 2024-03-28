@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user';
-import { Observable, of, switchMap } from 'rxjs';
+import { Observable, Subject, of, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Geolocation } from '../interfaces/geolocation';
 import { Router } from '@angular/router';
@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class ConnectService {
   private apiServerUrl = environment.apiBaseUrl;
   connectedUser?: User;
+  connectedUserReady$: Subject<void> = new Subject<void>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -32,6 +33,21 @@ export class ConnectService {
       .pipe(
         switchMap((loggedInUser: User) => {
           this.connectedUser = loggedInUser;
+          this.connectedUserReady$.next();
+          return of(loggedInUser);
+        })
+      );
+  }
+
+  public getConnectedUser(): Observable<User> {
+    return this.http
+      .get<User>(`${this.apiServerUrl}/user`, {
+        withCredentials: true,
+      })
+      .pipe(
+        switchMap((loggedInUser: User) => {
+          this.connectedUser = loggedInUser;
+          this.connectedUserReady$.next();
           return of(loggedInUser);
         })
       );

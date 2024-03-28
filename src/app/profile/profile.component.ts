@@ -82,11 +82,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   refreshUser(message: string): void {
-    this.profileService.getConnectedUser().subscribe({
-      next: (user: User) => {
-        this.connectService.connectedUser = user;
-      },
-      complete: () => {
+    this.connectService.getConnectedUser().subscribe({
+      next: () => {
         if (message && message === 'Main Picture Selected') {
           this.toastr.success('Your main picture has been selected', message, {
             positionClass: 'toast-bottom-center',

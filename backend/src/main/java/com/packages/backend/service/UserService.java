@@ -5,6 +5,7 @@ import com.packages.backend.model.Match;
 import com.packages.backend.model.dto.UserDTO;
 import com.packages.backend.model.dto.UserDTOMapper;
 import com.packages.backend.model.dto.UserDTOMapperRestricted;
+import com.packages.backend.model.entity.Notification;
 import com.packages.backend.model.entity.Preferences;
 import com.packages.backend.model.entity.Stats;
 import com.packages.backend.model.entity.User;
@@ -101,6 +102,10 @@ public class UserService implements UserDetailsService {
     user.setPreferences(new Preferences());
     user.getPreferences().setFkUser(user);
     user.setStats(new Stats(0L, 0L, 0L, user));
+    List<Notification> notifications = new ArrayList<>();
+    Notification firstNotification = new Notification("Welcome, you can start by completing your profile !", "profile", new Date(), false, user);
+    notifications.add(firstNotification);
+    user.setNotifications(notifications);
     userRepository.save(user);
   }
 
@@ -231,6 +236,7 @@ public class UserService implements UserDetailsService {
 
   @Transactional
   private void deleteUser(User user) {
+    userRepository.deleteUserNotificationsByFk(user.getId());
     userRepository.deleteUserGeolocationByFk(user.getId());
     userRepository.deleteUserPreferencesByFk(user.getId());
     userRepository.deleteUserGenderAgeByFk(user.getId());

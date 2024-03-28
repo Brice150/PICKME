@@ -23,7 +23,8 @@ public class UserDTOMapper implements Function<User, UserDTO> {
       user.getPreferences(),
       user.getGeolocation(),
       user.getPictures(),
-      user.getStats()
+      user.getStats(),
+      user.getNotifications()
     );
   }
 }

@@ -38,12 +38,6 @@ export class ProfileService {
     });
   }
 
-  public getConnectedUser(): Observable<User> {
-    return this.http.get<User>(`${this.apiServerUrl}/user`, {
-      withCredentials: true,
-    });
-  }
-
   public updateUser(user: User): Observable<User> {
     return this.http.put<User>(`${this.apiServerUrl}/user`, user, {
       withCredentials: true,

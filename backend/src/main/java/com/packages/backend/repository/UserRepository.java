@@ -21,6 +21,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   @Transactional
   @Modifying
+  @Query("DELETE FROM Notification n WHERE n.fkUser.id = :fkUser")
+  void deleteUserNotificationsByFk(@Param("fkUser") Long fkUser);
+
+  @Transactional
+  @Modifying
   @Query("DELETE FROM Preferences p WHERE p.id = :fkUser")
   void deleteUserPreferencesByFk(@Param("fkUser") Long fkUser);
 

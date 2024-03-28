@@ -44,28 +44,11 @@ export class NavComponent implements OnInit {
 
   ngOnInit(): void {
     //TODO
-    this.isMenuActive = true;
-    this.isNotificationsActive = true;
-    this.notifications.push({
-      id: 1,
-      content: 'Welcome, you can start by completing your profile !',
-      link: 'profile',
-      date: new Date(),
-      seen: true,
-    });
-    this.notifications.push({
-      id: 2,
-      content: 'New match with Vanessa',
-      link: 'match',
-      date: new Date(),
-      seen: false,
-    });
-    this.notifications.push({
-      id: 3,
-      content: 'New message from Vanessa',
-      link: 'match',
-      date: new Date(),
-      seen: false,
+    this.connectService.connectedUserReady$.asObservable().subscribe({
+      next: () => {
+        this.notifications =
+          this.connectService.connectedUser?.notifications || [];
+      },
     });
   }
 
@@ -78,8 +61,10 @@ export class NavComponent implements OnInit {
   }
 
   toggleNotifications(): void {
+    if (this.isNotificationsActive) {
+      this.setAllNotificationsToSeen();
+    }
     this.isNotificationsActive = !this.isNotificationsActive;
-    this.setAllNotificationsToSeen();
   }
 
   setAllNotificationsToSeen(): void {
