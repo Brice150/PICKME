@@ -1,0 +1,8 @@
+<div class="container">
+  <div class="content" *ngFor="let notification of notifications">
+    <app-notification
+      [notification]="notification"
+      (click)="goTo(notification.link)"
+    ></app-notification>
+  </div>
+</div>

@@ -7,17 +7,35 @@
   title="Notifications"
   *ngIf="connectService.connectedUser && isMenuActive"
   [ngClass]="getUnseenNotificationsLenght() !== 0 ? 'gold' : ''"
-  @notificationTrigger
+  @notificationLogoTrigger
 >
-  <span *ngIf="getUnseenNotificationsLenght() !== 0">{{
-    getUnseenNotificationsLenght()
-  }}</span>
-  <i class="bx bxs-bell" (click)="openNotifications()"></i>
+  <span
+    *ngIf="getUnseenNotificationsLenght() !== 0 && !isNotificationsActive"
+    >{{ getUnseenNotificationsLenght() }}</span
+  >
+  <i
+    class="bx bxs-bell"
+    (click)="toggleNotifications()"
+    *ngIf="!isNotificationsActive"
+  ></i>
+  <i
+    class="bx bx-arrow-back"
+    (click)="toggleNotifications()"
+    *ngIf="isNotificationsActive"
+  ></i>
 </div>
 <div class="container" @menuTrigger *ngIf="isMenuActive">
   <app-nav-buttons
+    *ngIf="!isNotificationsActive"
     [hasAdminRole]="connectService.connectedUser?.userRole === 'ROLE_ADMIN'"
     (toggleMenuEvent)="toggleMenu()"
     (logoutEvent)="logout()"
+    @navButtonTrigger
   ></app-nav-buttons>
+  <app-notifications
+    *ngIf="isNotificationsActive"
+    [notifications]="notifications"
+    (goToEvent)="goTo($event)"
+    @notificationTrigger
+  ></app-notifications>
 </div>

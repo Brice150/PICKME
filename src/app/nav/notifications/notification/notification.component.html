@@ -1,0 +1,15 @@
+<div
+  class="container"
+  [ngClass]="!notification.seen ? 'gold' : ''"
+  [title]="notification.link === 'profile' ? 'Profile' : 'Match'"
+>
+  <div class="title-container">
+    <div class="title">
+      <i class="bx bxs-user" *ngIf="notification.link === 'profile'"></i>
+      <i class="bx bxs-flame" *ngIf="notification.link === 'match'"></i>
+      <span>{{ notification.link }}</span>
+    </div>
+    <span class="date">{{ notification.date | customDate }}</span>
+  </div>
+  <span class="content">{{ notification.content }}</span>
+</div>

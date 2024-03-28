@@ -98,6 +98,12 @@
   border-radius: 20px 0 0 20px;
   background: var(--glass-background);
   backdrop-filter: blur(2px);
+  overflow: hidden;
+}
+
+.container > * {
+  position: absolute;
+  width: 100%;
 }
 
 @media screen and (min-width: 600px) {
