@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, filter, takeUntil } from 'rxjs';
+import { Subject, distinctUntilChanged, filter, repeat, takeUntil } from 'rxjs';
 import { Match } from '../core/interfaces/match';
 import { Message } from '../core/interfaces/message';
 import { MatchService } from '../core/services/match.service';
@@ -67,12 +67,24 @@ export class MatchComponent implements OnInit, OnDestroy {
 
     this.matchService
       .getAllUserMatches()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(
+        repeat({ delay: 10000 }),
+        distinctUntilChanged(),
+        takeUntil(this.destroyed$)
+      )
       .subscribe({
         next: (matches: Match[]) => {
           this.matches = matches;
           this.searchByNickname();
           this.loading = false;
+          if (this.selectedMatch) {
+            const matchIndex = this.matches.findIndex(
+              (match: Match) => this.selectedMatch?.user.id === match.user.id
+            );
+            if (matchIndex !== -1) {
+              this.selectedMatch = this.matches[matchIndex];
+            }
+          }
         },
       });
   }
