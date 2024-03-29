@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,5 +30,15 @@ public class NotificationService {
     User connectedUser = userService.getConnectedUser();
     connectedUser.getNotifications().forEach(notification -> notification.setSeen(true));
     notificationRepository.saveAll(connectedUser.getNotifications());
+  }
+
+  public void sendNotification(String content, String link, Long userId) {
+    User user = userService.getUserById(userId);
+    sendNotification(content, link, user);
+  }
+
+  public void sendNotification(String content, String link, User user) {
+    Notification notification = new Notification(content, link, new Date(), false, user);
+    notificationRepository.save(notification);
   }
 }

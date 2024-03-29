@@ -21,15 +21,17 @@ public class LikeService {
   private final MessageRepository messageRepository;
   private final UserService userService;
   private final StatsRepository statsRepository;
+  private final NotificationService notificationService;
   private static final String FORBIDDEN = "FORBIDDEN";
 
   @Autowired
-  public LikeService(LikeRepository likeRepository, DislikeRepository dislikeRepository, MessageRepository messageRepository, UserService userService, StatsRepository statsRepository) {
+  public LikeService(LikeRepository likeRepository, DislikeRepository dislikeRepository, MessageRepository messageRepository, UserService userService, StatsRepository statsRepository, NotificationService notificationService) {
     this.likeRepository = likeRepository;
     this.dislikeRepository = dislikeRepository;
     this.messageRepository = messageRepository;
     this.userService = userService;
     this.statsRepository = statsRepository;
+    this.notificationService = notificationService;
   }
 
   public String addLike(Long userId) {
@@ -84,6 +86,7 @@ public class LikeService {
     userStats.setTotalMatches(userStats.getTotalMatches() + 1);
     Stats connectedUserStats = statsRepository.getById(connectedUser.getId());
     connectedUserStats.setTotalMatches(connectedUserStats.getTotalMatches() + 1);
+    notificationService.sendNotification("New match with " + connectedUser.getNickname(), "match", likedUser);
     statsRepository.save(connectedUserStats);
     return likedUser.getNickname();
   }

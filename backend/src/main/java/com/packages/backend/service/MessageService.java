@@ -18,11 +18,13 @@ import java.util.Optional;
 public class MessageService {
   private final MessageRepository messageRepository;
   private final UserService userService;
+  private final NotificationService notificationService;
 
   @Autowired
-  public MessageService(MessageRepository messageRepository, UserService userService) {
+  public MessageService(MessageRepository messageRepository, UserService userService, NotificationService notificationService) {
     this.messageRepository = messageRepository;
     this.userService = userService;
+    this.notificationService = notificationService;
   }
 
   public Optional<Message> addMessage(Message message) {
@@ -34,6 +36,7 @@ public class MessageService {
       message.setDate(new Date());
       message.setSender(connectedUser.getNickname());
       message.setFkSender(connectedUser.getId());
+      notificationService.sendNotification("New message from " + connectedUser.getNickname(), "match", message.getFkReceiver());
       Message newMessage = messageRepository.save(message);
       return Optional.of(newMessage);
     } else {
