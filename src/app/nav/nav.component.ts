@@ -2,7 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, distinctUntilChanged, repeat, takeUntil } from 'rxjs';
+import { Notification } from '../core/interfaces/notification';
 import { ConnectService } from '../core/services/connect.service';
+import { NotificationService } from '../core/services/notification.service';
 import {
   MenuAnimation,
   NavButtonAnimation,
@@ -10,7 +13,6 @@ import {
   NotificationLogoAnimation,
 } from './nav-animation';
 import { NavButtonsComponent } from './nav-buttons/nav-buttons.component';
-import { Notification } from '../core/interfaces/notification';
 import { NotificationsComponent } from './notifications/notifications.component';
 
 @Component({
@@ -35,21 +37,34 @@ export class NavComponent implements OnInit {
   isMenuActive: boolean = false;
   isNotificationsActive: boolean = false;
   notifications: Notification[] = [];
+  destroyed$: Subject<void> = new Subject<void>();
 
   constructor(
     public connectService: ConnectService,
+    private notificationService: NotificationService,
     private toastr: ToastrService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    //TODO
     this.connectService.connectedUserReady$.asObservable().subscribe({
       next: () => {
-        this.notifications =
-          this.connectService.connectedUser?.notifications || [];
+        this.getNotificationsEvery10Seconds();
       },
     });
+  }
+
+  getNotificationsEvery10Seconds(): void {
+    this.notificationService
+      .getAllUserNotifications()
+      .pipe(
+        repeat({ delay: 10000 }),
+        distinctUntilChanged(),
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((notifications: Notification[]) => {
+        this.notifications = notifications;
+      });
   }
 
   toggleMenu(): void {
@@ -68,9 +83,19 @@ export class NavComponent implements OnInit {
   }
 
   setAllNotificationsToSeen(): void {
-    this.notifications.forEach(
-      (notification: Notification) => (notification.seen = true)
-    );
+    if (
+      this.notifications.some(
+        (notification: Notification) => !notification.seen
+      )
+    ) {
+      this.notificationService.markUserNotificationsAsSeen().subscribe({
+        next: () => {
+          this.notifications.forEach(
+            (notification: Notification) => (notification.seen = true)
+          );
+        },
+      });
+    }
   }
 
   getUnseenNotificationsLenght(): number {
@@ -85,6 +110,8 @@ export class NavComponent implements OnInit {
   }
 
   logout(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
     this.connectService.logout();
     this.toggleMenu();
     this.toastr.success('You are logged out', 'Logged Out', {

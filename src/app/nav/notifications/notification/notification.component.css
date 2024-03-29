@@ -1,10 +1,13 @@
 :host {
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .container {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   flex-direction: column;
   backdrop-filter: blur(2px);
@@ -13,6 +16,9 @@
   cursor: pointer;
   overflow: hidden;
   transition: 0.5s ease;
+  height: 70px;
+  width: 90%;
+  margin: 5px 0;
 }
 
 .container::before {

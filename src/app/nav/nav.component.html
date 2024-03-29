@@ -1,4 +1,19 @@
-<div class="menu-button" title="Menu" *ngIf="connectService.connectedUser">
+<div
+  class="menu-button"
+  title="Menu"
+  *ngIf="connectService.connectedUser"
+  [ngClass]="
+    getUnseenNotificationsLenght() !== 0 && !isMenuActive ? 'gold' : ''
+  "
+>
+  <span
+    *ngIf="
+      getUnseenNotificationsLenght() !== 0 &&
+      !isNotificationsActive &&
+      !isMenuActive
+    "
+    >{{ getUnseenNotificationsLenght() }}</span
+  >
   <i class="bx bx-menu" (click)="toggleMenu()" *ngIf="!isMenuActive"></i>
   <i class="bx bx-x" (click)="toggleMenu()" *ngIf="isMenuActive"></i>
 </div>

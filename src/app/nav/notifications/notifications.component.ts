@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NotificationComponent } from './notification/notification.component';
 import { Notification } from '../../core/interfaces/notification';
+import { NotificationComponent } from './notification/notification.component';
 
 @Component({
   selector: 'app-notifications',

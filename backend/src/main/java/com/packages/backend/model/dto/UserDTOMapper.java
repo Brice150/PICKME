@@ -24,7 +24,7 @@ public class UserDTOMapper implements Function<User, UserDTO> {
       user.getGeolocation(),
       user.getPictures(),
       user.getStats(),
-      user.getNotifications()
+      null
     );
   }
 }

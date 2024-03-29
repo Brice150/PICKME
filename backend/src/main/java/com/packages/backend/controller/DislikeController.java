@@ -20,7 +20,7 @@ public class DislikeController {
   }
 
   @PostMapping("/{userId}")
-  public ResponseEntity<String> addDislike(@PathVariable("userId") Long userId) {
+  public ResponseEntity<Void> addDislike(@PathVariable("userId") Long userId) {
     String status = dislikeService.addDislike(userId);
     return !"FORBIDDEN".equals(status) ?
       new ResponseEntity<>(HttpStatus.CREATED) :

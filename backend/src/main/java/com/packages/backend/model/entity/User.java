@@ -53,8 +53,7 @@ public class User implements UserDetails {
   @JsonManagedReference(value = "stats")
   private Stats stats;
 
-  @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @OrderBy("date DESC")
+  @OneToMany(mappedBy = "fkUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonManagedReference(value = "notifications")
   private List<Notification> notifications;
 

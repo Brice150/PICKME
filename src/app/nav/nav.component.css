@@ -17,6 +17,8 @@
 
 .menu-button i {
   font-size: 40px;
+  color: var(--primary);
+  transition: 0.5s ease;
 }
 
 .menu-button:hover {
@@ -48,7 +50,7 @@
   background-color: var(--secondary);
 }
 
-.menu-button.notification.gold {
+.menu-button.gold {
   background-color: var(--liked);
 }
 
@@ -58,19 +60,20 @@
   transition: 0.5s ease;
 }
 
-.menu-button.notification.gold i {
+.menu-button.gold i {
+  color: var(--secondary);
+  transition: 0.5s ease;
+}
+
+.menu-button:hover i {
   color: var(--secondary);
 }
 
-.menu-button.notification:hover i {
-  color: var(--secondary);
-}
-
-.menu-button.notification.gold:hover i {
+.menu-button.gold:hover i {
   color: var(--liked);
 }
 
-.menu-button.notification span {
+.menu-button span {
   position: absolute;
   top: 0;
   right: 2px;
@@ -80,7 +83,7 @@
   transition: 0.5s ease;
 }
 
-.menu-button.notification:hover span {
+.menu-button:hover span {
   color: var(--liked);
 }
 
