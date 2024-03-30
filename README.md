@@ -56,7 +56,7 @@ Backend : Spring Boot
 ### Notifications
 
 - First notification says welcome, you can start by completing your profile
-- New notifications for each message or match
+- New notification for each message or match
 - Mark notifications as seen
 
 </details>
