@@ -7,6 +7,10 @@
     <div class="title">
       <i class="bx bxs-user" *ngIf="notification.link === 'profile'"></i>
       <i class="bx bxs-flame" *ngIf="notification.link === 'match'"></i>
+      <i
+        class="bx bxs-message-square-detail"
+        *ngIf="notification.link !== 'match' && notification.link !== 'profile'"
+      ></i>
       <span>{{ notification.link }}</span>
     </div>
     <span class="date">{{ notification.date | customDate }}</span>

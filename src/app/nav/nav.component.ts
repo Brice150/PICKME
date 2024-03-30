@@ -63,7 +63,11 @@ export class NavComponent implements OnInit {
         takeUntil(this.destroyed$)
       )
       .subscribe((notifications: Notification[]) => {
-        this.notifications = notifications;
+        if (this.router.url === '/match') {
+          this.setAllNotificationsToSeenWithNewNotifications(notifications);
+        } else {
+          this.notifications = notifications;
+        }
       });
   }
 
@@ -98,6 +102,23 @@ export class NavComponent implements OnInit {
     }
   }
 
+  setAllNotificationsToSeenWithNewNotifications(
+    notifications: Notification[]
+  ): void {
+    if (
+      notifications.some((notification: Notification) => !notification.seen)
+    ) {
+      this.notificationService.markUserNotificationsAsSeen().subscribe({
+        next: () => {
+          notifications.forEach(
+            (notification: Notification) => (notification.seen = true)
+          );
+          this.notifications = notifications;
+        },
+      });
+    }
+  }
+
   getUnseenNotificationsLenght(): number {
     return this.notifications.filter(
       (notification: Notification) => !notification.seen
@@ -106,7 +127,11 @@ export class NavComponent implements OnInit {
 
   goTo(link: string): void {
     this.toggleMenu();
-    this.router.navigate([link]);
+    if (link !== 'profile' && link !== 'match') {
+      this.router.navigate(['match']);
+    } else {
+      this.router.navigate([link]);
+    }
   }
 
   logout(): void {

@@ -36,7 +36,7 @@ public class MessageService {
       message.setDate(new Date());
       message.setSender(connectedUser.getNickname());
       message.setFkSender(connectedUser.getId());
-      notificationService.sendNotification("New message from " + connectedUser.getNickname(), "match", message.getFkReceiver());
+      notificationService.sendNotification(message.getContent(), connectedUser.getNickname(), message.getFkReceiver());
       Message newMessage = messageRepository.save(message);
       return Optional.of(newMessage);
     } else {
