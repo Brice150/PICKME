@@ -53,6 +53,12 @@ Backend : Spring Boot
 - Swiper user pictures
 - Like, Dislike or Delete if you are an admin user
 
+### Notifications
+
+- First notification says welcome, you can start by completing your profile
+- New notifications for each message or match
+- Mark notifications as seen
+
 </details>
 
 <details>
@@ -231,6 +237,23 @@ Backend : Spring Boot
 
 ```http
   GET /match/all
+```
+
+  </details>
+
+  <details>
+  <summary>Notification</summary>
+
+### Get all user notifications
+
+```http
+  GET /notification/all
+```
+
+### mark all user notifications as seen
+
+```http
+  POST /notification
 ```
 
   </details>
