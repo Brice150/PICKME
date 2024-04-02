@@ -1,6 +1,12 @@
 # Dev Configuration
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/pickme
-    username: postgres
-    password: root
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
+
+PGHOST: localhost
+PGPORT: 5432
+PGDATABASE: pickme
+PGUSER: postgres
+PGPASSWORD: root
