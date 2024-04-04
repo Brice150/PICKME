@@ -139,14 +139,19 @@ export class RegisterComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (geolocation: Geolocation) => {
-          if (geolocation.city !== geolocation.country_capital) {
-            this.geolocation.latitude = geolocation.latitude;
-            this.geolocation.longitude = geolocation.longitude;
-          } else {
-            navigator.geolocation.getCurrentPosition((position) => {
-              this.geolocation.latitude = position.coords.latitude.toString();
-              this.geolocation.longitude = position.coords.longitude.toString();
-            });
+          this.geolocation.latitude = geolocation.latitude;
+          this.geolocation.longitude = geolocation.longitude;
+          if (geolocation.city === geolocation.country_capital) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                this.geolocation.latitude = position.coords.latitude.toString();
+                this.geolocation.longitude =
+                  position.coords.longitude.toString();
+              },
+              (error) => {
+                // Do nothing
+              }
+            );
           }
         },
       });
