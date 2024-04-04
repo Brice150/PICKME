@@ -156,7 +156,7 @@ form .slide-container span {
 }
 
 ::ng-deep form .slide-container .mat-mdc-slider {
-  min-width: 250px;
+  width: 80%;
 }
 
 ::ng-deep form .slide-container .mdc-form-field {

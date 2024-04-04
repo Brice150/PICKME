@@ -34,7 +34,7 @@ import { PreferencesComponent } from './preferences/preferences.component';
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-  user?: User = this.connectService.connectedUser;
+  user?: User = { ...this.connectService.connectedUser! };
   destroyed$: Subject<void> = new Subject<void>();
   geolocation: Geolocation = {} as Geolocation;
 

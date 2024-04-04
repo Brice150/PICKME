@@ -1,127 +1,14 @@
-<form
-  [formGroup]="preferencesForm"
-  (ngSubmit)="updatePreferences()"
-  class="preferences"
+<app-preference
+  #preference
+  [user]="user"
+  [preference]="preferences[currentPreferenceIndex]"
+  (updateEvent)="updatePreferences()"
+></app-preference>
+<app-paginator
+  (handlePageEvent)="handlePageEvent($event)"
+  [usersNumber]="1"
+  [maxPerPage]="1"
+  [loading]="false"
+  [maxPages]="8"
 >
-  <div class="chip-container">
-    <span>Alcohol Drinking</span>
-    <mat-chip-listbox formControlName="alcoholDrinking">
-      <mat-chip-option
-        *ngFor="let attribute of alcoholDrinking"
-        [selected]="isSelected(attribute, 'alcoholDrinking')"
-        (click)="select(attribute, 'alcoholDrinking')"
-      >
-        <i class="bx bxs-drink" matChipAvatar></i>
-        {{ attribute }}
-      </mat-chip-option>
-    </mat-chip-listbox>
-  </div>
-  <div class="chip-container">
-    <span>Smoking</span>
-    <mat-chip-listbox formControlName="smokes">
-      <mat-chip-option
-        *ngFor="let attribute of smokes"
-        [selected]="isSelected(attribute, 'smokes')"
-        (click)="select(attribute, 'smokes')"
-      >
-        <i class="bx bx-wind" matChipAvatar></i>
-        {{ attribute }}
-      </mat-chip-option>
-    </mat-chip-listbox>
-  </div>
-  <div class="chip-container">
-    <span>Sport Pratice</span>
-    <mat-chip-listbox formControlName="sportPractice">
-      <mat-chip-option
-        *ngFor="let attribute of sportPractice"
-        [selected]="isSelected(attribute, 'sportPractice')"
-        (click)="select(attribute, 'sportPractice')"
-      >
-        <i class="bx bx-dumbbell" matChipAvatar></i>
-        {{ attribute }}
-      </mat-chip-option>
-    </mat-chip-listbox>
-  </div>
-  <div class="chip-container">
-    <span>Parenthood</span>
-    <mat-chip-listbox formControlName="parenthood">
-      <mat-chip-option
-        *ngFor="let attribute of parenthood"
-        [selected]="isSelected(attribute, 'parenthood')"
-        (click)="select(attribute, 'parenthood')"
-      >
-        <i class="bx bx-child" matChipAvatar></i>
-        {{ attribute }}
-      </mat-chip-option>
-    </mat-chip-listbox>
-  </div>
-  <div class="chip-container">
-    <span>Gamer</span>
-    <mat-chip-listbox formControlName="gamer">
-      <mat-chip-option
-        *ngFor="let attribute of gamer"
-        [selected]="isSelected(attribute, 'gamer')"
-        (click)="select(attribute, 'gamer')"
-      >
-        <i class="bx bxs-joystick" matChipAvatar></i>
-        {{ attribute }}
-      </mat-chip-option>
-    </mat-chip-listbox>
-  </div>
-  <div class="chip-container">
-    <span>Animals</span>
-    <mat-chip-listbox formControlName="animals">
-      <mat-chip-option
-        *ngFor="let attribute of animals"
-        [selected]="isSelected(attribute, 'animals')"
-        (click)="select(attribute, 'animals')"
-      >
-        <i class="bx bxs-cat" matChipAvatar></i>
-        {{ attribute }}
-      </mat-chip-option>
-    </mat-chip-listbox>
-  </div>
-  <div class="chip-container">
-    <span>Organised</span>
-    <mat-chip-listbox formControlName="organised">
-      <mat-chip-option
-        *ngFor="let attribute of organised"
-        [selected]="isSelected(attribute, 'organised')"
-        (click)="select(attribute, 'organised')"
-      >
-        <i class="bx bxs-layer" matChipAvatar></i>
-        {{ attribute }}
-      </mat-chip-option>
-    </mat-chip-listbox>
-  </div>
-  <div class="chip-container">
-    <span>Personality</span>
-    <mat-chip-listbox formControlName="personality">
-      <mat-chip-option
-        *ngFor="let attribute of personality"
-        [selected]="isSelected(attribute, 'personality')"
-        (click)="select(attribute, 'personality')"
-      >
-        <i class="bx bxs-user-voice" matChipAvatar></i>
-        {{ attribute }}
-      </mat-chip-option>
-    </mat-chip-listbox>
-  </div>
-  <div class="button-container">
-    <button
-      *ngIf="preferencesForm.dirty"
-      type="button"
-      title="Cancel"
-      (click)="cancel()"
-    >
-      Cancel
-    </button>
-    <button
-      title="Update"
-      *ngIf="preferencesForm.valid && preferencesForm.dirty"
-      type="submit"
-    >
-      Update
-    </button>
-  </div>
-</form>
+</app-paginator>
