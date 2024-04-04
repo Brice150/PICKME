@@ -139,9 +139,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (geolocation: Geolocation) => {
-          this.geolocation.city = geolocation.city;
-          this.geolocation.latitude = geolocation.latitude;
-          this.geolocation.longitude = geolocation.longitude;
+          if (geolocation.city !== geolocation.country_capital) {
+            this.geolocation.latitude = geolocation.latitude;
+            this.geolocation.longitude = geolocation.longitude;
+          } else {
+            navigator.geolocation.getCurrentPosition((position) => {
+              this.geolocation.latitude = position.coords.latitude.toString();
+              this.geolocation.longitude = position.coords.longitude.toString();
+            });
+          }
         },
       });
   }
@@ -204,7 +210,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
       password: this.registerForm.get('thirdFormGroup.password')
         ?.value as string,
       geolocation: {
-        city: this.geolocation.city,
         latitude: this.geolocation.latitude,
         longitude: this.geolocation.longitude,
         distanceSearch: this.registerForm.get('firstFormGroup.distanceSearch')

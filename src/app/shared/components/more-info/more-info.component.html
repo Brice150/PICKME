@@ -31,12 +31,12 @@
     <span class="larger">{{ user.nickname }}</span>
     <span class="subtitle">
       A {{ user.birthDate | age }} years old {{ user.job | lowercase }} at
-      {{ user.geolocation.city }} ({{
+      {{
         user.geolocation.distance +
           (user.geolocation.distance === 1 || user.geolocation.distance === 0
             ? " km"
             : " kms")
-      }})
+      }}
     </span>
   </div>
   <div class="picture-container">

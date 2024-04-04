@@ -44,12 +44,12 @@
     <div class="right">
       <h2 class="age">{{ user.birthDate | age }}</h2>
       <h3>
-        {{ user.geolocation.city }} ({{
+        {{
           user.geolocation.distance +
             (user.geolocation.distance === 1 || user.geolocation.distance === 0
               ? " km"
               : " kms")
-        }})
+        }}
       </h3>
     </div>
   </div>

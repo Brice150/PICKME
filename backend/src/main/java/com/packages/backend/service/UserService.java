@@ -80,8 +80,6 @@ public class UserService implements UserDetailsService {
       signUpMessage = "Max age" + emptyPhrase;
     } else if (user.getGeolocation() == null) {
       signUpMessage = "Geolocation" + emptyPhrase;
-    } else if (user.getGeolocation().getCity() == null || user.getGeolocation().getCity().isBlank()) {
-      signUpMessage = "City" + emptyPhrase;
     } else if (user.getGeolocation().getLatitude() == null || user.getGeolocation().getLatitude().isBlank()) {
       signUpMessage = "Latitude" + emptyPhrase;
     } else if (user.getGeolocation().getLongitude() == null || user.getGeolocation().getLongitude().isBlank()) {
@@ -159,7 +157,6 @@ public class UserService implements UserDetailsService {
 
   private void updateGeolocation(User connectedUser, User user) {
     if (user.getGeolocation() != null && !Objects.equals(connectedUser.getGeolocation(), user.getGeolocation())) {
-      connectedUser.getGeolocation().setCity(user.getGeolocation().getCity() != null ? user.getGeolocation().getCity() : connectedUser.getGeolocation().getCity());
       connectedUser.getGeolocation().setLatitude(user.getGeolocation().getLatitude() != null ? user.getGeolocation().getLatitude() : connectedUser.getGeolocation().getLatitude());
       connectedUser.getGeolocation().setLongitude(user.getGeolocation().getLongitude() != null ? user.getGeolocation().getLongitude() : connectedUser.getGeolocation().getLongitude());
       connectedUser.getGeolocation().setDistanceSearch(user.getGeolocation().getDistanceSearch() != null ? user.getGeolocation().getDistanceSearch() : connectedUser.getGeolocation().getDistanceSearch());

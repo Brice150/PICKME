@@ -10,7 +10,6 @@ public class Geolocation {
   @Id
   @Column(name = "user_id")
   private Long id;
-  private String city;
   private String latitude;
   private String longitude;
   private Long distanceSearch;
@@ -24,8 +23,7 @@ public class Geolocation {
   public Geolocation() {
   }
 
-  public Geolocation(String city, String latitude, String longitude, Long distanceSearch, Long distance, User fkUser) {
-    this.city = city;
+  public Geolocation(String latitude, String longitude, Long distanceSearch, Long distance, User fkUser) {
     this.latitude = latitude;
     this.longitude = longitude;
     this.distanceSearch = distanceSearch;
@@ -39,14 +37,6 @@ public class Geolocation {
 
   public void setId(Long id) {
     this.id = id;
-  }
-
-  public String getCity() {
-    return city;
-  }
-
-  public void setCity(String city) {
-    this.city = city;
   }
 
   public String getLatitude() {

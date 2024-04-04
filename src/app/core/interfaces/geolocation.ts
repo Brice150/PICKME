@@ -1,5 +1,6 @@
 export interface Geolocation {
-  city: string;
+  city?: string;
+  country_capital?: string;
   latitude: string;
   longitude: string;
   distanceSearch: number;
