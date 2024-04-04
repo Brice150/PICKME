@@ -8,7 +8,7 @@
     <app-card
       loading="true"
       [user]="user"
-      [display]="isCurrentView(user) && !activeMatchAnimation"
+      [display]="isCurrentView(user) && !activeMatchAnimation && !isLoading"
       [activeMatchAnimation]="activeMatchAnimation"
       (likeEvent)="like(user)"
       (dislikeEvent)="dislike(user)"

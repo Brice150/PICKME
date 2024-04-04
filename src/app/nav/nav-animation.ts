@@ -5,24 +5,24 @@ export const MenuAnimation = trigger('menuTrigger', [
     style({
       transform: 'translateX(100%)',
     }),
-    animate('0.5s ease', style({ transform: 'translateX(0%)' })),
+    animate('0.3s ease', style({ transform: 'translateX(0%)' })),
   ]),
 
   transition(':leave', [
-    animate('0.5s ease', style({ transform: 'translateX(100%)' })),
+    animate('0.3s ease', style({ transform: 'translateX(100%)' })),
   ]),
 ]);
 
 export const NotificationLogoAnimation = trigger('notificationLogoTrigger', [
   transition(':enter', [
     style({
-      transform: 'translateX(50vw) scale(0)',
+      transform: 'translateX(50vw)',
     }),
-    animate('0.5s ease', style({ transform: 'translateX(0%)' })),
+    animate('0.3s ease', style({ transform: 'translateX(0%)' })),
   ]),
 
   transition(':leave', [
-    animate('0.5s ease', style({ transform: 'translateX(50vw) scale(0)' })),
+    animate('0.3s ease', style({ transform: 'translateX(50vw)' })),
   ]),
 ]);
 

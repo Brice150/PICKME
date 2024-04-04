@@ -2,6 +2,7 @@
   class="top-button left"
   title="Delete"
   (click)="openDialog()"
+  [ngClass]="{ disabled: isLoading }"
   *ngIf="display"
   @dislikeButtonTrigger
 >
@@ -10,7 +11,7 @@
 <a
   class="top-button right"
   [title]="!picture.isMainPicture ? 'Select Main Picture' : ''"
-  [ngClass]="picture.isMainPicture ? 'gold' : null"
+  [ngClass]="{ gold: picture.isMainPicture, disabled: isLoading }"
   (click)="selectMainPicture()"
   *ngIf="display"
   @likeButtonTrigger

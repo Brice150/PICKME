@@ -2,7 +2,7 @@
   <a
     [title]="page === 0 ? '' : 'Previous'"
     (click)="previous()"
-    [ngClass]="page === 0 ? 'disabled' : ''"
+    [ngClass]="{ disabled: page === 0 }"
   >
     <i class="bx bx-left-arrow-alt"></i>
   </a>
@@ -10,7 +10,7 @@
   <a
     [title]="usersNumber < 25 ? '' : 'Next'"
     (click)="next()"
-    [ngClass]="usersNumber < 25 ? 'disabled' : ''"
+    [ngClass]="{ disabled: usersNumber < 25 }"
   >
     <i class="bx bx-right-arrow-alt"></i>
   </a>

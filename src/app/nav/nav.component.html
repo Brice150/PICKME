@@ -2,9 +2,7 @@
   class="menu-button"
   title="Menu"
   *ngIf="connectService.connectedUser"
-  [ngClass]="
-    getUnseenNotificationsLenght() !== 0 && !isMenuActive ? 'gold' : ''
-  "
+  [ngClass]="{ gold: getUnseenNotificationsLenght() !== 0 && !isMenuActive }"
 >
   <span
     *ngIf="
@@ -21,7 +19,7 @@
   class="menu-button notification"
   title="Notifications"
   *ngIf="connectService.connectedUser && isMenuActive"
-  [ngClass]="getUnseenNotificationsLenght() !== 0 ? 'gold' : ''"
+  [ngClass]="{ gold: getUnseenNotificationsLenght() !== 0 }"
   @notificationLogoTrigger
 >
   <span

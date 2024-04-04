@@ -11,6 +11,7 @@
           loading="true"
           [picture]="picture"
           [display]="isCurrentView(picture)"
+          [isLoading]="isLoading"
           (deleteEvent)="deletePicture(picture.id)"
           (selectMainEvent)="selectMainPicture(picture.id)"
         ></app-picture>
@@ -23,7 +24,14 @@
     />
   </div>
   <div class="button-container">
-    <label for="image" class="add" title="Add Picture"> Add picture</label>
+    <label
+      for="image"
+      class="add"
+      title="Add Picture"
+      [ngClass]="{ disabled: isLoading }"
+    >
+      Add picture</label
+    >
     <input
       #imageInput
       type="file"
@@ -32,6 +40,7 @@
       name="files"
       accept=".jpg, .jpeg, .png"
       multiple
+      [disabled]="isLoading"
     />
   </div>
 </div>

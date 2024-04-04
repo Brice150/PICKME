@@ -14,7 +14,12 @@
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-.top-button::before {
+.top-button.disabled {
+  cursor: default;
+  color: var(--disabled);
+}
+
+.top-button:not(.disabled):before {
   content: "";
   position: absolute;
   background-color: var(--primary);
@@ -26,11 +31,11 @@
   z-index: -1;
 }
 
-.top-button:not(.gold):hover::before {
+.top-button:not(.gold):not(.disabled):hover::before {
   height: 100%;
 }
 
-.top-button:hover {
+.top-button:not(.disabled):hover {
   color: var(--secondary);
 }
 

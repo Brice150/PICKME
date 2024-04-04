@@ -134,19 +134,22 @@ mat-form-field mat-datepicker-toggle {
 
 form .slide-container {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
+  flex-direction: column;
   width: 100%;
 }
 
 form .slide-container span {
-  color: var(--primary);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: -10px;
+  margin-top: 5px;
 }
 
 ::ng-deep form .slide-container .mat-mdc-slider {
-  min-width: 150px;
+  width: 100%;
 }
 
 @media screen and (max-width: 375px) {

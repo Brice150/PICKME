@@ -1,5 +1,5 @@
 <form
-  [ngClass]="invalidLogin ? 'invalidLogin' : null"
+  [ngClass]="{ invalidLogin: invalidLogin }"
   [formGroup]="loginForm"
   (ngSubmit)="loginUser(loginForm.value)"
 >

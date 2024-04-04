@@ -104,6 +104,7 @@ form .slide-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   width: 100%;
 }
 
@@ -111,11 +112,12 @@ form .slide-container span {
   font-size: 15px;
   font-weight: 700;
   color: var(--primary);
-  margin-right: 20px;
+  margin-bottom: -10px;
+  margin-top: 5px;
 }
 
 ::ng-deep form .slide-container .mat-mdc-slider {
-  min-width: 150px;
+  width: 80%;
 }
 
 @media screen and (max-width: 375px) {

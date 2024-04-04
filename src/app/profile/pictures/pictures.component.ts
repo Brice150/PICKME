@@ -27,11 +27,13 @@ export class PicturesComponent {
   @Input() user?: User;
   @Output() refreshEvent: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('imageInput') imageInput!: ElementRef;
+  isLoading: boolean = false;
 
   constructor(private profileService: ProfileService) {}
 
   addPicture(files: File[]): void {
     for (let file of files) {
+      this.isLoading = true;
       let reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (event: any) => {
@@ -67,6 +69,7 @@ export class PicturesComponent {
                 document.querySelector('swiper-container')?.swiper.slideTo(0);
                 this.imageInput.nativeElement.value = '';
                 this.refreshEvent.emit('Picture Added');
+                this.isLoading = false;
               }, 0);
             },
           });
@@ -76,6 +79,7 @@ export class PicturesComponent {
   }
 
   deletePicture(pictureId: number): void {
+    this.isLoading = true;
     this.profileService.deletePicture(pictureId).subscribe({
       next: () => {
         let isMainPictureDeleted: boolean = false;
@@ -93,12 +97,14 @@ export class PicturesComponent {
             this.user!.pictures![0].isMainPicture = true;
           }
           this.refreshEvent.emit('Picture Deleted');
+          this.isLoading = false;
         }
       },
     });
   }
 
   selectMainPicture(pictureId: number): void {
+    this.isLoading = true;
     this.profileService.selectMainPicture(pictureId).subscribe({
       next: () => {
         const pictureIndex = this.user!.pictures!.findIndex(
@@ -111,6 +117,7 @@ export class PicturesComponent {
           this.user!.pictures![pictureIndex].isMainPicture = true;
         }
         this.refreshEvent.emit('Main Picture Selected');
+        this.isLoading = false;
       },
     });
   }

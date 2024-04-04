@@ -54,7 +54,12 @@ swiper-slide {
   font-family: Roboto, sans-serif;
 }
 
-.container .button-container label::before {
+.container .button-container label.disabled {
+  cursor: default;
+  color: var(--disabled);
+}
+
+.container .button-container label:not(.disabled):before {
   content: "";
   position: absolute;
   background-color: var(--primary);
@@ -66,12 +71,12 @@ swiper-slide {
   z-index: -1;
 }
 
-.container .button-container label:hover::before {
+.container .button-container label:not(.disabled):hover::before {
   height: 100%;
   border-radius: 10px;
 }
 
-.container .button-container label:hover {
+.container .button-container label:not(.disabled):hover {
   color: var(--secondary);
 }
 

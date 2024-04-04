@@ -25,6 +25,7 @@ export class SelectComponent implements OnInit, OnDestroy {
   destroyed$: Subject<void> = new Subject<void>();
   activeMatchAnimation: boolean = false;
   loading: boolean = true;
+  isLoading: boolean = false;
   page: number = 0;
   maxLoadedIndex: number = 0;
   initLoading: boolean = true;
@@ -85,6 +86,7 @@ export class SelectComponent implements OnInit, OnDestroy {
   }
 
   like(user: User): void {
+    this.isLoading = true;
     this.selectService.addLike(user.id!).subscribe({
       next: (matchNotification: string) => {
         if (matchNotification && matchNotification !== '') {
@@ -92,6 +94,7 @@ export class SelectComponent implements OnInit, OnDestroy {
           setTimeout(() => {
             this.activeMatchAnimation = false;
             this.removeSlide(user.id!);
+            this.isLoading = false;
           }, 3000);
           this.toastr.success(
             'You have a match with ' + matchNotification,
@@ -103,6 +106,7 @@ export class SelectComponent implements OnInit, OnDestroy {
           );
         } else {
           this.removeSlide(user.id!);
+          this.isLoading = false;
           this.toastr.success(
             'You have liked ' + user.nickname,
             'Liked ' + user.nickname,
@@ -117,9 +121,11 @@ export class SelectComponent implements OnInit, OnDestroy {
   }
 
   dislike(user: User): void {
+    this.isLoading = true;
     this.selectService.addDislike(user.id!).subscribe({
       next: () => {
         this.removeSlide(user.id!);
+        this.isLoading = false;
       },
       complete: () => {
         this.toastr.success(

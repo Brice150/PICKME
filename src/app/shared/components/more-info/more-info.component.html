@@ -20,7 +20,7 @@
   <a
     class="button right"
     title="Like"
-    [ngClass]="user.gold ? 'gold' : null"
+    [ngClass]="{ gold: user.gold }"
     (click)="like()"
     @likeButtonTrigger
     *ngIf="!adminMode && !matchMode"

@@ -5,6 +5,7 @@
   --secondary: black;
   --liked: gold;
   --error: red;
+  --disabled: grey;
 
   /* Swiper JS */
   --swiper-preloader-color: var(--error);

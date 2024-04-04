@@ -1,6 +1,6 @@
 <div
   class="container"
-  [ngClass]="!notification.seen ? 'gold' : ''"
+  [ngClass]="{ gold: !notification.seen }"
   [title]="notification.link === 'profile' ? 'Profile' : 'Match'"
 >
   <div class="title-container">
