@@ -40,7 +40,7 @@ public class MyBasicAuthenticationEntryPoint extends BasicAuthenticationEntryPoi
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
     config.addAllowedOrigin("http://localhost:4200");
-    config.addAllowedOrigin("https://pickme-production-8aef.up.railway.app");
+    config.addAllowedOrigin("https://pickme-production-8aef.up.railway.app/#");
     config.addAllowedHeader("*");
     config.addAllowedMethod("*");
 
