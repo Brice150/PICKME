@@ -24,6 +24,7 @@ public class User implements UserDetails {
   private Boolean locked = false;
   private Boolean enabled = true;
   private Date birthDate;
+  private Date registeredDate;
   private Boolean gold;
   private String nickname;
   private String job;
@@ -133,6 +134,14 @@ public class User implements UserDetails {
 
   public void setBirthDate(Date birthDate) {
     this.birthDate = birthDate;
+  }
+
+  public Date getRegisteredDate() {
+    return registeredDate;
+  }
+
+  public void setRegisteredDate(Date registeredDate) {
+    this.registeredDate = registeredDate;
   }
 
   public Boolean getGold() {

@@ -4,7 +4,6 @@ import com.packages.backend.exception.PictureNotFoundException;
 import com.packages.backend.model.entity.Picture;
 import com.packages.backend.model.entity.User;
 import com.packages.backend.repository.PictureRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,6 @@ public class PictureService {
   private final PictureRepository pictureRepository;
   private final UserService userService;
 
-  @Autowired
   public PictureService(PictureRepository pictureRepository, UserService userService) {
     this.pictureRepository = pictureRepository;
     this.userService = userService;

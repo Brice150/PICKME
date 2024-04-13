@@ -5,23 +5,31 @@ import java.util.Date;
 
 @Entity
 @Table(name = "deleted_accounts")
-public class DeletedAccounts {
+public class DeletedAccount {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false, updatable = false)
   private Long id;
   private String nickname;
   private String email;
+  private Date registeredDate;
   private Date deletionDate;
+  private Long totalDislikes;
+  private Long totalLikes;
+  private Long totalMatches;
   private String deletedBy;
 
-  public DeletedAccounts() {
+  public DeletedAccount() {
   }
 
-  public DeletedAccounts(String nickname, String email, Date deletionDate, String deletedBy) {
+  public DeletedAccount(String nickname, String email, Date registeredDate, Date deletionDate, Long totalDislikes, Long totalLikes, Long totalMatches, String deletedBy) {
     this.nickname = nickname;
     this.email = email;
+    this.registeredDate = registeredDate;
     this.deletionDate = deletionDate;
+    this.totalDislikes = totalDislikes;
+    this.totalLikes = totalLikes;
+    this.totalMatches = totalMatches;
     this.deletedBy = deletedBy;
   }
 
@@ -49,12 +57,44 @@ public class DeletedAccounts {
     this.email = email;
   }
 
+  public Date getRegisteredDate() {
+    return registeredDate;
+  }
+
+  public void setRegisteredDate(Date registeredDate) {
+    this.registeredDate = registeredDate;
+  }
+
   public Date getDeletionDate() {
     return deletionDate;
   }
 
   public void setDeletionDate(Date deletionDate) {
     this.deletionDate = deletionDate;
+  }
+
+  public Long getTotalDislikes() {
+    return totalDislikes;
+  }
+
+  public void setTotalDislikes(Long totalDislikes) {
+    this.totalDislikes = totalDislikes;
+  }
+
+  public Long getTotalLikes() {
+    return totalLikes;
+  }
+
+  public void setTotalLikes(Long totalLikes) {
+    this.totalLikes = totalLikes;
+  }
+
+  public Long getTotalMatches() {
+    return totalMatches;
+  }
+
+  public void setTotalMatches(Long totalMatches) {
+    this.totalMatches = totalMatches;
   }
 
   public String getDeletedBy() {

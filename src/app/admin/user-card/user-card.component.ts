@@ -5,15 +5,17 @@ import { environment } from '../../../environments/environment';
 import { MoreInfoComponent } from '../../shared/components/more-info/more-info.component';
 import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
+import { CustomDatePipe } from '../../shared/pipes/custom-date.pipe';
+import { DescriptionPipe } from '../../shared/pipes/description.pipe';
 
 @Component({
-  selector: 'app-admin-card',
+  selector: 'app-user-card',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './admin-card.component.html',
-  styleUrl: './admin-card.component.css',
+  imports: [CommonModule, CustomDatePipe, DescriptionPipe],
+  templateUrl: './user-card.component.html',
+  styleUrl: './user-card.component.css',
 })
-export class AdminCardComponent {
+export class UserCardComponent {
   imagePath: string = environment.imagePath;
   @Input() user!: User;
   @Output() deleteEvent: EventEmitter<void> = new EventEmitter<void>();

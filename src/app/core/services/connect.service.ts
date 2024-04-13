@@ -11,6 +11,7 @@ export class ConnectService {
   private apiServerUrl = environment.apiBaseUrl;
   connectedUser?: User;
   connectedUserReady$: Subject<void> = new Subject<void>();
+  loggedOut$: Subject<void> = new Subject<void>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -60,5 +61,6 @@ export class ConnectService {
   public logout() {
     this.router.navigate(['/']);
     this.connectedUser = undefined;
+    this.loggedOut$.next();
   }
 }

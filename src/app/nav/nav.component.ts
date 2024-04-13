@@ -2,7 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, distinctUntilChanged, repeat, takeUntil } from 'rxjs';
+import {
+  Subject,
+  distinctUntilChanged,
+  repeat,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import { Notification } from '../core/interfaces/notification';
 import { ConnectService } from '../core/services/connect.service';
 import { NotificationService } from '../core/services/notification.service';
@@ -47,20 +53,17 @@ export class NavComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.connectService.connectedUserReady$.asObservable().subscribe({
-      next: () => {
-        this.getNotificationsEvery10Seconds();
-      },
-    });
-  }
-
-  getNotificationsEvery10Seconds(): void {
-    this.notificationService
-      .getAllUserNotifications()
+    this.connectService.connectedUserReady$
       .pipe(
-        repeat({ delay: 10000 }),
-        distinctUntilChanged(),
-        takeUntil(this.destroyed$)
+        switchMap(() => {
+          return this.notificationService
+            .getAllUserNotifications()
+            .pipe(
+              repeat({ delay: 10000 }),
+              distinctUntilChanged(),
+              takeUntil(this.connectService.loggedOut$)
+            );
+        })
       )
       .subscribe((notifications: Notification[]) => {
         if (this.router.url === '/match') {
@@ -135,8 +138,6 @@ export class NavComponent implements OnInit {
   }
 
   logout(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
     this.connectService.logout();
     this.toggleMenu();
     this.toastr.success('You are logged out', 'Logged Out', {

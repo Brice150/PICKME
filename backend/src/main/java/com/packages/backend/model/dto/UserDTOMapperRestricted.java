@@ -20,6 +20,7 @@ public class UserDTOMapperRestricted implements Function<User, UserDTO> {
       user.getHeight(),
       user.getEmail(),
       user.getDescription(),
+      null,
       user.getGenderAge(),
       user.getPreferences(),
       user.getGeolocation(),

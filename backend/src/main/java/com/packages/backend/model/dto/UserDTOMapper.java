@@ -19,6 +19,7 @@ public class UserDTOMapper implements Function<User, UserDTO> {
       user.getHeight(),
       user.getEmail(),
       user.getDescription(),
+      user.getRegisteredDate(),
       user.getGenderAge(),
       user.getPreferences(),
       user.getGeolocation(),

@@ -7,7 +7,6 @@ import com.packages.backend.repository.DislikeRepository;
 import com.packages.backend.repository.LikeRepository;
 import com.packages.backend.repository.MessageRepository;
 import com.packages.backend.repository.StatsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +23,6 @@ public class LikeService {
   private final NotificationService notificationService;
   private static final String FORBIDDEN = "FORBIDDEN";
 
-  @Autowired
   public LikeService(LikeRepository likeRepository, DislikeRepository dislikeRepository, MessageRepository messageRepository, UserService userService, StatsRepository statsRepository, NotificationService notificationService) {
     this.likeRepository = likeRepository;
     this.dislikeRepository = dislikeRepository;

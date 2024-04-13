@@ -16,6 +16,7 @@ export interface User {
   email: string;
   password?: string;
   description?: string;
+  registeredDate?: Date;
   genderAge: GenderAge;
   preferences?: Preferences;
   geolocation: Geolocation;

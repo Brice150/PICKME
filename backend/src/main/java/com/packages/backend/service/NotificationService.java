@@ -3,7 +3,6 @@ package com.packages.backend.service;
 import com.packages.backend.model.entity.Notification;
 import com.packages.backend.model.entity.User;
 import com.packages.backend.repository.NotificationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,6 @@ public class NotificationService {
   private final NotificationRepository notificationRepository;
   private final UserService userService;
 
-  @Autowired
   public NotificationService(NotificationRepository notificationRepository, UserService userService) {
     this.notificationRepository = notificationRepository;
     this.userService = userService;

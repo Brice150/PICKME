@@ -1,0 +1,21 @@
+<div class="container" [title]="'Deleted By ' + deletedAccount.deletedBy">
+  <img [src]="imagePath + 'No-Image.png'" [alt]="deletedAccount.nickname" />
+  <div class="infos-container">
+    <span class="info">{{ deletedAccount.email | description : 19 }}</span>
+    <div class="stats">
+      <div class="stat">
+        <span>{{ deletedAccount.totalDislikes }}</span>
+        <i class="bx bxs-dislike"></i>
+      </div>
+      <div class="stat">
+        <span>{{ deletedAccount.totalLikes }}</span>
+        <i class="bx bxs-like"></i>
+      </div>
+      <div class="stat">
+        <span>{{ deletedAccount.totalMatches }}</span>
+        <i class="bx bxs-flame gold"></i>
+      </div>
+    </div>
+    <span class="info">{{ deletedAccount.deletionDate! | customDate }}</span>
+  </div>
+</div>

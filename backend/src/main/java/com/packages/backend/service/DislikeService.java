@@ -3,7 +3,6 @@ package com.packages.backend.service;
 import com.packages.backend.model.entity.Dislike;
 import com.packages.backend.model.entity.User;
 import com.packages.backend.repository.DislikeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -16,7 +15,6 @@ public class DislikeService {
   private final UserService userService;
   private static final String FORBIDDEN = "FORBIDDEN";
 
-  @Autowired
   public DislikeService(DislikeRepository dislikeRepository, UserService userService, LikeService likeService) {
     this.dislikeRepository = dislikeRepository;
     this.userService = userService;

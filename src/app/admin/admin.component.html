@@ -1,34 +1,43 @@
 <div class="container">
-  <form [formGroup]="adminForm" (ngSubmit)="search(0)">
+  <div class="btn-container">
+    <a
+      (click)="toggleUserOrDeleted('user')"
+      [title]="!isUserMode ? 'View Users' : ''"
+      [ngClass]="isUserMode ? 'active' : 'unactive'"
+    >
+      <span class="main">{{ adminStats?.totalUsers }} Users</span>
+      <span *ngIf="adminStats"
+        >(+{{ adminStats.totalRecentUsers }} this week)</span
+      >
+    </a>
+    <a
+      (click)="toggleUserOrDeleted('deleted')"
+      [title]="isUserMode ? 'View Deleted Users' : ''"
+      [ngClass]="!isUserMode ? 'active' : 'unactive'"
+    >
+      <span class="main">{{ adminStats?.totalDeletedAccounts }} Deleted</span>
+      <span *ngIf="adminStats"
+        >(+{{ adminStats.totalRecentDeletedAccounts }} this week)</span
+      >
+    </a>
+  </div>
+  <form [formGroup]="adminForm">
     <div class="input-container">
-      <span class="title">Nickname</span>
-      <input placeholder="Nickname" formControlName="nickname" />
+      <span class="title">Email</span>
+      <input
+        placeholder="Email"
+        formControlName="email"
+        (focusout)="focusOut(0)"
+      />
     </div>
     <div class="input-container">
-      <span class="title">Gender</span>
-      <select formControlName="genders">
-        <option value="" disabled selected hidden>Gender</option>
-        <option [value]="gender" *ngFor="let gender of genders">
-          {{ gender }}
-        </option>
+      <span class="title">Order By</span>
+      <select formControlName="orderBy" (change)="search(0)">
+        <option value="" selected>Date</option>
+        <option value="totalDislikes">Dislikes</option>
+        <option value="totalLikes">Likes</option>
+        <option value="totalMatches">Matches</option>
       </select>
-    </div>
-    <div class="slide-container">
-      <span>Age</span>
-      <mat-slider min="18" max="80" discrete>
-        <input matSliderStartThumb formControlName="minAge" />
-        <input matSliderEndThumb formControlName="maxAge" />
-      </mat-slider>
-    </div>
-    <div class="slide-container">
-      <span>Max Distance</span>
-      <mat-slider min="10" max="500" discrete step="10">
-        <input matSliderThumb formControlName="distance" />
-      </mat-slider>
-      <mat-checkbox formControlName="moreDistance">+ 500 kms</mat-checkbox>
-    </div>
-    <div class="button-container">
-      <button title="Search" type="submit">Search</button>
     </div>
   </form>
   <app-paginator
@@ -36,24 +45,49 @@
     *ngIf="searched"
     (handlePageEvent)="handlePageEvent($event)"
     [loading]="loading"
-    [usersNumber]="users.length"
-    [maxPerPage]="25"
+    [usersNumber]="isUserMode ? users.length : deletedAccounts.length"
+    [maxPerPage]="5"
   >
   </app-paginator>
-  <div class="content" *ngIf="users && users.length !== 0 && !loading">
-    <app-admin-card
+  <div
+    class="content"
+    *ngIf="users && users.length !== 0 && !loading && isUserMode"
+  >
+    <app-user-card
       *ngFor="let user of users"
       [user]="user"
       (deleteEvent)="deleteUser(user)"
-    ></app-admin-card>
+    ></app-user-card>
+  </div>
+  <div
+    class="content"
+    *ngIf="
+      deletedAccounts && deletedAccounts.length !== 0 && !loading && !isUserMode
+    "
+  >
+    <app-deleted-account-card
+      *ngFor="let deletedAccount of deletedAccounts"
+      [deletedAccount]="deletedAccount"
+    ></app-deleted-account-card>
   </div>
   <div class="content loading" *ngIf="loading">
     <app-loading></app-loading>
   </div>
   <div
     class="content nothing"
-    *ngIf="(!users || users.length === 0) && !loading && searched"
+    *ngIf="(!users || users.length === 0) && !loading && searched && isUserMode"
   >
     <span>No user</span>
+  </div>
+  <div
+    class="content nothing"
+    *ngIf="
+      (!deletedAccounts || deletedAccounts.length === 0) &&
+      !loading &&
+      searched &&
+      !isUserMode
+    "
+  >
+    <span>No deleted account</span>
   </div>
 </div>

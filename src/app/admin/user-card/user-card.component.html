@@ -10,7 +10,7 @@
     *ngIf="!user.pictures || user.pictures.length === 0"
   />
   <div class="infos-container">
-    <span class="nickname">{{ user.nickname }}</span>
+    <span class="info">{{ user.email | description : 19 }}</span>
     <div class="stats">
       <div class="stat">
         <span>{{ user.stats?.totalDislikes }}</span>
@@ -25,5 +25,6 @@
         <i class="bx bxs-flame gold"></i>
       </div>
     </div>
+    <span class="info">{{ user.registeredDate! | customDate }}</span>
   </div>
 </div>

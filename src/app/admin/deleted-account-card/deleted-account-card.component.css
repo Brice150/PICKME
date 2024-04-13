@@ -2,41 +2,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 250px;
-  backdrop-filter: blur(2px);
-  margin: 10px;
-  border-radius: 20px;
-  cursor: pointer;
-  overflow: hidden;
-  transition: 0.5s ease;
-}
-
-.container::before {
-  content: "";
-  position: absolute;
-  background-color: var(--primary);
-  height: 0%;
-  top: 0;
-  left: 0;
   width: 100%;
-  transition: 0.5s ease;
-  z-index: -1;
-}
-
-.container:hover::before {
-  height: 100%;
+  backdrop-filter: blur(2px);
+  margin: 5px;
   border-radius: 20px;
-}
-
-.container:hover {
-  color: var(--secondary);
+  overflow: hidden;
 }
 
 .container img {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  min-width: 60px;
+  height: 60px;
   object-fit: cover;
-  border-radius: 20px;
+  border-radius: 10px;
   background-color: var(--primary);
 }
 
@@ -44,14 +22,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  flex-wrap: wrap;
 }
 
-.container .nickname {
+.container .infos-container > * {
+  margin: 4px 0;
+}
+
+.container .info {
   width: 170px;
   font-size: 17px;
   font-weight: 700;
   text-align: center;
+  overflow: hidden;
 }
 
 .container .stats {
@@ -59,7 +42,6 @@
   justify-content: space-evenly;
   align-items: center;
   width: 170px;
-  margin-top: 10px;
 }
 
 .container .stats .stat {

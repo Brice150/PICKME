@@ -16,6 +16,7 @@ public record UserDTO(
   Long height,
   String email,
   String description,
+  Date registeredDate,
   GenderAge genderAge,
   Preferences preferences,
   Geolocation geolocation,

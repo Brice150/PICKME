@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { Geolocation } from '../core/interfaces/geolocation';
@@ -40,7 +39,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   constructor(
     private connectService: ConnectService,
-    private router: Router,
     private toastr: ToastrService,
     private profileService: ProfileService
   ) {}
@@ -117,9 +115,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   deleteAccount(): void {
     this.profileService.deleteConnectedUser().subscribe({
       next: () => {
-        this.connectService.connectedUser = undefined;
         this.user = undefined;
-        this.router.navigate(['/']);
+        this.connectService.logout();
       },
       complete: () => {
         this.toastr.success(

@@ -5,7 +5,6 @@ import com.packages.backend.model.Match;
 import com.packages.backend.model.dto.UserDTO;
 import com.packages.backend.model.dto.UserDTOMapper;
 import com.packages.backend.model.dto.UserDTOMapperRestricted;
-import com.packages.backend.model.entity.Notification;
 import com.packages.backend.model.entity.Preferences;
 import com.packages.backend.model.entity.Stats;
 import com.packages.backend.model.entity.User;
@@ -35,8 +34,9 @@ public class UserService implements UserDetailsService {
   private final UserDTOMapperRestricted userDTOMapperRestricted;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final DistanceService distanceService;
+  private final DeletedAccountService deletedAccountService;
 
-  public UserService(UserRepository userRepository, MessageRepository messageRepository, LikeRepository likeRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperRestricted userDTOMapperRestricted, DistanceService distanceService) {
+  public UserService(UserRepository userRepository, MessageRepository messageRepository, LikeRepository likeRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperRestricted userDTOMapperRestricted, DistanceService distanceService, DeletedAccountService deletedAccountService) {
     this.userRepository = userRepository;
     this.messageRepository = messageRepository;
     this.likeRepository = likeRepository;
@@ -44,6 +44,7 @@ public class UserService implements UserDetailsService {
     this.userDTOMapper = userDTOMapper;
     this.userDTOMapperRestricted = userDTOMapperRestricted;
     this.distanceService = distanceService;
+    this.deletedAccountService = deletedAccountService;
   }
 
   @Override
@@ -95,15 +96,12 @@ public class UserService implements UserDetailsService {
   private void registerUser(User user) {
     String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
     user.setPassword(encodedPassword);
+    user.setRegisteredDate(new Date());
     user.getGenderAge().setFkUser(user);
     user.getGeolocation().setFkUser(user);
     user.setPreferences(new Preferences());
     user.getPreferences().setFkUser(user);
     user.setStats(new Stats(0L, 0L, 0L, user));
-    List<Notification> notifications = new ArrayList<>();
-    Notification firstNotification = new Notification("Welcome, you can start by completing your profile !", "profile", new Date(), false, user);
-    notifications.add(firstNotification);
-    user.setNotifications(notifications);
     userRepository.save(user);
   }
 
@@ -223,16 +221,17 @@ public class UserService implements UserDetailsService {
 
   public void deleteConnectedUser() {
     User connectedUser = getConnectedUser();
-    deleteUser(connectedUser);
+    deleteUser(connectedUser, connectedUser);
   }
 
   public void deleteUserById(Long userId) {
+    User connectedUser = getConnectedUser();
     User selectedUser = getUserById(userId);
-    deleteUser(selectedUser);
+    deleteUser(selectedUser, connectedUser);
   }
 
   @Transactional
-  private void deleteUser(User user) {
+  private void deleteUser(User user, User connectedUser) {
     userRepository.deleteUserNotificationsByFk(user.getId());
     userRepository.deleteUserGeolocationByFk(user.getId());
     userRepository.deleteUserPreferencesByFk(user.getId());
@@ -243,6 +242,7 @@ public class UserService implements UserDetailsService {
     userRepository.deleteUserDislikesByFk(user.getId());
     userRepository.deleteUserMessagesByFk(user.getId());
     userRepository.deleteUserByEmail(user.getEmail());
+    deletedAccountService.addDeletedAccount(user, connectedUser);
   }
 
   private Double calculateScore(User connectedUser, User user) {
