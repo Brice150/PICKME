@@ -6,7 +6,7 @@
       [ngClass]="isUserMode ? 'active' : 'unactive'"
     >
       <span class="main">{{ adminStats?.totalUsers }} Users</span>
-      <span *ngIf="adminStats"
+      <span *ngIf="adminStats && adminStats.totalRecentUsers > 0"
         >(+{{ adminStats.totalRecentUsers }} this week)</span
       >
     </a>
@@ -16,7 +16,7 @@
       [ngClass]="!isUserMode ? 'active' : 'unactive'"
     >
       <span class="main">{{ adminStats?.totalDeletedAccounts }} Deleted</span>
-      <span *ngIf="adminStats"
+      <span *ngIf="adminStats && adminStats.totalRecentDeletedAccounts > 0"
         >(+{{ adminStats.totalRecentDeletedAccounts }} this week)</span
       >
     </a>
