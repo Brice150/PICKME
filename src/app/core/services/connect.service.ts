@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 @Injectable({ providedIn: 'root' })
 export class ConnectService {
   private apiServerUrl = environment.apiBaseUrl;
+  registeredUser?: User;
   connectedUser?: User;
   connectedUserReady$: Subject<void> = new Subject<void>();
   loggedOut$: Subject<void> = new Subject<void>();

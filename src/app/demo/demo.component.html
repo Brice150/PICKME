@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="content">
+    <app-profile-demo
+      [userGender]="userGender"
+      *ngIf="currentIndex === 0"
+    ></app-profile-demo>
+    <app-select-demo
+      [userGenderSearch]="userGenderSearch"
+      *ngIf="currentIndex === 1"
+    ></app-select-demo>
+    <app-match-demo
+      [userGenderSearch]="userGenderSearch"
+      *ngIf="currentIndex === 2"
+    ></app-match-demo>
+    <app-start-demo *ngIf="currentIndex === 3"></app-start-demo>
+  </div>
+  <app-paginator-demo
+    [currentIndex]="currentIndex"
+    [listLength]="demos.length"
+    (previousEvent)="previous()"
+    (nextEvent)="next()"
+  ></app-paginator-demo>
+</div>

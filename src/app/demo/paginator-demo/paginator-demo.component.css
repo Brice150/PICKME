@@ -1,0 +1,61 @@
+:host {
+  width: 100%;
+  position: absolute;
+  bottom: 10px;
+}
+
+.container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+}
+
+.container a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: var(--primary);
+  backdrop-filter: blur(2px);
+  padding: 10px;
+  transition: 0.5s ease;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.container a.disabled {
+  backdrop-filter: none;
+  cursor: default;
+}
+
+.container a:not(.disabled):before {
+  content: "";
+  position: absolute;
+  background-color: var(--primary);
+  height: 0%;
+  top: 0;
+  right: 0;
+  width: 100%;
+  transition: 0.5s ease;
+  z-index: -1;
+}
+
+.container a:not(.disabled):hover::before {
+  height: 100%;
+}
+
+.container a:not(.disabled):hover {
+  color: var(--secondary);
+}
+
+.container a i {
+  font-size: 30px;
+}
+
+.container span {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+}

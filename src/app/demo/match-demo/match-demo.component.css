@@ -1,0 +1,41 @@
+:host {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+}
+
+.title {
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--primary);
+}
+
+.title span {
+  font-size: 20px;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.title i {
+  font-size: 25px;
+  margin-right: 10px;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.content .text {
+  width: 80%;
+  text-align: justify;
+}

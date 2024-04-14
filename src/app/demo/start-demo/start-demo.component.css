@@ -1,0 +1,87 @@
+:host {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+}
+
+.title {
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--primary);
+}
+
+.title span {
+  font-size: 20px;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.title i {
+  font-size: 25px;
+  margin-right: 10px;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.content .text {
+  width: 80%;
+  text-align: center;
+}
+
+.content .button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-container a {
+  position: absolute;
+  top: 45%;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--primary);
+  padding: 15px 30px;
+  margin: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  overflow: hidden;
+  border-radius: 10px;
+  transition: 0.5s ease;
+  backdrop-filter: blur(2px);
+  font-size: 14px;
+  font-family: Roboto, sans-serif;
+}
+
+.button-container a::before {
+  content: "";
+  position: absolute;
+  background-color: var(--liked);
+  height: 0%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: 0.5s ease;
+  z-index: -1;
+}
+
+.button-container a:hover::before {
+  height: 100%;
+  border-radius: 10px;
+}
+
+.button-container a:hover {
+  color: var(--secondary);
+}

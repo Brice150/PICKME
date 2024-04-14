@@ -22,14 +22,14 @@ export class PaginatorComponent {
       this.usersNumber === this.maxPerPage &&
       this.page + 1 !== this.maxPages
     ) {
-      this.page = this.page + 1;
+      this.page++;
       this.handlePageEvent.emit(this.page);
     }
   }
 
   previous(): void {
     if (this.page !== 0) {
-      this.page = this.page - 1;
+      this.page--;
       this.handlePageEvent.emit(this.page);
     }
   }

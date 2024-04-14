@@ -1,0 +1,63 @@
+<div class="title">
+  <i class="bx bxs-user"></i>
+  <span>Profile</span>
+</div>
+<div class="content">
+  <span class="text">
+    Welcome, here is a demo before using the application ! First you can start
+    by completing your profile. Complete pictures, description and preferences
+    sections to increase chances of match !
+  </span>
+  <mat-accordion>
+    <mat-expansion-panel expanded="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="bx bx-image"></i>
+          <span>Pictures</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <swiper-container effect="cards" mousewheel="true">
+        <swiper-slide lazy="true">
+          <img
+            [src]="imagePath + 'Picture1.jpg'"
+            alt="Picture1.jpg"
+            loading="true"
+          />
+        </swiper-slide>
+        <swiper-slide lazy="true">
+          <img
+            [src]="imagePath + 'Picture2.jpg'"
+            alt="Picture2.jpg"
+            loading="true"
+          />
+        </swiper-slide>
+        <swiper-slide lazy="true">
+          <img
+            [src]="imagePath + 'Picture3.jpg'"
+            alt="Picture3.jpg"
+            loading="true"
+          />
+        </swiper-slide>
+      </swiper-container>
+      <span>Complete here !</span>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="bx bx-image"></i>
+          <span>Description</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <span>Complete here !</span>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="bx bx-heart"></i>
+          <span>Preferences</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <span>Complete here !</span>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
