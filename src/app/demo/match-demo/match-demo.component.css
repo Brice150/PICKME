@@ -36,6 +36,7 @@
 }
 
 .content .text {
-  width: 80%;
+  width: 90%;
   text-align: justify;
+  margin-bottom: 15px;
 }
