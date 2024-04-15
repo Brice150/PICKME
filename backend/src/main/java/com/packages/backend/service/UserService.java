@@ -68,7 +68,7 @@ public class UserService implements UserDetailsService {
     } else if (user.getPassword() == null || user.getPassword().isBlank()) {
       signUpMessage = "Password" + emptyPhrase;
     } else if (userRepository.getUserByEmail(user.getEmail()).isPresent()) {
-      signUpMessage = "email already taken";
+      signUpMessage = "Email already taken";
     } else if (user.getGenderAge() == null) {
       signUpMessage = "Gender or Age" + emptyPhrase;
     } else if (user.getGenderAge().getGender() == null || Gender.getDescriptionNullSafe(user.getGenderAge().getGender()).isBlank()) {

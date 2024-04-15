@@ -2,6 +2,7 @@ package com.packages.backend.service;
 
 import com.packages.backend.model.entity.DeletedAccount;
 import com.packages.backend.model.entity.User;
+import com.packages.backend.model.enums.UserRole;
 import com.packages.backend.repository.DeletedAccountRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class DeletedAccountService {
       userToDelete.getStats().getTotalDislikes(),
       userToDelete.getStats().getTotalLikes(),
       userToDelete.getStats().getTotalMatches(),
-      connectedUser.getNickname()
+      connectedUser.getUserRole() == UserRole.ROLE_USER ? "User" : "Admin"
     );
     deletedAccountRepository.save(deletedAccount);
   }
