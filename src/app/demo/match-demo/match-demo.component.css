@@ -40,3 +40,126 @@
   text-align: justify;
   margin-bottom: 15px;
 }
+
+.match-container {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 700px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.match-container a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: var(--primary);
+  backdrop-filter: blur(2px);
+  padding: 10px;
+  margin: 5px;
+  transition: 0.5s ease;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.match-container a::before {
+  content: "";
+  position: absolute;
+  background-color: var(--primary);
+  height: 0%;
+  top: 0;
+  right: 0;
+  width: 100%;
+  transition: 0.5s ease;
+  z-index: -1;
+}
+
+.match-container a:hover::before {
+  height: 100%;
+}
+
+.match-container a:hover {
+  color: var(--secondary);
+}
+
+.match-container a i {
+  font-size: 30px;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 350px;
+  backdrop-filter: blur(2px);
+  margin: 10px;
+  border-radius: 10px;
+  padding: 5px;
+  overflow: hidden;
+}
+
+.message.left {
+  background-color: goldenrod;
+  color: var(--secondary);
+  margin-right: 40px;
+}
+
+.message.left .date {
+  width: 95%;
+  text-align: left;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.message.left .content {
+  width: 95%;
+  text-align: justify;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.message.right {
+  background-color: transparent;
+  color: var(--primary);
+  margin-left: 40px;
+}
+
+.message.right .date {
+  width: 95%;
+  text-align: right;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.message.right .content {
+  width: 95%;
+  text-align: justify;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+@media screen and (max-width: 450px) {
+  .match-container {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .message {
+    width: 300px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .message {
+    width: 250px;
+  }
+}

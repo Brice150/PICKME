@@ -1,0 +1,12 @@
+<div class="container" (click)="click()">
+  <img [src]="picture" [alt]="picture" />
+  <div class="infos-container">
+    <span class="nickname">{{ match }}</span>
+    <span
+      class="messages gold"
+      [ngClass]="{ gold: match === 'Kate' || match === 'Mark' }"
+    >
+      {{ preview | description : 30 }}
+    </span>
+  </div>
+</div>

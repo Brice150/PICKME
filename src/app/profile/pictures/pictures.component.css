@@ -98,6 +98,11 @@ img {
     max-width: 380px;
     height: 380px;
   }
+
+  img {
+    max-width: 380px;
+    height: 380px;
+  }
 }
 
 @media screen and (max-width: 440px) {
@@ -105,10 +110,20 @@ img {
     max-width: 330px;
     height: 330px;
   }
+
+  img {
+    max-width: 330px;
+    height: 330px;
+  }
 }
 
 @media screen and (max-width: 380px) {
   swiper-container {
+    max-width: 280px;
+    height: 280px;
+  }
+
+  img {
     max-width: 280px;
     height: 280px;
   }
