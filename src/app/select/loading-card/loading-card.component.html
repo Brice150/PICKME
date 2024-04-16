@@ -1,4 +1,8 @@
 <app-loading *ngIf="loading"></app-loading>
 <div class="container" *ngIf="!loading">
   <span>No user {{ usersNumber !== 0 ? "left" : "" }}</span>
+  <span
+    >You should consider increasing your max distance to see more profiles
+    !</span
+  >
 </div>

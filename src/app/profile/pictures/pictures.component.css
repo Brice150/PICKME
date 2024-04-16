@@ -17,8 +17,8 @@
 
 swiper-container {
   width: 100%;
-  max-width: 450px;
-  height: 450px;
+  max-width: 380px;
+  height: 380px;
   border-radius: 20px;
 }
 
@@ -87,22 +87,10 @@ swiper-slide {
 img {
   background-color: var(--secondary);
   width: 100%;
-  max-width: 450px;
-  height: 450px;
+  max-width: 380px;
+  height: 380px;
   object-fit: cover;
   border-radius: 10px;
-}
-
-@media screen and (max-width: 540px) {
-  swiper-container {
-    max-width: 380px;
-    height: 380px;
-  }
-
-  img {
-    max-width: 380px;
-    height: 380px;
-  }
 }
 
 @media screen and (max-width: 440px) {

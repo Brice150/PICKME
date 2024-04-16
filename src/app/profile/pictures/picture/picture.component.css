@@ -70,17 +70,10 @@
 img {
   background-color: var(--primary);
   width: 100%;
-  max-width: 450px;
-  height: 450px;
+  max-width: 380px;
+  height: 380px;
   object-fit: cover;
   border-radius: 10px;
-}
-
-@media screen and (max-width: 540px) {
-  img {
-    max-width: 380px;
-    height: 380px;
-  }
 }
 
 @media screen and (max-width: 440px) {
