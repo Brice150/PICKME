@@ -8,7 +8,7 @@
 }
 
 ::ng-deep .container .mat-expansion-panel {
-  background: var(--glass-background);
+  background-color: var(--glass-background);
   backdrop-filter: blur(2px);
 }
 
@@ -19,6 +19,7 @@
 
 ::ng-deep .mat-expansion-panel-header.mat-expanded {
   backdrop-filter: blur(2px);
+  background-color: var(--glass-background);
 }
 
 ::ng-deep .mat-expansion-panel-header.mat-expanded:hover,

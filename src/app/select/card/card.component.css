@@ -31,7 +31,7 @@
   justify-content: center;
   flex-direction: column;
   height: 40%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--glass-background);
   border-radius: 20px;
   cursor: pointer;
   overflow: hidden;
@@ -89,11 +89,11 @@
   text-decoration: none;
   color: var(--primary);
   backdrop-filter: blur(2px);
+  background-color: var(--glass-background);
   padding: 10px;
   transition: 0.5s ease;
   cursor: pointer;
   overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .button::before {

@@ -28,7 +28,7 @@ form {
 }
 
 ::ng-deep .mat-mdc-standard-chip.mat-primary {
-  --mdc-chip-elevated-container-color: transparent;
+  --mdc-chip-elevated-container-color: var(--glass-background);
   backdrop-filter: blur(2px);
 }
 
@@ -67,7 +67,7 @@ form .button-container {
 
 form .button-container button {
   border: none;
-  background-color: transparent;
+  background-color: var(--glass-background);
   cursor: pointer;
   text-decoration: none;
   color: var(--primary);

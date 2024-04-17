@@ -26,7 +26,7 @@ form .title {
 }
 
 form select {
-  background: transparent;
+  background-color: var(--glass-background);
   backdrop-filter: blur(2px);
   width: 200px;
   margin-top: 5px;
@@ -62,7 +62,7 @@ select option {
 
 form .button-container button {
   border: none;
-  background-color: transparent;
+  background-color: var(--glass-background);
   cursor: pointer;
   text-decoration: none;
   color: var(--primary);

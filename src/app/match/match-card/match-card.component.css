@@ -4,6 +4,7 @@
   align-items: center;
   width: 350px;
   backdrop-filter: blur(2px);
+  background-color: var(--glass-background);
   margin: 10px;
   border-radius: 20px;
   cursor: pointer;

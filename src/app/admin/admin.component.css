@@ -5,7 +5,7 @@
   transform: translate(-50%, -50%);
   width: 100%;
   max-width: 700px;
-  background: var(--glass-background);
+  background-color: var(--glass-background);
   backdrop-filter: blur(2px);
   border-radius: 20px;
   display: flex;
@@ -39,6 +39,7 @@
   overflow: hidden;
   transition: 0.5s ease;
   backdrop-filter: blur(2px);
+  background-color: var(--glass-background);
 }
 
 .container .btn-container a span {
@@ -125,7 +126,7 @@ form .title {
 
 form select,
 input {
-  background: transparent;
+  background-color: var(--glass-background);
   backdrop-filter: blur(2px);
   width: 120px;
   margin-top: 5px;
@@ -161,7 +162,7 @@ select option {
 
 form .button-container button {
   border: none;
-  background-color: transparent;
+  background-color: var(--glass-background);
   cursor: pointer;
   text-decoration: none;
   color: var(--primary);

@@ -11,6 +11,7 @@
   align-items: center;
   flex-direction: column;
   backdrop-filter: blur(2px);
+  background-color: var(--glass-background);
   border-radius: 10px;
   padding: 10px;
   cursor: pointer;

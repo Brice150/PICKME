@@ -42,7 +42,7 @@
 }
 
 ::ng-deep .container .mat-expansion-panel {
-  background: var(--glass-background);
+  background-color: var(--glass-background);
   width: 100%;
 }
 

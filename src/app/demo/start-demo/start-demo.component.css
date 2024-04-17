@@ -61,6 +61,7 @@
   border-radius: 10px;
   transition: 0.5s ease;
   backdrop-filter: blur(2px);
+  background-color: var(--glass-background);
   font-size: 14px;
   font-family: Roboto, sans-serif;
 }

@@ -3,7 +3,7 @@
   top: 5px;
   right: 5px;
   padding: 5px;
-  background: var(--glass-background);
+  background-color: var(--glass-background);
   backdrop-filter: blur(2px);
   border-radius: 10px;
   width: 40px;
@@ -99,7 +99,7 @@
   flex-direction: column;
   z-index: 10;
   border-radius: 20px 0 0 20px;
-  background: var(--glass-background);
+  background-color: var(--glass-background);
   backdrop-filter: blur(2px);
   overflow: hidden;
 }

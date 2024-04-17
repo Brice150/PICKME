@@ -37,7 +37,7 @@ swiper-slide {
 
 .container .button-container label {
   border: none;
-  background-color: transparent;
+  background-color: var(--glass-background);
   cursor: pointer;
   text-decoration: none;
   color: var(--primary);

@@ -62,6 +62,7 @@
   text-decoration: none;
   color: var(--primary);
   backdrop-filter: blur(2px);
+  background-color: var(--glass-background);
   padding: 10px;
   margin: 5px;
   transition: 0.5s ease;
@@ -100,6 +101,7 @@
   flex-direction: column;
   width: 350px;
   backdrop-filter: blur(2px);
+  background-color: var(--glass-background);
   margin: 10px;
   border-radius: 10px;
   padding: 5px;
@@ -127,7 +129,7 @@
 }
 
 .message.right {
-  background-color: transparent;
+  background-color: var(--glass-background);
   color: var(--primary);
   margin-left: 40px;
 }

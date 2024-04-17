@@ -16,7 +16,7 @@ form span {
 
 form input:not(.date),
 select {
-  background: transparent;
+  background-color: var(--glass-background);
   backdrop-filter: blur(2px);
   width: 200px;
   margin: 16px 0;
@@ -52,7 +52,7 @@ select option {
 
 form .button-container button {
   border: none;
-  background-color: transparent;
+  background-color: var(--glass-background);
   cursor: pointer;
   text-decoration: none;
   color: var(--primary);
@@ -98,7 +98,7 @@ form .button-container button:hover {
 }
 
 mat-form-field {
-  background: transparent;
+  background-color: var(--glass-background);
   backdrop-filter: blur(2px);
   width: 200px;
   height: 57.6px;

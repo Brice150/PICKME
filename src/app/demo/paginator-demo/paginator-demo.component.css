@@ -18,6 +18,7 @@
   text-decoration: none;
   color: var(--primary);
   backdrop-filter: blur(2px);
+  background-color: var(--glass-background);
   padding: 10px;
   transition: 0.5s ease;
   cursor: pointer;
@@ -28,6 +29,7 @@
 .container a.disabled {
   backdrop-filter: none;
   cursor: default;
+  background: none;
 }
 
 .container a:not(.disabled):before {

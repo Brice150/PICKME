@@ -6,7 +6,7 @@ form {
 }
 
 form textarea {
-  background: transparent;
+  background-color: var(--glass-background);
   backdrop-filter: blur(2px);
   width: 200px;
   margin: 16px 0;
@@ -37,7 +37,7 @@ form textarea {
 
 form .button-container button {
   border: none;
-  background-color: transparent;
+  background-color: var(--glass-background);
   cursor: pointer;
   text-decoration: none;
   color: var(--primary);
