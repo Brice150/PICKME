@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { CommonModule } from '@angular/common';
 
@@ -12,4 +12,13 @@ import { CommonModule } from '@angular/common';
 export class LoadingCardComponent {
   @Input() loading: boolean = true;
   @Input() usersNumber: number = 0;
+  @Output() goToActionEvent: EventEmitter<string> = new EventEmitter<string>();
+
+  goToFirst(): void {
+    this.goToActionEvent.emit('first');
+  }
+
+  goToProfile(): void {
+    this.goToActionEvent.emit('profile');
+  }
 }

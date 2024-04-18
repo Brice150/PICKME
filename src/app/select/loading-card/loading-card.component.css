@@ -15,14 +15,58 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  position: relative;
 }
 
-.container span {
+.container .content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.container .content span {
   font-size: 16px;
   font-weight: 600;
   color: var(--primary);
   margin: 10px;
   text-align: center;
+}
+
+.container .content a {
+  background-color: var(--glass-background);
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--primary);
+  padding: 15px 30px;
+  margin: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  overflow: hidden;
+  border-radius: 10px;
+  transition: 0.5s ease;
+  backdrop-filter: blur(2px);
+  font-size: 14px;
+  border: 2px solid var(--primary);
+}
+
+.container .content a::before {
+  content: "";
+  position: absolute;
+  background-color: var(--primary);
+  height: 0%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: 0.5s ease;
+  z-index: -1;
+}
+
+.container .content a:hover::before {
+  height: 100%;
+  border-radius: 10px;
+}
+
+.container .content a:hover {
+  color: var(--secondary);
 }

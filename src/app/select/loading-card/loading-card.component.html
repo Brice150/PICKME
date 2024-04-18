@@ -1,8 +1,12 @@
 <app-loading *ngIf="loading"></app-loading>
 <div class="container" *ngIf="!loading">
-  <span>No user {{ usersNumber !== 0 ? "left" : "" }}</span>
-  <span
-    >You should consider increasing your max distance to see more profiles
-    !</span
-  >
+  <div class="content" *ngIf="usersNumber !== 0">
+    <span>No more users to show</span>
+    <a (click)="goToFirst()" title="Go To First">Go To First</a>
+  </div>
+  <div class="content" *ngIf="usersNumber === 0">
+    <span>No user to show</span>
+    <span>You should consider increasing max distance and / or age gap</span>
+    <a (click)="goToProfile()" title="Go To Profile">Go To Profile</a>
+  </div>
 </div>

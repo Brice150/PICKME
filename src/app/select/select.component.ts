@@ -11,6 +11,7 @@ import { User } from '../core/interfaces/user';
 import { SelectService } from '../core/services/select.service';
 import { CardComponent } from './card/card.component';
 import { LoadingCardComponent } from './loading-card/loading-card.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-select',
@@ -32,7 +33,8 @@ export class SelectComponent implements OnInit, OnDestroy {
 
   constructor(
     private toastr: ToastrService,
-    private selectService: SelectService
+    private selectService: SelectService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -145,6 +147,16 @@ export class SelectComponent implements OnInit, OnDestroy {
     if (userIndex !== -1) {
       document.querySelector('swiper-container')?.swiper.removeSlide(userIndex);
       this.users.splice(userIndex, 1);
+    }
+  }
+
+  goTo(action: string): void {
+    console.log(action);
+
+    if (action === 'profile') {
+      this.router.navigate(['/profile']);
+    } else {
+      document.querySelector('swiper-container')?.swiper.slideTo(0);
     }
   }
 }
