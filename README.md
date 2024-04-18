@@ -17,6 +17,11 @@ Backend : Spring Boot
 - Login with failure animation for bad credentials
 - Logout is available on menu once logged in
 
+### Demo
+
+- Demo of the application when you have registered
+- View and try key features of the application
+
 ### Select
 
 - View profiles that are similar to yours by distance
@@ -43,7 +48,8 @@ Backend : Spring Boot
 ### Admin
 
 - Admin role needed to view this page
-- Search users by nickname, gender, age or max distance
+- Search users and deleted accounts by email and sort them
+- Get application stats
 - View more information about a profile
 - Delete a user
 
@@ -55,7 +61,6 @@ Backend : Spring Boot
 
 ### Notifications
 
-- First notification says welcome, you can start by completing your profile
 - New notification for each message or match
 - Mark notifications as seen
 
@@ -119,10 +124,22 @@ Backend : Spring Boot
   <details>
   <summary>Admin</summary>
 
+### Get admin stats
+
+```http
+  GET /admin/stats
+```
+
 ### Get all users
 
 ```http
-  GET /admin/all/${page}
+  POST /admin/user/all/${page}
+```
+
+### Get all deleted accounts
+
+```http
+  POST /admin/deleted-account/all/${page}
 ```
 
 ### Delete user
@@ -253,7 +270,7 @@ Backend : Spring Boot
 ### mark all user notifications as seen
 
 ```http
-  POST /notification
+  PUT /notification
 ```
 
   </details>

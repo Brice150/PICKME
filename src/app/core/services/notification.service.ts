@@ -20,7 +20,7 @@ export class NotificationService {
   }
 
   public markUserNotificationsAsSeen(): Observable<void> {
-    return this.http.post<void>(`${this.apiServerUrl}/notification`, null, {
+    return this.http.put<void>(`${this.apiServerUrl}/notification`, null, {
       withCredentials: true,
     });
   }
