@@ -15,5 +15,5 @@
     </div>
     <span class="date">{{ notification.date | customDate }}</span>
   </div>
-  <span class="content">{{ notification.content }}</span>
+  <span class="content">{{ notification.content | description : 60 }}</span>
 </div>

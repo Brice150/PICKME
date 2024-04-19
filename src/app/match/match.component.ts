@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -44,6 +50,8 @@ export class MatchComponent implements OnInit, OnDestroy {
   selectedMatch?: Match;
   destroyed$: Subject<void> = new Subject<void>();
   loading: boolean = true;
+  previousMessages?: Message[];
+  @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
   constructor(
     private toastr: ToastrService,
@@ -83,6 +91,15 @@ export class MatchComponent implements OnInit, OnDestroy {
             );
             if (matchIndex !== -1) {
               this.selectedMatch = this.matches[matchIndex];
+              if (
+                this.previousMessages?.length !==
+                this.selectedMatch.messages.length
+              ) {
+                this.previousMessages = this.selectedMatch.messages;
+                setTimeout(() => {
+                  this.scrollDown();
+                });
+              }
             }
           }
         },
@@ -131,6 +148,10 @@ export class MatchComponent implements OnInit, OnDestroy {
 
   selectMatch(match: Match): void {
     this.selectedMatch = match;
+    this.previousMessages = this.selectedMatch.messages;
+    setTimeout(() => {
+      this.scrollDown();
+    });
   }
 
   moreInfo(): void {
@@ -152,6 +173,7 @@ export class MatchComponent implements OnInit, OnDestroy {
 
   back(): void {
     this.selectedMatch = undefined;
+    this.previousMessages = undefined;
   }
 
   modifyMessage(message: Message): void {
@@ -185,6 +207,9 @@ export class MatchComponent implements OnInit, OnDestroy {
           this.searchByNickname();
         }
         this.unModifyMessage();
+        setTimeout(() => {
+          this.scrollDown();
+        });
       },
       complete: () => {
         this.toastr.success('You have sent a message', 'Message Sent', {
@@ -265,5 +290,10 @@ export class MatchComponent implements OnInit, OnDestroy {
       return 'Message deleted';
     }
     return messagesWithContent[messagesWithContent.length - 1].content;
+  }
+
+  scrollDown(): void {
+    this.messagesContainer.nativeElement.scrollTop =
+      this.messagesContainer.nativeElement.scrollHeight;
   }
 }
