@@ -3,35 +3,43 @@
   [formGroup]="loginForm"
   (ngSubmit)="loginUser(loginForm.value)"
 >
-  <input placeholder="Email" formControlName="email" />
-  <span
-    *ngIf="
-      loginForm.get('email')!.hasError('required') &&
-      loginForm.get('email')!.touched
-    "
-    >Email is required</span
-  >
-  <span *ngIf="loginForm.get('email')!.hasError('email')"
-    >Email is invalid</span
-  >
-  <span *ngIf="loginForm.get('email')!.hasError('maxlength')"
-    >Email is too long</span
-  >
-  <input type="password" placeholder="Password" formControlName="password" />
-  <span
-    *ngIf="
-      loginForm.get('password')!.hasError('required') &&
-      loginForm.get('password')!.touched
-    "
-    >Password is required</span
-  >
-  <span *ngIf="loginForm.get('password')!.hasError('minlength')"
-    >Password is too short</span
-  >
-  <span *ngIf="loginForm.get('password')!.hasError('maxlength')"
-    >Password is too long</span
-  >
-  <span *ngIf="invalidLogin">Wrong Email or Password</span>
+  <mat-form-field color="accent">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" required />
+    @if (loginForm.get('email')!.hasError('required')) {
+    <mat-error>Email is required</mat-error>
+    } @else if (loginForm.get('email')!.hasError('email')) {
+    <mat-error>Email is invalid</mat-error>
+    } @else if (loginForm.get('email')!.hasError('maxlength')) {
+    <mat-error>Email is too long</mat-error>
+    }
+  </mat-form-field>
+  <mat-form-field color="accent">
+    <mat-label>Password</mat-label>
+    <input
+      matInput
+      [type]="hide ? 'password' : 'text'"
+      formControlName="password"
+      required
+    />
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="hide = !hide"
+      [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hide"
+      type="button"
+    >
+      <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+    </button>
+    @if (loginForm.get('password')!.hasError('required')) {
+    <mat-error>Password is required</mat-error>
+    } @else if (loginForm.get('password')!.hasError('minlength')) {
+    <mat-error>Password is too short</mat-error>
+    } @else if (loginForm.get('password')!.hasError('maxlength')) {
+    <mat-error>Password is too long</mat-error>
+    }
+  </mat-form-field>
   <div class="button-container">
     <button title="Let's Go" *ngIf="loginForm.valid" type="submit">
       Let's Go

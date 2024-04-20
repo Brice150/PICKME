@@ -109,7 +109,7 @@
 }
 
 .message.left {
-  background-color: goldenrod;
+  background-color: var(--liked);
   color: var(--secondary);
   margin-right: 40px;
 }

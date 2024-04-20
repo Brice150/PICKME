@@ -8,9 +8,9 @@
   --disabled: grey;
 
   /* Swiper JS */
-  --swiper-preloader-color: var(--error);
-  --swiper-navigation-color: var(--error);
-  --swiper-pagination-color: var(--error);
+  --swiper-preloader-color: var(--primary);
+  --swiper-navigation-color: var(--primary);
+  --swiper-pagination-color: var(--primary);
 
   /* Angular Material */
   --mat-stepper-container-color: transparent;
@@ -39,6 +39,11 @@
   --mdc-checkbox-selected-hover-icon-color: var(--primary);
   --mdc-checkbox-selected-focus-state-layer-color: var(--primary);
   --mdc-checkbox-selected-pressed-state-layer-color: var(--primary);
+  --mdc-filled-text-field-container-color: var(--glass-background);
+  --mdc-filled-text-field-label-text-color: var(--primary);
+  --mdc-filled-text-field-hover-label-text-color: var(--primary);
+  --mdc-filled-text-field-input-text-color: var(--primary);
+  --mat-datepicker-toggle-icon-color: var(--primary);
 }
 
 body {

@@ -24,30 +24,8 @@ form.invalidLogin {
   }
 }
 
-form span {
-  color: red;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-input {
-  background-color: var(--glass-background);
-  backdrop-filter: blur(2px);
-  width: 200px;
-  margin: 16px 0;
-  border: 0;
-  padding: 20px 40px;
-  outline: none;
-  border-radius: 10px;
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
-}
-
-::placeholder {
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
+mat-form-field {
+  width: 100%;
 }
 
 .button-container {
@@ -94,10 +72,4 @@ form .button-container button:hover::before {
 
 form .button-container button:hover {
   color: var(--secondary);
-}
-
-@media screen and (max-width: 375px) {
-  form input {
-    width: 160px;
-  }
 }

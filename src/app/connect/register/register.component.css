@@ -8,42 +8,6 @@ form {
   animation: none;
 }
 
-form span {
-  color: red;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-form input:not(.date),
-select {
-  background-color: var(--glass-background);
-  backdrop-filter: blur(2px);
-  width: 200px;
-  margin: 16px 0;
-  border: 0;
-  padding: 20px 40px;
-  outline: none;
-  border-radius: 10px;
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
-}
-
-form select {
-  width: 280px;
-}
-
-select option {
-  background-color: var(--secondary);
-  color: var(--primary);
-}
-
-::placeholder {
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
-}
-
 .button-container {
   display: flex;
   justify-content: center;
@@ -98,38 +62,7 @@ form .button-container button:hover {
 }
 
 mat-form-field {
-  background-color: var(--glass-background);
-  backdrop-filter: blur(2px);
-  width: 200px;
-  height: 57.6px;
-  margin: 16px 0;
-  border: 0;
-  padding: 0 40px;
-  outline: none;
-  border-radius: 10px;
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
-}
-
-mat-form-field mat-label {
-  color: white;
-}
-
-mat-form-field mat-datepicker-toggle {
-  color: var(--primary);
-}
-
-::ng-deep .mat-mdc-form-field-subscript-wrapper {
-  display: none;
-}
-
-::ng-deep .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
-  margin-left: -16px;
-}
-
-::ng-deep .mat-mdc-form-field-flex {
-  width: 200px;
+  width: 100%;
 }
 
 form .slide-container {
@@ -152,16 +85,10 @@ form .slide-container span {
   width: 100%;
 }
 
-@media screen and (max-width: 375px) {
-  form input:not(.date) {
-    width: 160px;
-  }
+::ng-deep .mat-mdc-select {
+  color: var(--primary) !important;
+}
 
-  form select {
-    width: 240px;
-  }
-
-  mat-form-field {
-    width: 160px;
-  }
+::ng-deep .mat-mdc-select-arrow {
+  color: var(--primary) !important;
 }

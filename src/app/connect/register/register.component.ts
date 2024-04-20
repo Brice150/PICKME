@@ -2,16 +2,14 @@ import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { DateAdapter, provideNativeDateAdapter } from '@angular/material/core';
-import {
-  MatDatepickerInputEvent,
-  MatDatepickerModule,
-} from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSliderModule } from '@angular/material/slider';
@@ -23,6 +21,9 @@ import { Gender } from '../../core/enums/gender';
 import { Geolocation } from '../../core/interfaces/geolocation';
 import { User } from '../../core/interfaces/user';
 import { ConnectService } from '../../core/services/connect.service';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-register',
@@ -42,21 +43,22 @@ import { ConnectService } from '../../core/services/connect.service';
     MatDatepickerModule,
     MatStepperModule,
     MatSliderModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   destroyed$: Subject<void> = new Subject<void>();
+  hide: boolean = true;
+  hideDuplicate: boolean = true;
   registerForm!: FormGroup;
   firstFormGroup!: FormGroup;
   secondFormGroup!: FormGroup;
   thirdFormGroup!: FormGroup;
-  birthDateExists: boolean = false;
-  birthDateTouched: boolean = false;
   passwordsMatch: boolean = false;
-  birthDate!: Date;
-  startDate: Date = new Date(1990, 0, 1);
   minDate: Date;
   genders: string[] = Object.values(Gender);
   geolocation: Geolocation = {} as Geolocation;
@@ -64,11 +66,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private connectService: ConnectService,
-    private dateAdapter: DateAdapter<Date>,
     private toastr: ToastrService,
     private router: Router
   ) {
-    this.dateAdapter.setLocale('en-GB');
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(
       currentYear - 18,
@@ -95,6 +95,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           Validators.minLength(2),
         ],
       ],
+      birthDate: ['', [Validators.required]],
       distanceSearch: [100, [Validators.required]],
     });
 
@@ -105,28 +106,31 @@ export class RegisterComponent implements OnInit, OnDestroy {
       maxAge: [40, Validators.required],
     });
 
-    this.thirdFormGroup = this.fb.group({
-      email: [
-        '',
-        [Validators.required, Validators.email, Validators.maxLength(30)],
-      ],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(30),
-          Validators.minLength(5),
+    this.thirdFormGroup = this.fb.group(
+      {
+        email: [
+          '',
+          [Validators.required, Validators.email, Validators.maxLength(30)],
         ],
-      ],
-      passwordDuplicate: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(30),
-          Validators.minLength(5),
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.maxLength(30),
+            Validators.minLength(5),
+          ],
         ],
-      ],
-    });
+        passwordDuplicate: [
+          '',
+          [
+            Validators.required,
+            Validators.maxLength(30),
+            Validators.minLength(5),
+          ],
+        ],
+      },
+      { validators: this.passwordMatchValidator }
+    );
 
     this.registerForm = this.fb.group({
       firstFormGroup: this.firstFormGroup,
@@ -160,6 +164,22 @@ export class RegisterComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+
+  passwordMatchValidator(control: AbstractControl): void {
+    const password = control.get('password')?.value;
+    const passwordDuplicate = control.get('passwordDuplicate')?.value;
+
+    if (
+      control.get('password')!.valid &&
+      passwordDuplicate &&
+      passwordDuplicate !== '' &&
+      password !== passwordDuplicate &&
+      !control.get('passwordDuplicate')!.hasError('minlength') &&
+      !control.get('passwordDuplicate')!.hasError('maxlength')
+    ) {
+      control.get('passwordDuplicate')?.setErrors({ passwordMismatch: true });
+    }
   }
 
   registerUser() {
@@ -203,7 +223,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       nickname: this.registerForm.get('firstFormGroup.nickname')
         ?.value as string,
       job: this.registerForm.get('firstFormGroup.job')?.value as string,
-      birthDate: this.birthDate,
+      birthDate: this.registerForm.get('firstFormGroup.birthDate')?.value,
       genderAge: {
         gender: this.registerForm.get('secondFormGroup.gender')
           ?.value as Gender,
@@ -223,16 +243,5 @@ export class RegisterComponent implements OnInit, OnDestroy {
       },
     };
     return user;
-  }
-
-  addBirthDate(event: MatDatepickerInputEvent<Date>): void {
-    if (event.value != null) {
-      this.birthDate = event.value;
-      this.birthDateExists = true;
-    }
-  }
-
-  closed(): void {
-    this.birthDateTouched = true;
   }
 }
