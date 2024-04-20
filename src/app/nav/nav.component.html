@@ -48,7 +48,7 @@
   <app-notifications
     *ngIf="isNotificationsActive"
     [notifications]="notifications"
-    (goToEvent)="goTo($event)"
+    (goToEvent)="goTo()"
     @notificationTrigger
   ></app-notifications>
 </div>

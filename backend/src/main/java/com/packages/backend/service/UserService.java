@@ -5,12 +5,15 @@ import com.packages.backend.model.Match;
 import com.packages.backend.model.dto.UserDTO;
 import com.packages.backend.model.dto.UserDTOMapper;
 import com.packages.backend.model.dto.UserDTOMapperRestricted;
+import com.packages.backend.model.entity.Notification;
 import com.packages.backend.model.entity.Preferences;
 import com.packages.backend.model.entity.Stats;
 import com.packages.backend.model.entity.User;
 import com.packages.backend.model.enums.Gender;
+import com.packages.backend.model.enums.UserRole;
 import com.packages.backend.repository.LikeRepository;
 import com.packages.backend.repository.MessageRepository;
+import com.packages.backend.repository.NotificationRepository;
 import com.packages.backend.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,8 +38,9 @@ public class UserService implements UserDetailsService {
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final DistanceService distanceService;
   private final DeletedAccountService deletedAccountService;
+  private final NotificationRepository notificationRepository;
 
-  public UserService(UserRepository userRepository, MessageRepository messageRepository, LikeRepository likeRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperRestricted userDTOMapperRestricted, DistanceService distanceService, DeletedAccountService deletedAccountService) {
+  public UserService(UserRepository userRepository, MessageRepository messageRepository, LikeRepository likeRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperRestricted userDTOMapperRestricted, DistanceService distanceService, DeletedAccountService deletedAccountService, NotificationRepository notificationRepository) {
     this.userRepository = userRepository;
     this.messageRepository = messageRepository;
     this.likeRepository = likeRepository;
@@ -45,6 +49,7 @@ public class UserService implements UserDetailsService {
     this.userDTOMapperRestricted = userDTOMapperRestricted;
     this.distanceService = distanceService;
     this.deletedAccountService = deletedAccountService;
+    this.notificationRepository = notificationRepository;
   }
 
   @Override
@@ -232,6 +237,7 @@ public class UserService implements UserDetailsService {
 
   @Transactional
   private void deleteUser(User user, User connectedUser) {
+    sendNotificationToMatches(user, connectedUser);
     userRepository.deleteUserNotificationsByFk(user.getId());
     userRepository.deleteUserGeolocationByFk(user.getId());
     userRepository.deleteUserPreferencesByFk(user.getId());
@@ -243,6 +249,15 @@ public class UserService implements UserDetailsService {
     userRepository.deleteUserMessagesByFk(user.getId());
     userRepository.deleteUserByEmail(user.getEmail());
     deletedAccountService.addDeletedAccount(user, connectedUser);
+  }
+
+  private void sendNotificationToMatches(User user, User connectedUser) {
+    List<User> matchedUsers = userRepository.getAllUserMatches(user.getId());
+    String content = connectedUser.getUserRole() == UserRole.ROLE_USER ? user.getNickname() + " has deleted his account" : "Admin has deleted " + user.getNickname() + "'s account";
+    for (User match : matchedUsers) {
+      Notification notification = new Notification(content, "delete", new Date(), false, match);
+      notificationRepository.save(notification);
+    }
   }
 
   private Double calculateScore(User connectedUser, User user) {
@@ -262,8 +277,11 @@ public class UserService implements UserDetailsService {
   }
 
   private int calculateDifference(Enum<?> enum1, Enum<?> enum2) {
-    if (null == enum1 || null == enum2) {
-      return 0;
+    if (null == enum1) {
+      return 1;
+    }
+    if (null == enum2) {
+      return 2;
     }
     return Math.abs(enum1.ordinal() - enum2.ordinal());
   }

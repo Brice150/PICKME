@@ -151,8 +151,6 @@ export class SelectComponent implements OnInit, OnDestroy {
   }
 
   goTo(action: string): void {
-    console.log(action);
-
     if (action === 'profile') {
       this.router.navigate(['/profile']);
     } else {

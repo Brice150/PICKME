@@ -1,15 +1,18 @@
-<div
-  class="container"
-  [ngClass]="{ gold: !notification.seen }"
-  [title]="notification.link === 'profile' ? 'Profile' : 'Match'"
->
+<div class="container" [ngClass]="{ gold: !notification.seen }" title="Match">
   <div class="title-container">
     <div class="title">
-      <i class="bx bxs-user" *ngIf="notification.link === 'profile'"></i>
-      <i class="bx bxs-flame" *ngIf="notification.link === 'match'"></i>
+      <i
+        class="bx bxs-flame"
+        *ngIf="notification.link === 'match' || notification.link === 'unmatch'"
+      ></i>
+      <i class="bx bx-x-circle" *ngIf="notification.link === 'delete'"></i>
       <i
         class="bx bxs-message-square-detail"
-        *ngIf="notification.link !== 'match' && notification.link !== 'profile'"
+        *ngIf="
+          notification.link !== 'match' &&
+          notification.link !== 'unmatch' &&
+          notification.link !== 'delete'
+        "
       ></i>
       <span>{{ notification.link }}</span>
     </div>

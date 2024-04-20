@@ -67,14 +67,14 @@ public class LikeService {
   }
 
   @Transactional
-  public void deleteLikeByFk(Long connectedUserId, Long userId) {
-    Optional<Like> previousSenderLike = likeRepository.getLikeByFk(connectedUserId, userId);
-    Optional<Like> previousReceiverLike = likeRepository.getLikeByFk(userId, connectedUserId);
-    Stats userStats = statsRepository.getById(userId);
+  public void deleteLikeByFk(User connectedUser, User dislikedUser) {
+    Optional<Like> previousSenderLike = likeRepository.getLikeByFk(connectedUser.getId(), dislikedUser.getId());
+    Optional<Like> previousReceiverLike = likeRepository.getLikeByFk(dislikedUser.getId(), connectedUser.getId());
+    Stats userStats = statsRepository.getById(dislikedUser.getId());
     userStats.setTotalDislikes(userStats.getTotalDislikes() + 1);
     previousSenderLike.ifPresent(likeSender -> {
       userStats.setTotalLikes(userStats.getTotalLikes() - 1);
-      previousReceiverLike.ifPresent(likeReceiver -> handleDismatch(userStats, connectedUserId, userId));
+      previousReceiverLike.ifPresent(likeReceiver -> handleDismatch(userStats, connectedUser, dislikedUser));
       likeRepository.deleteLikeById(likeSender.getId());
     });
     statsRepository.save(userStats);
@@ -89,10 +89,11 @@ public class LikeService {
     return likedUser.getNickname();
   }
 
-  private void handleDismatch(Stats userStats, Long connectedUserId, Long userId) {
-    messageRepository.deleteMessagesByFk(connectedUserId, userId);
+  private void handleDismatch(Stats userStats, User connectedUser, User dislikedUser) {
+    messageRepository.deleteMessagesByFk(connectedUser.getId(), dislikedUser.getId());
+    notificationService.sendNotification(connectedUser.getNickname() + " decided to unmatch", "unmatch", dislikedUser);
     userStats.setTotalMatches(userStats.getTotalMatches() - 1);
-    Stats connectedUserStats = statsRepository.getById(connectedUserId);
+    Stats connectedUserStats = statsRepository.getById(connectedUser.getId());
     connectedUserStats.setTotalMatches(connectedUserStats.getTotalMatches() - 1);
     statsRepository.save(connectedUserStats);
   }

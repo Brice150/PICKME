@@ -66,7 +66,11 @@ export class NavComponent implements OnInit {
         })
       )
       .subscribe((notifications: Notification[]) => {
-        if (this.router.url === '/match') {
+        if (
+          this.router.url === '/match' &&
+          notifications[0].link !== 'unmatch' &&
+          notifications[0].link !== 'delete'
+        ) {
           this.setAllNotificationsToSeenWithNewNotifications(notifications);
         } else {
           this.notifications = notifications;
@@ -128,13 +132,9 @@ export class NavComponent implements OnInit {
     ).length;
   }
 
-  goTo(link: string): void {
+  goTo(): void {
     this.toggleMenu();
-    if (link !== 'profile' && link !== 'match') {
-      this.router.navigate(['match']);
-    } else {
-      this.router.navigate([link]);
-    }
+    this.router.navigate(['match']);
   }
 
   logout(): void {

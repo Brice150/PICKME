@@ -12,9 +12,9 @@ import { NotificationComponent } from './notification/notification.component';
 })
 export class NotificationsComponent {
   @Input() notifications: Notification[] = [];
-  @Output() goToEvent: EventEmitter<string> = new EventEmitter<string>();
+  @Output() goToEvent: EventEmitter<void> = new EventEmitter<void>();
 
-  goTo(link: string): void {
-    this.goToEvent.emit(link);
+  goTo(): void {
+    this.goToEvent.emit();
   }
 }

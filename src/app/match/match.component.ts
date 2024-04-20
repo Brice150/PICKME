@@ -100,6 +100,8 @@ export class MatchComponent implements OnInit, OnDestroy {
                   this.scrollDown();
                 });
               }
+            } else {
+              this.back();
             }
           }
         },

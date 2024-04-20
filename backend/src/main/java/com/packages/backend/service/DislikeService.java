@@ -28,7 +28,7 @@ public class DislikeService {
     if (previousSenderDislike.isPresent()) {
       return FORBIDDEN;
     }
-    likeService.deleteLikeByFk(connectedUser.getId(), dislikedUser.getId());
+    likeService.deleteLikeByFk(connectedUser, dislikedUser);
     Dislike dislike = new Dislike(new Date(), connectedUser.getId(), dislikedUser.getId());
     dislike.setDate(new Date());
     dislikeRepository.save(dislike);
