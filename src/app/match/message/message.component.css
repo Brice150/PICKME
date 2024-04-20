@@ -38,7 +38,7 @@
 }
 
 .container.left {
-  background-color: goldenrod;
+  background-color: var(--liked);
   color: var(--secondary);
 }
 

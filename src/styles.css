@@ -1,5 +1,5 @@
 :root {
-  --background: rgb(110, 0, 0);
+  --background: linear-gradient(225deg, #ff3cac 0%, #784ba0 50%, #2b86c5 100%);
   --glass-background: rgba(0, 0, 0, 0.5);
   --primary: white;
   --secondary: black;
@@ -45,7 +45,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: var(--background);
+  background: var(--background);
   color: var(--primary);
 }
 
