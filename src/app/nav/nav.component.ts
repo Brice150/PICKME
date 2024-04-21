@@ -68,8 +68,8 @@ export class NavComponent implements OnInit {
       .subscribe((notifications: Notification[]) => {
         if (
           this.router.url === '/match' &&
-          notifications[0].link !== 'unmatch' &&
-          notifications[0].link !== 'delete'
+          notifications[0]?.link !== 'unmatch' &&
+          notifications[0]?.link !== 'delete'
         ) {
           this.setAllNotificationsToSeenWithNewNotifications(notifications);
         } else {

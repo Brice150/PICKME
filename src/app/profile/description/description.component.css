@@ -3,30 +3,11 @@ form {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin-top: 10px;
 }
 
-form textarea {
-  background-color: var(--glass-background);
-  backdrop-filter: blur(2px);
-  width: 200px;
-  margin: 16px 0;
-  border: 0;
-  padding: 20px 40px;
-  outline: none;
-  border-radius: 10px;
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
+mat-form-field {
   width: 80%;
-  resize: none;
-  min-height: 150px;
-  text-align: justify;
-}
-
-::placeholder {
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
 }
 
 .button-container {

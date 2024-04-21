@@ -1,13 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { User } from '../../core/interfaces/user';
 import { ConnectService } from '../../core/services/connect.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-description',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   templateUrl: './description.component.html',
   styleUrl: './description.component.css',
 })
@@ -23,7 +35,10 @@ export class DescriptionComponent implements OnInit {
 
   ngOnInit(): void {
     this.descriptionForm = this.fb.group({
-      description: [this.user.description],
+      description: [
+        this.user.description,
+        [Validators.minLength(2), Validators.maxLength(500)],
+      ],
     });
   }
 

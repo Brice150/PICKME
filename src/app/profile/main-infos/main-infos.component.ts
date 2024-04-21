@@ -9,11 +9,19 @@ import {
 import { User } from '../../core/interfaces/user';
 import { MatSliderModule } from '@angular/material/slider';
 import { ConnectService } from '../../core/services/connect.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-main-infos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatSliderModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatSliderModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   templateUrl: './main-infos.component.html',
   styleUrl: './main-infos.component.css',
 })

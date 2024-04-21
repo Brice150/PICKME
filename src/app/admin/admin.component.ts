@@ -14,6 +14,9 @@ import { UserCardComponent } from './user-card/user-card.component';
 import { DeletedAccount } from '../core/interfaces/deleted-account';
 import { DeletedAccountCardComponent } from './deleted-account-card/deleted-account-card.component';
 import { AdminStats } from '../core/interfaces/admin-stats';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-admin',
@@ -27,6 +30,9 @@ import { AdminStats } from '../core/interfaces/admin-stats';
     MatCheckboxModule,
     PaginatorComponent,
     DeletedAccountCardComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',

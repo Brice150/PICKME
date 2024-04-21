@@ -1,38 +1,26 @@
 <form [formGroup]="mainInfosForm" (ngSubmit)="updateMainInfos()">
-  <div class="input-container">
-    <span class="title">Nickname</span>
-    <input placeholder="Nickname" formControlName="nickname" />
-    <span
-      *ngIf="
-        mainInfosForm.get('nickname')!.hasError('required') &&
-        mainInfosForm.get('nickname')!.touched
-      "
-      >Nickname is required</span
-    >
-    <span *ngIf="mainInfosForm.get('nickname')!.hasError('maxlength')"
-      >Nickname is too long</span
-    >
-    <span *ngIf="mainInfosForm.get('nickname')!.hasError('minlength')"
-      >Nickname is too short</span
-    >
-  </div>
-  <div class="input-container">
-    <span class="title">Job</span>
-    <input placeholder="Job" formControlName="job" />
-    <span
-      *ngIf="
-        mainInfosForm.get('job')!.hasError('required') &&
-        mainInfosForm.get('job')!.touched
-      "
-      >Job is required</span
-    >
-    <span *ngIf="mainInfosForm.get('job')!.hasError('minlength')"
-      >Job is too short</span
-    >
-    <span *ngIf="mainInfosForm.get('job')!.hasError('maxlength')"
-      >Job is too long</span
-    >
-  </div>
+  <mat-form-field color="accent">
+    <mat-label>Nickname</mat-label>
+    <input matInput formControlName="nickname" required />
+    @if (mainInfosForm.get('nickname')!.hasError('required')) {
+    <mat-error>Nickname is required</mat-error>
+    } @else if (mainInfosForm.get('nickname')!.hasError('minlength')) {
+    <mat-error>Nickname is too short</mat-error>
+    } @else if (mainInfosForm.get('nickname')!.hasError('maxlength')) {
+    <mat-error>Nickname is too long</mat-error>
+    }
+  </mat-form-field>
+  <mat-form-field color="accent">
+    <mat-label>Job</mat-label>
+    <input matInput formControlName="job" required />
+    @if (mainInfosForm.get('job')!.hasError('required')) {
+    <mat-error>Job is required</mat-error>
+    } @else if (mainInfosForm.get('job')!.hasError('minlength')) {
+    <mat-error>Job is too short</mat-error>
+    } @else if (mainInfosForm.get('job')!.hasError('maxlength')) {
+    <mat-error>Job is too long</mat-error>
+    }
+  </mat-form-field>
   <div class="slide-container">
     <span>Max Distance</span>
     <mat-slider min="10" max="500" discrete step="10">

@@ -110,132 +110,18 @@ form {
   width: 100%;
 }
 
-form .input-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin: 10px;
+mat-form-field {
+  margin: 5px;
 }
 
-form .title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--primary);
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none;
 }
 
-form select,
-input {
-  background-color: var(--glass-background);
-  backdrop-filter: blur(2px);
-  width: 120px;
-  margin-top: 5px;
-  border: 0;
-  padding: 20px;
-  outline: none;
-  border-radius: 10px;
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
+::ng-deep .mat-mdc-select {
+  color: var(--primary) !important;
 }
 
-form select {
-  width: 160px;
-}
-
-select option {
-  background-color: var(--secondary);
-  color: var(--primary);
-}
-
-::placeholder {
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-form .button-container button {
-  border: none;
-  background-color: var(--glass-background);
-  cursor: pointer;
-  text-decoration: none;
-  color: var(--primary);
-  padding: 15px 30px;
-  margin: 10px;
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 1px;
-  overflow: hidden;
-  border-radius: 10px;
-  transition: 0.5s ease;
-  backdrop-filter: blur(2px);
-  font-size: 14px;
-  font-family: Roboto, sans-serif;
-}
-
-form .button-container button::before {
-  content: "";
-  position: absolute;
-  background-color: var(--primary);
-  height: 0%;
-  top: 0;
-  left: 0;
-  width: 100%;
-  transition: 0.5s ease;
-  z-index: -1;
-}
-
-form .button-container button:hover::before {
-  height: 100%;
-  border-radius: 10px;
-}
-
-form .button-container button:hover {
-  color: var(--secondary);
-}
-
-form .slide-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 10px;
-}
-
-form .slide-container mat-checkbox {
-  margin-top: -20px;
-}
-
-form .slide-container span {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: -15px;
-}
-
-::ng-deep form .slide-container .mat-mdc-slider {
-  width: 80%;
-}
-
-::ng-deep form .slide-container .mdc-form-field {
-  --mdc-form-field-label-text-color: var(--primary);
-  font-size: 15px;
-  font-weight: 500;
-}
-
-@media screen and (max-width: 375px) {
-  form select {
-    width: 130px;
-  }
-
-  form input {
-    width: 90px;
-  }
+::ng-deep .mat-mdc-select-arrow {
+  color: var(--primary) !important;
 }

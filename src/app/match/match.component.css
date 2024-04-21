@@ -14,27 +14,14 @@
   flex-direction: column;
 }
 
-.container .search {
+.search {
   margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  max-width: 500px;
+  width: 80%;
+  max-width: 350px;
 }
 
-.container .search input {
-  background-color: var(--glass-background);
-  backdrop-filter: blur(2px);
-  width: 200px;
-  border: 0;
-  padding: 20px 40px;
-  outline: none;
-  border-radius: 10px;
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
+::ng-deep .search .mat-mdc-form-field-subscript-wrapper {
+  display: none;
 }
 
 form {
@@ -45,26 +32,20 @@ form {
   width: 100%;
 }
 
-form textarea {
-  background-color: var(--glass-background);
-  backdrop-filter: blur(2px);
-  margin: 16px 0;
-  border: 0;
-  padding: 20px 40px;
-  outline: none;
-  border-radius: 10px;
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
-  width: 80%;
-  resize: none;
-  text-align: justify;
+form mat-form-field {
+  width: 90%;
 }
 
-::placeholder {
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
+form mat-form-field textarea {
+  resize: none;
+  min-height: 80px;
+}
+
+::ng-deep form mat-form-field .mat-mdc-form-field-icon-suffix {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .container .content {
@@ -73,7 +54,7 @@ form textarea {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  max-height: 500px;
+  max-height: 400px;
   min-height: 80px;
   overflow: scroll;
   margin-bottom: 10px;

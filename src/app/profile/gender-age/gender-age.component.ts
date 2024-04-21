@@ -6,6 +6,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { Gender } from '../../core/enums/gender';
 import { User } from '../../core/interfaces/user';
@@ -14,7 +16,13 @@ import { ConnectService } from '../../core/services/connect.service';
 @Component({
   selector: 'app-gender-age',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatSliderModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatSliderModule,
+    MatFormFieldModule,
+    MatSelectModule,
+  ],
   templateUrl: './gender-age.component.html',
   styleUrl: './gender-age.component.css',
 })

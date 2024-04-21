@@ -22,23 +22,19 @@
     </a>
   </div>
   <form [formGroup]="adminForm">
-    <div class="input-container">
-      <span class="title">Email</span>
-      <input
-        placeholder="Email"
-        formControlName="email"
-        (focusout)="focusOut(0)"
-      />
-    </div>
-    <div class="input-container">
-      <span class="title">Order By</span>
-      <select formControlName="orderBy" (change)="search(0)">
-        <option value="" selected>Date</option>
-        <option value="totalDislikes">Dislikes</option>
-        <option value="totalLikes">Likes</option>
-        <option value="totalMatches">Matches</option>
-      </select>
-    </div>
+    <mat-form-field color="accent">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" (focusout)="focusOut(0)" />
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <mat-label>Order By</mat-label>
+      <mat-select formControlName="orderBy" (ngModelChange)="search(0)">
+        <mat-option value="" selected>Date</mat-option>
+        <mat-option value="totalDislikes">Dislikes</mat-option>
+        <mat-option value="totalLikes">Likes</mat-option>
+        <mat-option value="totalMatches">Matches</mat-option>
+      </mat-select>
+    </mat-form-field>
   </form>
   <app-paginator
     #paginator

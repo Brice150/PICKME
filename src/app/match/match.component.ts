@@ -25,6 +25,10 @@ import { LoadingComponent } from '../shared/components/loading/loading.component
 import { MoreInfoComponent } from '../shared/components/more-info/more-info.component';
 import { MatchCardComponent } from './match-card/match-card.component';
 import { MessageComponent } from './message/message.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-match',
@@ -36,6 +40,10 @@ import { MessageComponent } from './message/message.component';
     MessageComponent,
     ReactiveFormsModule,
     LoadingComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
   ],
   templateUrl: './match.component.html',
   styleUrl: './match.component.css',
@@ -68,7 +76,7 @@ export class MatchComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.maxLength(500),
-          Validators.minLength(5),
+          Validators.minLength(2),
         ],
       ],
     });
@@ -190,6 +198,7 @@ export class MatchComponent implements OnInit, OnDestroy {
 
   unModifyMessage(): void {
     this.messageForm.get('content')?.reset();
+    this.messageForm.get('content')?.setErrors(null);
     this.messageForm.markAsPristine();
     this.updatedMessage = undefined;
     this.isModifying = false;

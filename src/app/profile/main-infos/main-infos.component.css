@@ -3,46 +3,12 @@ form {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin-top: 10px;
 }
 
-form .input-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin: 10px 0;
-}
-
-form span:not(.title) {
-  color: var(--error);
-  font-size: 14px;
-  font-weight: 600;
-}
-
-form .title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--primary);
-}
-
-form input {
-  background-color: var(--glass-background);
-  backdrop-filter: blur(2px);
-  width: 200px;
-  margin-top: 5px;
-  border: 0;
-  padding: 20px 40px;
-  outline: none;
-  border-radius: 10px;
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
-}
-
-::placeholder {
-  color: var(--primary);
-  font-size: 15px;
-  font-weight: 600;
+mat-form-field {
+  width: 80%;
+  max-width: 350px;
 }
 
 .button-container {

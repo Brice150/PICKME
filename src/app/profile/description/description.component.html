@@ -1,5 +1,13 @@
 <form [formGroup]="descriptionForm" (ngSubmit)="updateDescription()">
-  <textarea placeholder="Description" formControlName="description"></textarea>
+  <mat-form-field color="accent">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description"></textarea>
+    @if (descriptionForm.get('description')!.hasError('minlength')) {
+    <mat-error>Description is too short</mat-error>
+    } @else if (descriptionForm.get('description')!.hasError('maxlength')) {
+    <mat-error>Description is too long</mat-error>
+    }
+  </mat-form-field>
   <div class="button-container">
     <button
       *ngIf="descriptionForm.dirty"
