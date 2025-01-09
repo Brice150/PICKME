@@ -46,12 +46,19 @@
   --mat-datepicker-toggle-icon-color: var(--primary);
 }
 
+html,
+body {
+  height: 100vh;
+  height: 100dvh;
+}
+
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   background: var(--background);
   color: var(--primary);
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 ::-webkit-scrollbar {
@@ -70,13 +77,4 @@ body {
 
 .toast-container .ngx-toastr.custom.error {
   background-color: var(--error);
-}
-
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
