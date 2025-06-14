@@ -1,3 +1,4 @@
+@if (!loading) {
 <form
   [ngClass]="{ invalidLogin: invalidLogin }"
   [formGroup]="loginForm"
@@ -46,3 +47,6 @@
     </button>
   </div>
 </form>
+}@else {
+<app-loading></app-loading>
+}

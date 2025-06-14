@@ -24,6 +24,8 @@ import { ConnectService } from '../../core/services/connect.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { HttpErrorResponse } from '@angular/common/http';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-register',
@@ -46,6 +48,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
+    LoadingComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -62,6 +65,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   minDate: Date;
   genders: string[] = Object.values(Gender);
   geolocation: Geolocation = {} as Geolocation;
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -184,11 +188,20 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   registerUser() {
     if (this.registerForm.valid) {
+      this.loading = true;
       const user: User = this.setUser();
       this.connectService.register(user).subscribe({
         next: () => {
+          this.loading = false;
           this.connectService.registeredUser = user;
           this.router.navigate(['/demo']);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.loading = false;
+          this.toastr.error(error.message, 'Error', {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom error',
+          });
         },
         complete: () => {
           this.toastr.success(
@@ -202,20 +215,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
         },
       });
     }
-  }
-
-  loginUser(user: User): void {
-    this.connectService.login(user).subscribe({
-      next: () => {
-        this.router.navigate(['/select']);
-      },
-      complete: () => {
-        this.toastr.success('You are logged in !', 'Logged In', {
-          positionClass: 'toast-bottom-center',
-          toastClass: 'ngx-toastr custom gold',
-        });
-      },
-    });
   }
 
   setUser(): User {

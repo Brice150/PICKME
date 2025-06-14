@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    LoadingComponent,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -34,6 +36,7 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   hide: boolean = true;
   invalidLogin: boolean = false;
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -61,11 +64,14 @@ export class LoginComponent implements OnInit {
 
   loginUser(user: User) {
     if (this.loginForm.valid) {
+      this.loading = true;
       this.connectService.login(user).subscribe({
         next: () => {
+          this.loading = false;
           this.router.navigate(['/select']);
         },
         error: (error: HttpErrorResponse) => {
+          this.loading = false;
           if (!error.error.error && error.error.includes('Bad credentials')) {
             this.invalidLogin = true;
             this.toastr.error('Wrong email or password !', 'Bad Credentials', {

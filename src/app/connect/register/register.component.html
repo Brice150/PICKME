@@ -1,3 +1,4 @@
+@if (!loading) {
 <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
   <mat-stepper
     orientation="vertical"
@@ -185,3 +186,6 @@
     </ng-template>
   </mat-stepper>
 </form>
+} @else {
+<app-loading></app-loading>
+}
