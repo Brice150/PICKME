@@ -31,22 +31,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-match',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatchCardComponent,
-    MessageComponent,
-    ReactiveFormsModule,
-    LoadingComponent,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-  ],
-  templateUrl: './match.component.html',
-  styleUrl: './match.component.css',
+    selector: 'app-match',
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatchCardComponent,
+        MessageComponent,
+        ReactiveFormsModule,
+        LoadingComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+    ],
+    templateUrl: './match.component.html',
+    styleUrl: './match.component.css'
 })
 export class MatchComponent implements OnInit, OnDestroy {
   search!: string;

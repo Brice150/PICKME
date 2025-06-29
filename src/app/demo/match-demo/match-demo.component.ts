@@ -5,11 +5,10 @@ import { MatchCardDemoComponent } from './match-card-demo/match-card-demo.compon
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-match-demo',
-  standalone: true,
-  imports: [CommonModule, MatchCardDemoComponent],
-  templateUrl: './match-demo.component.html',
-  styleUrl: './match-demo.component.css',
+    selector: 'app-match-demo',
+    imports: [CommonModule, MatchCardDemoComponent],
+    templateUrl: './match-demo.component.html',
+    styleUrl: './match-demo.component.css'
 })
 export class MatchDemoComponent implements OnInit {
   imagePath: string = environment.imagePath;

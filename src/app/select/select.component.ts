@@ -14,12 +14,11 @@ import { LoadingCardComponent } from './loading-card/loading-card.component';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-select',
-  standalone: true,
-  imports: [CommonModule, CardComponent, LoadingCardComponent],
-  templateUrl: './select.component.html',
-  styleUrl: './select.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    selector: 'app-select',
+    imports: [CommonModule, CardComponent, LoadingCardComponent],
+    templateUrl: './select.component.html',
+    styleUrl: './select.component.css',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SelectComponent implements OnInit, OnDestroy {
   users: User[] = [];

@@ -15,18 +15,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-password',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-  ],
-  templateUrl: './password.component.html',
-  styleUrl: './password.component.css',
+    selector: 'app-password',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+    ],
+    templateUrl: './password.component.html',
+    styleUrl: './password.component.css'
 })
 export class PasswordComponent implements OnInit {
   @Input() user!: User;

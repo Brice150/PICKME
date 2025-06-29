@@ -13,17 +13,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-main-infos',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatSliderModule,
-    MatFormFieldModule,
-    MatInputModule,
-  ],
-  templateUrl: './main-infos.component.html',
-  styleUrl: './main-infos.component.css',
+    selector: 'app-main-infos',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatSliderModule,
+        MatFormFieldModule,
+        MatInputModule,
+    ],
+    templateUrl: './main-infos.component.html',
+    styleUrl: './main-infos.component.css'
 })
 export class MainInfosComponent implements OnInit {
   @Input() user!: User;

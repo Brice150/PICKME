@@ -6,11 +6,10 @@ import { User } from '../../core/interfaces/user';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-start-demo',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './start-demo.component.html',
-  styleUrl: './start-demo.component.css',
+    selector: 'app-start-demo',
+    imports: [CommonModule],
+    templateUrl: './start-demo.component.html',
+    styleUrl: './start-demo.component.css'
 })
 export class StartDemoComponent {
   constructor(

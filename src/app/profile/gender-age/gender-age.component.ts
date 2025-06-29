@@ -14,17 +14,16 @@ import { User } from '../../core/interfaces/user';
 import { ConnectService } from '../../core/services/connect.service';
 
 @Component({
-  selector: 'app-gender-age',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatSliderModule,
-    MatFormFieldModule,
-    MatSelectModule,
-  ],
-  templateUrl: './gender-age.component.html',
-  styleUrl: './gender-age.component.css',
+    selector: 'app-gender-age',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatSliderModule,
+        MatFormFieldModule,
+        MatSelectModule,
+    ],
+    templateUrl: './gender-age.component.html',
+    styleUrl: './gender-age.component.css'
 })
 export class GenderAgeComponent implements OnInit {
   @Input() user!: User;

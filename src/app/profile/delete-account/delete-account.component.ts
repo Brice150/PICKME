@@ -6,11 +6,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
 
 @Component({
-  selector: 'app-delete-account',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './delete-account.component.html',
-  styleUrl: './delete-account.component.css',
+    selector: 'app-delete-account',
+    imports: [CommonModule],
+    templateUrl: './delete-account.component.html',
+    styleUrl: './delete-account.component.css'
 })
 export class DeleteAccountComponent {
   @Input() user?: User;

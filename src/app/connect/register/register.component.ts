@@ -28,30 +28,29 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
-  selector: 'app-register',
-  standalone: true,
-  providers: [
-    provideNativeDateAdapter(),
-    {
-      provide: STEPPER_GLOBAL_OPTIONS,
-      useValue: { displayDefaultIndicatorType: false },
-    },
-  ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatStepperModule,
-    MatSliderModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-    LoadingComponent,
-  ],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.css',
+    selector: 'app-register',
+    providers: [
+        provideNativeDateAdapter(),
+        {
+            provide: STEPPER_GLOBAL_OPTIONS,
+            useValue: { displayDefaultIndicatorType: false },
+        },
+    ],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatStepperModule,
+        MatSliderModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatIconModule,
+        LoadingComponent,
+    ],
+    templateUrl: './register.component.html',
+    styleUrl: './register.component.css'
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   destroyed$: Subject<void> = new Subject<void>();

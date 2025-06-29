@@ -9,11 +9,10 @@ import { CustomDatePipe } from '../../shared/pipes/custom-date.pipe';
 import { DescriptionPipe } from '../../shared/pipes/description.pipe';
 
 @Component({
-  selector: 'app-user-card',
-  standalone: true,
-  imports: [CommonModule, CustomDatePipe, DescriptionPipe],
-  templateUrl: './user-card.component.html',
-  styleUrl: './user-card.component.css',
+    selector: 'app-user-card',
+    imports: [CommonModule, CustomDatePipe, DescriptionPipe],
+    templateUrl: './user-card.component.html',
+    styleUrl: './user-card.component.css'
 })
 export class UserCardComponent {
   imagePath: string = environment.imagePath;

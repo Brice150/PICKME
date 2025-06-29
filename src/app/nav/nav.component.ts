@@ -22,22 +22,21 @@ import { NavButtonsComponent } from './nav-buttons/nav-buttons.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 
 @Component({
-  selector: 'app-nav',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    NavButtonsComponent,
-    NotificationsComponent,
-  ],
-  templateUrl: './nav.component.html',
-  styleUrl: './nav.component.css',
-  animations: [
-    MenuAnimation,
-    NotificationLogoAnimation,
-    NavButtonAnimation,
-    NotificationAnimation,
-  ],
+    selector: 'app-nav',
+    imports: [
+        CommonModule,
+        RouterModule,
+        NavButtonsComponent,
+        NotificationsComponent,
+    ],
+    templateUrl: './nav.component.html',
+    styleUrl: './nav.component.css',
+    animations: [
+        MenuAnimation,
+        NotificationLogoAnimation,
+        NavButtonAnimation,
+        NotificationAnimation,
+    ]
 })
 export class NavComponent implements OnInit {
   isMenuActive: boolean = false;

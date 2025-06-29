@@ -6,11 +6,10 @@ import { DescriptionPipe } from '../../shared/pipes/description.pipe';
 import { CustomDatePipe } from '../../shared/pipes/custom-date.pipe';
 
 @Component({
-  selector: 'app-deleted-account-card',
-  standalone: true,
-  imports: [CommonModule, CustomDatePipe, DescriptionPipe],
-  templateUrl: './deleted-account-card.component.html',
-  styleUrl: './deleted-account-card.component.css',
+    selector: 'app-deleted-account-card',
+    imports: [CommonModule, CustomDatePipe, DescriptionPipe],
+    templateUrl: './deleted-account-card.component.html',
+    styleUrl: './deleted-account-card.component.css'
 })
 export class DeletedAccountCardComponent {
   imagePath: string = environment.imagePath;

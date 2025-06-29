@@ -21,16 +21,15 @@ import { PaginatorComponent } from '../../shared/components/paginator/paginator.
 import { PreferenceComponent } from './preference/preference.component';
 
 @Component({
-  selector: 'app-preferences',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    PreferenceComponent,
-    PaginatorComponent,
-  ],
-  templateUrl: './preferences.component.html',
-  styleUrl: './preferences.component.css',
+    selector: 'app-preferences',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        PreferenceComponent,
+        PaginatorComponent,
+    ],
+    templateUrl: './preferences.component.html',
+    styleUrl: './preferences.component.css'
 })
 export class PreferencesComponent {
   @Input() user!: User;

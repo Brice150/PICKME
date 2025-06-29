@@ -10,12 +10,11 @@ import {
 } from '../../../select/card/card-animation';
 
 @Component({
-  selector: 'app-picture',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './picture.component.html',
-  styleUrl: './picture.component.css',
-  animations: [LikeButtonAnimation, DislikeButtonAnimation],
+    selector: 'app-picture',
+    imports: [CommonModule],
+    templateUrl: './picture.component.html',
+    styleUrl: './picture.component.css',
+    animations: [LikeButtonAnimation, DislikeButtonAnimation]
 })
 export class PictureComponent {
   @Input() picture!: Picture;

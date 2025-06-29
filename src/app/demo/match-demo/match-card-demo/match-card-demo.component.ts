@@ -3,11 +3,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DescriptionPipe } from '../../../shared/pipes/description.pipe';
 
 @Component({
-  selector: 'app-match-card-demo',
-  standalone: true,
-  imports: [CommonModule, DescriptionPipe],
-  templateUrl: './match-card-demo.component.html',
-  styleUrl: './match-card-demo.component.css',
+    selector: 'app-match-card-demo',
+    imports: [CommonModule, DescriptionPipe],
+    templateUrl: './match-card-demo.component.html',
+    styleUrl: './match-card-demo.component.css'
 })
 export class MatchCardDemoComponent {
   @Input() picture!: string;

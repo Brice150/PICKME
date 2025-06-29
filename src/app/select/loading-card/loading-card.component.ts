@@ -3,11 +3,10 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-loading-card',
-  standalone: true,
-  imports: [CommonModule, LoadingComponent],
-  templateUrl: './loading-card.component.html',
-  styleUrl: './loading-card.component.css',
+    selector: 'app-loading-card',
+    imports: [CommonModule, LoadingComponent],
+    templateUrl: './loading-card.component.html',
+    styleUrl: './loading-card.component.css'
 })
 export class LoadingCardComponent {
   @Input() loading: boolean = true;

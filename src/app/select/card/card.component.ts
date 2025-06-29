@@ -17,24 +17,23 @@ import {
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-card',
-  standalone: true,
-  imports: [
-    CommonModule,
-    DescriptionPipe,
-    AgePipe,
-    MatDialogModule,
-    RouterModule,
-  ],
-  templateUrl: './card.component.html',
-  styleUrl: './card.component.css',
-  animations: [
-    TextAnimation,
-    LikeButtonAnimation,
-    DislikeButtonAnimation,
-    TextMatchAnimation,
-    ButtonMatchAnimation,
-  ],
+    selector: 'app-card',
+    imports: [
+        CommonModule,
+        DescriptionPipe,
+        AgePipe,
+        MatDialogModule,
+        RouterModule,
+    ],
+    templateUrl: './card.component.html',
+    styleUrl: './card.component.css',
+    animations: [
+        TextAnimation,
+        LikeButtonAnimation,
+        DislikeButtonAnimation,
+        TextMatchAnimation,
+        ButtonMatchAnimation,
+    ]
 })
 export class CardComponent {
   imagePath: string = environment.imagePath;

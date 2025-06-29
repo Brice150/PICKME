@@ -16,21 +16,20 @@ import { PicturesComponent } from './pictures/pictures.component';
 import { PreferencesComponent } from './preferences/preferences.component';
 
 @Component({
-  selector: 'app-profile',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatExpansionModule,
-    PasswordComponent,
-    DescriptionComponent,
-    GenderAgeComponent,
-    MainInfosComponent,
-    PicturesComponent,
-    PreferencesComponent,
-    DeleteAccountComponent,
-  ],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css',
+    selector: 'app-profile',
+    imports: [
+        CommonModule,
+        MatExpansionModule,
+        PasswordComponent,
+        DescriptionComponent,
+        GenderAgeComponent,
+        MainInfosComponent,
+        PicturesComponent,
+        PreferencesComponent,
+        DeleteAccountComponent,
+    ],
+    templateUrl: './profile.component.html',
+    styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   user?: User = { ...this.connectService.connectedUser! };

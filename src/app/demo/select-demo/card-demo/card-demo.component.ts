@@ -7,12 +7,11 @@ import {
 } from '../../../select/card/card-animation';
 
 @Component({
-  selector: 'app-card-demo',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './card-demo.component.html',
-  styleUrl: './card-demo.component.css',
-  animations: [LikeButtonAnimation, DislikeButtonAnimation, TextMatchAnimation],
+    selector: 'app-card-demo',
+    imports: [CommonModule],
+    templateUrl: './card-demo.component.html',
+    styleUrl: './card-demo.component.css',
+    animations: [LikeButtonAnimation, DislikeButtonAnimation, TextMatchAnimation]
 })
 export class CardDemoComponent {
   @Input() display: boolean = false;

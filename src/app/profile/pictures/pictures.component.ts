@@ -15,12 +15,11 @@ import { ProfileService } from '../../core/services/profile.service';
 import { PictureComponent } from './picture/picture.component';
 
 @Component({
-  selector: 'app-pictures',
-  standalone: true,
-  imports: [CommonModule, PictureComponent],
-  templateUrl: './pictures.component.html',
-  styleUrl: './pictures.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    selector: 'app-pictures',
+    imports: [CommonModule, PictureComponent],
+    templateUrl: './pictures.component.html',
+    styleUrl: './pictures.component.css',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PicturesComponent {
   imagePath: string = environment.imagePath;

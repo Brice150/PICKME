@@ -9,18 +9,17 @@ import { SelectDemoComponent } from './select-demo/select-demo.component';
 import { StartDemoComponent } from './start-demo/start-demo.component';
 
 @Component({
-  selector: 'app-demo',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ProfileDemoComponent,
-    SelectDemoComponent,
-    MatchDemoComponent,
-    StartDemoComponent,
-    PaginatorDemoComponent,
-  ],
-  templateUrl: './demo.component.html',
-  styleUrl: './demo.component.css',
+    selector: 'app-demo',
+    imports: [
+        CommonModule,
+        ProfileDemoComponent,
+        SelectDemoComponent,
+        MatchDemoComponent,
+        StartDemoComponent,
+        PaginatorDemoComponent,
+    ],
+    templateUrl: './demo.component.html',
+    styleUrl: './demo.component.css'
 })
 export class DemoComponent implements OnInit {
   demos: string[] = ['profile', 'select', 'match', 'start'];

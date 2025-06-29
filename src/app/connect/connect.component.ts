@@ -4,11 +4,10 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 
 @Component({
-  selector: 'app-connect',
-  standalone: true,
-  imports: [CommonModule, LoginComponent, RegisterComponent],
-  templateUrl: './connect.component.html',
-  styleUrl: './connect.component.css',
+    selector: 'app-connect',
+    imports: [CommonModule, LoginComponent, RegisterComponent],
+    templateUrl: './connect.component.html',
+    styleUrl: './connect.component.css'
 })
 export class ConnectComponent {
   isRegistering: boolean = false;

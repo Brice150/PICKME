@@ -12,16 +12,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-description',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-  ],
-  templateUrl: './description.component.html',
-  styleUrl: './description.component.css',
+    selector: 'app-description',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+    ],
+    templateUrl: './description.component.html',
+    styleUrl: './description.component.css'
 })
 export class DescriptionComponent implements OnInit {
   @Input() user!: User;

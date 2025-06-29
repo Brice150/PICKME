@@ -2,11 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-paginator-demo',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './paginator-demo.component.html',
-  styleUrl: './paginator-demo.component.css',
+    selector: 'app-paginator-demo',
+    imports: [CommonModule],
+    templateUrl: './paginator-demo.component.html',
+    styleUrl: './paginator-demo.component.css'
 })
 export class PaginatorDemoComponent {
   @Input() currentIndex: number = 0;

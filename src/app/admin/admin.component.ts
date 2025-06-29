@@ -19,23 +19,22 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 @Component({
-  selector: 'app-admin',
-  standalone: true,
-  imports: [
-    CommonModule,
-    UserCardComponent,
-    ReactiveFormsModule,
-    LoadingComponent,
-    MatSliderModule,
-    MatCheckboxModule,
-    PaginatorComponent,
-    DeletedAccountCardComponent,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-  ],
-  templateUrl: './admin.component.html',
-  styleUrl: './admin.component.css',
+    selector: 'app-admin',
+    imports: [
+        CommonModule,
+        UserCardComponent,
+        ReactiveFormsModule,
+        LoadingComponent,
+        MatSliderModule,
+        MatCheckboxModule,
+        PaginatorComponent,
+        DeletedAccountCardComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+    ],
+    templateUrl: './admin.component.html',
+    styleUrl: './admin.component.css'
 })
 export class AdminComponent implements OnInit, OnDestroy {
   users: User[] = [];

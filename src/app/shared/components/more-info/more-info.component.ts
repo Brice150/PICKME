@@ -22,13 +22,12 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 import { filter } from 'rxjs';
 
 @Component({
-  selector: 'app-more-info',
-  standalone: true,
-  imports: [CommonModule, MatChipsModule, AgePipe],
-  templateUrl: './more-info.component.html',
-  styleUrl: './more-info.component.css',
-  animations: [LikeButtonAnimation, DislikeButtonAnimation],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    selector: 'app-more-info',
+    imports: [CommonModule, MatChipsModule, AgePipe],
+    templateUrl: './more-info.component.html',
+    styleUrl: './more-info.component.css',
+    animations: [LikeButtonAnimation, DislikeButtonAnimation],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MoreInfoComponent implements OnInit {
   imagePath: string = environment.imagePath;

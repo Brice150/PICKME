@@ -15,11 +15,10 @@ import { User } from '../../../core/interfaces/user';
 import { ConnectService } from '../../../core/services/connect.service';
 
 @Component({
-  selector: 'app-preference',
-  standalone: true,
-  imports: [CommonModule, MatChipsModule, ReactiveFormsModule],
-  templateUrl: './preference.component.html',
-  styleUrl: './preference.component.css',
+    selector: 'app-preference',
+    imports: [CommonModule, MatChipsModule, ReactiveFormsModule],
+    templateUrl: './preference.component.html',
+    styleUrl: './preference.component.css'
 })
 export class PreferenceComponent implements OnInit, OnChanges {
   @Input() preference!: Preference;

@@ -10,12 +10,11 @@ import { environment } from '../../../environments/environment';
 import { Gender } from '../../core/enums/gender';
 
 @Component({
-  selector: 'app-profile-demo',
-  standalone: true,
-  imports: [CommonModule, MatExpansionModule],
-  templateUrl: './profile-demo.component.html',
-  styleUrl: './profile-demo.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    selector: 'app-profile-demo',
+    imports: [CommonModule, MatExpansionModule],
+    templateUrl: './profile-demo.component.html',
+    styleUrl: './profile-demo.component.css',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ProfileDemoComponent implements OnInit {
   imagePath: string = environment.imagePath;

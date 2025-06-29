@@ -5,11 +5,10 @@ import { Match } from '../../core/interfaces/match';
 import { DescriptionPipe } from '../../shared/pipes/description.pipe';
 
 @Component({
-  selector: 'app-match-card',
-  standalone: true,
-  imports: [CommonModule, DescriptionPipe],
-  templateUrl: './match-card.component.html',
-  styleUrl: './match-card.component.css',
+    selector: 'app-match-card',
+    imports: [CommonModule, DescriptionPipe],
+    templateUrl: './match-card.component.html',
+    styleUrl: './match-card.component.css'
 })
 export class MatchCardComponent {
   imagePath: string = environment.imagePath;

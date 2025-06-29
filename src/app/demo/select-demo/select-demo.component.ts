@@ -10,12 +10,11 @@ import { CardDemoComponent } from './card-demo/card-demo.component';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-select-demo',
-  standalone: true,
-  imports: [CommonModule, CardDemoComponent],
-  templateUrl: './select-demo.component.html',
-  styleUrl: './select-demo.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    selector: 'app-select-demo',
+    imports: [CommonModule, CardDemoComponent],
+    templateUrl: './select-demo.component.html',
+    styleUrl: './select-demo.component.css',
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SelectDemoComponent implements OnInit {
   imagePath: string = environment.imagePath;

@@ -3,11 +3,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-nav-buttons',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './nav-buttons.component.html',
-  styleUrl: './nav-buttons.component.css',
+    selector: 'app-nav-buttons',
+    imports: [CommonModule, RouterModule],
+    templateUrl: './nav-buttons.component.html',
+    styleUrl: './nav-buttons.component.css'
 })
 export class NavButtonsComponent {
   @Input() hasAdminRole: boolean = false;
