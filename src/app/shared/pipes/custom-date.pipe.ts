@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class CustomDatePipe implements PipeTransform {
-  private datePipe: DatePipe = new DatePipe('en-FR');
+  datePipe: DatePipe = new DatePipe('en-FR');
 
   transform(date: Date): string | null {
     if (!date) {

@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  input,
+  inject,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -14,32 +21,33 @@ import { User } from '../../core/interfaces/user';
 import { ConnectService } from '../../core/services/connect.service';
 
 @Component({
-    selector: 'app-gender-age',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatSliderModule,
-        MatFormFieldModule,
-        MatSelectModule,
-    ],
-    templateUrl: './gender-age.component.html',
-    styleUrl: './gender-age.component.css'
+  selector: 'app-gender-age',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatSliderModule,
+    MatFormFieldModule,
+    MatSelectModule,
+  ],
+  templateUrl: './gender-age.component.html',
+  styleUrl: './gender-age.component.css',
 })
 export class GenderAgeComponent implements OnInit {
+  fb = inject(FormBuilder);
+  connectService = inject(ConnectService);
+
   readonly user = input.required<User>();
   genderAgeForm!: FormGroup;
   genders: string[] = Object.values(Gender);
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(
-    private fb: FormBuilder,
-    private connectService: ConnectService
-  ) {}
-
   ngOnInit(): void {
     this.genderAgeForm = this.fb.group({
       gender: [this.user().genderAge?.gender, [Validators.required]],
-      genderSearch: [this.user().genderAge?.genderSearch, [Validators.required]],
+      genderSearch: [
+        this.user().genderAge?.genderSearch,
+        [Validators.required],
+      ],
       minAge: [this.user().genderAge?.minAge, [Validators.required]],
       maxAge: [this.user().genderAge?.maxAge, [Validators.required]],
     });

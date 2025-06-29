@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, input } from '@angular/core';
+import { Component, EventEmitter, Output, input, inject } from '@angular/core';
 import { User } from '../../core/interfaces/user';
 import { environment } from '../../../environments/environment';
 import { MoreInfoComponent } from '../../shared/components/more-info/more-info.component';
@@ -15,11 +15,11 @@ import { DescriptionPipe } from '../../shared/pipes/description.pipe';
     styleUrl: './user-card.component.css'
 })
 export class UserCardComponent {
+  dialog = inject(MatDialog);
+
   imagePath: string = environment.imagePath;
   readonly user = input.required<User>();
   @Output() deleteEvent: EventEmitter<void> = new EventEmitter<void>();
-
-  constructor(public dialog: MatDialog) {}
 
   moreInfo(): void {
     const dialogRef = this.dialog.open(MoreInfoComponent, {

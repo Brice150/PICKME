@@ -6,7 +6,8 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  input
+  inject,
+  input,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
@@ -15,28 +16,28 @@ import { User } from '../../../core/interfaces/user';
 import { ConnectService } from '../../../core/services/connect.service';
 
 @Component({
-    selector: 'app-preference',
-    imports: [CommonModule, MatChipsModule, ReactiveFormsModule],
-    templateUrl: './preference.component.html',
-    styleUrl: './preference.component.css'
+  selector: 'app-preference',
+  imports: [CommonModule, MatChipsModule, ReactiveFormsModule],
+  templateUrl: './preference.component.html',
+  styleUrl: './preference.component.css',
 })
 export class PreferenceComponent implements OnInit, OnChanges {
+  fb = inject(FormBuilder);
+  connectService = inject(ConnectService);
+
   readonly preference = input.required<Preference>();
   readonly user = input.required<User>();
   preferenceForm!: FormGroup;
   @Output() updateEvent: EventEmitter<void> = new EventEmitter<void>();
   initialValue!: string;
 
-  constructor(
-    private fb: FormBuilder,
-    private connectService: ConnectService
-  ) {}
-
   ngOnInit(): void {
     this.initialValue = (this.connectService.connectedUser!.preferences as any)[
       this.preference().name
     ];
-    const value: string = (this.user().preferences as any)[this.preference().name];
+    const value: string = (this.user().preferences as any)[
+      this.preference().name
+    ];
     this.preferenceForm = this.fb.group({
       [this.preference().name]: value,
     });

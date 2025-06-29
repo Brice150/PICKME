@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  input,
+  inject,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -13,26 +20,24 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-    selector: 'app-main-infos',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatSliderModule,
-        MatFormFieldModule,
-        MatInputModule,
-    ],
-    templateUrl: './main-infos.component.html',
-    styleUrl: './main-infos.component.css'
+  selector: 'app-main-infos',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatSliderModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
+  templateUrl: './main-infos.component.html',
+  styleUrl: './main-infos.component.css',
 })
 export class MainInfosComponent implements OnInit {
+  fb = inject(FormBuilder);
+  connectService = inject(ConnectService);
+
   readonly user = input.required<User>();
   mainInfosForm!: FormGroup;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
-
-  constructor(
-    private fb: FormBuilder,
-    private connectService: ConnectService
-  ) {}
 
   ngOnInit(): void {
     this.mainInfosForm = this.fb.group({

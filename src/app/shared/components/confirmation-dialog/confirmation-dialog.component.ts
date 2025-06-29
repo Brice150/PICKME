@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -9,12 +9,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     styleUrl: './confirmation-dialog.component.css'
 })
 export class ConfirmationDialogComponent implements OnInit {
-  action: string = 'delete';
+  dialogRef = inject<MatDialogRef<ConfirmationDialogComponent>>(MatDialogRef);
+  data = inject(MAT_DIALOG_DATA);
 
-  constructor(
-    public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: string
-  ) {}
+  action: string = 'delete';
 
   ngOnInit(): void {
     if (this.data) {

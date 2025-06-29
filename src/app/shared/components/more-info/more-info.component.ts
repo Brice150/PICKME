@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  CUSTOM_ELEMENTS_SCHEMA,
-  Component,
-  Inject,
-  OnInit,
-} from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, inject } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { User } from '../../../core/interfaces/user';
 import {
@@ -30,16 +25,14 @@ import { filter } from 'rxjs';
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MoreInfoComponent implements OnInit {
+  dialogRef = inject<MatDialogRef<MoreInfoComponent>>(MatDialogRef);
+  data = inject(MAT_DIALOG_DATA);
+  dialog = inject(MatDialog);
+
   imagePath: string = environment.imagePath;
   user!: User;
   adminMode: boolean = false;
   matchMode: boolean = false;
-
-  constructor(
-    public dialogRef: MatDialogRef<MoreInfoComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialog: MatDialog
-  ) {}
 
   ngOnInit(): void {
     this.user = this.data.user;

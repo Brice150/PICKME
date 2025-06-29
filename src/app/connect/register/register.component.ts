@@ -1,6 +1,6 @@
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -28,31 +28,35 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
-    selector: 'app-register',
-    providers: [
-        provideNativeDateAdapter(),
-        {
-            provide: STEPPER_GLOBAL_OPTIONS,
-            useValue: { displayDefaultIndicatorType: false },
-        },
-    ],
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDatepickerModule,
-        MatStepperModule,
-        MatSliderModule,
-        MatSelectModule,
-        MatButtonModule,
-        MatIconModule,
-        LoadingComponent,
-    ],
-    templateUrl: './register.component.html',
-    styleUrl: './register.component.css'
+  selector: 'app-register',
+  providers: [
+    provideNativeDateAdapter(),
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { displayDefaultIndicatorType: false },
+    },
+  ],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatStepperModule,
+    MatSliderModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    LoadingComponent,
+  ],
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css',
 })
 export class RegisterComponent implements OnInit, OnDestroy {
+  fb = inject(FormBuilder);
+  connectService = inject(ConnectService);
+  toastr = inject(ToastrService);
+  router = inject(Router);
   destroyed$: Subject<void> = new Subject<void>();
   hide: boolean = true;
   hideDuplicate: boolean = true;
@@ -66,12 +70,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   geolocation: Geolocation = {} as Geolocation;
   loading: boolean = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private connectService: ConnectService,
-    private toastr: ToastrService,
-    private router: Router
-  ) {
+  constructor() {
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(
       currentYear - 18,

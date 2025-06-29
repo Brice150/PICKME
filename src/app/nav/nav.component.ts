@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import {
@@ -22,34 +22,32 @@ import { NavButtonsComponent } from './nav-buttons/nav-buttons.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 
 @Component({
-    selector: 'app-nav',
-    imports: [
-        CommonModule,
-        RouterModule,
-        NavButtonsComponent,
-        NotificationsComponent,
-    ],
-    templateUrl: './nav.component.html',
-    styleUrl: './nav.component.css',
-    animations: [
-        MenuAnimation,
-        NotificationLogoAnimation,
-        NavButtonAnimation,
-        NotificationAnimation,
-    ]
+  selector: 'app-nav',
+  imports: [
+    CommonModule,
+    RouterModule,
+    NavButtonsComponent,
+    NotificationsComponent,
+  ],
+  templateUrl: './nav.component.html',
+  styleUrl: './nav.component.css',
+  animations: [
+    MenuAnimation,
+    NotificationLogoAnimation,
+    NavButtonAnimation,
+    NotificationAnimation,
+  ],
 })
 export class NavComponent implements OnInit {
+  connectService = inject(ConnectService);
+  notificationService = inject(NotificationService);
+  toastr = inject(ToastrService);
+  router = inject(Router);
+
   isMenuActive: boolean = false;
   isNotificationsActive: boolean = false;
   notifications: Notification[] = [];
   destroyed$: Subject<void> = new Subject<void>();
-
-  constructor(
-    public connectService: ConnectService,
-    private notificationService: NotificationService,
-    private toastr: ToastrService,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     this.connectService.connectedUserReady$

@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  input,
+  inject,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -12,25 +19,23 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-    selector: 'app-description',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-    ],
-    templateUrl: './description.component.html',
-    styleUrl: './description.component.css'
+  selector: 'app-description',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
+  templateUrl: './description.component.html',
+  styleUrl: './description.component.css',
 })
 export class DescriptionComponent implements OnInit {
+  fb = inject(FormBuilder);
+  connectService = inject(ConnectService);
+
   readonly user = input.required<User>();
   descriptionForm!: FormGroup;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
-
-  constructor(
-    private fb: FormBuilder,
-    private connectService: ConnectService
-  ) {}
 
   ngOnInit(): void {
     this.descriptionForm = this.fb.group({

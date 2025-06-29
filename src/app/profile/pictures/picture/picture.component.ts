@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, input } from '@angular/core';
+import { Component, EventEmitter, Output, input, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
 import { Picture } from '../../../core/interfaces/picture';
@@ -17,13 +17,13 @@ import {
     animations: [LikeButtonAnimation, DislikeButtonAnimation]
 })
 export class PictureComponent {
+  dialog = inject(MatDialog);
+
   readonly picture = input.required<Picture>();
   readonly display = input<boolean>(false);
   readonly isLoading = input<boolean>(false);
   @Output() selectMainEvent: EventEmitter<void> = new EventEmitter<void>();
   @Output() deleteEvent: EventEmitter<void> = new EventEmitter<void>();
-
-  constructor(public dialog: MatDialog) {}
 
   selectMainPicture(): void {
     if (!this.picture().isMainPicture && !this.isLoading()) {

@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  inject,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -31,23 +32,29 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-match',
-    imports: [
-        CommonModule,
-        FormsModule,
-        MatchCardComponent,
-        MessageComponent,
-        ReactiveFormsModule,
-        LoadingComponent,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-    ],
-    templateUrl: './match.component.html',
-    styleUrl: './match.component.css'
+  selector: 'app-match',
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatchCardComponent,
+    MessageComponent,
+    ReactiveFormsModule,
+    LoadingComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
+  templateUrl: './match.component.html',
+  styleUrl: './match.component.css',
 })
 export class MatchComponent implements OnInit, OnDestroy {
+  toastr = inject(ToastrService);
+  dialog = inject(MatDialog);
+  fb = inject(FormBuilder);
+  matchService = inject(MatchService);
+  selectService = inject(SelectService);
+
   search!: string;
   messageForm!: FormGroup;
   isModifying: boolean = false;
@@ -59,14 +66,6 @@ export class MatchComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   previousMessages?: Message[];
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
-
-  constructor(
-    private toastr: ToastrService,
-    public dialog: MatDialog,
-    private fb: FormBuilder,
-    private matchService: MatchService,
-    private selectService: SelectService
-  ) {}
 
   ngOnInit(): void {
     this.messageForm = this.fb.group({

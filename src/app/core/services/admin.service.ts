@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { User } from '../interfaces/user';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
@@ -11,20 +11,17 @@ import { AdminStats } from '../interfaces/admin-stats';
   providedIn: 'root',
 })
 export class AdminService {
-  private apiServerUrl = environment.apiBaseUrl;
+  http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  apiServerUrl = environment.apiBaseUrl;
 
-  public getAdminStats(): Observable<AdminStats> {
+  getAdminStats(): Observable<AdminStats> {
     return this.http.get<AdminStats>(`${this.apiServerUrl}/admin/stats`, {
       withCredentials: true,
     });
   }
 
-  public getAllUsers(
-    adminSearch: AdminSearch,
-    page: number
-  ): Observable<User[]> {
+  getAllUsers(adminSearch: AdminSearch, page: number): Observable<User[]> {
     return this.http.post<User[]>(
       `${this.apiServerUrl}/admin/user/all/${page}`,
       adminSearch,
@@ -34,7 +31,7 @@ export class AdminService {
     );
   }
 
-  public getAllDeletedAccounts(
+  getAllDeletedAccounts(
     adminSearch: AdminSearch,
     page: number
   ): Observable<DeletedAccount[]> {
@@ -47,7 +44,7 @@ export class AdminService {
     );
   }
 
-  public deleteUser(userId: number): Observable<void> {
+  deleteUser(userId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/admin/${userId}`, {
       withCredentials: true,
     });

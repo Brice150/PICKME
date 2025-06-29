@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { User } from '../interfaces/user';
 import { Observable, Subject, of, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -8,22 +8,23 @@ import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class ConnectService {
-  private apiServerUrl = environment.apiBaseUrl;
+  http = inject(HttpClient);
+  router = inject(Router);
+
+  apiServerUrl = environment.apiBaseUrl;
   registeredUser?: User;
   connectedUser?: User;
   connectedUserReady$: Subject<void> = new Subject<void>();
   loggedOut$: Subject<void> = new Subject<void>();
 
-  constructor(private http: HttpClient, private router: Router) {}
-
-  public register(user: User): any {
+  register(user: User): any {
     return this.http.post(`${this.apiServerUrl}/registration`, user, {
       withCredentials: true,
       responseType: 'text',
     });
   }
 
-  public login(user: User): Observable<User> {
+  login(user: User): Observable<User> {
     const headers = new HttpHeaders({
       Authorization: 'Basic ' + window.btoa(user.email + ':' + user.password),
     });
@@ -41,7 +42,7 @@ export class ConnectService {
       );
   }
 
-  public getConnectedUser(): Observable<User> {
+  getConnectedUser(): Observable<User> {
     return this.http
       .get<User>(`${this.apiServerUrl}/user`, {
         withCredentials: true,
@@ -55,11 +56,11 @@ export class ConnectService {
       );
   }
 
-  public getGeolocation(): Observable<Geolocation> {
+  getGeolocation(): Observable<Geolocation> {
     return this.http.get<Geolocation>('https://ipapi.co/json/');
   }
 
-  public logout() {
+  logout() {
     this.router.navigate(['/']);
     this.connectedUser = undefined;
     this.loggedOut$.next();

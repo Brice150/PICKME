@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSliderModule } from '@angular/material/slider';
@@ -19,24 +19,28 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 @Component({
-    selector: 'app-admin',
-    imports: [
-        CommonModule,
-        UserCardComponent,
-        ReactiveFormsModule,
-        LoadingComponent,
-        MatSliderModule,
-        MatCheckboxModule,
-        PaginatorComponent,
-        DeletedAccountCardComponent,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-    ],
-    templateUrl: './admin.component.html',
-    styleUrl: './admin.component.css'
+  selector: 'app-admin',
+  imports: [
+    CommonModule,
+    UserCardComponent,
+    ReactiveFormsModule,
+    LoadingComponent,
+    MatSliderModule,
+    MatCheckboxModule,
+    PaginatorComponent,
+    DeletedAccountCardComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+  ],
+  templateUrl: './admin.component.html',
+  styleUrl: './admin.component.css',
 })
 export class AdminComponent implements OnInit, OnDestroy {
+  toastr = inject(ToastrService);
+  adminService = inject(AdminService);
+  fb = inject(FormBuilder);
+
   users: User[] = [];
   deletedAccounts: DeletedAccount[] = [];
   destroyed$: Subject<void> = new Subject<void>();
@@ -48,12 +52,6 @@ export class AdminComponent implements OnInit, OnDestroy {
   isFirstSwitch: boolean = true;
   adminStats?: AdminStats;
   @ViewChild('paginator') paginator?: PaginatorComponent;
-
-  constructor(
-    private toastr: ToastrService,
-    private adminService: AdminService,
-    private fb: FormBuilder
-  ) {}
 
   ngOnInit(): void {
     this.adminForm = this.fb.group({

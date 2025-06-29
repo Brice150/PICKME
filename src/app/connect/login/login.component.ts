@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -18,31 +18,29 @@ import { MatIconModule } from '@angular/material/icon';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
-    selector: 'app-login',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        LoadingComponent,
-    ],
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.css'
+  selector: 'app-login',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    LoadingComponent,
+  ],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
+  fb = inject(FormBuilder);
+  connectService = inject(ConnectService);
+  router = inject(Router);
+  toastr = inject(ToastrService);
+
   loginForm!: FormGroup;
   hide: boolean = true;
   invalidLogin: boolean = false;
   loading: boolean = false;
-
-  constructor(
-    private fb: FormBuilder,
-    private connectService: ConnectService,
-    private router: Router,
-    private toastr: ToastrService
-  ) {}
 
   ngOnInit() {
     this.loginForm = this.fb.group({

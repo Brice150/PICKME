@@ -7,6 +7,7 @@ import {
   Output,
   ViewChild,
   input,
+  inject,
 } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Picture } from '../../core/interfaces/picture';
@@ -22,13 +23,13 @@ import { PictureComponent } from './picture/picture.component';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class PicturesComponent {
+  profileService = inject(ProfileService);
+
   imagePath: string = environment.imagePath;
   readonly user = input<User>();
   @Output() refreshEvent: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('imageInput') imageInput!: ElementRef;
   isLoading: boolean = false;
-
-  constructor(private profileService: ProfileService) {}
 
   addPicture(files: File[]): void {
     for (let file of files) {

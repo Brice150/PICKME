@@ -4,23 +4,28 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  inject,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { User } from '../core/interfaces/user';
 import { SelectService } from '../core/services/select.service';
 import { CardComponent } from './card/card.component';
 import { LoadingCardComponent } from './loading-card/loading-card.component';
-import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-select',
-    imports: [CommonModule, CardComponent, LoadingCardComponent],
-    templateUrl: './select.component.html',
-    styleUrl: './select.component.css',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  selector: 'app-select',
+  imports: [CommonModule, CardComponent, LoadingCardComponent],
+  templateUrl: './select.component.html',
+  styleUrl: './select.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SelectComponent implements OnInit, OnDestroy {
+  toastr = inject(ToastrService);
+  selectService = inject(SelectService);
+  router = inject(Router);
+
   users: User[] = [];
   destroyed$: Subject<void> = new Subject<void>();
   activeMatchAnimation: boolean = false;
@@ -29,12 +34,6 @@ export class SelectComponent implements OnInit, OnDestroy {
   page: number = 0;
   maxLoadedIndex: number = 0;
   initLoading: boolean = true;
-
-  constructor(
-    private toastr: ToastrService,
-    private selectService: SelectService,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     this.initLoading = true;

@@ -1,22 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ConnectService } from '../../core/services/connect.service';
 import { Router } from '@angular/router';
 import { User } from '../../core/interfaces/user';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-    selector: 'app-start-demo',
-    imports: [CommonModule],
-    templateUrl: './start-demo.component.html',
-    styleUrl: './start-demo.component.css'
+  selector: 'app-start-demo',
+  imports: [CommonModule],
+  templateUrl: './start-demo.component.html',
+  styleUrl: './start-demo.component.css',
 })
 export class StartDemoComponent {
-  constructor(
-    private connectService: ConnectService,
-    private router: Router,
-    private toastr: ToastrService
-  ) {}
+  connectService = inject(ConnectService);
+  router = inject(Router);
+  toastr = inject(ToastrService);
 
   startNow(): void {
     if (this.connectService.registeredUser) {

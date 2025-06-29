@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Match } from '../interfaces/match';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -9,29 +9,29 @@ import { Message } from '../interfaces/message';
   providedIn: 'root',
 })
 export class MatchService {
-  private apiServerUrl = environment.apiBaseUrl;
+  http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  apiServerUrl = environment.apiBaseUrl;
 
-  public getAllUserMatches(): Observable<Match[]> {
+  getAllUserMatches(): Observable<Match[]> {
     return this.http.get<Match[]>(`${this.apiServerUrl}/match/all`, {
       withCredentials: true,
     });
   }
 
-  public addMessage(message: Message): Observable<Message> {
+  addMessage(message: Message): Observable<Message> {
     return this.http.post<Message>(`${this.apiServerUrl}/message`, message, {
       withCredentials: true,
     });
   }
 
-  public updateMessage(message: Message): Observable<Message> {
+  updateMessage(message: Message): Observable<Message> {
     return this.http.put<Message>(`${this.apiServerUrl}/message`, message, {
       withCredentials: true,
     });
   }
 
-  public deleteMessage(messageId: number): Observable<void> {
+  deleteMessage(messageId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/message/${messageId}`, {
       withCredentials: true,
     });

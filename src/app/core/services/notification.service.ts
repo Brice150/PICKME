@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -6,11 +6,11 @@ import { Notification } from '../interfaces/notification';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  private apiServerUrl = environment.apiBaseUrl;
+  http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  apiServerUrl = environment.apiBaseUrl;
 
-  public getAllUserNotifications(): Observable<Notification[]> {
+  getAllUserNotifications(): Observable<Notification[]> {
     return this.http.get<Notification[]>(
       `${this.apiServerUrl}/notification/all`,
       {
@@ -19,7 +19,7 @@ export class NotificationService {
     );
   }
 
-  public markUserNotificationsAsSeen(): Observable<void> {
+  markUserNotificationsAsSeen(): Observable<void> {
     return this.http.put<void>(`${this.apiServerUrl}/notification`, null, {
       withCredentials: true,
     });

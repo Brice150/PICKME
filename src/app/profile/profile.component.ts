@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
@@ -16,31 +16,29 @@ import { PicturesComponent } from './pictures/pictures.component';
 import { PreferencesComponent } from './preferences/preferences.component';
 
 @Component({
-    selector: 'app-profile',
-    imports: [
-        CommonModule,
-        MatExpansionModule,
-        PasswordComponent,
-        DescriptionComponent,
-        GenderAgeComponent,
-        MainInfosComponent,
-        PicturesComponent,
-        PreferencesComponent,
-        DeleteAccountComponent,
-    ],
-    templateUrl: './profile.component.html',
-    styleUrl: './profile.component.css'
+  selector: 'app-profile',
+  imports: [
+    CommonModule,
+    MatExpansionModule,
+    PasswordComponent,
+    DescriptionComponent,
+    GenderAgeComponent,
+    MainInfosComponent,
+    PicturesComponent,
+    PreferencesComponent,
+    DeleteAccountComponent,
+  ],
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit, OnDestroy {
+  connectService = inject(ConnectService);
+  toastr = inject(ToastrService);
+  profileService = inject(ProfileService);
+
   user?: User = { ...this.connectService.connectedUser! };
   destroyed$: Subject<void> = new Subject<void>();
   geolocation: Geolocation = {} as Geolocation;
-
-  constructor(
-    private connectService: ConnectService,
-    private toastr: ToastrService,
-    private profileService: ProfileService
-  ) {}
 
   ngOnInit(): void {
     this.connectService
