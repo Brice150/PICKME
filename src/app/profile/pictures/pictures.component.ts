@@ -6,7 +6,7 @@ import {
   EventEmitter,
   Output,
   ViewChild,
-  input
+  input,
 } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Picture } from '../../core/interfaces/picture';
@@ -15,11 +15,11 @@ import { ProfileService } from '../../core/services/profile.service';
 import { PictureComponent } from './picture/picture.component';
 
 @Component({
-    selector: 'app-pictures',
-    imports: [CommonModule, PictureComponent],
-    templateUrl: './pictures.component.html',
-    styleUrl: './pictures.component.css',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  selector: 'app-pictures',
+  imports: [CommonModule, PictureComponent],
+  templateUrl: './pictures.component.html',
+  styleUrl: './pictures.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class PicturesComponent {
   imagePath: string = environment.imagePath;
@@ -111,10 +111,10 @@ export class PicturesComponent {
           (picture: Picture) => picture.id === pictureId
         );
         if (pictureIndex !== -1) {
-          user?.pictures?.forEach(
+          this.user()?.pictures?.forEach(
             (picture: Picture) => (picture.isMainPicture = false)
           );
-          user!.pictures![pictureIndex].isMainPicture = true;
+          this.user()!.pictures![pictureIndex].isMainPicture = true;
         }
         this.refreshEvent.emit('Main Picture Selected');
         this.isLoading = false;
