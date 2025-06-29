@@ -188,7 +188,7 @@
 }
 
 ::ng-deep .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
-  --mdc-chip-elevated-container-color: var(--primary);
+  --mat-chip-elevated-container-color: var(--primary);
 }
 
 swiper-container {

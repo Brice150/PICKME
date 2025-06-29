@@ -28,35 +28,35 @@ form {
 }
 
 ::ng-deep .mat-mdc-standard-chip.mat-primary {
-  --mdc-chip-elevated-container-color: var(--glass-background);
+  --mat-chip-elevated-container-color: var(--glass-background);
   backdrop-filter: blur(2px);
 }
 
 ::ng-deep .mat-mdc-standard-chip.mat-mdc-chip-selected.mat-primary,
 .mat-mdc-standard-chip.mat-mdc-chip-highlighted.mat-primary {
-  --mdc-chip-elevated-container-color: var(--primary);
+  --mat-chip-elevated-container-color: var(--primary);
 }
 
 ::ng-deep .mat-mdc-chip-focus-overlay {
-  --mdc-chip-focus-state-layer-color: var(--primary);
+  --mat-chip-focus-state-layer-color: var(--primary);
 }
 
 ::ng-deep .mat-mdc-standard-chip .mdc-evolution-chip__icon--primary {
-  --mdc-chip-with-icon-icon-color: var(--primary);
+  --mat-chip-with-icon-icon-color: var(--primary);
 }
 
 ::ng-deep .mat-mdc-standard-chip .mdc-evolution-chip__checkmark {
-  --mdc-chip-with-icon-selected-icon-color: var(--secondary);
+  --mat-chip-with-icon-selected-icon-color: var(--secondary);
 }
 
 ::ng-deep .mat-mdc-standard-chip .mdc-evolution-chip__text-label {
-  --mdc-chip-label-text-color: var(--primary);
+  --mat-chip-label-text-color: var(--primary);
 }
 
 ::ng-deep
   .mat-mdc-standard-chip.mat-mdc-chip-selected
   .mdc-evolution-chip__text-label {
-  --mdc-chip-label-text-color: var(--secondary);
+  --mat-chip-label-text-color: var(--secondary);
 }
 
 form .button-container {
