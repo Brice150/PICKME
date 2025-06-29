@@ -8,10 +8,14 @@
   [title]="
     message.sender !== userName && message.content ? 'Update Message' : ''
   "
->
+  >
   <span class="date">{{ message.date | customDate }}</span>
-  <span class="content" *ngIf="message.content">
-    {{ message.content }}
-  </span>
-  <span class="content" *ngIf="!message.content"> Message deleted </span>
+  @if (message.content) {
+    <span class="content">
+      {{ message.content }}
+    </span>
+  }
+  @if (!message.content) {
+    <span class="content"> Message deleted </span>
+  }
 </div>

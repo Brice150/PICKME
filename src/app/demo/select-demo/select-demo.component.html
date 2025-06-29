@@ -7,20 +7,23 @@
     Swipe, like or dislike profiles. If like button is gold, it means that this
     person has already liked you. Like back to get a match !
   </span>
-  <swiper-container
-    effect="cards"
-    mousewheel="true"
-    (swiperslidechange)="onSlideChange()"
-    *ngIf="images && images.length !== 0"
-  >
-    <swiper-slide lazy="true" *ngFor="let image of images">
-      <app-card-demo
-        loading="true"
-        [image]="image"
-        [display]="isCurrentView(image)"
-        (likeEvent)="like(image)"
-        (dislikeEvent)="dislike(image)"
-      ></app-card-demo>
-    </swiper-slide>
-  </swiper-container>
+  @if (images && images.length !== 0) {
+    <swiper-container
+      effect="cards"
+      mousewheel="true"
+      (swiperslidechange)="onSlideChange()"
+      >
+      @for (image of images; track image) {
+        <swiper-slide lazy="true">
+          <app-card-demo
+            loading="true"
+            [image]="image"
+            [display]="isCurrentView(image)"
+            (likeEvent)="like(image)"
+            (dislikeEvent)="dislike(image)"
+          ></app-card-demo>
+        </swiper-slide>
+      }
+    </swiper-container>
+  }
 </div>

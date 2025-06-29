@@ -1,191 +1,192 @@
 @if (!loading) {
-<form [formGroup]="registerForm" (ngSubmit)="registerUser()">
-  <mat-stepper
-    orientation="vertical"
-    [linear]="true"
-    #stepper
-    background="none"
-  >
-    <mat-step [stepControl]="firstFormGroup" [formGroup]="firstFormGroup">
-      <ng-template matStepLabel>Main Infos</ng-template>
-      <mat-form-field color="accent">
-        <mat-label>Nickname</mat-label>
-        <input matInput formControlName="nickname" required />
-        @if (firstFormGroup.get('nickname')!.hasError('required')) {
-        <mat-error>Nickname is required</mat-error>
-        } @else if (firstFormGroup.get('nickname')!.hasError('minlength')) {
-        <mat-error>Nickname is too short</mat-error>
-        } @else if (firstFormGroup.get('nickname')!.hasError('maxlength')) {
-        <mat-error>Nickname is too long</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field color="accent">
-        <mat-label>Job</mat-label>
-        <input matInput formControlName="job" required />
-        @if (firstFormGroup.get('job')!.hasError('required')) {
-        <mat-error>Job is required</mat-error>
-        } @else if (firstFormGroup.get('job')!.hasError('minlength')) {
-        <mat-error>Job is too short</mat-error>
-        } @else if (firstFormGroup.get('job')!.hasError('maxlength')) {
-        <mat-error>Job is too long</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field color="accent">
-        <mat-label>Birth Date</mat-label>
-        <input
-          matInput
-          [matDatepicker]="picker"
-          [max]="minDate"
-          formControlName="birthDate"
-        />
-        @if (firstFormGroup.get('birthDate')!.hasError('required')) {
-        <mat-error>Required and you must be at least 18</mat-error>
-        }
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="picker"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #picker color="accent"></mat-datepicker>
-      </mat-form-field>
-      <div class="slide-container">
-        <span>Max Distance</span>
-        <mat-slider min="10" max="500" discrete step="10">
-          <input matSliderThumb formControlName="distanceSearch" />
-        </mat-slider>
-      </div>
-    </mat-step>
-    <mat-step
-      [stepControl]="secondFormGroup"
-      [formGroup]="secondFormGroup"
-      [state]="firstFormGroup.valid ? 'number' : 'disabled'"
-    >
-      <ng-template matStepLabel>Gender and Age</ng-template>
-      <mat-form-field color="accent">
-        <mat-label>Gender</mat-label>
-        <mat-select formControlName="gender">
-          @for (gender of genders; track gender) {
-          <mat-option [value]="gender">{{ gender }}</mat-option>
+  <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+    <mat-stepper
+      orientation="vertical"
+      [linear]="true"
+      #stepper
+      background="none"
+      >
+      <mat-step [stepControl]="firstFormGroup" [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Main Infos</ng-template>
+        <mat-form-field color="accent">
+          <mat-label>Nickname</mat-label>
+          <input matInput formControlName="nickname" required />
+          @if (firstFormGroup.get('nickname')!.hasError('required')) {
+            <mat-error>Nickname is required</mat-error>
+          } @else if (firstFormGroup.get('nickname')!.hasError('minlength')) {
+            <mat-error>Nickname is too short</mat-error>
+          } @else if (firstFormGroup.get('nickname')!.hasError('maxlength')) {
+            <mat-error>Nickname is too long</mat-error>
           }
-        </mat-select>
-        @if (secondFormGroup.get('gender')!.hasError('required')) {
-        <mat-error>Gender is required</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field color="accent">
-        <mat-label>Gender Search</mat-label>
-        <mat-select formControlName="genderSearch">
-          @for (gender of genders; track gender) {
-          <mat-option [value]="gender">{{ gender }}</mat-option>
+        </mat-form-field>
+        <mat-form-field color="accent">
+          <mat-label>Job</mat-label>
+          <input matInput formControlName="job" required />
+          @if (firstFormGroup.get('job')!.hasError('required')) {
+            <mat-error>Job is required</mat-error>
+          } @else if (firstFormGroup.get('job')!.hasError('minlength')) {
+            <mat-error>Job is too short</mat-error>
+          } @else if (firstFormGroup.get('job')!.hasError('maxlength')) {
+            <mat-error>Job is too long</mat-error>
           }
-        </mat-select>
-        @if (secondFormGroup.get('genderSearch')!.hasError('required')) {
-        <mat-error>Gender Search is required</mat-error>
-        }
-      </mat-form-field>
-      <div class="slide-container">
-        <span>Age</span>
-        <mat-slider min="18" max="80" discrete>
-          <input matSliderStartThumb formControlName="minAge" />
-          <input matSliderEndThumb formControlName="maxAge" />
-        </mat-slider>
-      </div>
-    </mat-step>
-    <mat-step
-      [stepControl]="thirdFormGroup"
-      [formGroup]="thirdFormGroup"
-      [state]="secondFormGroup.valid ? 'number' : 'disabled'"
-    >
-      <ng-template matStepLabel>Connection Infos</ng-template>
-      <mat-form-field color="accent">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" required />
-        @if (thirdFormGroup.get('email')!.hasError('required')) {
-        <mat-error>Email is required</mat-error>
-        } @else if (thirdFormGroup.get('email')!.hasError('email')) {
-        <mat-error>Email is invalid</mat-error>
-        } @else if (thirdFormGroup.get('email')!.hasError('maxlength')) {
-        <mat-error>Email is too long</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field color="accent">
-        <mat-label>Password</mat-label>
-        <input
-          matInput
-          [type]="hide ? 'password' : 'text'"
-          formControlName="password"
-          required
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="hide = !hide"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hide"
-          type="button"
-        >
-          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
-        </button>
-        @if (thirdFormGroup.get('password')!.hasError('required')) {
-        <mat-error>Password is required</mat-error>
-        } @else if (thirdFormGroup.get('password')!.hasError('minlength')) {
-        <mat-error>Password is too short</mat-error>
-        } @else if (thirdFormGroup.get('password')!.hasError('maxlength')) {
-        <mat-error>Password is too long</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field color="accent">
-        <mat-label>Password Confirmation</mat-label>
-        <input
-          matInput
-          [type]="hideDuplicate ? 'password' : 'text'"
-          formControlName="passwordDuplicate"
-          required
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="hideDuplicate = !hideDuplicate"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hideDuplicate"
-          type="button"
-        >
-          <mat-icon>{{
-            hideDuplicate ? "visibility_off" : "visibility"
-          }}</mat-icon>
-        </button>
-        @if (thirdFormGroup.get('passwordDuplicate')!.hasError('required')) {
-        <mat-error>Password is required</mat-error>
-        } @else if
-        (thirdFormGroup.get('passwordDuplicate')!.hasError('minlength')) {
-        <mat-error>Password is too short</mat-error>
-        } @else if
-        (thirdFormGroup.get('passwordDuplicate')!.hasError('maxlength')) {
-        <mat-error>Password is too long</mat-error>
-        } @else if
-        (thirdFormGroup.get('passwordDuplicate')!.hasError('passwordMismatch'))
-        {
-        <mat-error>Passwords don't match</mat-error>
-        }
-      </mat-form-field>
-      <div class="button-container">
-        <button
-          title="Register"
-          *ngIf="
-            registerForm.valid &&
-            thirdFormGroup.get('password')?.value ===
-              thirdFormGroup.get('passwordDuplicate')?.value
-          "
-          type="submit"
-        >
-          Register
-        </button>
-      </div>
-    </mat-step>
-    <ng-template matStepperIcon="disabled">
-      <i class="bx bx-block"></i>
-    </ng-template>
-  </mat-stepper>
-</form>
-} @else {
-<app-loading></app-loading>
-}
+        </mat-form-field>
+        <mat-form-field color="accent">
+          <mat-label>Birth Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [max]="minDate"
+            formControlName="birthDate"
+            />
+            @if (firstFormGroup.get('birthDate')!.hasError('required')) {
+              <mat-error>Required and you must be at least 18</mat-error>
+            }
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker color="accent"></mat-datepicker>
+          </mat-form-field>
+          <div class="slide-container">
+            <span>Max Distance</span>
+            <mat-slider min="10" max="500" discrete step="10">
+              <input matSliderThumb formControlName="distanceSearch" />
+            </mat-slider>
+          </div>
+        </mat-step>
+        <mat-step
+          [stepControl]="secondFormGroup"
+          [formGroup]="secondFormGroup"
+          [state]="firstFormGroup.valid ? 'number' : 'disabled'"
+          >
+          <ng-template matStepLabel>Gender and Age</ng-template>
+          <mat-form-field color="accent">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              @for (gender of genders; track gender) {
+                <mat-option [value]="gender">{{ gender }}</mat-option>
+              }
+            </mat-select>
+            @if (secondFormGroup.get('gender')!.hasError('required')) {
+              <mat-error>Gender is required</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field color="accent">
+            <mat-label>Gender Search</mat-label>
+            <mat-select formControlName="genderSearch">
+              @for (gender of genders; track gender) {
+                <mat-option [value]="gender">{{ gender }}</mat-option>
+              }
+            </mat-select>
+            @if (secondFormGroup.get('genderSearch')!.hasError('required')) {
+              <mat-error>Gender Search is required</mat-error>
+            }
+          </mat-form-field>
+          <div class="slide-container">
+            <span>Age</span>
+            <mat-slider min="18" max="80" discrete>
+              <input matSliderStartThumb formControlName="minAge" />
+              <input matSliderEndThumb formControlName="maxAge" />
+            </mat-slider>
+          </div>
+        </mat-step>
+        <mat-step
+          [stepControl]="thirdFormGroup"
+          [formGroup]="thirdFormGroup"
+          [state]="secondFormGroup.valid ? 'number' : 'disabled'"
+          >
+          <ng-template matStepLabel>Connection Infos</ng-template>
+          <mat-form-field color="accent">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" required />
+            @if (thirdFormGroup.get('email')!.hasError('required')) {
+              <mat-error>Email is required</mat-error>
+            } @else if (thirdFormGroup.get('email')!.hasError('email')) {
+              <mat-error>Email is invalid</mat-error>
+            } @else if (thirdFormGroup.get('email')!.hasError('maxlength')) {
+              <mat-error>Email is too long</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field color="accent">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [type]="hide ? 'password' : 'text'"
+              formControlName="password"
+              required
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="hide = !hide"
+                [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide"
+                type="button"
+                >
+                <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+              </button>
+              @if (thirdFormGroup.get('password')!.hasError('required')) {
+                <mat-error>Password is required</mat-error>
+              } @else if (thirdFormGroup.get('password')!.hasError('minlength')) {
+                <mat-error>Password is too short</mat-error>
+              } @else if (thirdFormGroup.get('password')!.hasError('maxlength')) {
+                <mat-error>Password is too long</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field color="accent">
+              <mat-label>Password Confirmation</mat-label>
+              <input
+                matInput
+                [type]="hideDuplicate ? 'password' : 'text'"
+                formControlName="passwordDuplicate"
+                required
+                />
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="hideDuplicate = !hideDuplicate"
+                  [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hideDuplicate"
+                  type="button"
+                  >
+                  <mat-icon>{{
+                    hideDuplicate ? "visibility_off" : "visibility"
+                  }}</mat-icon>
+                </button>
+                @if (thirdFormGroup.get('passwordDuplicate')!.hasError('required')) {
+                  <mat-error>Password is required</mat-error>
+                } @else if
+                  (thirdFormGroup.get('passwordDuplicate')!.hasError('minlength')) {
+                  <mat-error>Password is too short</mat-error>
+                } @else if
+                  (thirdFormGroup.get('passwordDuplicate')!.hasError('maxlength')) {
+                  <mat-error>Password is too long</mat-error>
+                } @else if
+                  (thirdFormGroup.get('passwordDuplicate')!.hasError('passwordMismatch'))
+                  {
+                  <mat-error>Passwords don't match</mat-error>
+                }
+              </mat-form-field>
+              <div class="button-container">
+                @if (
+                  registerForm.valid &&
+                  thirdFormGroup.get('password')?.value ===
+                  thirdFormGroup.get('passwordDuplicate')?.value
+                  ) {
+                  <button
+                    title="Register"
+                    type="submit"
+                    >
+                    Register
+                  </button>
+                }
+              </div>
+            </mat-step>
+            <ng-template matStepperIcon="disabled">
+              <i class="bx bx-block"></i>
+            </ng-template>
+          </mat-stepper>
+        </form>
+      } @else {
+        <app-loading></app-loading>
+      }

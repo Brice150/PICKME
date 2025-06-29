@@ -1,135 +1,150 @@
-<div class="container" *ngIf="!selectedMatch">
-  <mat-form-field color="accent" class="search">
-    <mat-label>Search by nickname</mat-label>
-    <input matInput [(ngModel)]="search" (ngModelChange)="searchByNickname()" />
-  </mat-form-field>
-  <div class="content" *ngIf="matches && matches.length !== 0 && !loading">
-    <app-match-card
-      *ngFor="let match of filteredMatches"
-      [match]="match"
-      [preview]="getPreview(match)"
-      (clickEvent)="selectMatch(match)"
-      title="View Messages"
-    ></app-match-card>
+@if (!selectedMatch) {
+  <div class="container">
+    <mat-form-field color="accent" class="search">
+      <mat-label>Search by nickname</mat-label>
+      <input matInput [(ngModel)]="search" (ngModelChange)="searchByNickname()" />
+    </mat-form-field>
+    @if (matches && matches.length !== 0 && !loading) {
+      <div class="content">
+        @for (match of filteredMatches; track match) {
+          <app-match-card
+            [match]="match"
+            [preview]="getPreview(match)"
+            (clickEvent)="selectMatch(match)"
+            title="View Messages"
+          ></app-match-card>
+        }
+      </div>
+    }
+    @if (loading) {
+      <div class="content loading">
+        <app-loading></app-loading>
+      </div>
+    }
+    @if ((!matches || matches.length === 0) && !loading) {
+      <div
+        class="content nothing"
+        >
+        <span>No match</span>
+      </div>
+    }
   </div>
-  <div class="content loading" *ngIf="loading">
-    <app-loading></app-loading>
-  </div>
-  <div
-    class="content nothing"
-    *ngIf="(!matches || matches.length === 0) && !loading"
-  >
-    <span>No match</span>
-  </div>
-</div>
+}
 
-<div class="container" *ngIf="selectedMatch">
-  <div class="title">
-    <app-match-card
-      [match]="selectedMatch"
-      [preview]="'View ' + selectedMatch.user.nickname + ' profile'"
-      (clickEvent)="moreInfo()"
-      title="More Info"
-      [messageMode]="true"
-    ></app-match-card>
-    <a title="Back" (click)="back()">
-      <i class="bx bx-arrow-back"></i>
-    </a>
-  </div>
-  <div
-    class="content"
-    #messagesContainer
-    *ngIf="selectedMatch.messages && selectedMatch.messages.length !== 0"
-  >
-    <app-message
-      *ngFor="let message of selectedMatch.messages"
+@if (selectedMatch) {
+  <div class="container">
+    <div class="title">
+      <app-match-card
+        [match]="selectedMatch"
+        [preview]="'View ' + selectedMatch.user.nickname + ' profile'"
+        (clickEvent)="moreInfo()"
+        title="More Info"
+        [messageMode]="true"
+      ></app-match-card>
+      <a title="Back" (click)="back()">
+        <i class="bx bx-arrow-back"></i>
+      </a>
+    </div>
+    @if (selectedMatch.messages && selectedMatch.messages.length !== 0) {
+      <div
+        class="content"
+        #messagesContainer
+        >
+        @for (message of selectedMatch.messages; track message) {
+          <app-message
       [ngClass]="
         message.sender === selectedMatch.user.nickname ? 'left' : 'right'
       "
-      [message]="message"
-      [userName]="selectedMatch.user.nickname"
-      (click)="modifyMessage(message)"
-    ></app-message>
+            [message]="message"
+            [userName]="selectedMatch.user.nickname"
+            (click)="modifyMessage(message)"
+          ></app-message>
+        }
+      </div>
+    }
+    @if (!selectedMatch.messages || selectedMatch.messages.length === 0) {
+      <div
+        class="content nothing"
+        >
+        <span>No message</span>
+      </div>
+    }
+    @if (!isModifying) {
+      <form
+        [formGroup]="messageForm"
+        (ngSubmit)="sendMessage(messageForm.value)"
+        >
+        <mat-form-field color="accent">
+          <mat-label>Message</mat-label>
+          <textarea matInput formControlName="content"></textarea>
+          <button
+            mat-icon-button
+            matSuffix
+            type="submit"
+            title="Send"
+            [disabled]="!messageForm.valid || !messageForm.get('content')?.value"
+            >
+            <mat-icon>send</mat-icon>
+          </button>
+          @if (messageForm.get('content')!.hasError('required')) {
+            <mat-error>Message is required</mat-error>
+          } @else if (messageForm.get('content')!.hasError('minlength')) {
+            <mat-error>Message is too short</mat-error>
+          } @else if (messageForm.get('content')!.hasError('maxlength')) {
+            <mat-error>Message is too long</mat-error>
+          }
+        </mat-form-field>
+      </form>
+    }
+    @if (isModifying) {
+      <form
+        [formGroup]="messageForm"
+        (ngSubmit)="updateMessage(messageForm.value)"
+        >
+        <mat-form-field color="accent">
+          <mat-label>Update or Delete Message</mat-label>
+          <textarea
+            matInput
+            formControlName="content"
+            ngModel="{{ updatedMessage?.content }}"
+          ></textarea>
+          <button
+            mat-icon-button
+            matSuffix
+            type="submit"
+            title="Update"
+            [disabled]="!messageForm.valid || !messageForm.dirty"
+            >
+            <mat-icon>send</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            title="Cancel"
+            (click)="unModifyMessage()"
+            >
+            <mat-icon>undo</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            title="Delete"
+            (click)="openDialog()"
+            [disabled]="messageForm.dirty"
+            >
+            <mat-icon>delete</mat-icon>
+          </button>
+          @if (messageForm.get('content')!.hasError('required')) {
+            <mat-error>Message is required</mat-error>
+          } @else if (messageForm.get('content')!.hasError('minlength')) {
+            <mat-error>Message is too short</mat-error>
+          } @else if (messageForm.get('content')!.hasError('maxlength')) {
+            <mat-error>Message is too long</mat-error>
+          }
+        </mat-form-field>
+      </form>
+    }
   </div>
-  <div
-    class="content nothing"
-    *ngIf="!selectedMatch.messages || selectedMatch.messages.length === 0"
-  >
-    <span>No message</span>
-  </div>
-  <form
-    *ngIf="!isModifying"
-    [formGroup]="messageForm"
-    (ngSubmit)="sendMessage(messageForm.value)"
-  >
-    <mat-form-field color="accent">
-      <mat-label>Message</mat-label>
-      <textarea matInput formControlName="content"></textarea>
-      <button
-        mat-icon-button
-        matSuffix
-        type="submit"
-        title="Send"
-        [disabled]="!messageForm.valid || !messageForm.get('content')?.value"
-      >
-        <mat-icon>send</mat-icon>
-      </button>
-      @if (messageForm.get('content')!.hasError('required')) {
-      <mat-error>Message is required</mat-error>
-      } @else if (messageForm.get('content')!.hasError('minlength')) {
-      <mat-error>Message is too short</mat-error>
-      } @else if (messageForm.get('content')!.hasError('maxlength')) {
-      <mat-error>Message is too long</mat-error>
-      }
-    </mat-form-field>
-  </form>
-  <form
-    *ngIf="isModifying"
-    [formGroup]="messageForm"
-    (ngSubmit)="updateMessage(messageForm.value)"
-  >
-    <mat-form-field color="accent">
-      <mat-label>Update or Delete Message</mat-label>
-      <textarea
-        matInput
-        formControlName="content"
-        ngModel="{{ updatedMessage?.content }}"
-      ></textarea>
-      <button
-        mat-icon-button
-        matSuffix
-        type="submit"
-        title="Update"
-        [disabled]="!messageForm.valid || !messageForm.dirty"
-      >
-        <mat-icon>send</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        matSuffix
-        type="button"
-        title="Cancel"
-        (click)="unModifyMessage()"
-      >
-        <mat-icon>undo</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        matSuffix
-        type="button"
-        title="Delete"
-        (click)="openDialog()"
-        [disabled]="messageForm.dirty"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
-      @if (messageForm.get('content')!.hasError('required')) {
-      <mat-error>Message is required</mat-error>
-      } @else if (messageForm.get('content')!.hasError('minlength')) {
-      <mat-error>Message is too short</mat-error>
-      } @else if (messageForm.get('content')!.hasError('maxlength')) {
-      <mat-error>Message is too long</mat-error>
-      }
-    </mat-form-field>
-  </form>
-</div>
+}

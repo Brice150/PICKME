@@ -4,86 +4,99 @@
       (click)="toggleUserOrDeleted('user')"
       [title]="!isUserMode ? 'View Users' : ''"
       [ngClass]="isUserMode ? 'active' : 'unactive'"
-    >
+      >
       <span class="main">{{ adminStats?.totalUsers }} Users</span>
-      <span *ngIf="adminStats && adminStats.totalRecentUsers > 0"
-        >(+{{ adminStats.totalRecentUsers }} this week)</span
-      >
-    </a>
-    <a
-      (click)="toggleUserOrDeleted('deleted')"
-      [title]="isUserMode ? 'View Deleted Users' : ''"
-      [ngClass]="!isUserMode ? 'active' : 'unactive'"
-    >
-      <span class="main">{{ adminStats?.totalDeletedAccounts }} Deleted</span>
-      <span *ngIf="adminStats && adminStats.totalRecentDeletedAccounts > 0"
-        >(+{{ adminStats.totalRecentDeletedAccounts }} this week)</span
-      >
-    </a>
-  </div>
-  <form [formGroup]="adminForm">
-    <mat-form-field color="accent">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" (focusout)="focusOut(0)" />
-    </mat-form-field>
-    <mat-form-field color="accent">
-      <mat-label>Order By</mat-label>
-      <mat-select formControlName="orderBy" (ngModelChange)="search(0)">
-        <mat-option value="" selected>Date</mat-option>
-        <mat-option value="totalDislikes">Dislikes</mat-option>
-        <mat-option value="totalLikes">Likes</mat-option>
-        <mat-option value="totalMatches">Matches</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </form>
-  <app-paginator
-    #paginator
-    *ngIf="searched"
-    (handlePageEvent)="handlePageEvent($event)"
-    [loading]="loading"
-    [usersNumber]="isUserMode ? users.length : deletedAccounts.length"
-    [maxPerPage]="5"
-  >
-  </app-paginator>
-  <div
-    class="content"
-    *ngIf="users && users.length !== 0 && !loading && isUserMode"
-  >
-    <app-user-card
-      *ngFor="let user of users"
-      [user]="user"
-      (deleteEvent)="deleteUser(user)"
-    ></app-user-card>
-  </div>
-  <div
-    class="content"
-    *ngIf="
-      deletedAccounts && deletedAccounts.length !== 0 && !loading && !isUserMode
-    "
-  >
-    <app-deleted-account-card
-      *ngFor="let deletedAccount of deletedAccounts"
-      [deletedAccount]="deletedAccount"
-    ></app-deleted-account-card>
-  </div>
-  <div class="content loading" *ngIf="loading">
-    <app-loading></app-loading>
-  </div>
-  <div
-    class="content nothing"
-    *ngIf="(!users || users.length === 0) && !loading && searched && isUserMode"
-  >
-    <span>No user</span>
-  </div>
-  <div
-    class="content nothing"
-    *ngIf="
-      (!deletedAccounts || deletedAccounts.length === 0) &&
-      !loading &&
-      searched &&
-      !isUserMode
-    "
-  >
-    <span>No deleted account</span>
-  </div>
-</div>
+      @if (adminStats && adminStats.totalRecentUsers > 0) {
+        <span
+          >(+{{ adminStats.totalRecentUsers }} this week)</span
+          >
+        }
+      </a>
+      <a
+        (click)="toggleUserOrDeleted('deleted')"
+        [title]="isUserMode ? 'View Deleted Users' : ''"
+        [ngClass]="!isUserMode ? 'active' : 'unactive'"
+        >
+        <span class="main">{{ adminStats?.totalDeletedAccounts }} Deleted</span>
+        @if (adminStats && adminStats.totalRecentDeletedAccounts > 0) {
+          <span
+            >(+{{ adminStats.totalRecentDeletedAccounts }} this week)</span
+            >
+          }
+        </a>
+      </div>
+      <form [formGroup]="adminForm">
+        <mat-form-field color="accent">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" (focusout)="focusOut(0)" />
+        </mat-form-field>
+        <mat-form-field color="accent">
+          <mat-label>Order By</mat-label>
+          <mat-select formControlName="orderBy" (ngModelChange)="search(0)">
+            <mat-option value="" selected>Date</mat-option>
+            <mat-option value="totalDislikes">Dislikes</mat-option>
+            <mat-option value="totalLikes">Likes</mat-option>
+            <mat-option value="totalMatches">Matches</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+      @if (searched) {
+        <app-paginator
+          #paginator
+          (handlePageEvent)="handlePageEvent($event)"
+          [loading]="loading"
+          [usersNumber]="isUserMode ? users.length : deletedAccounts.length"
+          [maxPerPage]="5"
+          >
+        </app-paginator>
+      }
+      @if (users && users.length !== 0 && !loading && isUserMode) {
+        <div
+          class="content"
+          >
+          @for (user of users; track user) {
+            <app-user-card
+              [user]="user"
+              (deleteEvent)="deleteUser(user)"
+            ></app-user-card>
+          }
+        </div>
+      }
+      @if (
+        deletedAccounts && deletedAccounts.length !== 0 && !loading && !isUserMode
+        ) {
+        <div
+          class="content"
+          >
+          @for (deletedAccount of deletedAccounts; track deletedAccount) {
+            <app-deleted-account-card
+              [deletedAccount]="deletedAccount"
+            ></app-deleted-account-card>
+          }
+        </div>
+      }
+      @if (loading) {
+        <div class="content loading">
+          <app-loading></app-loading>
+        </div>
+      }
+      @if ((!users || users.length === 0) && !loading && searched && isUserMode) {
+        <div
+          class="content nothing"
+          >
+          <span>No user</span>
+        </div>
+      }
+      @if (
+        (!deletedAccounts || deletedAccounts.length === 0) &&
+        !loading &&
+        searched &&
+        !isUserMode
+        ) {
+        <div
+          class="content nothing"
+          >
+          <span>No deleted account</span>
+        </div>
+      }
+    </div>

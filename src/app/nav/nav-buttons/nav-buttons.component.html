@@ -3,7 +3,7 @@
   routerLinkActive="active"
   title="Select"
   (click)="toggleMenu()"
->
+  >
   <i class="bx bx-search"></i>
   <span>Select</span>
 </a>
@@ -12,7 +12,7 @@
   routerLinkActive="active"
   title="Profile"
   (click)="toggleMenu()"
->
+  >
   <i class="bx bxs-user"></i>
   <span>Profile</span>
 </a>
@@ -21,20 +21,21 @@
   routerLinkActive="active"
   title="Match"
   (click)="toggleMenu()"
->
+  >
   <i class="bx bxs-flame"></i>
   <span>Match</span>
 </a>
-<a
-  *ngIf="hasAdminRole"
-  routerLink="admin"
-  routerLinkActive="active"
-  title="Admin"
-  (click)="toggleMenu()"
->
-  <i class="bx bxs-key"></i>
-  <span>Admin</span>
-</a>
+@if (hasAdminRole) {
+  <a
+    routerLink="admin"
+    routerLinkActive="active"
+    title="Admin"
+    (click)="toggleMenu()"
+    >
+    <i class="bx bxs-key"></i>
+    <span>Admin</span>
+  </a>
+}
 <a title="Logout" (click)="logout()">
   <i class="bx bxs-log-out"></i>
   <span>Logout</span>

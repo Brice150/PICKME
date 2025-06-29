@@ -8,70 +8,78 @@
     refresh every 10 secondes on this page. If you are not on this page, you
     will receive a notification in the application menu !
   </span>
-  <div class="match-container" *ngIf="!selectedMatch && isWomanGenderSearch()">
-    <app-match-card-demo
-      [picture]="images[1]"
-      [match]="'Kate'"
-      [preview]="'I like your pictures !'"
-      (clickEvent)="selectMatch('Kate')"
-      title="View Messages"
-    ></app-match-card-demo>
-    <app-match-card-demo
-      [picture]="images[0]"
-      [match]="'Eva'"
-      [preview]="'Hey how are you ?'"
-      (clickEvent)="selectMatch('Eva')"
-      title="View Messages"
-    ></app-match-card-demo>
-  </div>
-  <div class="match-container" *ngIf="!selectedMatch && !isWomanGenderSearch()">
-    <app-match-card-demo
-      [picture]="images[1]"
-      [match]="'Mark'"
-      [preview]="'I like your pictures !'"
-      (clickEvent)="selectMatch('Mark')"
-      title="View Messages"
-    ></app-match-card-demo>
-    <app-match-card-demo
-      [picture]="images[0]"
-      [match]="'John'"
-      [preview]="'Hey how are you ?'"
-      (clickEvent)="selectMatch('John')"
-      title="View Messages"
-    ></app-match-card-demo>
-  </div>
+  @if (!selectedMatch && isWomanGenderSearch()) {
+    <div class="match-container">
+      <app-match-card-demo
+        [picture]="images[1]"
+        [match]="'Kate'"
+        [preview]="'I like your pictures !'"
+        (clickEvent)="selectMatch('Kate')"
+        title="View Messages"
+      ></app-match-card-demo>
+      <app-match-card-demo
+        [picture]="images[0]"
+        [match]="'Eva'"
+        [preview]="'Hey how are you ?'"
+        (clickEvent)="selectMatch('Eva')"
+        title="View Messages"
+      ></app-match-card-demo>
+    </div>
+  }
+  @if (!selectedMatch && !isWomanGenderSearch()) {
+    <div class="match-container">
+      <app-match-card-demo
+        [picture]="images[1]"
+        [match]="'Mark'"
+        [preview]="'I like your pictures !'"
+        (clickEvent)="selectMatch('Mark')"
+        title="View Messages"
+      ></app-match-card-demo>
+      <app-match-card-demo
+        [picture]="images[0]"
+        [match]="'John'"
+        [preview]="'Hey how are you ?'"
+        (clickEvent)="selectMatch('John')"
+        title="View Messages"
+      ></app-match-card-demo>
+    </div>
+  }
 
-  <div class="match-container" *ngIf="selectedMatch">
-    <a title="Back" (click)="back()">
-      <i class="bx bx-arrow-back"></i>
-    </a>
-    <div
-      *ngIf="
+  @if (selectedMatch) {
+    <div class="match-container">
+      <a title="Back" (click)="back()">
+        <i class="bx bx-arrow-back"></i>
+      </a>
+      @if (
         selectedMatch && (selectedMatch === 'Eva' || selectedMatch === 'John')
-      "
-    >
-      <div class="message left">
-        <span class="date">12/04/2024</span>
-        <span class="content">Hello there !</span>
-      </div>
-      <div class="message right">
-        <span class="date">10:17</span>
-        <span class="content">Hey how are you ?</span>
-      </div>
-    </div>
-    <div
-      *ngIf="
+        ) {
+        <div
+          >
+          <div class="message left">
+            <span class="date">12/04/2024</span>
+            <span class="content">Hello there !</span>
+          </div>
+          <div class="message right">
+            <span class="date">10:17</span>
+            <span class="content">Hey how are you ?</span>
+          </div>
+        </div>
+      }
+      @if (
         selectedMatch && (selectedMatch === 'Kate' || selectedMatch === 'Mark')
-      "
-    >
-      <div class="message right">
-        <span class="date">12:01</span>
-        <span class="content">What did you like about my profile ?</span>
-      </div>
-      <div class="message left">
-        <span class="date">12:10</span>
-        <span class="content">I like your pictures !</span>
-      </div>
+        ) {
+        <div
+          >
+          <div class="message right">
+            <span class="date">12:01</span>
+            <span class="content">What did you like about my profile ?</span>
+          </div>
+          <div class="message left">
+            <span class="date">12:10</span>
+            <span class="content">I like your pictures !</span>
+          </div>
+        </div>
+      }
     </div>
-  </div>
+  }
 </div>

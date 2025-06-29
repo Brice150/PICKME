@@ -1,14 +1,16 @@
 <div class="container" title="More Info" (click)="moreInfo()">
-  <img
-    [src]="user.pictures[0].content"
-    [alt]="user.nickname"
-    *ngIf="user.pictures && user.pictures.length !== 0"
-  />
-  <img
-    [src]="imagePath + 'No-Image.png'"
-    [alt]="user.nickname"
-    *ngIf="!user.pictures || user.pictures.length === 0"
-  />
+  @if (user.pictures && user.pictures.length !== 0) {
+    <img
+      [src]="user.pictures[0].content"
+      [alt]="user.nickname"
+      />
+  }
+  @if (!user.pictures || user.pictures.length === 0) {
+    <img
+      [src]="imagePath + 'No-Image.png'"
+      [alt]="user.nickname"
+      />
+  }
   <div class="infos-container">
     <span class="info">{{ user.email | description : 19 }}</span>
     <div class="stats">

@@ -1,100 +1,125 @@
 <div mat-dialog-content class="container">
-  <a
-    class="button left"
-    title="Dislike"
-    (click)="dislike()"
-    @dislikeButtonTrigger
-    *ngIf="!adminMode"
-  >
-    <i class="bx bxs-dislike"></i>
-  </a>
-  <a
-    class="button left"
-    title="Delete User"
-    (click)="deleteUser()"
-    @dislikeButtonTrigger
-    *ngIf="adminMode"
-  >
-    <i class="bx bxs-trash"></i>
-  </a>
-  <a
-    class="button right"
-    title="Like"
-    [ngClass]="{ gold: user.gold }"
-    (click)="like()"
-    @likeButtonTrigger
-    *ngIf="!adminMode && !matchMode"
-  >
-    <i class="bx bxs-like"></i>
-  </a>
+  @if (!adminMode) {
+    <a
+      class="button left"
+      title="Dislike"
+      (click)="dislike()"
+      @dislikeButtonTrigger
+      >
+      <i class="bx bxs-dislike"></i>
+    </a>
+  }
+  @if (adminMode) {
+    <a
+      class="button left"
+      title="Delete User"
+      (click)="deleteUser()"
+      @dislikeButtonTrigger
+      >
+      <i class="bx bxs-trash"></i>
+    </a>
+  }
+  @if (!adminMode && !matchMode) {
+    <a
+      class="button right"
+      title="Like"
+      [ngClass]="{ gold: user.gold }"
+      (click)="like()"
+      @likeButtonTrigger
+      >
+      <i class="bx bxs-like"></i>
+    </a>
+  }
   <div class="title">
     <span class="larger">{{ user.nickname }}</span>
     <span class="subtitle">
       A {{ user.birthDate | age }} years old {{ user.job | lowercase }} at
       {{
-        user.geolocation.distance +
-          (user.geolocation.distance === 1 || user.geolocation.distance === 0
-            ? " km"
-            : " kms")
+      user.geolocation.distance +
+      (user.geolocation.distance === 1 || user.geolocation.distance === 0
+      ? " km"
+      : " kms")
       }}
     </span>
   </div>
   <div class="picture-container">
-    <swiper-container
-      effect="cards"
-      mousewheel="true"
-      *ngIf="user.pictures?.length !== 0"
-    >
-      <swiper-slide lazy="true" *ngFor="let picture of user.pictures">
-        <img [src]="picture.content" [alt]="picture" loading="true" />
-      </swiper-slide>
-    </swiper-container>
-    <img
-      *ngIf="!user?.pictures || user.pictures?.length === 0"
-      [src]="imagePath + 'No-Image.png'"
-      [alt]="user.nickname"
-    />
+    @if (user.pictures?.length !== 0) {
+      <swiper-container
+        effect="cards"
+        mousewheel="true"
+        >
+        @for (picture of user.pictures; track picture) {
+          <swiper-slide lazy="true">
+            <img [src]="picture.content" [alt]="picture" loading="true" />
+          </swiper-slide>
+        }
+      </swiper-container>
+    }
+    @if (!user?.pictures || user.pictures?.length === 0) {
+      <img
+        [src]="imagePath + 'No-Image.png'"
+        [alt]="user.nickname"
+        />
+    }
   </div>
   <div class="main-infos-container">
     <span>{{ user.description }}</span>
   </div>
   <mat-chip-listbox>
-    <mat-chip color="accent" *ngIf="user?.height">
-      <i class="bx bx-sort-up" matChipAvatar></i>
-      {{ user.height }}
-    </mat-chip>
-    <mat-chip color="accent" *ngIf="user.preferences?.alcoholDrinking">
-      <i class="bx bxs-drink" matChipAvatar></i>
-      {{ user.preferences?.alcoholDrinking }}
-    </mat-chip>
-    <mat-chip color="accent" *ngIf="user.preferences?.smokes">
-      <i class="bx bx-wind" matChipAvatar></i>
-      {{ user.preferences?.smokes }}
-    </mat-chip>
-    <mat-chip color="accent" *ngIf="user.preferences?.sportPractice">
-      <i class="bx bx-dumbbell" matChipAvatar></i>
-      {{ user.preferences?.sportPractice }}
-    </mat-chip>
-    <mat-chip color="accent" *ngIf="user.preferences?.parenthood">
-      <i class="bx bx-child" matChipAvatar></i>
-      {{ user.preferences?.parenthood }}
-    </mat-chip>
-    <mat-chip color="accent" *ngIf="user.preferences?.gamer">
-      <i class="bx bxs-joystick" matChipAvatar></i>
-      {{ user.preferences?.gamer }}
-    </mat-chip>
-    <mat-chip color="accent" *ngIf="user.preferences?.animals">
-      <i class="bx bxs-cat" matChipAvatar></i>
-      {{ user.preferences?.animals }}
-    </mat-chip>
-    <mat-chip color="accent" *ngIf="user.preferences?.organised">
-      <i class="bx bxs-layer" matChipAvatar></i>
-      {{ user.preferences?.organised }}
-    </mat-chip>
-    <mat-chip color="accent" *ngIf="user.preferences?.personality">
-      <i class="bx bxs-user-voice" matChipAvatar></i>
-      {{ user.preferences?.personality }}
-    </mat-chip>
+    @if (user?.height) {
+      <mat-chip color="accent">
+        <i class="bx bx-sort-up" matChipAvatar></i>
+        {{ user.height }}
+      </mat-chip>
+    }
+    @if (user.preferences?.alcoholDrinking) {
+      <mat-chip color="accent">
+        <i class="bx bxs-drink" matChipAvatar></i>
+        {{ user.preferences?.alcoholDrinking }}
+      </mat-chip>
+    }
+    @if (user.preferences?.smokes) {
+      <mat-chip color="accent">
+        <i class="bx bx-wind" matChipAvatar></i>
+        {{ user.preferences?.smokes }}
+      </mat-chip>
+    }
+    @if (user.preferences?.sportPractice) {
+      <mat-chip color="accent">
+        <i class="bx bx-dumbbell" matChipAvatar></i>
+        {{ user.preferences?.sportPractice }}
+      </mat-chip>
+    }
+    @if (user.preferences?.parenthood) {
+      <mat-chip color="accent">
+        <i class="bx bx-child" matChipAvatar></i>
+        {{ user.preferences?.parenthood }}
+      </mat-chip>
+    }
+    @if (user.preferences?.gamer) {
+      <mat-chip color="accent">
+        <i class="bx bxs-joystick" matChipAvatar></i>
+        {{ user.preferences?.gamer }}
+      </mat-chip>
+    }
+    @if (user.preferences?.animals) {
+      <mat-chip color="accent">
+        <i class="bx bxs-cat" matChipAvatar></i>
+        {{ user.preferences?.animals }}
+      </mat-chip>
+    }
+    @if (user.preferences?.organised) {
+      <mat-chip color="accent">
+        <i class="bx bxs-layer" matChipAvatar></i>
+        {{ user.preferences?.organised }}
+      </mat-chip>
+    }
+    @if (user.preferences?.personality) {
+      <mat-chip color="accent">
+        <i class="bx bxs-user-voice" matChipAvatar></i>
+        {{ user.preferences?.personality }}
+      </mat-chip>
+    }
   </mat-chip-listbox>
   <a class="close-button" title="Close" (click)="close()">Close</a>
 </div>

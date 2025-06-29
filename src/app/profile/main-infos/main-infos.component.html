@@ -3,22 +3,22 @@
     <mat-label>Nickname</mat-label>
     <input matInput formControlName="nickname" required />
     @if (mainInfosForm.get('nickname')!.hasError('required')) {
-    <mat-error>Nickname is required</mat-error>
+      <mat-error>Nickname is required</mat-error>
     } @else if (mainInfosForm.get('nickname')!.hasError('minlength')) {
-    <mat-error>Nickname is too short</mat-error>
+      <mat-error>Nickname is too short</mat-error>
     } @else if (mainInfosForm.get('nickname')!.hasError('maxlength')) {
-    <mat-error>Nickname is too long</mat-error>
+      <mat-error>Nickname is too long</mat-error>
     }
   </mat-form-field>
   <mat-form-field color="accent">
     <mat-label>Job</mat-label>
     <input matInput formControlName="job" required />
     @if (mainInfosForm.get('job')!.hasError('required')) {
-    <mat-error>Job is required</mat-error>
+      <mat-error>Job is required</mat-error>
     } @else if (mainInfosForm.get('job')!.hasError('minlength')) {
-    <mat-error>Job is too short</mat-error>
+      <mat-error>Job is too short</mat-error>
     } @else if (mainInfosForm.get('job')!.hasError('maxlength')) {
-    <mat-error>Job is too long</mat-error>
+      <mat-error>Job is too long</mat-error>
     }
   </mat-form-field>
   <div class="slide-container">
@@ -34,20 +34,22 @@
     </mat-slider>
   </div>
   <div class="button-container">
-    <button
-      *ngIf="mainInfosForm.dirty"
-      type="button"
-      title="Cancel"
-      (click)="cancel()"
-    >
-      Cancel
-    </button>
-    <button
-      title="Update"
-      *ngIf="mainInfosForm.valid && mainInfosForm.dirty"
-      type="submit"
-    >
-      Update
-    </button>
+    @if (mainInfosForm.dirty) {
+      <button
+        type="button"
+        title="Cancel"
+        (click)="cancel()"
+        >
+        Cancel
+      </button>
+    }
+    @if (mainInfosForm.valid && mainInfosForm.dirty) {
+      <button
+        title="Update"
+        type="submit"
+        >
+        Update
+      </button>
+    }
   </div>
 </form>

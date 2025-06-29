@@ -1,34 +1,38 @@
-<swiper-container
-  effect="cards"
-  mousewheel="true"
-  (swiperslidechange)="onSlideChange()"
-  *ngIf="users && users.length !== 0"
->
-  <swiper-slide lazy="true" *ngFor="let user of users">
-    <app-card
-      loading="true"
-      [user]="user"
-      [display]="isCurrentView(user) && !activeMatchAnimation && !isLoading"
-      [activeMatchAnimation]="activeMatchAnimation"
-      (likeEvent)="like(user)"
-      (dislikeEvent)="dislike(user)"
-    ></app-card>
-  </swiper-slide>
-  <swiper-slide>
+@if (users && users.length !== 0) {
+  <swiper-container
+    effect="cards"
+    mousewheel="true"
+    (swiperslidechange)="onSlideChange()"
+    >
+    @for (user of users; track user) {
+      <swiper-slide lazy="true">
+        <app-card
+          loading="true"
+          [user]="user"
+          [display]="isCurrentView(user) && !activeMatchAnimation && !isLoading"
+          [activeMatchAnimation]="activeMatchAnimation"
+          (likeEvent)="like(user)"
+          (dislikeEvent)="dislike(user)"
+        ></app-card>
+      </swiper-slide>
+    }
+    <swiper-slide>
+      <app-loading-card
+        [loading]="loading"
+        [usersNumber]="users.length"
+        (goToActionEvent)="goTo($event)"
+      ></app-loading-card>
+    </swiper-slide>
+  </swiper-container>
+}
+@if (initLoading || (users && users.length === 0)) {
+  <div
+    class="loading-container"
+    >
     <app-loading-card
-      [loading]="loading"
+      [loading]="initLoading"
       [usersNumber]="users.length"
       (goToActionEvent)="goTo($event)"
     ></app-loading-card>
-  </swiper-slide>
-</swiper-container>
-<div
-  class="loading-container"
-  *ngIf="initLoading || (users && users.length === 0)"
->
-  <app-loading-card
-    [loading]="initLoading"
-    [usersNumber]="users.length"
-    (goToActionEvent)="goTo($event)"
-  ></app-loading-card>
-</div>
+  </div>
+}

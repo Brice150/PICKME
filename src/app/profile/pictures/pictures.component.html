@@ -1,27 +1,31 @@
 <div class="container">
   <div class="picture-container">
-    <swiper-container
-      effect="cards"
-      mousewheel="true"
-      (swiperslidechange)="onSlideChange()"
-      *ngIf="user?.pictures?.length !== 0"
-    >
-      <swiper-slide lazy="true" *ngFor="let picture of user?.pictures">
-        <app-picture
-          loading="true"
-          [picture]="picture"
-          [display]="isCurrentView(picture)"
-          [isLoading]="isLoading"
-          (deleteEvent)="deletePicture(picture.id)"
-          (selectMainEvent)="selectMainPicture(picture.id)"
-        ></app-picture>
-      </swiper-slide>
-    </swiper-container>
-    <img
-      *ngIf="!user?.pictures || user?.pictures?.length === 0"
-      [src]="imagePath + 'No-Image.png'"
-      [alt]="user?.nickname"
-    />
+    @if (user?.pictures?.length !== 0) {
+      <swiper-container
+        effect="cards"
+        mousewheel="true"
+        (swiperslidechange)="onSlideChange()"
+        >
+        @for (picture of user?.pictures; track picture) {
+          <swiper-slide lazy="true">
+            <app-picture
+              loading="true"
+              [picture]="picture"
+              [display]="isCurrentView(picture)"
+              [isLoading]="isLoading"
+              (deleteEvent)="deletePicture(picture.id)"
+              (selectMainEvent)="selectMainPicture(picture.id)"
+            ></app-picture>
+          </swiper-slide>
+        }
+      </swiper-container>
+    }
+    @if (!user?.pictures || user?.pictures?.length === 0) {
+      <img
+        [src]="imagePath + 'No-Image.png'"
+        [alt]="user?.nickname"
+        />
+    }
   </div>
   <div class="button-container">
     <label
@@ -29,18 +33,18 @@
       class="add"
       title="Add Picture"
       [ngClass]="{ disabled: isLoading }"
-    >
+      >
       Add picture</label
-    >
-    <input
-      #imageInput
-      type="file"
-      id="image"
-      (change)="addPicture($any($event.target).files)"
-      name="files"
-      accept=".jpg, .jpeg, .png"
-      multiple
-      [disabled]="isLoading"
-    />
-  </div>
-</div>
+      >
+      <input
+        #imageInput
+        type="file"
+        id="image"
+        (change)="addPicture($any($event.target).files)"
+        name="files"
+        accept=".jpg, .jpeg, .png"
+        multiple
+        [disabled]="isLoading"
+        />
+      </div>
+    </div>

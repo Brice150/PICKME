@@ -1,29 +1,33 @@
-<a
-  class="button left"
-  title="Dislike"
-  (click)="dislike()"
-  @dislikeButtonTrigger
-  *ngIf="display"
->
-  <i class="bx bxs-dislike"></i>
-</a>
-<a
-  class="button right"
-  title="Like"
-  [ngClass]="{ gold: image.includes('Picture2.jpg') }"
-  (click)="like()"
-  @likeButtonTrigger
-  *ngIf="display"
->
-  <i class="bx bxs-like"></i>
-</a>
+@if (display) {
+  <a
+    class="button left"
+    title="Dislike"
+    (click)="dislike()"
+    @dislikeButtonTrigger
+    >
+    <i class="bx bxs-dislike"></i>
+  </a>
+}
+@if (display) {
+  <a
+    class="button right"
+    title="Like"
+    [ngClass]="{ gold: image.includes('Picture2.jpg') }"
+    (click)="like()"
+    @likeButtonTrigger
+    >
+    <i class="bx bxs-like"></i>
+  </a>
+}
 <div class="picture-container">
   <img [src]="image" [alt]="image" />
 </div>
 
-<div class="match-animation" *ngIf="activeMatchAnimation">
-  <div class="flex" @textMatchTrigger>
-    <span>It's a Match !</span>
-    <i class="bx bxs-flame"></i>
+@if (activeMatchAnimation) {
+  <div class="match-animation">
+    <div class="flex" @textMatchTrigger>
+      <span>It's a Match !</span>
+      <i class="bx bxs-flame"></i>
+    </div>
   </div>
-</div>
+}

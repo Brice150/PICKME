@@ -1,25 +1,30 @@
-<div
-  class="container"
-  *ngIf="!(page === 0 && usersNumber < maxPerPage) && !loading"
->
-  <a
-    [title]="page === 0 ? '' : 'Previous'"
-    (click)="previous()"
-    [ngClass]="{ disabled: page === 0 }"
-  >
-    <i class="bx bx-left-arrow-alt"></i>
-  </a>
-  <span *ngIf="maxPages === 100"
-    >Page : {{ page + 1 }} ({{ usersNumber }})</span
-  >
-  <span *ngIf="maxPages !== 100"
-    >Page : {{ page + 1 }} / {{ maxPages }} ({{ usersNumber }})</span
-  >
-  <a
-    [title]="usersNumber < maxPerPage ? '' : 'Next'"
-    (click)="next()"
-    [ngClass]="{ disabled: usersNumber < maxPerPage || page + 1 === maxPages }"
-  >
-    <i class="bx bx-right-arrow-alt"></i>
-  </a>
-</div>
+@if (!(page === 0 && usersNumber < maxPerPage) && !loading) {
+  <div
+    class="container"
+    >
+    <a
+      [title]="page === 0 ? '' : 'Previous'"
+      (click)="previous()"
+      [ngClass]="{ disabled: page === 0 }"
+      >
+      <i class="bx bx-left-arrow-alt"></i>
+    </a>
+    @if (maxPages === 100) {
+      <span
+        >Page : {{ page + 1 }} ({{ usersNumber }})</span
+        >
+      }
+      @if (maxPages !== 100) {
+        <span
+          >Page : {{ page + 1 }} / {{ maxPages }} ({{ usersNumber }})</span
+          >
+        }
+        <a
+          [title]="usersNumber < maxPerPage ? '' : 'Next'"
+          (click)="next()"
+          [ngClass]="{ disabled: usersNumber < maxPerPage || page + 1 === maxPages }"
+          >
+          <i class="bx bx-right-arrow-alt"></i>
+        </a>
+      </div>
+    }

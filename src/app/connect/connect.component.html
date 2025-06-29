@@ -5,16 +5,20 @@
       title="Register"
       [ngClass]="isRegistering ? 'active' : 'unactive'"
       >Register</a
-    >
-    <a
-      (click)="toggleLoginOrRegister('login')"
-      title="Login"
-      [ngClass]="!isRegistering ? 'active' : 'unactive'"
-      >Login</a
-    >
-  </div>
-  <div class="content">
-    <app-login *ngIf="!isRegistering"></app-login>
-    <app-register *ngIf="isRegistering"></app-register>
-  </div>
-</div>
+      >
+      <a
+        (click)="toggleLoginOrRegister('login')"
+        title="Login"
+        [ngClass]="!isRegistering ? 'active' : 'unactive'"
+        >Login</a
+        >
+      </div>
+      <div class="content">
+        @if (!isRegistering) {
+          <app-login></app-login>
+        }
+        @if (isRegistering) {
+          <app-register></app-register>
+        }
+      </div>
+    </div>

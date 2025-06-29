@@ -3,26 +3,28 @@
     <mat-label>Description</mat-label>
     <textarea matInput formControlName="description"></textarea>
     @if (descriptionForm.get('description')!.hasError('minlength')) {
-    <mat-error>Description is too short</mat-error>
+      <mat-error>Description is too short</mat-error>
     } @else if (descriptionForm.get('description')!.hasError('maxlength')) {
-    <mat-error>Description is too long</mat-error>
+      <mat-error>Description is too long</mat-error>
     }
   </mat-form-field>
   <div class="button-container">
-    <button
-      *ngIf="descriptionForm.dirty"
-      type="button"
-      title="Cancel"
-      (click)="cancel()"
-    >
-      Cancel
-    </button>
-    <button
-      title="Update"
-      *ngIf="descriptionForm.valid && descriptionForm.dirty"
-      type="submit"
-    >
-      Update
-    </button>
+    @if (descriptionForm.dirty) {
+      <button
+        type="button"
+        title="Cancel"
+        (click)="cancel()"
+        >
+        Cancel
+      </button>
+    }
+    @if (descriptionForm.valid && descriptionForm.dirty) {
+      <button
+        title="Update"
+        type="submit"
+        >
+        Update
+      </button>
+    }
   </div>
 </form>

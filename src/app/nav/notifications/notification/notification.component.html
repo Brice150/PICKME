@@ -1,19 +1,23 @@
 <div class="container" [ngClass]="{ gold: !notification.seen }" title="Match">
   <div class="title-container">
     <div class="title">
-      <i
-        class="bx bxs-flame"
-        *ngIf="notification.link === 'match' || notification.link === 'unmatch'"
-      ></i>
-      <i class="bx bx-x-circle" *ngIf="notification.link === 'delete'"></i>
-      <i
-        class="bx bxs-message-square-detail"
-        *ngIf="
-          notification.link !== 'match' &&
-          notification.link !== 'unmatch' &&
-          notification.link !== 'delete'
-        "
-      ></i>
+      @if (notification.link === 'match' || notification.link === 'unmatch') {
+        <i
+          class="bx bxs-flame"
+        ></i>
+      }
+      @if (notification.link === 'delete') {
+        <i class="bx bx-x-circle"></i>
+      }
+      @if (
+        notification.link !== 'match' &&
+        notification.link !== 'unmatch' &&
+        notification.link !== 'delete'
+        ) {
+        <i
+          class="bx bxs-message-square-detail"
+        ></i>
+      }
       <span>{{ notification.link }}</span>
     </div>
     <span class="date">{{ notification.date | customDate }}</span>

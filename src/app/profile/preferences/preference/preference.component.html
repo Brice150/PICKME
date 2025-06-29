@@ -2,35 +2,38 @@
   [formGroup]="preferenceForm"
   (ngSubmit)="updatePreferences()"
   class="preferences"
->
+  >
   <div class="chip-container">
     <span>{{ preference.title }}</span>
     <mat-chip-listbox [formControlName]="preference.name">
-      <mat-chip-option
-        *ngFor="let attribute of preference.elements"
-        [selected]="isSelected(attribute, preference.name)"
-        (click)="select(attribute, preference.name)"
-      >
-        <i [class]="preference.class" matChipAvatar></i>
-        {{ attribute }}
-      </mat-chip-option>
+      @for (attribute of preference.elements; track attribute) {
+        <mat-chip-option
+          [selected]="isSelected(attribute, preference.name)"
+          (click)="select(attribute, preference.name)"
+          >
+          <i [class]="preference.class" matChipAvatar></i>
+          {{ attribute }}
+        </mat-chip-option>
+      }
     </mat-chip-listbox>
   </div>
   <div class="button-container">
-    <button
-      *ngIf="preferenceForm.dirty"
-      type="button"
-      title="Cancel"
-      (click)="cancel()"
-    >
-      Cancel
-    </button>
-    <button
-      title="Update"
-      *ngIf="preferenceForm.valid && preferenceForm.dirty"
-      type="submit"
-    >
-      Update
-    </button>
+    @if (preferenceForm.dirty) {
+      <button
+        type="button"
+        title="Cancel"
+        (click)="cancel()"
+        >
+        Cancel
+      </button>
+    }
+    @if (preferenceForm.valid && preferenceForm.dirty) {
+      <button
+        title="Update"
+        type="submit"
+        >
+        Update
+      </button>
+    }
   </div>
 </form>
