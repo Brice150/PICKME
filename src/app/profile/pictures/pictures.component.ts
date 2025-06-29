@@ -4,9 +4,9 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Input,
   Output,
   ViewChild,
+  input
 } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Picture } from '../../core/interfaces/picture';
@@ -23,7 +23,7 @@ import { PictureComponent } from './picture/picture.component';
 })
 export class PicturesComponent {
   imagePath: string = environment.imagePath;
-  @Input() user?: User;
+  readonly user = input<User>();
   @Output() refreshEvent: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('imageInput') imageInput!: ElementRef;
   isLoading: boolean = false;
@@ -62,7 +62,7 @@ export class PicturesComponent {
 
           this.profileService.addPicture(dataURL).subscribe({
             next: (picture: Picture) => {
-              this.user?.pictures?.unshift(picture);
+              this.user()?.pictures?.unshift(picture);
               setTimeout(() => {
                 document.querySelector('swiper-container')?.swiper.update();
                 document.querySelector('swiper-container')?.swiper.slideTo(0);
@@ -82,18 +82,19 @@ export class PicturesComponent {
     this.profileService.deletePicture(pictureId).subscribe({
       next: () => {
         let isMainPictureDeleted: boolean = false;
-        const pictureIndex = this.user!.pictures!.findIndex(
+        const pictureIndex = this.user()!.pictures!.findIndex(
           (picture: Picture) => picture.id === pictureId
         );
         if (pictureIndex !== -1) {
           isMainPictureDeleted =
-            this.user!.pictures![pictureIndex].isMainPicture;
+            this.user()!.pictures![pictureIndex].isMainPicture;
           document
             .querySelector('swiper-container')
             ?.swiper.removeSlide(pictureIndex);
-          this.user!.pictures!.splice(pictureIndex, 1);
-          if (isMainPictureDeleted && this.user?.pictures?.length !== 0) {
-            this.user!.pictures![0].isMainPicture = true;
+          this.user()!.pictures!.splice(pictureIndex, 1);
+          const user = this.user();
+          if (isMainPictureDeleted && user?.pictures?.length !== 0) {
+            user!.pictures![0].isMainPicture = true;
           }
           this.refreshEvent.emit('Picture Deleted');
           this.isLoading = false;
@@ -106,14 +107,14 @@ export class PicturesComponent {
     this.isLoading = true;
     this.profileService.selectMainPicture(pictureId).subscribe({
       next: () => {
-        const pictureIndex = this.user!.pictures!.findIndex(
+        const pictureIndex = this.user()!.pictures!.findIndex(
           (picture: Picture) => picture.id === pictureId
         );
         if (pictureIndex !== -1) {
-          this.user?.pictures?.forEach(
+          user?.pictures?.forEach(
             (picture: Picture) => (picture.isMainPicture = false)
           );
-          this.user!.pictures![pictureIndex].isMainPicture = true;
+          user!.pictures![pictureIndex].isMainPicture = true;
         }
         this.refreshEvent.emit('Main Picture Selected');
         this.isLoading = false;
@@ -131,6 +132,6 @@ export class PicturesComponent {
     if (index === undefined) {
       return false;
     }
-    return picture.id === this.user?.pictures![index].id;
+    return picture.id === this.user()?.pictures![index].id;
   }
 }

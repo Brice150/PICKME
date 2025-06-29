@@ -1,76 +1,62 @@
-@if (display) {
-  <a
-    class="button left"
-    title="Dislike"
-    (click)="dislike()"
-    @dislikeButtonTrigger
-    >
-    <i class="bx bxs-dislike"></i>
-  </a>
-}
-@if (display) {
-  <a
-    class="button right"
-    title="Like"
-    [ngClass]="{ gold: user.gold }"
-    (click)="like()"
-    @likeButtonTrigger
-    >
-    <i class="bx bxs-like"></i>
-  </a>
+@if (display()) {
+<a
+  class="button left"
+  title="Dislike"
+  (click)="dislike()"
+  @dislikeButtonTrigger
+>
+  <i class="bx bxs-dislike"></i>
+</a>
+} @if (display()) {
+<a
+  class="button right"
+  title="Like"
+  [ngClass]="{ gold: user().gold }"
+  (click)="like()"
+  @likeButtonTrigger
+>
+  <i class="bx bxs-like"></i>
+</a>
 }
 <div class="picture-container">
-  @if (user.pictures && user.pictures.length !== 0) {
-    <img
-      [src]="user.pictures[0].content"
-      [alt]="user.nickname"
-      />
-  }
-  @if (!user.pictures || user.pictures.length === 0) {
-    <img
-      [src]="imagePath + 'No-Image.png'"
-      [alt]="user.nickname"
-      />
+  @if (user().pictures && user().pictures!.length !== 0) {
+  <img [src]="user().pictures![0].content" [alt]="user().nickname" />
+  } @if (!user().pictures || user().pictures!.length === 0) {
+  <img [src]="imagePath + 'No-Image.png'" [alt]="user().nickname" />
   }
 </div>
-@if (display) {
-  <div
-    class="text-container"
-    title="More Info"
-    (click)="moreInfo()"
-    @textTrigger
-    >
-    <div class="flex">
-      <div class="left">
-        <h2>{{ user.nickname }}</h2>
-        <h3>{{ user.job }}</h3>
-      </div>
-      <div class="right">
-        <h2 class="age">{{ user.birthDate | age }}</h2>
-        <h3>
-          {{
-          user.geolocation.distance +
-          (user.geolocation.distance === 1 || user.geolocation.distance === 0
-          ? " km"
-          : " kms")
-          }}
-        </h3>
-      </div>
+@if (display()) {
+<div class="text-container" title="More Info" (click)="moreInfo()" @textTrigger>
+  <div class="flex">
+    <div class="left">
+      <h2>{{ user().nickname }}</h2>
+      <h3>{{ user().job }}</h3>
     </div>
-    <span class="description">
-      {{ user.description | description : 150 }}
-    </span>
+    <div class="right">
+      <h2 class="age">{{ user().birthDate | age }}</h2>
+      <h3>
+        {{
+          user().geolocation.distance +
+            (user().geolocation.distance === 1 ||
+            user().geolocation.distance === 0
+              ? " km"
+              : " kms")
+        }}
+      </h3>
+    </div>
   </div>
+  <span class="description">
+    {{ user().description | description : 150 }}
+  </span>
+</div>
+} @if (activeMatchAnimation()) {
+<div class="match-animation">
+  <div class="flex" @textMatchTrigger>
+    <span>It's a Match !</span>
+    <i class="bx bxs-flame"></i>
+  </div>
+  <a class="button" title="View Match" @buttonMatchTrigger (click)="viewMatch()"
+    >View Match</a
+  >
+</div>
 }
-
-@if (activeMatchAnimation) {
-  <div class="match-animation">
-    <div class="flex" @textMatchTrigger>
-      <span>It's a Match !</span>
-      <i class="bx bxs-flame"></i>
-    </div>
-    <a class="button" title="View Match" @buttonMatchTrigger (click)="viewMatch()"
-      >View Match</a
-      >
-    </div>
-  }

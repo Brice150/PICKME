@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
     styleUrl: './nav-buttons.component.css'
 })
 export class NavButtonsComponent {
-  @Input() hasAdminRole: boolean = false;
+  readonly hasAdminRole = input<boolean>(false);
   @Output() toggleMenuEvent: EventEmitter<void> = new EventEmitter<void>();
   @Output() logoutEvent: EventEmitter<void> = new EventEmitter<void>();
 

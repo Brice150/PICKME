@@ -1,12 +1,12 @@
 <div class="container">
   <div class="picture-container">
-    @if (user?.pictures?.length !== 0) {
+    @if (user()?.pictures?.length !== 0) {
       <swiper-container
         effect="cards"
         mousewheel="true"
         (swiperslidechange)="onSlideChange()"
         >
-        @for (picture of user?.pictures; track picture) {
+        @for (picture of user()?.pictures; track picture) {
           <swiper-slide lazy="true">
             <app-picture
               loading="true"
@@ -20,10 +20,10 @@
         }
       </swiper-container>
     }
-    @if (!user?.pictures || user?.pictures?.length === 0) {
+    @if (!user()?.pictures || user()?.pictures?.length === 0) {
       <img
         [src]="imagePath + 'No-Image.png'"
-        [alt]="user?.nickname"
+        [alt]="user()?.nickname"
         />
     }
   </div>

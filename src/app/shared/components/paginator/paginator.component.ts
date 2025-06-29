@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 
 @Component({
     selector: 'app-paginator',
@@ -9,17 +9,17 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class PaginatorComponent {
   page: number = 0;
-  @Input() loading: boolean = true;
-  @Input() usersNumber: number = 0;
-  @Input() maxPerPage: number = 0;
-  @Input() maxPages: number = 100;
+  readonly loading = input<boolean>(true);
+  readonly usersNumber = input<number>(0);
+  readonly maxPerPage = input<number>(0);
+  readonly maxPages = input<number>(100);
   @Output() handlePageEvent: EventEmitter<number> = new EventEmitter<number>();
 
   next(): void {
     if (
-      !this.loading &&
-      this.usersNumber === this.maxPerPage &&
-      this.page + 1 !== this.maxPages
+      !this.loading() &&
+      this.usersNumber() === this.maxPerPage() &&
+      this.page + 1 !== this.maxPages()
     ) {
       this.page++;
       this.handlePageEvent.emit(this.page);

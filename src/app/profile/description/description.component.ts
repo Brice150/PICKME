@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -23,7 +23,7 @@ import { MatInputModule } from '@angular/material/input';
     styleUrl: './description.component.css'
 })
 export class DescriptionComponent implements OnInit {
-  @Input() user!: User;
+  readonly user = input.required<User>();
   descriptionForm!: FormGroup;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 
@@ -35,7 +35,7 @@ export class DescriptionComponent implements OnInit {
   ngOnInit(): void {
     this.descriptionForm = this.fb.group({
       description: [
-        this.user.description,
+        this.user().description,
         [Validators.minLength(2), Validators.maxLength(500)],
       ],
     });
@@ -47,16 +47,18 @@ export class DescriptionComponent implements OnInit {
   }
 
   setDescription(): void {
-    if (this.user) {
-      this.user.description = this.descriptionForm.get('description')?.value;
+    const user = this.user();
+    if (user) {
+      user.description = this.descriptionForm.get('description')?.value;
       this.descriptionForm.markAsPristine();
     }
   }
 
   cancel(): void {
-    if (this.user) {
-      this.user.description = this.connectService.connectedUser!.description;
-      this.descriptionForm.get('description')?.setValue(this.user.description);
+    const user = this.user();
+    if (user) {
+      user.description = this.connectService.connectedUser!.description;
+      this.descriptionForm.get('description')?.setValue(user.description);
       this.descriptionForm.markAsPristine();
     }
   }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -26,7 +26,7 @@ import { ConnectService } from '../../core/services/connect.service';
     styleUrl: './gender-age.component.css'
 })
 export class GenderAgeComponent implements OnInit {
-  @Input() user!: User;
+  readonly user = input.required<User>();
   genderAgeForm!: FormGroup;
   genders: string[] = Object.values(Gender);
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
@@ -38,10 +38,10 @@ export class GenderAgeComponent implements OnInit {
 
   ngOnInit(): void {
     this.genderAgeForm = this.fb.group({
-      gender: [this.user.genderAge?.gender, [Validators.required]],
-      genderSearch: [this.user.genderAge?.genderSearch, [Validators.required]],
-      minAge: [this.user.genderAge?.minAge, [Validators.required]],
-      maxAge: [this.user.genderAge?.maxAge, [Validators.required]],
+      gender: [this.user().genderAge?.gender, [Validators.required]],
+      genderSearch: [this.user().genderAge?.genderSearch, [Validators.required]],
+      minAge: [this.user().genderAge?.minAge, [Validators.required]],
+      maxAge: [this.user().genderAge?.maxAge, [Validators.required]],
     });
   }
 
@@ -51,31 +51,33 @@ export class GenderAgeComponent implements OnInit {
   }
 
   setGenderAge(): void {
-    if (this.user) {
-      this.user.genderAge.gender = this.genderAgeForm.get('gender')?.value;
-      this.user.genderAge.genderSearch =
+    const user = this.user();
+    if (user) {
+      user.genderAge.gender = this.genderAgeForm.get('gender')?.value;
+      user.genderAge.genderSearch =
         this.genderAgeForm.get('genderSearch')?.value;
-      this.user.genderAge.minAge = this.genderAgeForm.get('minAge')?.value;
-      this.user.genderAge.maxAge = this.genderAgeForm.get('maxAge')?.value;
+      user.genderAge.minAge = this.genderAgeForm.get('minAge')?.value;
+      user.genderAge.maxAge = this.genderAgeForm.get('maxAge')?.value;
       this.genderAgeForm.markAsPristine();
     }
   }
 
   cancel(): void {
-    if (this.user) {
-      this.user.genderAge.gender =
+    const user = this.user();
+    if (user) {
+      user.genderAge.gender =
         this.connectService.connectedUser!.genderAge?.gender!;
-      this.user.genderAge.genderSearch =
+      user.genderAge.genderSearch =
         this.connectService.connectedUser!.genderAge?.genderSearch!;
-      this.user.genderAge.minAge =
+      user.genderAge.minAge =
         this.connectService.connectedUser!.genderAge?.minAge!;
-      this.user.genderAge.maxAge =
+      user.genderAge.maxAge =
         this.connectService.connectedUser!.genderAge?.maxAge!;
       this.genderAgeForm.patchValue({
-        gender: this.user.genderAge.gender,
-        genderSearch: this.user.genderAge.genderSearch,
-        minAge: this.user.genderAge.minAge,
-        maxAge: this.user.genderAge.maxAge,
+        gender: user.genderAge.gender,
+        genderSearch: user.genderAge.genderSearch,
+        minAge: user.genderAge.minAge,
+        maxAge: user.genderAge.maxAge,
       });
       this.genderAgeForm.markAsPristine();
     }

@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   Component,
-  Input,
   OnInit,
+  input
 } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { environment } from '../../../environments/environment';
@@ -18,12 +18,13 @@ import { Gender } from '../../core/enums/gender';
 })
 export class ProfileDemoComponent implements OnInit {
   imagePath: string = environment.imagePath;
-  @Input() userGender!: Gender;
+  readonly userGender = input.required<Gender>();
 
   ngOnInit(): void {
-    if (this.userGender === Gender.MAN) {
+    const userGender = this.userGender();
+    if (userGender === Gender.MAN) {
       this.imagePath = this.imagePath + 'man-profile-demo/';
-    } else if (this.userGender === Gender.WOMAN) {
+    } else if (userGender === Gender.WOMAN) {
       this.imagePath = this.imagePath + 'woman-profile-demo/';
     }
   }

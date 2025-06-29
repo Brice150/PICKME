@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { DeletedAccount } from '../../core/interfaces/deleted-account';
 import { environment } from '../../../environments/environment';
 import { DescriptionPipe } from '../../shared/pipes/description.pipe';
@@ -13,5 +13,5 @@ import { CustomDatePipe } from '../../shared/pipes/custom-date.pipe';
 })
 export class DeletedAccountCardComponent {
   imagePath: string = environment.imagePath;
-  @Input() deletedAccount!: DeletedAccount;
+  readonly deletedAccount = input.required<DeletedAccount>();
 }

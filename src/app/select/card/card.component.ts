@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { filter } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -37,17 +37,17 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class CardComponent {
   imagePath: string = environment.imagePath;
-  @Input() user!: User;
-  @Input() display: boolean = false;
+  readonly user = input.required<User>();
+  readonly display = input<boolean>(false);
   @Output() likeEvent: EventEmitter<void> = new EventEmitter<void>();
   @Output() dislikeEvent: EventEmitter<void> = new EventEmitter<void>();
-  @Input() activeMatchAnimation: boolean = false;
+  readonly activeMatchAnimation = input<boolean>(false);
 
   constructor(public dialog: MatDialog, private router: Router) {}
 
   moreInfo(): void {
     const dialogRef = this.dialog.open(MoreInfoComponent, {
-      data: { user: this.user, adminMode: false, matchMode: false },
+      data: { user: this.user(), adminMode: false, matchMode: false },
     });
 
     dialogRef

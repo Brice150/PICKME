@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -28,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
     styleUrl: './password.component.css'
 })
 export class PasswordComponent implements OnInit {
-  @Input() user!: User;
+  readonly user = input.required<User>();
   hide: boolean = true;
   hideDuplicate: boolean = true;
   passwordForm!: FormGroup;
@@ -85,15 +85,17 @@ export class PasswordComponent implements OnInit {
   }
 
   setConnectionInfos(): void {
-    if (this.user) {
-      this.user.password = this.passwordForm.get('password')?.value;
+    const user = this.user();
+    if (user) {
+      user.password = this.passwordForm.get('password')?.value;
       this.passwordForm.markAsPristine();
     }
   }
 
   cancel(): void {
-    if (this.user) {
-      this.user.password = this.connectService.connectedUser!.password;
+    const user = this.user();
+    if (user) {
+      user.password = this.connectService.connectedUser!.password;
       this.passwordForm.patchValue({
         password: null,
         passwordDuplicate: null,

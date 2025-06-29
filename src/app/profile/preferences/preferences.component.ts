@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
-  Input,
   Output,
   ViewChild,
+  input
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlcoholDrinking } from '../../core/enums/alcohol-drinking';
@@ -32,7 +32,7 @@ import { PreferenceComponent } from './preference/preference.component';
     styleUrl: './preferences.component.css'
 })
 export class PreferencesComponent {
-  @Input() user!: User;
+  readonly user = input.required<User>();
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('preference') preference?: PreferenceComponent;
   currentPreferenceIndex: number = 0;

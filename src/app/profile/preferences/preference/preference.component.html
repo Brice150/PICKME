@@ -4,14 +4,14 @@
   class="preferences"
   >
   <div class="chip-container">
-    <span>{{ preference.title }}</span>
-    <mat-chip-listbox [formControlName]="preference.name">
-      @for (attribute of preference.elements; track attribute) {
+    <span>{{ preference().title }}</span>
+    <mat-chip-listbox [formControlName]="preference().name">
+      @for (attribute of preference().elements; track attribute) {
         <mat-chip-option
-          [selected]="isSelected(attribute, preference.name)"
-          (click)="select(attribute, preference.name)"
+          [selected]="isSelected(attribute, preference().name)"
+          (click)="select(attribute, preference().name)"
           >
-          <i [class]="preference.class" matChipAvatar></i>
+          <i [class]="preference().class" matChipAvatar></i>
           {{ attribute }}
         </mat-chip-option>
       }

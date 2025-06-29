@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 import { Notification } from '../../core/interfaces/notification';
 import { NotificationComponent } from './notification/notification.component';
 
@@ -10,7 +10,7 @@ import { NotificationComponent } from './notification/notification.component';
     styleUrl: './notifications.component.css'
 })
 export class NotificationsComponent {
-  @Input() notifications: Notification[] = [];
+  readonly notifications = input<Notification[]>([]);
   @Output() goToEvent: EventEmitter<void> = new EventEmitter<void>();
 
   goTo(): void {

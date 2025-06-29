@@ -1,4 +1,4 @@
-@if (display) {
+@if (display()) {
   <a
     class="button left"
     title="Dislike"
@@ -8,11 +8,11 @@
     <i class="bx bxs-dislike"></i>
   </a>
 }
-@if (display) {
+@if (display()) {
   <a
     class="button right"
     title="Like"
-    [ngClass]="{ gold: image.includes('Picture2.jpg') }"
+    [ngClass]="{ gold: image().includes('Picture2.jpg') }"
     (click)="like()"
     @likeButtonTrigger
     >
@@ -20,7 +20,7 @@
   </a>
 }
 <div class="picture-container">
-  <img [src]="image" [alt]="image" />
+  <img [src]="image()" [alt]="image()" />
 </div>
 
 @if (activeMatchAnimation) {

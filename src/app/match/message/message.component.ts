@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { Message } from '../../core/interfaces/message';
 import { CustomDatePipe } from '../../shared/pipes/custom-date.pipe';
 
@@ -10,6 +10,6 @@ import { CustomDatePipe } from '../../shared/pipes/custom-date.pipe';
     styleUrl: './message.component.css'
 })
 export class MessageComponent {
-  @Input() message!: Message;
-  @Input() userName!: string;
+  readonly message = input.required<Message>();
+  readonly userName = input.required<string>();
 }

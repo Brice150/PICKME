@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { Gender } from '../../core/enums/gender';
 import { MatchCardDemoComponent } from './match-card-demo/match-card-demo.component';
 import { environment } from '../../../environments/environment';
@@ -12,14 +12,15 @@ import { environment } from '../../../environments/environment';
 })
 export class MatchDemoComponent implements OnInit {
   imagePath: string = environment.imagePath;
-  @Input() userGenderSearch!: Gender;
+  readonly userGenderSearch = input.required<Gender>();
   selectedMatch?: string;
   images: string[] = [];
 
   ngOnInit(): void {
-    if (this.userGenderSearch === Gender.MAN) {
+    const userGenderSearch = this.userGenderSearch();
+    if (userGenderSearch === Gender.MAN) {
       this.imagePath = this.imagePath + 'man-select-demo/';
-    } else if (this.userGenderSearch === Gender.WOMAN) {
+    } else if (userGenderSearch === Gender.WOMAN) {
       this.imagePath = this.imagePath + 'woman-select-demo/';
     }
     this.images = [
@@ -29,7 +30,7 @@ export class MatchDemoComponent implements OnInit {
   }
 
   isWomanGenderSearch(): boolean {
-    return this.userGenderSearch === Gender.WOMAN;
+    return this.userGenderSearch() === Gender.WOMAN;
   }
 
   selectMatch(match: string): void {

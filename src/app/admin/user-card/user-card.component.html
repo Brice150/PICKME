@@ -1,32 +1,25 @@
 <div class="container" title="More Info" (click)="moreInfo()">
-  @if (user.pictures && user.pictures.length !== 0) {
-    <img
-      [src]="user.pictures[0].content"
-      [alt]="user.nickname"
-      />
-  }
-  @if (!user.pictures || user.pictures.length === 0) {
-    <img
-      [src]="imagePath + 'No-Image.png'"
-      [alt]="user.nickname"
-      />
+  @if (user().pictures && user().pictures!.length !== 0) {
+  <img [src]="user().pictures![0].content" [alt]="user().nickname" />
+  } @if (!user().pictures || user().pictures!.length === 0) {
+  <img [src]="imagePath + 'No-Image.png'" [alt]="user().nickname" />
   }
   <div class="infos-container">
-    <span class="info">{{ user.email | description : 19 }}</span>
+    <span class="info">{{ user().email | description : 19 }}</span>
     <div class="stats">
       <div class="stat">
-        <span>{{ user.stats?.totalDislikes }}</span>
+        <span>{{ user().stats?.totalDislikes }}</span>
         <i class="bx bxs-dislike"></i>
       </div>
       <div class="stat">
-        <span>{{ user.stats?.totalLikes }}</span>
+        <span>{{ user().stats?.totalLikes }}</span>
         <i class="bx bxs-like"></i>
       </div>
       <div class="stat">
-        <span>{{ user.stats?.totalMatches }}</span>
+        <span>{{ user().stats?.totalMatches }}</span>
         <i class="bx bxs-flame gold"></i>
       </div>
     </div>
-    <span class="info">{{ user.registeredDate! | customDate }}</span>
+    <span class="info">{{ user().registeredDate! | customDate }}</span>
   </div>
 </div>

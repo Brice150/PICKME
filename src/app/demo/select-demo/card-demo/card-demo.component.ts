@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 import {
   DislikeButtonAnimation,
   LikeButtonAnimation,
@@ -14,14 +14,14 @@ import {
     animations: [LikeButtonAnimation, DislikeButtonAnimation, TextMatchAnimation]
 })
 export class CardDemoComponent {
-  @Input() display: boolean = false;
-  @Input() image!: string;
+  readonly display = input<boolean>(false);
+  readonly image = input.required<string>();
   @Output() likeEvent: EventEmitter<void> = new EventEmitter<void>();
   @Output() dislikeEvent: EventEmitter<void> = new EventEmitter<void>();
   activeMatchAnimation: boolean = false;
 
   like(): void {
-    if (this.image.includes('Picture2.jpg')) {
+    if (this.image().includes('Picture2.jpg')) {
       this.activeMatchAnimation = true;
       setTimeout(() => {
         this.activeMatchAnimation = false;

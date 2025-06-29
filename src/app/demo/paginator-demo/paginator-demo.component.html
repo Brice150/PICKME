@@ -1,15 +1,15 @@
 <div class="container">
   <a
-    [title]="currentIndex === 0 ? '' : 'Previous'"
+    [title]="currentIndex() === 0 ? '' : 'Previous'"
     (click)="previous()"
-    [ngClass]="{ disabled: currentIndex === 0 }"
+    [ngClass]="{ disabled: currentIndex() === 0 }"
   >
     <i class="bx bx-left-arrow-alt"></i>
   </a>
   <a
-    [title]="currentIndex === listLength - 1 ? '' : 'Next'"
+    [title]="currentIndex() === listLength() - 1 ? '' : 'Next'"
     (click)="next()"
-    [ngClass]="{ disabled: currentIndex === listLength - 1 }"
+    [ngClass]="{ disabled: currentIndex() === listLength() - 1 }"
   >
     <i class="bx bx-right-arrow-alt"></i>
   </a>

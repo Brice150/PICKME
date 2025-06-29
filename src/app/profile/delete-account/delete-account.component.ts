@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 import { User } from '../../core/interfaces/user';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,7 +12,7 @@ import { filter } from 'rxjs';
     styleUrl: './delete-account.component.css'
 })
 export class DeleteAccountComponent {
-  @Input() user?: User;
+  readonly user = input<User>();
   @Output() deleteEvent: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(public dialog: MatDialog) {}

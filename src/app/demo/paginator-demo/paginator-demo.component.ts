@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 
 @Component({
     selector: 'app-paginator-demo',
@@ -8,19 +8,19 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     styleUrl: './paginator-demo.component.css'
 })
 export class PaginatorDemoComponent {
-  @Input() currentIndex: number = 0;
-  @Input() listLength: number = 1;
+  readonly currentIndex = input<number>(0);
+  readonly listLength = input<number>(1);
   @Output() previousEvent: EventEmitter<void> = new EventEmitter<void>();
   @Output() nextEvent: EventEmitter<void> = new EventEmitter<void>();
 
   next(): void {
-    if (this.currentIndex !== this.listLength - 1) {
+    if (this.currentIndex() !== this.listLength() - 1) {
       this.nextEvent.emit();
     }
   }
 
   previous(): void {
-    if (this.currentIndex !== 0) {
+    if (this.currentIndex() !== 0) {
       this.previousEvent.emit();
     }
   }

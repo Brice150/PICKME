@@ -1,15 +1,15 @@
-@if (loading) {
+@if (loading()) {
   <app-loading></app-loading>
 }
-@if (!loading) {
+@if (!loading()) {
   <div class="container">
-    @if (usersNumber !== 0) {
+    @if (usersNumber() !== 0) {
       <div class="content">
         <span>No more users to show</span>
         <a (click)="goToFirst()" title="Go To First">Go To First</a>
       </div>
     }
-    @if (usersNumber === 0) {
+    @if (usersNumber() === 0) {
       <div class="content">
         <span>No user to show</span>
         <span>You should consider increasing max distance and / or age gap</span>

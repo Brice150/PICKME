@@ -1,23 +1,23 @@
-@if (display) {
+@if (display()) {
   <a
     class="top-button left"
     title="Delete"
     (click)="openDialog()"
-    [ngClass]="{ disabled: isLoading }"
+    [ngClass]="{ disabled: isLoading() }"
     @dislikeButtonTrigger
     >
     <i class="bx bxs-trash-alt"></i>
   </a>
 }
-@if (display) {
+@if (display()) {
   <a
     class="top-button right"
-    [title]="!picture.isMainPicture ? 'Select Main Picture' : ''"
-    [ngClass]="{ gold: picture.isMainPicture, disabled: isLoading }"
+    [title]="!picture().isMainPicture ? 'Select Main Picture' : ''"
+    [ngClass]="{ gold: picture().isMainPicture, disabled: isLoading() }"
     (click)="selectMainPicture()"
     @likeButtonTrigger
     >
     <i class="bx bxs-user-rectangle"></i>
   </a>
 }
-<img [src]="picture.content" [alt]="picture" />
+<img [src]="picture().content" [alt]="picture()" />

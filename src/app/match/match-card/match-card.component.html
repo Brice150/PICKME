@@ -1,30 +1,22 @@
 <div class="container" (click)="click()">
-  @if (match.user.pictures && match.user.pictures.length !== 0) {
-    <img
-      [src]="match.user.pictures[0].content"
-      [alt]="match.user.nickname"
-      />
-  }
-  @if (!match.user.pictures || match.user.pictures.length === 0) {
-    <img
-      [src]="imagePath + 'No-Image.png'"
-      [alt]="match.user.nickname"
-      />
+  @if (match().user.pictures && match().user.pictures.length !== 0) {
+  <img
+    [src]="match().user.pictures![0].content"
+    [alt]="match().user.nickname"
+  />
+  } @if (!match().user.pictures || match().user.pictures.length === 0) {
+  <img [src]="imagePath + 'No-Image.png'" [alt]="match().user.nickname" />
   }
   <div class="infos-container">
-    <span class="nickname">{{ match.user.nickname }}</span>
-    @if (preview) {
-      <span
-        class="messages gold"
-        [ngClass]="{ gold: isLastMessageFromMatch() }"
-        >
-        {{ preview | description : 30 }}
-      </span>
-    }
-    @if (!preview) {
-      <span class="messages">
-        Send a message to {{ match.user.nickname }}
-      </span>
+    <span class="nickname">{{ match().user.nickname }}</span>
+    @if (preview()) {
+    <span class="messages gold" [ngClass]="{ gold: isLastMessageFromMatch() }">
+      {{ preview() | description : 30 }}
+    </span>
+    } @if (!preview()) {
+    <span class="messages">
+      Send a message to {{ match().user.nickname }}
+    </span>
     }
   </div>
 </div>

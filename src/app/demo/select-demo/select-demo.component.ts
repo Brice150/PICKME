@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   Component,
-  Input,
   OnInit,
+  input
 } from '@angular/core';
 import { Gender } from '../../core/enums/gender';
 import { CardDemoComponent } from './card-demo/card-demo.component';
@@ -18,13 +18,14 @@ import { environment } from '../../../environments/environment';
 })
 export class SelectDemoComponent implements OnInit {
   imagePath: string = environment.imagePath;
-  @Input() userGenderSearch!: Gender;
+  readonly userGenderSearch = input.required<Gender>();
   images: string[] = [];
 
   ngOnInit(): void {
-    if (this.userGenderSearch === Gender.MAN) {
+    const userGenderSearch = this.userGenderSearch();
+    if (userGenderSearch === Gender.MAN) {
       this.imagePath = this.imagePath + 'man-select-demo/';
-    } else if (this.userGenderSearch === Gender.WOMAN) {
+    } else if (userGenderSearch === Gender.WOMAN) {
       this.imagePath = this.imagePath + 'woman-select-demo/';
     }
     this.images = [
