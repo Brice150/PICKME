@@ -2,90 +2,102 @@
 <img height="130px" width="130px" src="./src/assets/images/Logo.png">
 </div>
   
-# PICK ME, a dating web application
+# PICK ME, une application web de rencontre
 
 Frontend : Angular
 <br>
 Backend : Spring Boot
 
 <details>
-  <summary>Pages Features</summary>
+  <summary>Features</summary>
 
-### Connect
+### 🔐 Connexion
 
-- Register by completing mandatory information with form control
-- Login with failure animation for bad credentials
-- Logout is available on menu once logged in
+- Inscription via un formulaire avec validation des champs obligatoires
+- Connexion avec animation en cas d’erreur d’identifiants
+- Déconnexion accessible depuis le menu une fois connecté
 
-### Demo
+---
 
-- Demo of the application when you have registered
-- View and try key features of the application
+### 🎯 Démo
 
-### Select
+- Accès à une démonstration de l’application après inscription
+- Possibilité de tester les fonctionnalités principales
 
-- View profiles that are similar to yours by distance
-- Swipe profiles and go back if you want to
-- Like or Dislike a profile
-- Match animation
-- View more information about a profile
+---
 
-### Profile
+### 💘 Sélection
 
-- Add or Delete pictures and Select main profile picture
-- Modify your profile
-- Cancel modifications retrieves previous profile information
-- Delete your account (needs confirmation)
+- Affichage de profils similaires au vôtre en fonction de la distance
+- Navigation entre les profils (swipe) avec possibilité de revenir en arrière
+- Like ou Dislike d’un profil
+- Animation lors d’un match
+- Consultation des informations détaillées d’un profil
 
-### Match
+---
 
-- View profiles that matched with you
-- Search a user
-- Dislike a profile
-- View more information about a profile and messages
-- Add, Update or Delete a message
+### 👤 Profil
 
-### Admin
+- Ajout ou suppression de photos et sélection de la photo de profil principale
+- Modification du profil utilisateur
+- Annulation des modifications (retour aux anciennes données)
+- Suppression du compte (avec confirmation obligatoire)
 
-- Admin role needed to view this page
-- Search users and deleted accounts by email and sort them
-- Get application stats
-- View more information about a profile
-- Delete a user
+---
 
-### More Info
+### 💬 Match
 
-- View full user profile
-- Swiper user pictures
-- Like, Dislike or Delete if you are an admin user
+- Consultation des profils ayant matché avec vous
+- Recherche d’un utilisateur
+- Dislike d’un profil
+- Accès aux informations détaillées et aux messages
+- Ajout, modification ou suppression de messages
 
-### Notifications
+---
 
-- New notification for each message or match
-- Mark notifications as seen
+### 🛠️ Administration
+
+- Accès réservé aux administrateurs
+- Recherche et tri des utilisateurs et comptes supprimés par email
+- Consultation des statistiques de l’application
+- Consultation des profils utilisateurs
+- Suppression d’un utilisateur
+
+---
+
+### ℹ️ Informations
+
+- Consultation complète du profil utilisateur
+- Navigation dans les photos (swiper)
+- Like, Dislike ou suppression (si admin)
+
+---
+
+### 🔔 Notifications
+
+- Nouvelle notification pour chaque message ou match
+- Marquer les notifications comme vues
+
+---
 
 </details>
 
 <details>
-  <summary>Run Locally</summary>
+  <summary>Installation locale</summary>
 
-### Clone the project
+### Cloner le projet
 
 ```bash
-  git clone https://github.com/Brice150/PICKME.git
+  git clone https://github.com/Brice150/Life-Rise.git
 ```
 
-### Go to backend directory
-
-    --> Run application on Intellij
-
-### Install dependencies
+### Installer les dépendances
 
 ```bash
   npm install
 ```
 
-### Start the server
+### Lancer l'application
 
 ```bash
   ng serve -o
@@ -94,26 +106,26 @@ Backend : Spring Boot
 </details>
 
 <details>
-  <summary>API Reference</summary>
+  <summary>APIs</summary>
 
   <br>
 
   <details>
-  <summary>Connection</summary>
+  <summary>Connexion</summary>
 
-### Register
+### Inscription
 
 ```http
   POST /registration
 ```
 
-### Login
+### Connexion
 
 ```http
   GET /login
 ```
 
-### Logout
+### Déconnexion
 
 ```http
   GET /logout
@@ -124,25 +136,25 @@ Backend : Spring Boot
   <details>
   <summary>Admin</summary>
 
-### Get admin stats
+### Récupérer les statistiques admin
 
 ```http
   GET /admin/stats
 ```
 
-### Get all users
+### Récupérer tous les utilisateurs
 
 ```http
   POST /admin/user/all/${page}
 ```
 
-### Get all deleted accounts
+### Récupérer tous les comptes supprimés
 
 ```http
   POST /admin/deleted-account/all/${page}
 ```
 
-### Delete user
+### Supprimer un utilisateur
 
 ```http
   DELETE /admin/${userId}
@@ -153,25 +165,25 @@ Backend : Spring Boot
   <details>
   <summary>User</summary>
 
-### Get all selected users
+### Récupérer les utilisateurs sélectionnés
 
 ```http
   GET /user/all/${page}
 ```
 
-### Get connected user
+### Récupérer l’utilisateur connecté
 
 ```http
   GET /user
 ```
 
-### Update user
+### Mettre à jour l’utilisateur
 
 ```http
   PUT /user
 ```
 
-### Delete connected user
+### Supprimer l’utilisateur connecté
 
 ```http
   DELETE /user
@@ -182,19 +194,19 @@ Backend : Spring Boot
   <details>
   <summary>Message</summary>
 
-### Add message
+### Ajouter un message
 
 ```http
   POST /message
 ```
 
-### Update message
+### Modifier un message
 
 ```http
   PUT /message
 ```
 
-### Delete message
+### Supprimer un message
 
 ```http
   DELETE /message/${messageId}
@@ -205,7 +217,7 @@ Backend : Spring Boot
   <details>
   <summary>Like</summary>
 
-### Add like
+### Ajouter un like
 
 ```http
   POST /like/${userId}
@@ -216,7 +228,7 @@ Backend : Spring Boot
   <details>
   <summary>Dislike</summary>
 
-### Add dislike
+### Ajouter un dislike
 
 ```http
   POST /dislike/${userId}
@@ -227,19 +239,19 @@ Backend : Spring Boot
   <details>
   <summary>Picture</summary>
 
-### Add picture
+### Ajouter une photo
 
 ```http
   POST /picture
 ```
 
-### Select main picture
+### Définir la photo principale
 
 ```http
   PUT /picture/${pictureId}
 ```
 
-### Delete picture
+### Supprimer une photo
 
 ```http
   DELETE /picture/${pictureId}
@@ -250,7 +262,7 @@ Backend : Spring Boot
   <details>
   <summary>Match</summary>
 
-### Get all user matches
+### Récupérer tous les matchs utilisateur
 
 ```http
   GET /match/all
@@ -261,13 +273,13 @@ Backend : Spring Boot
   <details>
   <summary>Notification</summary>
 
-### Get all user notifications
+### Récupérer toutes les notifications utilisateur
 
 ```http
   GET /notification/all
 ```
 
-### mark all user notifications as seen
+### Marquer toutes les notifications comme lues
 
 ```http
   PUT /notification
