@@ -58,17 +58,17 @@ export class RegisterComponent implements OnInit, OnDestroy {
   toastr = inject(ToastrService);
   router = inject(Router);
   destroyed$: Subject<void> = new Subject<void>();
-  hide: boolean = true;
-  hideDuplicate: boolean = true;
+  hide = true;
+  hideDuplicate = true;
   registerForm!: FormGroup;
   firstFormGroup!: FormGroup;
   secondFormGroup!: FormGroup;
   thirdFormGroup!: FormGroup;
-  passwordsMatch: boolean = false;
+  passwordsMatch = false;
   minDate: Date;
   genders: string[] = Object.values(Gender);
   geolocation: Geolocation = {} as Geolocation;
-  loading: boolean = false;
+  loading = false;
 
   constructor() {
     const currentYear = new Date().getFullYear();

@@ -52,7 +52,7 @@ export class PreferenceComponent implements OnInit, OnChanges {
   }
 
   isSelected(attribute: string, property: string): boolean {
-    let selected: boolean = false;
+    let selected = false;
     const user = this.user();
     if (attribute && user) {
       selected = (user.preferences as any)[property] === attribute;

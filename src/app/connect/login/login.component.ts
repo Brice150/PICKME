@@ -38,9 +38,9 @@ export class LoginComponent implements OnInit {
   toastr = inject(ToastrService);
 
   loginForm!: FormGroup;
-  hide: boolean = true;
-  invalidLogin: boolean = false;
-  loading: boolean = false;
+  hide = true;
+  invalidLogin = false;
+  loading = false;
 
   ngOnInit() {
     this.loginForm = this.fb.group({

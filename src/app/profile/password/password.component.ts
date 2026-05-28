@@ -39,8 +39,8 @@ export class PasswordComponent implements OnInit {
   connectService = inject(ConnectService);
 
   readonly user = input.required<User>();
-  hide: boolean = true;
-  hideDuplicate: boolean = true;
+  hide = true;
+  hideDuplicate = true;
   passwordForm!: FormGroup;
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
 

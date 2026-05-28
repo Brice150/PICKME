@@ -49,16 +49,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.geolocation.latitude = geolocation.latitude;
           this.geolocation.longitude = geolocation.longitude;
           if (geolocation.city === geolocation.country_capital) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                this.geolocation.latitude = position.coords.latitude.toString();
-                this.geolocation.longitude =
-                  position.coords.longitude.toString();
-              },
-              (error) => {
-                // Do nothing
-              }
-            );
+            navigator.geolocation.getCurrentPosition((position) => {
+              this.geolocation.latitude = position.coords.latitude.toString();
+              this.geolocation.longitude = position.coords.longitude.toString();
+            });
           }
         },
       });
@@ -122,7 +116,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           {
             positionClass: 'toast-bottom-center',
             toastClass: 'ngx-toastr custom',
-          }
+          },
         );
       },
     });

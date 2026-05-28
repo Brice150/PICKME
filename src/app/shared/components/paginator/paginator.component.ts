@@ -8,7 +8,7 @@ import { Component, EventEmitter, Output, input } from '@angular/core';
     styleUrl: './paginator.component.css'
 })
 export class PaginatorComponent {
-  page: number = 0;
+  page = 0;
   readonly loading = input<boolean>(true);
   readonly usersNumber = input<number>(0);
   readonly maxPerPage = input<number>(0);

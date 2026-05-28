@@ -18,7 +18,7 @@ export class CardDemoComponent {
   readonly image = input.required<string>();
   @Output() likeEvent: EventEmitter<void> = new EventEmitter<void>();
   @Output() dislikeEvent: EventEmitter<void> = new EventEmitter<void>();
-  activeMatchAnimation: boolean = false;
+  activeMatchAnimation = false;
 
   like(): void {
     if (this.image().includes('Picture2.jpg')) {

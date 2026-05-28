@@ -29,12 +29,12 @@ export class PicturesComponent {
   readonly user = input<User>();
   @Output() refreshEvent: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('imageInput') imageInput!: ElementRef;
-  isLoading: boolean = false;
+  isLoading = false;
 
   addPicture(files: File[]): void {
-    for (let file of files) {
+    for (const file of files) {
       this.isLoading = true;
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (event: any) => {
         const img = new Image();
@@ -58,8 +58,8 @@ export class PicturesComponent {
           canvas.width = newWidth;
           canvas.height = newHeight;
           ctx!.drawImage(img, 0, 0, newWidth, newHeight);
-          let quality = 0.7;
-          let dataURL = canvas.toDataURL('image/jpeg', quality);
+          const quality = 0.7;
+          const dataURL = canvas.toDataURL('image/jpeg', quality);
 
           this.profileService.addPicture(dataURL).subscribe({
             next: (picture: Picture) => {
@@ -82,7 +82,7 @@ export class PicturesComponent {
     this.isLoading = true;
     this.profileService.deletePicture(pictureId).subscribe({
       next: () => {
-        let isMainPictureDeleted: boolean = false;
+        let isMainPictureDeleted = false;
         const pictureIndex = this.user()!.pictures!.findIndex(
           (picture: Picture) => picture.id === pictureId
         );

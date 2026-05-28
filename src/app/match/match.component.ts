@@ -14,7 +14,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, distinctUntilChanged, filter, repeat, takeUntil } from 'rxjs';
 import { Match } from '../core/interfaces/match';
@@ -26,10 +30,6 @@ import { LoadingComponent } from '../shared/components/loading/loading.component
 import { MoreInfoComponent } from '../shared/components/more-info/more-info.component';
 import { MatchCardComponent } from './match-card/match-card.component';
 import { MessageComponent } from './message/message.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-match',
@@ -57,13 +57,13 @@ export class MatchComponent implements OnInit, OnDestroy {
 
   search!: string;
   messageForm!: FormGroup;
-  isModifying: boolean = false;
+  isModifying = false;
   updatedMessage?: Message;
   matches: Match[] = [];
   filteredMatches: Match[] = [];
   selectedMatch?: Match;
   destroyed$: Subject<void> = new Subject<void>();
-  loading: boolean = true;
+  loading = true;
   previousMessages?: Message[];
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
@@ -84,7 +84,7 @@ export class MatchComponent implements OnInit, OnDestroy {
       .pipe(
         repeat({ delay: 10000 }),
         distinctUntilChanged(),
-        takeUntil(this.destroyed$)
+        takeUntil(this.destroyed$),
       )
       .subscribe({
         next: (matches: Match[]) => {
@@ -93,7 +93,7 @@ export class MatchComponent implements OnInit, OnDestroy {
           this.loading = false;
           if (this.selectedMatch) {
             const matchIndex = this.matches.findIndex(
-              (match: Match) => this.selectedMatch?.user.id === match.user.id
+              (match: Match) => this.selectedMatch?.user.id === match.user.id,
             );
             if (matchIndex !== -1) {
               this.selectedMatch = this.matches[matchIndex];
@@ -126,7 +126,7 @@ export class MatchComponent implements OnInit, OnDestroy {
       this.filteredMatches = [...this.matches].filter((match: Match) =>
         match.user.nickname
           .toLocaleLowerCase()
-          .includes(this.search.toLocaleLowerCase())
+          .includes(this.search.toLocaleLowerCase()),
       );
     }
   }
@@ -135,7 +135,7 @@ export class MatchComponent implements OnInit, OnDestroy {
     this.selectService.addDislike(this.selectedMatch?.user.id!).subscribe({
       next: () => {
         const matchIndex = this.matches.findIndex(
-          (match: Match) => match.user.id === this.selectedMatch!.user.id
+          (match: Match) => match.user.id === this.selectedMatch!.user.id,
         );
         if (matchIndex !== -1) {
           this.matches.splice(matchIndex, 1);
@@ -146,7 +146,7 @@ export class MatchComponent implements OnInit, OnDestroy {
             {
               positionClass: 'toast-bottom-center',
               toastClass: 'ngx-toastr custom',
-            }
+            },
           );
           this.selectedMatch = undefined;
         }
@@ -208,7 +208,7 @@ export class MatchComponent implements OnInit, OnDestroy {
       next: (newMessage: Message) => {
         this.selectedMatch!.messages.push(newMessage);
         const index = this.matches.findIndex(
-          (match) => match.user.id === this.selectedMatch!.user.id
+          (match) => match.user.id === this.selectedMatch!.user.id,
         );
         if (index !== -1) {
           const selected = this.matches.splice(index, 1)[0];
@@ -234,7 +234,7 @@ export class MatchComponent implements OnInit, OnDestroy {
     this.matchService.updateMessage(this.updatedMessage!).subscribe({
       next: (updatedMessage: Message) => {
         this.selectedMatch!.messages.find(
-          (message: Message) => message.id === this.updatedMessage?.id
+          (message: Message) => message.id === this.updatedMessage?.id,
         )!.content = updatedMessage.content;
         this.unModifyMessage();
       },
@@ -245,7 +245,7 @@ export class MatchComponent implements OnInit, OnDestroy {
           {
             positionClass: 'toast-bottom-center',
             toastClass: 'ngx-toastr custom',
-          }
+          },
         );
       },
     });
@@ -255,7 +255,7 @@ export class MatchComponent implements OnInit, OnDestroy {
     this.matchService.deleteMessage(messageToDelete.id).subscribe({
       next: () => {
         const messageIndex = this.selectedMatch!.messages.findIndex(
-          (message: Message) => message.id === messageToDelete.id
+          (message: Message) => message.id === messageToDelete.id,
         );
         if (messageIndex !== -1) {
           this.selectedMatch!.messages[messageIndex].content = undefined;
@@ -269,7 +269,7 @@ export class MatchComponent implements OnInit, OnDestroy {
           {
             positionClass: 'toast-bottom-center',
             toastClass: 'ngx-toastr custom',
-          }
+          },
         );
       },
     });
@@ -293,7 +293,7 @@ export class MatchComponent implements OnInit, OnDestroy {
       return undefined;
     }
     const messagesWithContent = match.messages.filter(
-      (message) => message.content
+      (message) => message.content,
     );
     if (messagesWithContent.length === 0) {
       return 'Message deleted';

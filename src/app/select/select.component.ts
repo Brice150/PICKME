@@ -28,12 +28,12 @@ export class SelectComponent implements OnInit, OnDestroy {
 
   users: User[] = [];
   destroyed$: Subject<void> = new Subject<void>();
-  activeMatchAnimation: boolean = false;
-  loading: boolean = true;
-  isLoading: boolean = false;
-  page: number = 0;
-  maxLoadedIndex: number = 0;
-  initLoading: boolean = true;
+  activeMatchAnimation = false;
+  loading = true;
+  isLoading = false;
+  page = 0;
+  maxLoadedIndex = 0;
+  initLoading = true;
 
   ngOnInit(): void {
     this.initLoading = true;

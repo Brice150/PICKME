@@ -12,9 +12,9 @@ export class CustomDatePipe implements PipeTransform {
     if (!date) {
       return null;
     }
-    let today: Date = new Date();
-    let frontDate: Date = new Date(date);
-    let isToday: boolean =
+    const today: Date = new Date();
+    const frontDate: Date = new Date(date);
+    const isToday: boolean =
       frontDate.getFullYear() === today.getFullYear() &&
       frontDate.getMonth() === today.getMonth() &&
       frontDate.getDate() === today.getDate();

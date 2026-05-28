@@ -26,7 +26,7 @@ export class DemoComponent implements OnInit {
 
   demos: string[] = ['profile', 'select', 'match', 'start'];
   animationDirection: 'previous' | 'next' = 'next';
-  currentIndex: number = 0;
+  currentIndex = 0;
   userGender: Gender = Gender.MAN;
   userGenderSearch: Gender = Gender.WOMAN;
 

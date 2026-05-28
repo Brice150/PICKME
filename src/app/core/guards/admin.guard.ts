@@ -3,7 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ConnectService } from '../services/connect.service';
 
-export const adminGuard: CanActivateFn = (route, state) => {
+export const adminGuard: CanActivateFn = () => {
   const connectService = inject(ConnectService);
   const router = inject(Router);
 

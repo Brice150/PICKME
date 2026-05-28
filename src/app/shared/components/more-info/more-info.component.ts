@@ -31,8 +31,8 @@ export class MoreInfoComponent implements OnInit {
 
   imagePath: string = environment.imagePath;
   user!: User;
-  adminMode: boolean = false;
-  matchMode: boolean = false;
+  adminMode = false;
+  matchMode = false;
 
   ngOnInit(): void {
     this.user = this.data.user;

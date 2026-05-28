@@ -10,7 +10,7 @@ import { RegisterComponent } from './register/register.component';
     styleUrl: './connect.component.css'
 })
 export class ConnectComponent {
-  isRegistering: boolean = false;
+  isRegistering = false;
 
   toggleLoginOrRegister(page: string) {
     if (

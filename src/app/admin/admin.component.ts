@@ -44,12 +44,12 @@ export class AdminComponent implements OnInit, OnDestroy {
   users: User[] = [];
   deletedAccounts: DeletedAccount[] = [];
   destroyed$: Subject<void> = new Subject<void>();
-  loading: boolean = false;
-  searched: boolean = false;
+  loading = false;
+  searched = false;
   adminForm!: FormGroup;
   adminSearch: AdminSearch = {} as AdminSearch;
-  isUserMode: boolean = true;
-  isFirstSwitch: boolean = true;
+  isUserMode = true;
+  isFirstSwitch = true;
   adminStats?: AdminStats;
   @ViewChild('paginator') paginator?: PaginatorComponent;
 

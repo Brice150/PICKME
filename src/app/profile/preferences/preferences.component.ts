@@ -35,7 +35,7 @@ export class PreferencesComponent {
   readonly user = input.required<User>();
   @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('preference') preference?: PreferenceComponent;
-  currentPreferenceIndex: number = 0;
+  currentPreferenceIndex = 0;
   alcoholDrinking: string[] = Object.values(AlcoholDrinking);
   smokes: string[] = Object.values(Smokes);
   sportPractice: string[] = Object.values(SportPractice);

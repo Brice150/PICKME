@@ -44,8 +44,8 @@ export class NavComponent implements OnInit {
   toastr = inject(ToastrService);
   router = inject(Router);
 
-  isMenuActive: boolean = false;
-  isNotificationsActive: boolean = false;
+  isMenuActive = false;
+  isNotificationsActive = false;
   notifications: Notification[] = [];
   destroyed$: Subject<void> = new Subject<void>();
 
