@@ -19,8 +19,4 @@ public enum Organised {
   public String getDescription() {
     return description;
   }
-
-  public static String getDescriptionNullSafe(Organised organised) {
-    return organised != null ? organised.getDescription() : null;
-  }
 }

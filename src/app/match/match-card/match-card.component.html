@@ -1,4 +1,4 @@
-<div class="container" (click)="click()">
+<div class="container" (click)="click()" (keyup.enter)="click()" tabindex="0">
   @if (match().user.pictures && match().user.pictures!.length !== 0) {
   <img
     [src]="match().user.pictures![0].content"

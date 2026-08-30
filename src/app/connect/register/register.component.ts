@@ -1,6 +1,7 @@
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
@@ -16,7 +17,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatStepperModule } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, takeUntil } from 'rxjs';
 import { Gender } from '../../core/enums/gender';
 import { Geolocation } from '../../core/interfaces/geolocation';
 import { User } from '../../core/interfaces/user';
@@ -52,12 +52,12 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
-export class RegisterComponent implements OnInit, OnDestroy {
-  fb = inject(FormBuilder);
-  connectService = inject(ConnectService);
-  toastr = inject(ToastrService);
-  router = inject(Router);
-  destroyed$: Subject<void> = new Subject<void>();
+export class RegisterComponent implements OnInit {
+  private readonly fb = inject(FormBuilder);
+  private readonly connectService = inject(ConnectService);
+  private readonly toastr = inject(ToastrService);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   hide = true;
   hideDuplicate = true;
   registerForm!: FormGroup;
@@ -142,7 +142,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
     this.connectService
       .getGeolocation()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (geolocation: Geolocation) => {
           this.geolocation.latitude = geolocation.latitude;
@@ -154,8 +154,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
                 this.geolocation.longitude =
                   position.coords.longitude.toString();
               },
-              (error) => {
-                // Do nothing
+              () => {
+                // Keeps the IP based location when the browser one is refused
               }
             );
           }
@@ -163,10 +163,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
 
   passwordMatchValidator(control: AbstractControl): void {
     const password = control.get('password')?.value;

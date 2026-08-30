@@ -3,12 +3,23 @@ spring:
     active: dev
 
   jpa:
-    show-sql: true
+    # SQL logging is very expensive on large result sets: enable it only when debugging a query.
+    show-sql: false
     hibernate:
       ddl-auto: update
     properties:
+      # Bean Validation runs on the request payloads, not on the entity life cycle.
+      javax.persistence.validation.mode: none
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        # Loads lazy associations in batches instead of one SELECT per entity (N+1 guard).
+        default_batch_fetch_size: 50
+        jdbc:
+          batch_size: 50
+          # Fetches rows by blocks instead of materialising the whole ResultSet at once.
+          fetch_size: 100
+        order_inserts: true
+        order_updates: true
 
   servlet:
     multipart:
@@ -20,3 +31,8 @@ server:
   servlet:
     session:
       timeout: 30m
+  # Pictures are stored as base64 strings: gzipping the JSON payload divides its size by ~4.
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain,text/css,application/javascript
+    min-response-size: 2KB

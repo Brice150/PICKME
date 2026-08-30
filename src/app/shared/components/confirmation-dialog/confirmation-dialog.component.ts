@@ -10,7 +10,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class ConfirmationDialogComponent implements OnInit {
   dialogRef = inject<MatDialogRef<ConfirmationDialogComponent>>(MatDialogRef);
-  data = inject(MAT_DIALOG_DATA);
+  private readonly data = inject(MAT_DIALOG_DATA);
 
   action = 'delete';
 

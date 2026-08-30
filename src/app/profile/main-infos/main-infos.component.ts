@@ -32,8 +32,8 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './main-infos.component.css',
 })
 export class MainInfosComponent implements OnInit {
-  fb = inject(FormBuilder);
-  connectService = inject(ConnectService);
+  private readonly fb = inject(FormBuilder);
+  private readonly connectService = inject(ConnectService);
 
   readonly user = input.required<User>();
   mainInfosForm!: FormGroup;

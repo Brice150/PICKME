@@ -19,8 +19,4 @@ public enum Parenthood {
   public String getDescription() {
     return description;
   }
-
-  public static String getDescriptionNullSafe(Parenthood parenthood) {
-    return parenthood != null ? parenthood.getDescription() : null;
-  }
 }

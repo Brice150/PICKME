@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  DestroyRef,
   ElementRef,
-  OnDestroy,
   OnInit,
   ViewChild,
   inject,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormGroup,
@@ -20,7 +21,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, distinctUntilChanged, filter, repeat, takeUntil } from 'rxjs';
+import { distinctUntilChanged, filter, repeat } from 'rxjs';
 import { Match } from '../core/interfaces/match';
 import { Message } from '../core/interfaces/message';
 import { MatchService } from '../core/services/match.service';
@@ -48,12 +49,13 @@ import { MessageComponent } from './message/message.component';
   templateUrl: './match.component.html',
   styleUrl: './match.component.css',
 })
-export class MatchComponent implements OnInit, OnDestroy {
-  toastr = inject(ToastrService);
-  dialog = inject(MatDialog);
-  fb = inject(FormBuilder);
-  matchService = inject(MatchService);
-  selectService = inject(SelectService);
+export class MatchComponent implements OnInit {
+  private readonly toastr = inject(ToastrService);
+  private readonly dialog = inject(MatDialog);
+  private readonly fb = inject(FormBuilder);
+  private readonly matchService = inject(MatchService);
+  private readonly selectService = inject(SelectService);
+  private readonly destroyRef = inject(DestroyRef);
 
   search!: string;
   messageForm!: FormGroup;
@@ -62,7 +64,6 @@ export class MatchComponent implements OnInit, OnDestroy {
   matches: Match[] = [];
   filteredMatches: Match[] = [];
   selectedMatch?: Match;
-  destroyed$: Subject<void> = new Subject<void>();
   loading = true;
   previousMessages?: Message[];
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
@@ -84,7 +85,7 @@ export class MatchComponent implements OnInit, OnDestroy {
       .pipe(
         repeat({ delay: 10000 }),
         distinctUntilChanged(),
-        takeUntil(this.destroyed$),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (matches: Match[]) => {
@@ -114,11 +115,6 @@ export class MatchComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
-
   searchByNickname(): void {
     if (!this.search || this.search === '') {
       this.filteredMatches = [...this.matches];
@@ -132,17 +128,21 @@ export class MatchComponent implements OnInit, OnDestroy {
   }
 
   dislike(): void {
-    this.selectService.addDislike(this.selectedMatch?.user.id!).subscribe({
+    const selectedMatch = this.selectedMatch;
+    if (!selectedMatch?.user.id) {
+      return;
+    }
+    this.selectService.addDislike(selectedMatch.user.id).subscribe({
       next: () => {
         const matchIndex = this.matches.findIndex(
-          (match: Match) => match.user.id === this.selectedMatch!.user.id,
+          (match: Match) => match.user.id === selectedMatch.user.id,
         );
         if (matchIndex !== -1) {
           this.matches.splice(matchIndex, 1);
           this.searchByNickname();
           this.toastr.success(
-            'You have disliked ' + this.selectedMatch!.user.nickname,
-            'Disliked ' + this.selectedMatch!.user.nickname,
+            'You have disliked ' + selectedMatch.user.nickname,
+            'Disliked ' + selectedMatch.user.nickname,
             {
               positionClass: 'toast-bottom-center',
               toastClass: 'ngx-toastr custom',

@@ -17,7 +17,7 @@ import {
     animations: [LikeButtonAnimation, DislikeButtonAnimation]
 })
 export class PictureComponent {
-  dialog = inject(MatDialog);
+  private readonly dialog = inject(MatDialog);
 
   readonly picture = input.required<Picture>();
   readonly display = input<boolean>(false);

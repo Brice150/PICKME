@@ -12,9 +12,9 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './start-demo.component.css',
 })
 export class StartDemoComponent {
-  connectService = inject(ConnectService);
-  router = inject(Router);
-  toastr = inject(ToastrService);
+  private readonly connectService = inject(ConnectService);
+  private readonly router = inject(Router);
+  private readonly toastr = inject(ToastrService);
 
   startNow(): void {
     if (this.connectService.registeredUser) {

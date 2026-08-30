@@ -19,8 +19,4 @@ public enum Personality {
   public String getDescription() {
     return description;
   }
-
-  public static String getDescriptionNullSafe(Personality personality) {
-    return personality != null ? personality.getDescription() : null;
-  }
 }

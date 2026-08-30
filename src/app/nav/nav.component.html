@@ -2,22 +2,22 @@
   <div
     class="menu-button"
     title="Menu"
-    [ngClass]="{ gold: getUnseenNotificationsLenght() !== 0 && !isMenuActive }"
+    [ngClass]="{ gold: getUnseenNotificationsLength() !== 0 && !isMenuActive }"
     >
     @if (
-      getUnseenNotificationsLenght() !== 0 &&
+      getUnseenNotificationsLength() !== 0 &&
       !isNotificationsActive &&
       !isMenuActive
       ) {
       <span
-        >{{ getUnseenNotificationsLenght() }}</span
+        >{{ getUnseenNotificationsLength() }}</span
         >
       }
       @if (!isMenuActive) {
-        <i class="bx bx-menu" (click)="toggleMenu()"></i>
+        <i class="bx bx-menu" (click)="toggleMenu()" (keyup.enter)="toggleMenu()" tabindex="0"></i>
       }
       @if (isMenuActive) {
-        <i class="bx bx-x" (click)="toggleMenu()"></i>
+        <i class="bx bx-x" (click)="toggleMenu()" (keyup.enter)="toggleMenu()" tabindex="0"></i>
       }
     </div>
   }
@@ -25,24 +25,28 @@
     <div
       class="menu-button notification"
       title="Notifications"
-      [ngClass]="{ gold: getUnseenNotificationsLenght() !== 0 }"
+      [ngClass]="{ gold: getUnseenNotificationsLength() !== 0 }"
       @notificationLogoTrigger
       >
-      @if (getUnseenNotificationsLenght() !== 0 && !isNotificationsActive) {
+      @if (getUnseenNotificationsLength() !== 0 && !isNotificationsActive) {
         <span
-          >{{ getUnseenNotificationsLenght() }}</span
+          >{{ getUnseenNotificationsLength() }}</span
           >
         }
         @if (!isNotificationsActive) {
           <i
             class="bx bxs-bell"
             (click)="toggleNotifications()"
+            (keyup.enter)="toggleNotifications()"
+            tabindex="0"
           ></i>
         }
         @if (isNotificationsActive) {
           <i
             class="bx bx-arrow-back"
             (click)="toggleNotifications()"
+            (keyup.enter)="toggleNotifications()"
+            tabindex="0"
           ></i>
         }
       </div>

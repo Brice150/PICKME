@@ -15,7 +15,7 @@ import { DescriptionPipe } from '../../shared/pipes/description.pipe';
     styleUrl: './user-card.component.css'
 })
 export class UserCardComponent {
-  dialog = inject(MatDialog);
+  private readonly dialog = inject(MatDialog);
 
   imagePath: string = environment.imagePath;
   readonly user = input.required<User>();

@@ -26,8 +26,8 @@ import { filter } from 'rxjs';
 })
 export class MoreInfoComponent implements OnInit {
   dialogRef = inject<MatDialogRef<MoreInfoComponent>>(MatDialogRef);
-  data = inject(MAT_DIALOG_DATA);
-  dialog = inject(MatDialog);
+  private readonly data = inject(MAT_DIALOG_DATA);
+  private readonly dialog = inject(MatDialog);
 
   imagePath: string = environment.imagePath;
   user!: User;

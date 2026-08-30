@@ -1,23 +1,23 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { User } from '../interfaces/user';
-import { Observable, Subject, of, switchMap } from 'rxjs';
+import { Router } from '@angular/router';
+import { Observable, Subject, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Geolocation } from '../interfaces/geolocation';
-import { Router } from '@angular/router';
+import { User } from '../interfaces/user';
 
 @Injectable({ providedIn: 'root' })
 export class ConnectService {
-  http = inject(HttpClient);
-  router = inject(Router);
+  private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
+  private readonly apiServerUrl = environment.apiBaseUrl;
 
-  apiServerUrl = environment.apiBaseUrl;
   registeredUser?: User;
   connectedUser?: User;
-  connectedUserReady$: Subject<void> = new Subject<void>();
-  loggedOut$: Subject<void> = new Subject<void>();
+  readonly connectedUserReady$: Subject<void> = new Subject<void>();
+  readonly loggedOut$: Subject<void> = new Subject<void>();
 
-  register(user: User): any {
+  register(user: User): Observable<string> {
     return this.http.post(`${this.apiServerUrl}/registration`, user, {
       withCredentials: true,
       responseType: 'text',
@@ -33,13 +33,7 @@ export class ConnectService {
         withCredentials: true,
         headers,
       })
-      .pipe(
-        switchMap((loggedInUser: User) => {
-          this.connectedUser = loggedInUser;
-          this.connectedUserReady$.next();
-          return of(loggedInUser);
-        })
-      );
+      .pipe(tap((loggedInUser: User) => this.storeConnectedUser(loggedInUser)));
   }
 
   getConnectedUser(): Observable<User> {
@@ -47,22 +41,21 @@ export class ConnectService {
       .get<User>(`${this.apiServerUrl}/user`, {
         withCredentials: true,
       })
-      .pipe(
-        switchMap((loggedInUser: User) => {
-          this.connectedUser = loggedInUser;
-          this.connectedUserReady$.next();
-          return of(loggedInUser);
-        })
-      );
+      .pipe(tap((loggedInUser: User) => this.storeConnectedUser(loggedInUser)));
   }
 
   getGeolocation(): Observable<Geolocation> {
     return this.http.get<Geolocation>('https://ipapi.co/json/');
   }
 
-  logout() {
+  logout(): void {
     this.router.navigate(['/']);
     this.connectedUser = undefined;
     this.loggedOut$.next();
+  }
+
+  private storeConnectedUser(loggedInUser: User): void {
+    this.connectedUser = loggedInUser;
+    this.connectedUserReady$.next();
   }
 }

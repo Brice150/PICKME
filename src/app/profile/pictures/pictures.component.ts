@@ -23,22 +23,23 @@ import { PictureComponent } from './picture/picture.component';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class PicturesComponent {
-  profileService = inject(ProfileService);
+  private readonly profileService = inject(ProfileService);
 
   imagePath: string = environment.imagePath;
   readonly user = input<User>();
   @Output() refreshEvent: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('imageInput') imageInput!: ElementRef;
   isLoading = false;
+  activeIndex = 0;
 
   addPicture(files: File[]): void {
     for (const file of files) {
       this.isLoading = true;
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = (event: any) => {
+      reader.onload = (): void => {
         const img = new Image();
-        img.src = event.target.result;
+        img.src = reader.result as string;
         img.onload = () => {
           const maxDimension = 1200;
           const width = img.width;
@@ -65,8 +66,9 @@ export class PicturesComponent {
             next: (picture: Picture) => {
               this.user()?.pictures?.unshift(picture);
               setTimeout(() => {
-                document.querySelector('swiper-container')?.swiper.update();
-                document.querySelector('swiper-container')?.swiper.slideTo(0);
+                this.getSwiper()?.update();
+                this.getSwiper()?.slideTo(0);
+                this.activeIndex = 0;
                 this.imageInput.nativeElement.value = '';
                 this.refreshEvent.emit('Picture Added');
                 this.isLoading = false;
@@ -82,16 +84,14 @@ export class PicturesComponent {
     this.isLoading = true;
     this.profileService.deletePicture(pictureId).subscribe({
       next: () => {
-        let isMainPictureDeleted = false;
         const pictureIndex = this.user()!.pictures!.findIndex(
           (picture: Picture) => picture.id === pictureId
         );
         if (pictureIndex !== -1) {
-          isMainPictureDeleted =
+          const isMainPictureDeleted =
             this.user()!.pictures![pictureIndex].isMainPicture;
-          document
-            .querySelector('swiper-container')
-            ?.swiper.removeSlide(pictureIndex);
+          this.getSwiper()?.removeSlide(pictureIndex);
+          this.activeIndex = this.getSwiper()?.activeIndex ?? this.activeIndex;
           this.user()!.pictures!.splice(pictureIndex, 1);
           const user = this.user();
           if (isMainPictureDeleted && user?.pictures?.length !== 0) {
@@ -124,15 +124,10 @@ export class PicturesComponent {
   }
 
   onSlideChange(): void {
-    // Needed to update isCurrentView when we slide
+    this.activeIndex = this.getSwiper()?.activeIndex ?? this.activeIndex;
   }
 
-  isCurrentView(picture: Picture): boolean {
-    const index: number | undefined =
-      document.querySelector('swiper-container')?.swiper.activeIndex;
-    if (index === undefined) {
-      return false;
-    }
-    return picture.id === this.user()?.pictures![index].id;
+  private getSwiper() {
+    return document.querySelector('swiper-container')?.swiper;
   }
 }

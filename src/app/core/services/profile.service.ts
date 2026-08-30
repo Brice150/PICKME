@@ -9,9 +9,8 @@ import { User } from '../interfaces/user';
   providedIn: 'root',
 })
 export class ProfileService {
-  http = inject(HttpClient);
-
-  apiServerUrl = environment.apiBaseUrl;
+  private readonly http = inject(HttpClient);
+  private readonly apiServerUrl = environment.apiBaseUrl;
 
   addPicture(pictureContent: string): Observable<Picture> {
     return this.http.post<Picture>(

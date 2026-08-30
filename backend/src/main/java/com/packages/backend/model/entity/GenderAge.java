@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.packages.backend.model.enums.Gender;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "genders_ages")
@@ -11,11 +12,15 @@ public class GenderAge {
   @Id
   @Column(name = "user_id")
   private Long id;
+  @NotNull(message = "Gender is empty")
   @Enumerated(EnumType.STRING)
   private Gender gender;
+  @NotNull(message = "Gender search is empty")
   @Enumerated(EnumType.STRING)
   private Gender genderSearch;
+  @NotNull(message = "Min age is empty")
   private Long minAge;
+  @NotNull(message = "Max age is empty")
   private Long maxAge;
   @OneToOne
   @MapsId

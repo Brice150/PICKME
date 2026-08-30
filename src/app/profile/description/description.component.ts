@@ -30,8 +30,8 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './description.component.css',
 })
 export class DescriptionComponent implements OnInit {
-  fb = inject(FormBuilder);
-  connectService = inject(ConnectService);
+  private readonly fb = inject(FormBuilder);
+  private readonly connectService = inject(ConnectService);
 
   readonly user = input.required<User>();
   descriptionForm!: FormGroup;

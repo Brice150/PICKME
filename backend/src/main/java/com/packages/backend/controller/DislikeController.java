@@ -1,6 +1,7 @@
 package com.packages.backend.controller;
 
 import com.packages.backend.service.DislikeService;
+import com.packages.backend.service.ServiceStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +23,7 @@ public class DislikeController {
   @PostMapping("/{userId}")
   public ResponseEntity<Void> addDislike(@PathVariable("userId") Long userId) {
     String status = dislikeService.addDislike(userId);
-    return !"FORBIDDEN".equals(status) ?
+    return !ServiceStatus.FORBIDDEN.equals(status) ?
       new ResponseEntity<>(HttpStatus.CREATED) :
       new ResponseEntity<>(HttpStatus.FORBIDDEN);
   }

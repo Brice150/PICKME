@@ -1,7 +1,7 @@
 package com.packages.backend.controller;
 
-import com.packages.backend.model.entity.User;
 import com.packages.backend.model.dto.UserDTO;
+import com.packages.backend.model.dto.UserUpdateRequest;
 import com.packages.backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +36,8 @@ public class UserController {
   }
 
   @PutMapping("/user")
-  public ResponseEntity<UserDTO> updateUser(@RequestBody User user) {
-    return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
+  public ResponseEntity<UserDTO> updateUser(@RequestBody UserUpdateRequest request) {
+    return new ResponseEntity<>(userService.updateUser(request), HttpStatus.OK);
   }
 
   @DeleteMapping("/user")

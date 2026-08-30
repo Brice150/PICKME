@@ -32,10 +32,10 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
   styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
-  fb = inject(FormBuilder);
-  connectService = inject(ConnectService);
-  router = inject(Router);
-  toastr = inject(ToastrService);
+  private readonly fb = inject(FormBuilder);
+  private readonly connectService = inject(ConnectService);
+  private readonly router = inject(Router);
+  private readonly toastr = inject(ToastrService);
 
   loginForm!: FormGroup;
   hide = true;

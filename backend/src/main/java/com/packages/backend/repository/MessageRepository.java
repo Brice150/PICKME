@@ -13,6 +13,12 @@ import java.util.Optional;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
+  /**
+   * Finds a message from its identifier.
+   *
+   * @param id identifier of the message
+   * @return the matching message, or an empty optional when none exists
+   */
   Optional<Message> findMessageById(Long id);
 
   @Query(

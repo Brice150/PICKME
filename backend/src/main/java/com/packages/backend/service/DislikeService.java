@@ -1,38 +1,13 @@
 package com.packages.backend.service;
 
-import com.packages.backend.model.entity.Dislike;
-import com.packages.backend.model.entity.User;
-import com.packages.backend.repository.DislikeRepository;
-import org.springframework.stereotype.Service;
+public interface DislikeService {
 
-import java.util.Date;
-import java.util.Optional;
-
-@Service
-public class DislikeService {
-  private final DislikeRepository dislikeRepository;
-  private final LikeService likeService;
-  private final UserService userService;
-  private static final String FORBIDDEN = "FORBIDDEN";
-
-  public DislikeService(DislikeRepository dislikeRepository, UserService userService, LikeService likeService) {
-    this.dislikeRepository = dislikeRepository;
-    this.userService = userService;
-    this.likeService = likeService;
-  }
-
-  public String addDislike(Long userId) {
-    User connectedUser = userService.getConnectedUser();
-    User dislikedUser = userService.getUserById(userId);
-    Optional<Dislike> previousSenderDislike = dislikeRepository.getDislikeByFk(connectedUser.getId(), dislikedUser.getId());
-    if (previousSenderDislike.isPresent()) {
-      return FORBIDDEN;
-    }
-    likeService.deleteLikeByFk(connectedUser, dislikedUser);
-    Dislike dislike = new Dislike(new Date(), connectedUser.getId(), dislikedUser.getId());
-    dislike.setDate(new Date());
-    dislikeRepository.save(dislike);
-    return null;
-  }
+  /**
+   * Registers a dislike from the connected user and removes the like they may have sent before.
+   *
+   * @param userId identifier of the disliked user
+   * @return {@code null} when the dislike has been registered, or {@link ServiceStatus#FORBIDDEN}
+   * when the profile had already been disliked
+   */
+  String addDislike(Long userId);
 }
-

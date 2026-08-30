@@ -4,7 +4,7 @@
     >
     <a
       [title]="page === 0 ? '' : 'Previous'"
-      (click)="previous()"
+      (click)="previous()" (keyup.enter)="previous()" tabindex="0"
       [ngClass]="{ disabled: page === 0 }"
       >
       <i class="bx bx-left-arrow-alt"></i>
@@ -22,6 +22,8 @@
         <a
           [title]="usersNumber() < maxPerPage() ? '' : 'Next'"
           (click)="next()"
+          (keyup.enter)="next()"
+          tabindex="0"
           [ngClass]="{ disabled: usersNumber() < maxPerPage() || page + 1 === maxPages() }"
           >
           <i class="bx bx-right-arrow-alt"></i>

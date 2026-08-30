@@ -22,7 +22,7 @@ import { StartDemoComponent } from './start-demo/start-demo.component';
   styleUrl: './demo.component.css',
 })
 export class DemoComponent implements OnInit {
-  connectService = inject(ConnectService);
+  private readonly connectService = inject(ConnectService);
 
   demos: string[] = ['profile', 'select', 'match', 'start'];
   animationDirection: 'previous' | 'next' = 'next';

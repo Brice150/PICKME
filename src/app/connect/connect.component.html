@@ -1,13 +1,13 @@
 <div class="container">
   <div class="btn-container">
     <a
-      (click)="toggleLoginOrRegister('register')"
+      (click)="toggleLoginOrRegister('register')" (keyup.enter)="toggleLoginOrRegister('register')" tabindex="0"
       title="Register"
       [ngClass]="isRegistering ? 'active' : 'unactive'"
       >Register</a
       >
       <a
-        (click)="toggleLoginOrRegister('login')"
+        (click)="toggleLoginOrRegister('login')" (keyup.enter)="toggleLoginOrRegister('login')" tabindex="0"
         title="Login"
         [ngClass]="!isRegistering ? 'active' : 'unactive'"
         >Login</a

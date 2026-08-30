@@ -25,7 +25,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             });
           } else if (
             error.url?.includes('notification/all') &&
-            error.status === 500
+            (error.status === 404 || error.status === 500)
           ) {
             toastr.error(
               'Your account has been deleted by an admin',

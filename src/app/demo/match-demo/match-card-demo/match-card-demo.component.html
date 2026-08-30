@@ -1,4 +1,4 @@
-<div class="container" (click)="click()">
+<div class="container" (click)="click()" (keyup.enter)="click()" tabindex="0">
   <img [src]="picture()" [alt]="picture()" />
   <div class="infos-container">
     <span class="nickname">{{ match() }}</span>

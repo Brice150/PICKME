@@ -19,8 +19,4 @@ public enum SportPractice {
   public String getDescription() {
     return description;
   }
-
-  public static String getDescriptionNullSafe(SportPractice sportPractice) {
-    return sportPractice != null ? sportPractice.getDescription() : null;
-  }
 }

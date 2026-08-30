@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, takeUntil } from 'rxjs';
 import { Geolocation } from '../core/interfaces/geolocation';
 import { User } from '../core/interfaces/user';
 import { ConnectService } from '../core/services/connect.service';
@@ -31,19 +31,19 @@ import { PreferencesComponent } from './preferences/preferences.component';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
-export class ProfileComponent implements OnInit, OnDestroy {
-  connectService = inject(ConnectService);
-  toastr = inject(ToastrService);
-  profileService = inject(ProfileService);
+export class ProfileComponent implements OnInit {
+  private readonly connectService = inject(ConnectService);
+  private readonly toastr = inject(ToastrService);
+  private readonly profileService = inject(ProfileService);
+  private readonly destroyRef = inject(DestroyRef);
 
   user?: User = { ...this.connectService.connectedUser! };
-  destroyed$: Subject<void> = new Subject<void>();
   geolocation: Geolocation = {} as Geolocation;
 
   ngOnInit(): void {
     this.connectService
       .getGeolocation()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (geolocation: Geolocation) => {
           this.geolocation.latitude = geolocation.latitude;
@@ -58,10 +58,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
 
   updateUser(message: string): void {
     this.user!.geolocation.latitude = this.geolocation.latitude;

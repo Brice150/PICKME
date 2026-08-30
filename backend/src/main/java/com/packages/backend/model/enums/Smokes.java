@@ -19,8 +19,4 @@ public enum Smokes {
   public String getDescription() {
     return description;
   }
-
-  public static String getDescriptionNullSafe(Smokes smokes) {
-    return smokes != null ? smokes.getDescription() : null;
-  }
 }

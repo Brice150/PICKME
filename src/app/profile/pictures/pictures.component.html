@@ -6,12 +6,12 @@
         mousewheel="true"
         (swiperslidechange)="onSlideChange()"
         >
-        @for (picture of user()?.pictures; track picture) {
+        @for (picture of user()?.pictures; track picture.id; let index = $index) {
           <swiper-slide lazy="true">
             <app-picture
               loading="true"
               [picture]="picture"
-              [display]="isCurrentView(picture)"
+              [display]="index === activeIndex"
               [isLoading]="isLoading"
               (deleteEvent)="deletePicture(picture.id)"
               (selectMainEvent)="selectMainPicture(picture.id)"

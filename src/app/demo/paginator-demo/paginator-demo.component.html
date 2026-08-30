@@ -1,14 +1,14 @@
 <div class="container">
   <a
     [title]="currentIndex() === 0 ? '' : 'Previous'"
-    (click)="previous()"
+    (click)="previous()" (keyup.enter)="previous()" tabindex="0"
     [ngClass]="{ disabled: currentIndex() === 0 }"
   >
     <i class="bx bx-left-arrow-alt"></i>
   </a>
   <a
     [title]="currentIndex() === listLength() - 1 ? '' : 'Next'"
-    (click)="next()"
+    (click)="next()" (keyup.enter)="next()" tabindex="0"
     [ngClass]="{ disabled: currentIndex() === listLength() - 1 }"
   >
     <i class="bx bx-right-arrow-alt"></i>

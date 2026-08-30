@@ -19,8 +19,4 @@ public enum AlcoholDrinking {
   public String getDescription() {
     return description;
   }
-
-  public static String getDescriptionNullSafe(AlcoholDrinking alcoholDrinking) {
-    return alcoholDrinking != null ? alcoholDrinking.getDescription() : null;
-  }
 }

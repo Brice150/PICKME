@@ -35,8 +35,8 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './password.component.css',
 })
 export class PasswordComponent implements OnInit {
-  fb = inject(FormBuilder);
-  connectService = inject(ConnectService);
+  private readonly fb = inject(FormBuilder);
+  private readonly connectService = inject(ConnectService);
 
   readonly user = input.required<User>();
   hide = true;

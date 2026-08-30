@@ -1,19 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { User } from '../interfaces/user';
-import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { AdminSearch } from '../interfaces/admin-search';
-import { DeletedAccount } from '../interfaces/deleted-account';
 import { AdminStats } from '../interfaces/admin-stats';
+import { DeletedAccount } from '../interfaces/deleted-account';
+import { User } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminService {
-  http = inject(HttpClient);
-
-  apiServerUrl = environment.apiBaseUrl;
+  private readonly http = inject(HttpClient);
+  private readonly apiServerUrl = environment.apiBaseUrl;
 
   getAdminStats(): Observable<AdminStats> {
     return this.http.get<AdminStats>(`${this.apiServerUrl}/admin/stats`, {

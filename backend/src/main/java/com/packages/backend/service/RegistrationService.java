@@ -1,30 +1,15 @@
 package com.packages.backend.service;
 
 import com.packages.backend.model.Registration;
-import com.packages.backend.model.entity.User;
-import com.packages.backend.model.enums.UserRole;
-import org.springframework.stereotype.Service;
 
-@Service
-public class RegistrationService {
-  private final UserService userService;
+public interface RegistrationService {
 
-  public RegistrationService(UserService userService) {
-    this.userService = userService;
-  }
-
-  public String register(Registration request) {
-    return userService.signUpUser(
-      new User(
-        UserRole.ROLE_USER,
-        request.getBirthDate(),
-        request.getNickname(),
-        request.getJob(),
-        request.getEmail(),
-        request.getPassword(),
-        request.getGenderAge(),
-        request.getGeolocation()
-      )
-    );
-  }
+  /**
+   * Creates an account from the registration form.
+   *
+   * @param request registration form
+   * @return {@link ServiceStatus#OK} when the account has been created, otherwise the reason of
+   * the rejection
+   */
+  String register(Registration request);
 }

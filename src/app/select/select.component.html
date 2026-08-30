@@ -4,12 +4,12 @@
     mousewheel="true"
     (swiperslidechange)="onSlideChange()"
     >
-    @for (user of users; track user) {
+    @for (user of users; track user.id; let index = $index) {
       <swiper-slide lazy="true">
         <app-card
           loading="true"
           [user]="user"
-          [display]="isCurrentView(user) && !activeMatchAnimation && !isLoading"
+          [display]="index === activeIndex && !activeMatchAnimation && !isLoading"
           [activeMatchAnimation]="activeMatchAnimation"
           (likeEvent)="like(user)"
           (dislikeEvent)="dislike(user)"

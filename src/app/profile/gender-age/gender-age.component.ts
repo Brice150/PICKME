@@ -33,8 +33,8 @@ import { ConnectService } from '../../core/services/connect.service';
   styleUrl: './gender-age.component.css',
 })
 export class GenderAgeComponent implements OnInit {
-  fb = inject(FormBuilder);
-  connectService = inject(ConnectService);
+  private readonly fb = inject(FormBuilder);
+  private readonly connectService = inject(ConnectService);
 
   readonly user = input.required<User>();
   genderAgeForm!: FormGroup;
@@ -72,15 +72,12 @@ export class GenderAgeComponent implements OnInit {
 
   cancel(): void {
     const user = this.user();
-    if (user) {
-      user.genderAge.gender =
-        this.connectService.connectedUser!.genderAge?.gender!;
-      user.genderAge.genderSearch =
-        this.connectService.connectedUser!.genderAge?.genderSearch!;
-      user.genderAge.minAge =
-        this.connectService.connectedUser!.genderAge?.minAge!;
-      user.genderAge.maxAge =
-        this.connectService.connectedUser!.genderAge?.maxAge!;
+    const connectedGenderAge = this.connectService.connectedUser?.genderAge;
+    if (user && connectedGenderAge) {
+      user.genderAge.gender = connectedGenderAge.gender;
+      user.genderAge.genderSearch = connectedGenderAge.genderSearch;
+      user.genderAge.minAge = connectedGenderAge.minAge;
+      user.genderAge.maxAge = connectedGenderAge.maxAge;
       this.genderAgeForm.patchValue({
         gender: user.genderAge.gender,
         genderSearch: user.genderAge.genderSearch,

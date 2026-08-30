@@ -2,7 +2,7 @@
   <a
     class="top-button left"
     title="Delete"
-    (click)="openDialog()"
+    (click)="openDialog()" (keyup.enter)="openDialog()" tabindex="0"
     [ngClass]="{ disabled: isLoading() }"
     @dislikeButtonTrigger
     >
@@ -14,7 +14,7 @@
     class="top-button right"
     [title]="!picture().isMainPicture ? 'Select Main Picture' : ''"
     [ngClass]="{ gold: picture().isMainPicture, disabled: isLoading() }"
-    (click)="selectMainPicture()"
+    (click)="selectMainPicture()" (keyup.enter)="selectMainPicture()" tabindex="0"
     @likeButtonTrigger
     >
     <i class="bx bxs-user-rectangle"></i>

@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, ViewChild, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSliderModule } from '@angular/material/slider';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, takeUntil } from 'rxjs';
 import { AdminSearch } from '../core/interfaces/admin-search';
 import { User } from '../core/interfaces/user';
 import { AdminService } from '../core/services/admin.service';
@@ -36,14 +36,14 @@ import { MatSelectModule } from '@angular/material/select';
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css',
 })
-export class AdminComponent implements OnInit, OnDestroy {
-  toastr = inject(ToastrService);
-  adminService = inject(AdminService);
-  fb = inject(FormBuilder);
+export class AdminComponent implements OnInit {
+  private readonly toastr = inject(ToastrService);
+  private readonly adminService = inject(AdminService);
+  private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
 
   users: User[] = [];
   deletedAccounts: DeletedAccount[] = [];
-  destroyed$: Subject<void> = new Subject<void>();
   loading = false;
   searched = false;
   adminForm!: FormGroup;
@@ -61,7 +61,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     this.adminService
       .getAdminStats()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (adminStats: AdminStats) => {
           this.adminStats = adminStats;
@@ -71,10 +71,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.search(0);
   }
 
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
 
   toggleUserOrDeleted(content: string) {
     if (
@@ -97,7 +93,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       if (this.isUserMode) {
         this.adminService
           .getAllUsers(this.adminSearch, page)
-          .pipe(takeUntil(this.destroyed$))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: (users: User[]) => {
               this.users = users;
@@ -111,7 +107,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       } else {
         this.adminService
           .getAllDeletedAccounts(this.adminSearch, page)
-          .pipe(takeUntil(this.destroyed$))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: (deletedAccounts: DeletedAccount[]) => {
               this.deletedAccounts = deletedAccounts;

@@ -1,7 +1,7 @@
 <div class="container">
   <div class="btn-container">
     <a
-      (click)="toggleUserOrDeleted('user')"
+      (click)="toggleUserOrDeleted('user')" (keyup.enter)="toggleUserOrDeleted('user')" tabindex="0"
       [title]="!isUserMode ? 'View Users' : ''"
       [ngClass]="isUserMode ? 'active' : 'unactive'"
       >
@@ -13,7 +13,7 @@
         }
       </a>
       <a
-        (click)="toggleUserOrDeleted('deleted')"
+        (click)="toggleUserOrDeleted('deleted')" (keyup.enter)="toggleUserOrDeleted('deleted')" tabindex="0"
         [title]="isUserMode ? 'View Deleted Users' : ''"
         [ngClass]="!isUserMode ? 'active' : 'unactive'"
         >

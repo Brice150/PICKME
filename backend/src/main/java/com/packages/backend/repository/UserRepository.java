@@ -69,12 +69,20 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Query("DELETE FROM User u WHERE u.email = :email")
   void deleteUserByEmail(@Param("email") String email);
 
+  // The single valued associations needed to score and to expose a candidate are loaded with the
+  // root entity: without those JOIN FETCH clauses Hibernate runs four extra SELECT per candidate,
+  // which was by far the main cost of the selection screen. Pictures stay lazy on purpose, they
+  // hold base64 payloads and are loaded separately for the current page only.
   @Query(
     "SELECT DISTINCT u FROM User u" +
+      " JOIN FETCH u.genderAge genderAge" +
+      " JOIN FETCH u.geolocation" +
+      " LEFT JOIN FETCH u.preferences" +
+      " LEFT JOIN FETCH u.stats" +
       " LEFT JOIN Like l ON u.id = l.fkReceiver AND l.fkSender = :connectedId" +
       " LEFT JOIN Dislike d ON u.id = d.fkReceiver AND d.fkSender = :connectedId" +
-      " WHERE u.genderAge.genderSearch = :gender" +
-      " AND u.genderAge.gender = :genderSearch" +
+      " WHERE genderAge.genderSearch = :gender" +
+      " AND genderAge.gender = :genderSearch" +
       " AND EXTRACT(YEAR FROM AGE(CURRENT_DATE, u.birthDate)) BETWEEN :minAge AND :maxAge" +
       " AND u.id != :connectedId" +
       " AND l.fkSender IS NULL" +

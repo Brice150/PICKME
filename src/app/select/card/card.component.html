@@ -2,7 +2,7 @@
 <a
   class="button left"
   title="Dislike"
-  (click)="dislike()"
+  (click)="dislike()" (keyup.enter)="dislike()" tabindex="0"
   @dislikeButtonTrigger
 >
   <i class="bx bxs-dislike"></i>
@@ -12,7 +12,7 @@
   class="button right"
   title="Like"
   [ngClass]="{ gold: user().gold }"
-  (click)="like()"
+  (click)="like()" (keyup.enter)="like()" tabindex="0"
   @likeButtonTrigger
 >
   <i class="bx bxs-like"></i>
@@ -26,7 +26,7 @@
   }
 </div>
 @if (display()) {
-<div class="text-container" title="More Info" (click)="moreInfo()" @textTrigger>
+<div class="text-container" title="More Info" (click)="moreInfo()" (keyup.enter)="moreInfo()" tabindex="0" @textTrigger>
   <div class="flex">
     <div class="left">
       <h2>{{ user().nickname }}</h2>
@@ -55,7 +55,7 @@
     <span>It's a Match !</span>
     <i class="bx bxs-flame"></i>
   </div>
-  <a class="button" title="View Match" @buttonMatchTrigger (click)="viewMatch()"
+  <a class="button" title="View Match" @buttonMatchTrigger (click)="viewMatch()" (keyup.enter)="viewMatch()" tabindex="0"
     >View Match</a
   >
 </div>

@@ -17,9 +17,6 @@ import java.io.PrintWriter;
 
 @Component
 public class MyBasicAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
-  /**
-   * Used to make customizable error messages and codes when login fails
-   */
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authEx)
     throws IOException {

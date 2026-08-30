@@ -1,6 +1,7 @@
 package com.packages.backend.controller;
 
 import com.packages.backend.service.LikeService;
+import com.packages.backend.service.ServiceStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +23,7 @@ public class LikeController {
   @PostMapping("/{userId}")
   public ResponseEntity<String> addLike(@PathVariable("userId") Long userId) {
     String matchNotification = likeService.addLike(userId);
-    return !"FORBIDDEN".equals(matchNotification) ?
+    return !ServiceStatus.FORBIDDEN.equals(matchNotification) ?
       new ResponseEntity<>(matchNotification, HttpStatus.CREATED) :
       new ResponseEntity<>(HttpStatus.FORBIDDEN);
   }

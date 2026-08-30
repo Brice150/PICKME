@@ -19,8 +19,4 @@ public enum Animals {
   public String getDescription() {
     return description;
   }
-
-  public static String getDescriptionNullSafe(Animals animals) {
-    return animals != null ? animals.getDescription() : null;
-  }
 }

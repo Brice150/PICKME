@@ -12,7 +12,7 @@ import { filter } from 'rxjs';
     styleUrl: './delete-account.component.css'
 })
 export class DeleteAccountComponent {
-  dialog = inject(MatDialog);
+  private readonly dialog = inject(MatDialog);
 
   readonly user = input<User>();
   @Output() deleteEvent: EventEmitter<void> = new EventEmitter<void>();

@@ -2,6 +2,7 @@ package com.packages.backend.controller;
 
 import com.packages.backend.model.entity.Message;
 import com.packages.backend.service.MessageService;
+import com.packages.backend.service.ServiceStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +34,7 @@ public class MessageController {
 
   @DeleteMapping("/{messageId}")
   public ResponseEntity<Void> deleteMessage(@PathVariable("messageId") Long messageId) {
-    return "OK".equals(messageService.deleteMessageById(messageId)) ?
+    return ServiceStatus.OK.equals(messageService.deleteMessageById(messageId)) ?
       new ResponseEntity<>(HttpStatus.OK) :
       new ResponseEntity<>(HttpStatus.FORBIDDEN);
   }

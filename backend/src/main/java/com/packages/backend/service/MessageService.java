@@ -1,74 +1,42 @@
 package com.packages.backend.service;
 
-import com.packages.backend.exception.MessageNotFoundException;
-import com.packages.backend.model.Match;
 import com.packages.backend.model.entity.Message;
-import com.packages.backend.model.entity.User;
-import com.packages.backend.repository.MessageRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-@Service
-public class MessageService {
-  private final MessageRepository messageRepository;
-  private final UserService userService;
-  private final NotificationService notificationService;
+public interface MessageService {
 
-  public MessageService(MessageRepository messageRepository, UserService userService, NotificationService notificationService) {
-    this.messageRepository = messageRepository;
-    this.userService = userService;
-    this.notificationService = notificationService;
-  }
+  /**
+   * Sends a message to a matched user and notifies them.
+   *
+   * @param message message to send
+   * @return the persisted message, or an empty optional when the receiver is not a match
+   */
+  Optional<Message> addMessage(Message message);
 
-  public Optional<Message> addMessage(Message message) {
-    User connectedUser = userService.getConnectedUser();
-    List<Match> userMatches = userService.getAllUserMatches();
-    if (!Objects.equals(connectedUser.getId(), message.getFkReceiver())
-      && userMatches.stream()
-      .anyMatch((match -> Objects.equals(match.getUser().id(), message.getFkReceiver())))) {
-      message.setDate(new Date());
-      message.setSender(connectedUser.getNickname());
-      message.setFkSender(connectedUser.getId());
-      notificationService.sendNotification(message.getContent(), connectedUser.getNickname(), message.getFkReceiver());
-      Message newMessage = messageRepository.save(message);
-      return Optional.of(newMessage);
-    } else {
-      return Optional.empty();
-    }
-  }
+  /**
+   * Edits the content of a message owned by the connected user.
+   *
+   * @param message message carrying the new content
+   * @return the updated message, or an empty optional when the connected user is not its author
+   */
+  Optional<Message> updateMessage(Message message);
 
-  public Optional<Message> updateMessage(Message message) {
-    User connectedUser = userService.getConnectedUser();
-    Message previousMessage = getMessageById(message.getId());
-    if (Objects.equals(connectedUser.getId(), previousMessage.getFkSender())) {
-      previousMessage.setContent(message.getContent());
-      return Optional.of(messageRepository.save(previousMessage));
-    } else {
-      return Optional.empty();
-    }
-  }
+  /**
+   * Finds a message from its identifier.
+   *
+   * @param messageId identifier of the message
+   * @return the matching message
+   * @throws com.packages.backend.exception.MessageNotFoundException when no message matches
+   */
+  Message getMessageById(Long messageId);
 
-  public Message getMessageById(Long messageId) {
-    return messageRepository.findMessageById(messageId)
-      .orElseThrow(() -> new MessageNotFoundException("Message by id " + messageId + " was not found"));
-  }
-
-  @Transactional
-  public String deleteMessageById(Long messageId) {
-    User connectedUser = userService.getConnectedUser();
-    Message message = getMessageById(messageId);
-    if (Objects.equals(connectedUser.getId(), message.getFkSender())) {
-      message.setContent(null);
-      messageRepository.save(message);
-      return "OK";
-    } else {
-      return "FORBIDDEN";
-    }
-  }
+  /**
+   * Empties the content of a message owned by the connected user, keeping it in the conversation.
+   *
+   * @param messageId identifier of the message
+   * @return {@link ServiceStatus#OK} or {@link ServiceStatus#FORBIDDEN} when the connected user is
+   * not its author
+   */
+  String deleteMessageById(Long messageId);
 }
-

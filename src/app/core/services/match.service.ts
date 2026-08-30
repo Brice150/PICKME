@@ -1,17 +1,16 @@
-import { Injectable, inject } from '@angular/core';
-import { Match } from '../interfaces/match';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { Match } from '../interfaces/match';
 import { Message } from '../interfaces/message';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MatchService {
-  http = inject(HttpClient);
-
-  apiServerUrl = environment.apiBaseUrl;
+  private readonly http = inject(HttpClient);
+  private readonly apiServerUrl = environment.apiBaseUrl;
 
   getAllUserMatches(): Observable<Match[]> {
     return this.http.get<Match[]>(`${this.apiServerUrl}/match/all`, {

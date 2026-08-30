@@ -19,8 +19,4 @@ public enum Gender {
   public String getDescription() {
     return description;
   }
-
-  public static String getDescriptionNullSafe(Gender gender) {
-    return gender != null ? gender.getDescription() : null;
-  }
 }

@@ -1,32 +1,14 @@
 package com.packages.backend.service;
 
-import com.packages.backend.model.entity.DeletedAccount;
 import com.packages.backend.model.entity.User;
-import com.packages.backend.model.enums.UserRole;
-import com.packages.backend.repository.DeletedAccountRepository;
-import org.springframework.stereotype.Service;
 
-import java.util.Date;
+public interface DeletedAccountService {
 
-@Service
-public class DeletedAccountService {
-  private final DeletedAccountRepository deletedAccountRepository;
-
-  public DeletedAccountService(DeletedAccountRepository deletedAccountRepository) {
-    this.deletedAccountRepository = deletedAccountRepository;
-  }
-
-  public void addDeletedAccount(User userToDelete, User connectedUser) {
-    DeletedAccount deletedAccount = new DeletedAccount(
-      userToDelete.getNickname(),
-      userToDelete.getEmail(),
-      userToDelete.getRegisteredDate(),
-      new Date(),
-      userToDelete.getStats().getTotalDislikes(),
-      userToDelete.getStats().getTotalLikes(),
-      userToDelete.getStats().getTotalMatches(),
-      connectedUser.getUserRole() == UserRole.ROLE_USER ? "User" : "Admin"
-    );
-    deletedAccountRepository.save(deletedAccount);
-  }
+  /**
+   * Archives the statistics of a deleted account and records who deleted it.
+   *
+   * @param userToDelete  account being deleted
+   * @param connectedUser author of the deletion, the owner of the account or an administrator
+   */
+  void addDeletedAccount(User userToDelete, User connectedUser);
 }

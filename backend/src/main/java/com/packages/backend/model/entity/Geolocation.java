@@ -3,6 +3,8 @@ package com.packages.backend.model.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "geolocations")
@@ -10,8 +12,11 @@ public class Geolocation {
   @Id
   @Column(name = "user_id")
   private Long id;
+  @NotBlank(message = "Latitude is empty")
   private String latitude;
+  @NotBlank(message = "Longitude is empty")
   private String longitude;
+  @NotNull(message = "Max Distance is empty")
   private Long distanceSearch;
   private Long distance;
   @OneToOne

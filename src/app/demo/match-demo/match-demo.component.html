@@ -47,7 +47,7 @@
 
   @if (selectedMatch) {
     <div class="match-container">
-      <a title="Back" (click)="back()">
+      <a title="Back" (click)="back()" (keyup.enter)="back()" tabindex="0">
         <i class="bx bx-arrow-back"></i>
       </a>
       @if (

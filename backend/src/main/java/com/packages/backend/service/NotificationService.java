@@ -2,41 +2,38 @@ package com.packages.backend.service;
 
 import com.packages.backend.model.entity.Notification;
 import com.packages.backend.model.entity.User;
-import com.packages.backend.repository.NotificationRepository;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
-@Service
-public class NotificationService {
-  private final NotificationRepository notificationRepository;
-  private final UserService userService;
+public interface NotificationService {
 
-  public NotificationService(NotificationRepository notificationRepository, UserService userService) {
-    this.notificationRepository = notificationRepository;
-    this.userService = userService;
-  }
+  /**
+   * Returns the most recent notifications of the connected user.
+   *
+   * @return the notifications displayed in the menu
+   */
+  List<Notification> getAllUserNotifications();
 
-  public List<Notification> getAllUserNotifications() {
-    User connectedUser = userService.getConnectedUser();
-    return notificationRepository.getAllUserNotifications(connectedUser.getId(), PageRequest.of(0, 6));
-  }
+  /**
+   * Marks every notification of the connected user as seen.
+   */
+  void markUserNotificationsAsSeen();
 
-  public void markUserNotificationsAsSeen() {
-    User connectedUser = userService.getConnectedUser();
-    connectedUser.getNotifications().forEach(notification -> notification.setSeen(true));
-    notificationRepository.saveAll(connectedUser.getNotifications());
-  }
+  /**
+   * Sends a notification to a user designated by its identifier.
+   *
+   * @param content text of the notification
+   * @param link    screen the notification points to
+   * @param userId  identifier of the receiver
+   */
+  void sendNotification(String content, String link, Long userId);
 
-  public void sendNotification(String content, String link, Long userId) {
-    User user = userService.getUserById(userId);
-    sendNotification(content, link, user);
-  }
-
-  public void sendNotification(String content, String link, User user) {
-    Notification notification = new Notification(content, link, new Date(), false, user);
-    notificationRepository.save(notification);
-  }
+  /**
+   * Sends a notification to an already loaded user.
+   *
+   * @param content text of the notification
+   * @param link    screen the notification points to
+   * @param user    receiver
+   */
+  void sendNotification(String content, String link, User user);
 }

@@ -11,9 +11,15 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
-import { Preference } from '../../../core/interfaces/preference';
+import {
+  Preference,
+  PreferenceName,
+} from '../../../core/interfaces/preference';
+import { Preferences } from '../../../core/interfaces/preferences';
 import { User } from '../../../core/interfaces/user';
 import { ConnectService } from '../../../core/services/connect.service';
+
+type PreferenceValues = Record<PreferenceName, string | undefined>;
 
 @Component({
   selector: 'app-preference',
@@ -22,20 +28,18 @@ import { ConnectService } from '../../../core/services/connect.service';
   styleUrl: './preference.component.css',
 })
 export class PreferenceComponent implements OnInit, OnChanges {
-  fb = inject(FormBuilder);
-  connectService = inject(ConnectService);
+  private readonly fb = inject(FormBuilder);
+  private readonly connectService = inject(ConnectService);
 
   readonly preference = input.required<Preference>();
   readonly user = input.required<User>();
   preferenceForm!: FormGroup;
   @Output() updateEvent: EventEmitter<void> = new EventEmitter<void>();
-  initialValue!: string;
+  initialValue?: string;
 
   ngOnInit(): void {
-    this.initialValue = (this.connectService.connectedUser!.preferences as any)[
-      this.preference().name
-    ];
-    const value: string = (this.user().preferences as any)[
+    this.initialValue = this.readConnectedUserValue();
+    const value = this.valuesOf(this.user().preferences)[
       this.preference().name
     ];
     this.preferenceForm = this.fb.group({
@@ -45,25 +49,23 @@ export class PreferenceComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['firstChange']) {
-      this.initialValue = (
-        this.connectService.connectedUser!.preferences as any
-      )[this.preference().name];
+      this.initialValue = this.readConnectedUserValue();
     }
   }
 
-  isSelected(attribute: string, property: string): boolean {
+  isSelected(attribute: string, property: PreferenceName): boolean {
     let selected = false;
     const user = this.user();
     if (attribute && user) {
-      selected = (user.preferences as any)[property] === attribute;
+      selected = this.valuesOf(user.preferences)[property] === attribute;
     }
     return selected;
   }
 
-  select(attribute: string, property: string): void {
+  select(attribute: string, property: PreferenceName): void {
     const user = this.user();
     if (attribute && user) {
-      (user.preferences as any)[property] = attribute;
+      this.valuesOf(user.preferences)[property] = attribute;
     }
   }
 
@@ -75,11 +77,22 @@ export class PreferenceComponent implements OnInit, OnChanges {
   cancel(): void {
     const user = this.user();
     if (user) {
-      (user.preferences as any)[this.preference().name] = this.initialValue;
+      this.valuesOf(user.preferences)[this.preference().name] =
+        this.initialValue;
       this.preferenceForm.patchValue({
         [this.preference().name]: this.initialValue,
       });
       this.preferenceForm.markAsPristine();
     }
+  }
+
+  private readConnectedUserValue(): string | undefined {
+    return this.valuesOf(this.connectService.connectedUser?.preferences)[
+      this.preference().name
+    ];
+  }
+
+  private valuesOf(preferences: Preferences | undefined): PreferenceValues {
+    return (preferences ?? {}) as PreferenceValues;
   }
 }

@@ -19,8 +19,4 @@ public enum Gamer {
   public String getDescription() {
     return description;
   }
-
-  public static String getDescriptionNullSafe(Gamer gamer) {
-    return gamer != null ? gamer.getDescription() : null;
-  }
 }

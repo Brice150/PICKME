@@ -1,14 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import {
-  Subject,
-  distinctUntilChanged,
-  repeat,
-  switchMap,
-  takeUntil,
-} from 'rxjs';
+import { distinctUntilChanged, repeat, switchMap, takeUntil } from 'rxjs';
 import { Notification } from '../core/interfaces/notification';
 import { ConnectService } from '../core/services/connect.service';
 import { NotificationService } from '../core/services/notification.service';
@@ -39,15 +34,15 @@ import { NotificationsComponent } from './notifications/notifications.component'
   ],
 })
 export class NavComponent implements OnInit {
-  connectService = inject(ConnectService);
-  notificationService = inject(NotificationService);
-  toastr = inject(ToastrService);
-  router = inject(Router);
+  readonly connectService = inject(ConnectService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly toastr = inject(ToastrService);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   isMenuActive = false;
   isNotificationsActive = false;
   notifications: Notification[] = [];
-  destroyed$: Subject<void> = new Subject<void>();
 
   ngOnInit(): void {
     this.connectService.connectedUserReady$
@@ -60,7 +55,8 @@ export class NavComponent implements OnInit {
               distinctUntilChanged(),
               takeUntil(this.connectService.loggedOut$)
             );
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((notifications: Notification[]) => {
         if (
@@ -123,7 +119,7 @@ export class NavComponent implements OnInit {
     }
   }
 
-  getUnseenNotificationsLenght(): number {
+  getUnseenNotificationsLength(): number {
     return this.notifications.filter(
       (notification: Notification) => !notification.seen
     ).length;

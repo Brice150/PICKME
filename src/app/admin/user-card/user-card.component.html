@@ -1,4 +1,4 @@
-<div class="container" title="More Info" (click)="moreInfo()">
+<div class="container" title="More Info" (click)="moreInfo()" (keyup.enter)="moreInfo()" tabindex="0">
   @if (user().pictures && user().pictures!.length !== 0) {
   <img [src]="user().pictures![0].content" [alt]="user().nickname" />
   } @if (!user().pictures || user().pictures!.length === 0) {

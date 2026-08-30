@@ -21,6 +21,7 @@ export interface User {
   preferences?: Preferences;
   geolocation: Geolocation;
   pictures?: Picture[];
+  picturesLoaded?: boolean;
   stats?: Stats;
   notifications?: Notification[];
 }
