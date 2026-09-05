@@ -202,14 +202,21 @@ compteurs.
 
 ### Intégration continue
 
-Chaque push et chaque pull request déclenchent deux jobs :
+Chaque push et chaque pull request déclenchent trois jobs, en parallèle :
 
 - **Frontend** : vérification du formatage Prettier, ESLint, tests Karma en
-  headless, build de production
+  headless avec seuil de couverture, build de production
+- **End to end** : les parcours Playwright dans Chromium, le rapport étant
+  publié en artefact quand un scénario tombe
 - **Backend** : suite de tests complète et contrôle de couverture, le rapport
   JaCoCo étant publié en artefact
 
-Dependabot surveille par ailleurs les dépendances npm, Maven et GitHub Actions.
+Un nouveau push sur une branche annule le run encore en cours pour cette branche.
+
+Dependabot surveille les dépendances npm, Maven et GitHub Actions, groupées par
+famille pour qu'une mise à jour donne une pull request à relire plutôt qu'une par
+librairie. Les majors d'Angular et de Spring Boot en sont exclus : ils se migrent
+avec `ng update` et les notes de version, pas en fusionnant un bot.
 
 </details>
 

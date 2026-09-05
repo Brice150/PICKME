@@ -9,6 +9,18 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 3
+    # A major Angular release is migrated with `ng update`, which runs the schematics rewriting
+    # the code that changed. Dependabot only edits the manifest, so it opens pull requests that
+    # cannot install: Material and the CDK follow the major of the framework, and a bump of one
+    # alone contradicts the peer dependency of the other. Majors of the family are therefore
+    # raised by hand, on purpose.
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@angular-devkit/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'angular-eslint'
+        update-types: ['version-update:semver-major']
     groups:
       # Angular refuses to install unless every package of the framework sits on the same
       # version, so they are bumped as one.
@@ -18,7 +30,7 @@ updates:
           - '@angular-devkit/*'
           - 'angular-eslint'
       # Everything else, gathered by kind of change: a single pull request to review instead of
-      # one per library.
+      # one per library. Majors stay out, and keep landing one by one so they get read.
       minor-and-patch:
         patterns:
           - '*'
@@ -31,6 +43,11 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 3
+    # Same reasoning as Angular: a Spring Boot major carries breaking changes across the starters
+    # and is upgraded deliberately, not merged from a bot.
+    ignore:
+      - dependency-name: 'org.springframework*'
+        update-types: ['version-update:semver-major']
     groups:
       spring:
         patterns:
