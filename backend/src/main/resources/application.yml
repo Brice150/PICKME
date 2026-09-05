@@ -3,15 +3,16 @@ spring:
     active: dev
 
   jpa:
+    # Kept enabled on purpose: a few responses serialize entities whose associations are lazy.
+    open-in-view: true
     # SQL logging is very expensive on large result sets: enable it only when debugging a query.
     show-sql: false
     hibernate:
       ddl-auto: update
     properties:
       # Bean Validation runs on the request payloads, not on the entity life cycle.
-      javax.persistence.validation.mode: none
+      jakarta.persistence.validation.mode: none
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         # Loads lazy associations in batches instead of one SELECT per entity (N+1 guard).
         default_batch_fetch_size: 50
         jdbc:
@@ -36,3 +37,20 @@ server:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/plain,text/css,application/javascript
     min-response-size: 2KB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # The health probe is the only endpoint exposed: the others would leak the internals of
+        # the application on an API that is reachable from the internet.
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:4200
+      - https://pick-me.up.railway.app

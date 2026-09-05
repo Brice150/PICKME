@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, input } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, input, output } from '@angular/core';
 import {
   DislikeButtonAnimation,
   LikeButtonAnimation,
@@ -7,17 +7,17 @@ import {
 } from '../../../select/card/card-animation';
 
 @Component({
-    selector: 'app-card-demo',
-    imports: [CommonModule],
-    templateUrl: './card-demo.component.html',
-    styleUrl: './card-demo.component.css',
-    animations: [LikeButtonAnimation, DislikeButtonAnimation, TextMatchAnimation]
+  selector: 'app-card-demo',
+  imports: [NgClass],
+  templateUrl: './card-demo.component.html',
+  styleUrl: './card-demo.component.css',
+  animations: [LikeButtonAnimation, DislikeButtonAnimation, TextMatchAnimation],
 })
 export class CardDemoComponent {
   readonly display = input<boolean>(false);
   readonly image = input.required<string>();
-  @Output() likeEvent: EventEmitter<void> = new EventEmitter<void>();
-  @Output() dislikeEvent: EventEmitter<void> = new EventEmitter<void>();
+  readonly likeEvent = output<void>();
+  readonly dislikeEvent = output<void>();
   activeMatchAnimation = false;
 
   like(): void {

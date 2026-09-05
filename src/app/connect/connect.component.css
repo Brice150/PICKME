@@ -46,7 +46,7 @@
 }
 
 .container .btn-container .unactive::before {
-  content: "";
+  content: '';
   position: absolute;
   background-color: var(--primary);
   height: 0%;

@@ -23,7 +23,7 @@ export class SelectService {
       `${this.apiServerUrl}/picture/user/${userId}`,
       {
         withCredentials: true,
-      }
+      },
     );
   }
 
@@ -40,7 +40,7 @@ export class SelectService {
       null,
       {
         withCredentials: true,
-      }
+      },
     );
   }
 }

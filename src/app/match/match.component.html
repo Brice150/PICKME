@@ -2,7 +2,11 @@
   <div class="container">
     <mat-form-field color="accent" class="search">
       <mat-label>Search by nickname</mat-label>
-      <input matInput [(ngModel)]="search" (ngModelChange)="searchByNickname()" />
+      <input
+        matInput
+        [(ngModel)]="search"
+        (ngModelChange)="searchByNickname()"
+      />
     </mat-form-field>
     @if (matches && matches.length !== 0 && !loading) {
       <div class="content">
@@ -22,9 +26,7 @@
       </div>
     }
     @if ((!matches || matches.length === 0) && !loading) {
-      <div
-        class="content nothing"
-        >
+      <div class="content nothing">
         <span>No match</span>
       </div>
     }
@@ -46,15 +48,12 @@
       </a>
     </div>
     @if (selectedMatch.messages && selectedMatch.messages.length !== 0) {
-      <div
-        class="content"
-        #messagesContainer
-        >
+      <div class="content" #messagesContainer>
         @for (message of selectedMatch.messages; track message) {
           <app-message
-      [ngClass]="
-        message.sender === selectedMatch.user.nickname ? 'left' : 'right'
-      "
+            [ngClass]="
+              message.sender === selectedMatch.user.nickname ? 'left' : 'right'
+            "
             [message]="message"
             [userName]="selectedMatch.user.nickname"
             (click)="modifyMessage(message)"
@@ -63,9 +62,7 @@
       </div>
     }
     @if (!selectedMatch.messages || selectedMatch.messages.length === 0) {
-      <div
-        class="content nothing"
-        >
+      <div class="content nothing">
         <span>No message</span>
       </div>
     }
@@ -73,7 +70,7 @@
       <form
         [formGroup]="messageForm"
         (ngSubmit)="sendMessage(messageForm.value)"
-        >
+      >
         <mat-form-field color="accent">
           <mat-label>Message</mat-label>
           <textarea matInput formControlName="content"></textarea>
@@ -82,8 +79,10 @@
             matSuffix
             type="submit"
             title="Send"
-            [disabled]="!messageForm.valid || !messageForm.get('content')?.value"
-            >
+            [disabled]="
+              !messageForm.valid || !messageForm.get('content')?.value
+            "
+          >
             <mat-icon>send</mat-icon>
           </button>
           @if (messageForm.get('content')!.hasError('required')) {
@@ -100,7 +99,7 @@
       <form
         [formGroup]="messageForm"
         (ngSubmit)="updateMessage(messageForm.value)"
-        >
+      >
         <mat-form-field color="accent">
           <mat-label>Update or Delete Message</mat-label>
           <textarea
@@ -114,7 +113,7 @@
             type="submit"
             title="Update"
             [disabled]="!messageForm.valid || !messageForm.dirty"
-            >
+          >
             <mat-icon>send</mat-icon>
           </button>
           <button
@@ -123,7 +122,7 @@
             type="button"
             title="Cancel"
             (click)="unModifyMessage()"
-            >
+          >
             <mat-icon>undo</mat-icon>
           </button>
           <button
@@ -133,7 +132,7 @@
             title="Delete"
             (click)="openDialog()"
             [disabled]="messageForm.dirty"
-            >
+          >
             <mat-icon>delete</mat-icon>
           </button>
           @if (messageForm.get('content')!.hasError('required')) {

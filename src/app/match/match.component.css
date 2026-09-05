@@ -98,7 +98,7 @@ form mat-form-field textarea {
 }
 
 .container a::before {
-  content: "";
+  content: '';
   position: absolute;
   background-color: var(--primary);
   height: 0%;
@@ -155,7 +155,7 @@ form .button-container button {
 }
 
 form .button-container button::before {
-  content: "";
+  content: '';
   position: absolute;
   background-color: var(--primary);
   height: 0%;

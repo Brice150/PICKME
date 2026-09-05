@@ -26,20 +26,20 @@ export class AdminService {
       adminSearch,
       {
         withCredentials: true,
-      }
+      },
     );
   }
 
   getAllDeletedAccounts(
     adminSearch: AdminSearch,
-    page: number
+    page: number,
   ): Observable<DeletedAccount[]> {
     return this.http.post<DeletedAccount[]>(
       `${this.apiServerUrl}/admin/deleted-account/all/${page}`,
       adminSearch,
       {
         withCredentials: true,
-      }
+      },
     );
   }
 

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ConnectService } from '../../core/services/connect.service';
 import { Router } from '@angular/router';
@@ -7,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-start-demo',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './start-demo.component.html',
   styleUrl: './start-demo.component.css',
 })

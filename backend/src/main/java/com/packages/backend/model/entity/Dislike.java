@@ -1,6 +1,6 @@
 package com.packages.backend.model.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 

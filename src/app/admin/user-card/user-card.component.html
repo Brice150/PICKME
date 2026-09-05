@@ -1,11 +1,18 @@
-<div class="container" title="More Info" (click)="moreInfo()" (keyup.enter)="moreInfo()" tabindex="0">
+<div
+  class="container"
+  title="More Info"
+  (click)="moreInfo()"
+  (keyup.enter)="moreInfo()"
+  tabindex="0"
+>
   @if (user().pictures && user().pictures!.length !== 0) {
-  <img [src]="user().pictures![0].content" [alt]="user().nickname" />
-  } @if (!user().pictures || user().pictures!.length === 0) {
-  <img [src]="imagePath + 'No-Image.png'" [alt]="user().nickname" />
+    <img [src]="user().pictures![0].content" [alt]="user().nickname" />
+  }
+  @if (!user().pictures || user().pictures!.length === 0) {
+    <img [src]="imagePath + 'No-Image.png'" [alt]="user().nickname" />
   }
   <div class="infos-container">
-    <span class="info">{{ user().email | description : 19 }}</span>
+    <span class="info">{{ user().email | description: 19 }}</span>
     <div class="stats">
       <div class="stat">
         <span>{{ user().stats?.totalDislikes }}</span>

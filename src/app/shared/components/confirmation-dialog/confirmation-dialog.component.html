@@ -1,7 +1,21 @@
 <div mat-dialog-content class="container">
   <h1>Are you sure you want to {{ action }} ?</h1>
   <div class="button-container">
-    <a class="button" title="No" (click)="cancel()" (keyup.enter)="cancel()" tabindex="0">NO</a>
-    <a class="button" title="Yes" (click)="confirm()" (keyup.enter)="confirm()" tabindex="0">YES</a>
+    <a
+      class="button"
+      title="No"
+      (click)="cancel()"
+      (keyup.enter)="cancel()"
+      tabindex="0"
+      >NO</a
+    >
+    <a
+      class="button"
+      title="Yes"
+      (click)="confirm()"
+      (keyup.enter)="confirm()"
+      tabindex="0"
+      >YES</a
+    >
   </div>
 </div>

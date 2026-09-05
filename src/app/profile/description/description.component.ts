@@ -1,12 +1,4 @@
-import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  Output,
-  input,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, inject, input, output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -20,12 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-description',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-  ],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './description.component.html',
   styleUrl: './description.component.css',
 })
@@ -35,7 +22,7 @@ export class DescriptionComponent implements OnInit {
 
   readonly user = input.required<User>();
   descriptionForm!: FormGroup;
-  @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
+  readonly updateEvent = output<string>();
 
   ngOnInit(): void {
     this.descriptionForm = this.fb.group({

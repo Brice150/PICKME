@@ -1,24 +1,28 @@
 <div class="container">
   <div class="btn-container">
     <a
-      (click)="toggleLoginOrRegister('register')" (keyup.enter)="toggleLoginOrRegister('register')" tabindex="0"
+      (click)="toggleLoginOrRegister('register')"
+      (keyup.enter)="toggleLoginOrRegister('register')"
+      tabindex="0"
       title="Register"
       [ngClass]="isRegistering ? 'active' : 'unactive'"
       >Register</a
-      >
-      <a
-        (click)="toggleLoginOrRegister('login')" (keyup.enter)="toggleLoginOrRegister('login')" tabindex="0"
-        title="Login"
-        [ngClass]="!isRegistering ? 'active' : 'unactive'"
-        >Login</a
-        >
-      </div>
-      <div class="content">
-        @if (!isRegistering) {
-          <app-login></app-login>
-        }
-        @if (isRegistering) {
-          <app-register></app-register>
-        }
-      </div>
-    </div>
+    >
+    <a
+      (click)="toggleLoginOrRegister('login')"
+      (keyup.enter)="toggleLoginOrRegister('login')"
+      tabindex="0"
+      title="Login"
+      [ngClass]="!isRegistering ? 'active' : 'unactive'"
+      >Login</a
+    >
+  </div>
+  <div class="content">
+    @if (!isRegistering) {
+      <app-login></app-login>
+    }
+    @if (isRegistering) {
+      <app-register></app-register>
+    }
+  </div>
+</div>

@@ -1,3 +1,4 @@
+import { UserRole } from '../enums/user-role';
 import { GenderAge } from './gender-age';
 import { Geolocation } from './geolocation';
 import { Notification } from './notification';
@@ -7,7 +8,7 @@ import { Stats } from './stats';
 
 export interface User {
   id?: number;
-  userRole?: string;
+  userRole?: UserRole;
   birthDate: Date;
   gold?: boolean;
   nickname: string;

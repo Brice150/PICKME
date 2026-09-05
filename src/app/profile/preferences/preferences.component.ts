@@ -1,11 +1,4 @@
-import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Output,
-  ViewChild,
-  input
-} from '@angular/core';
+import { Component, ViewChild, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlcoholDrinking } from '../../core/enums/alcohol-drinking';
 import { Animals } from '../../core/enums/animals';
@@ -21,19 +14,14 @@ import { PaginatorComponent } from '../../shared/components/paginator/paginator.
 import { PreferenceComponent } from './preference/preference.component';
 
 @Component({
-    selector: 'app-preferences',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        PreferenceComponent,
-        PaginatorComponent,
-    ],
-    templateUrl: './preferences.component.html',
-    styleUrl: './preferences.component.css'
+  selector: 'app-preferences',
+  imports: [ReactiveFormsModule, PreferenceComponent, PaginatorComponent],
+  templateUrl: './preferences.component.html',
+  styleUrl: './preferences.component.css',
 })
 export class PreferencesComponent {
   readonly user = input.required<User>();
-  @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
+  readonly updateEvent = output<string>();
   @ViewChild('preference') preference?: PreferenceComponent;
   currentPreferenceIndex = 0;
   alcoholDrinking: string[] = Object.values(AlcoholDrinking);

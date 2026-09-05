@@ -60,7 +60,7 @@ swiper-slide {
 }
 
 .container .button-container label:not(.disabled):before {
-  content: "";
+  content: '';
   position: absolute;
   background-color: var(--primary);
   height: 0%;

@@ -58,7 +58,7 @@ body {
   box-sizing: border-box;
   background: var(--background);
   color: var(--primary);
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 ::-webkit-scrollbar {

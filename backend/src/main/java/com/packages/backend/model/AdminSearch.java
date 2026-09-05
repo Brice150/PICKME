@@ -9,6 +9,7 @@ public class AdminSearch {
 
   public AdminSearch(String email, String orderBy) {
     this.email = email;
+    this.orderBy = orderBy;
   }
 
   public String getEmail() {

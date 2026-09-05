@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   Component,
@@ -18,7 +17,7 @@ const SLIDES_BEFORE_NEXT_PAGE = 15;
 
 @Component({
   selector: 'app-select',
-  imports: [CommonModule, CardComponent, LoadingCardComponent],
+  imports: [CardComponent, LoadingCardComponent],
   templateUrl: './select.component.html',
   styleUrl: './select.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -96,7 +95,7 @@ export class SelectComponent implements OnInit {
               {
                 positionClass: 'toast-bottom-center',
                 toastClass: 'ngx-toastr custom gold',
-              }
+              },
             );
           } else {
             this.removeSlide(user.id!);
@@ -107,7 +106,7 @@ export class SelectComponent implements OnInit {
               {
                 positionClass: 'toast-bottom-center',
                 toastClass: 'ngx-toastr custom',
-              }
+              },
             );
           }
         },
@@ -131,7 +130,7 @@ export class SelectComponent implements OnInit {
             {
               positionClass: 'toast-bottom-center',
               toastClass: 'ngx-toastr custom',
-            }
+            },
           );
         },
       });

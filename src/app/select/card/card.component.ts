@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   inject,
   input,
+  output,
 } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
@@ -27,13 +26,7 @@ import {
 
 @Component({
   selector: 'app-card',
-  imports: [
-    CommonModule,
-    DescriptionPipe,
-    AgePipe,
-    MatDialogModule,
-    RouterModule,
-  ],
+  imports: [NgClass, DescriptionPipe, AgePipe, MatDialogModule, RouterModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,8 +47,8 @@ export class CardComponent {
   readonly user = input.required<User>();
   readonly display = input<boolean>(false);
   readonly activeMatchAnimation = input<boolean>(false);
-  @Output() likeEvent: EventEmitter<void> = new EventEmitter<void>();
-  @Output() dislikeEvent: EventEmitter<void> = new EventEmitter<void>();
+  readonly likeEvent = output<void>();
+  readonly dislikeEvent = output<void>();
 
   moreInfo(): void {
     const user = this.user();

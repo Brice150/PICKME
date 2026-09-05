@@ -1,13 +1,12 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   Component,
   ElementRef,
-  EventEmitter,
-  Output,
   ViewChild,
-  input,
   inject,
+  input,
+  output,
 } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Picture } from '../../core/interfaces/picture';
@@ -17,7 +16,7 @@ import { PictureComponent } from './picture/picture.component';
 
 @Component({
   selector: 'app-pictures',
-  imports: [CommonModule, PictureComponent],
+  imports: [NgClass, PictureComponent],
   templateUrl: './pictures.component.html',
   styleUrl: './pictures.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -27,7 +26,7 @@ export class PicturesComponent {
 
   imagePath: string = environment.imagePath;
   readonly user = input<User>();
-  @Output() refreshEvent: EventEmitter<string> = new EventEmitter<string>();
+  readonly refreshEvent = output<string>();
   @ViewChild('imageInput') imageInput!: ElementRef;
   isLoading = false;
   activeIndex = 0;
@@ -85,7 +84,7 @@ export class PicturesComponent {
     this.profileService.deletePicture(pictureId).subscribe({
       next: () => {
         const pictureIndex = this.user()!.pictures!.findIndex(
-          (picture: Picture) => picture.id === pictureId
+          (picture: Picture) => picture.id === pictureId,
         );
         if (pictureIndex !== -1) {
           const isMainPictureDeleted =
@@ -109,11 +108,11 @@ export class PicturesComponent {
     this.profileService.selectMainPicture(pictureId).subscribe({
       next: () => {
         const pictureIndex = this.user()!.pictures!.findIndex(
-          (picture: Picture) => picture.id === pictureId
+          (picture: Picture) => picture.id === pictureId,
         );
         if (pictureIndex !== -1) {
           this.user()?.pictures?.forEach(
-            (picture: Picture) => (picture.isMainPicture = false)
+            (picture: Picture) => (picture.isMainPicture = false),
           );
           this.user()!.pictures![pictureIndex].isMainPicture = true;
         }

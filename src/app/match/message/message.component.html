@@ -3,12 +3,12 @@
   [ngClass]="{
     left: message().sender === userName(),
     right: message().sender !== userName(),
-    deleted: !message().content
+    deleted: !message().content,
   }"
   [title]="
     message().sender !== userName() && message().content ? 'Update Message' : ''
   "
-  >
+>
   <span class="date">{{ message().date | customDate }}</span>
   @if (message().content) {
     <span class="content">

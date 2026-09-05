@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,6 +74,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
   // root entity: without those JOIN FETCH clauses Hibernate runs four extra SELECT per candidate,
   // which was by far the main cost of the selection screen. Pictures stay lazy on purpose, they
   // hold base64 payloads and are loaded separately for the current page only.
+  //
+  // The age criteria is expressed as a range of birth dates rather than as an age computed on
+  // every row: the comparison stays portable and can use an index on the birth date.
   @Query(
     "SELECT DISTINCT u FROM User u" +
       " JOIN FETCH u.genderAge genderAge" +
@@ -83,12 +87,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
       " LEFT JOIN Dislike d ON u.id = d.fkReceiver AND d.fkSender = :connectedId" +
       " WHERE genderAge.genderSearch = :gender" +
       " AND genderAge.gender = :genderSearch" +
-      " AND EXTRACT(YEAR FROM AGE(CURRENT_DATE, u.birthDate)) BETWEEN :minAge AND :maxAge" +
+      " AND u.birthDate >= :earliestBirthDate" +
+      " AND u.birthDate < :latestBirthDate" +
       " AND u.id != :connectedId" +
       " AND l.fkSender IS NULL" +
       " AND d.fkSender IS NULL"
   )
-  List<User> getAllUsers(@Param("genderSearch") Gender genderSearch, @Param("gender") Gender gender, @Param("minAge") Integer minAge, @Param("maxAge") Integer maxAge, @Param("connectedId") Long connectedId);
+  List<User> getAllUsers(@Param("genderSearch") Gender genderSearch, @Param("gender") Gender gender, @Param("earliestBirthDate") Date earliestBirthDate, @Param("latestBirthDate") Date latestBirthDate, @Param("connectedId") Long connectedId);
 
   @Query(
     value =

@@ -1,13 +1,11 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
-  EventEmitter,
   OnChanges,
   OnInit,
-  Output,
   SimpleChanges,
   inject,
   input,
+  output,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
@@ -23,7 +21,7 @@ type PreferenceValues = Record<PreferenceName, string | undefined>;
 
 @Component({
   selector: 'app-preference',
-  imports: [CommonModule, MatChipsModule, ReactiveFormsModule],
+  imports: [MatChipsModule, ReactiveFormsModule],
   templateUrl: './preference.component.html',
   styleUrl: './preference.component.css',
 })
@@ -34,7 +32,7 @@ export class PreferenceComponent implements OnInit, OnChanges {
   readonly preference = input.required<Preference>();
   readonly user = input.required<User>();
   preferenceForm!: FormGroup;
-  @Output() updateEvent: EventEmitter<void> = new EventEmitter<void>();
+  readonly updateEvent = output<void>();
   initialValue?: string;
 
   ngOnInit(): void {

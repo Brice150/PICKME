@@ -2,9 +2,11 @@
   <a
     class="button left"
     title="Dislike"
-    (click)="dislike()" (keyup.enter)="dislike()" tabindex="0"
+    (click)="dislike()"
+    (keyup.enter)="dislike()"
+    tabindex="0"
     @dislikeButtonTrigger
-    >
+  >
     <i class="bx bxs-dislike"></i>
   </a>
 }
@@ -13,9 +15,11 @@
     class="button right"
     title="Like"
     [ngClass]="{ gold: image().includes('Picture2.jpg') }"
-    (click)="like()" (keyup.enter)="like()" tabindex="0"
+    (click)="like()"
+    (keyup.enter)="like()"
+    tabindex="0"
     @likeButtonTrigger
-    >
+  >
     <i class="bx bxs-like"></i>
   </a>
 }

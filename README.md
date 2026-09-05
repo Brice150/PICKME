@@ -1,12 +1,22 @@
 <div align="center">
 <img height="130px" width="130px" src="./src/assets/images/Logo.png">
 </div>
-  
+
 # PICK ME, une application web de rencontre
 
-Frontend : Angular
+[![CI](https://github.com/Brice150/PICKME/actions/workflows/ci.yml/badge.svg)](https://github.com/Brice150/PICKME/actions/workflows/ci.yml)
+![Coverage](https://img.shields.io/badge/couverture-100%25-brightgreen)
+![Angular](https://img.shields.io/badge/Angular-21-dd0031)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1-6db33f)
+![Java](https://img.shields.io/badge/Java-21-007396)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791)
+
+Application de rencontre complète : sélection de profils par distance et affinité,
+messagerie entre profils ayant matché, notifications et back office d'administration.
+
+Frontend : Angular 21 (composants standalone, signaux, routes lazy)
 <br>
-Backend : Spring Boot
+Backend : Spring Boot 4 / Java 21 / PostgreSQL (API REST, Spring Security, JPA)
 
 <details>
   <summary>Features</summary>
@@ -88,7 +98,7 @@ Backend : Spring Boot
 ### Cloner le projet
 
 ```bash
-  git clone https://github.com/Brice150/Life-Rise.git
+  git clone https://github.com/Brice150/PICKME.git
 ```
 
 ### Installer les dépendances
@@ -102,6 +112,76 @@ Backend : Spring Boot
 ```bash
   ng serve -o
 ```
+
+### Lancer les tests du front
+
+```bash
+  ng test
+```
+
+### Lancer le back (Java 21, PostgreSQL sur le port 5432)
+
+```bash
+  cd backend && ./mvnw spring-boot:run
+```
+
+### Lancer les tests du back
+
+```bash
+  cd backend && ./mvnw verify
+```
+
+</details>
+
+<details>
+  <summary>Qualité et tests</summary>
+
+### Architecture
+
+Le back est découpé en couches, chacune avec une seule responsabilité :
+
+| Couche       | Rôle                                                                     |
+| ------------ | ------------------------------------------------------------------------ |
+| `controller` | Traduction HTTP : codes de retour, validation du payload, rien de métier |
+| `service`    | Règles métier, derrière une interface par service                        |
+| `repository` | Accès aux données via Spring Data JPA                                    |
+| `model/dto`  | Vues exposées au client, distinctes des entités JPA                      |
+| `security`   | Chaîne de filtres, CORS, chiffrement des mots de passe                   |
+
+Les entités ne sortent jamais telles quelles : `UserDTO` expose la vue complète du
+compte connecté, `UserDTOMapperRestricted` la vue réduite d'un autre profil, sans
+mot de passe, rôle ni statistiques.
+
+### Stratégie de test
+
+| Niveau                        | Outils                            | Ce qui est vérifié                                            |
+| ----------------------------- | --------------------------------- | ------------------------------------------------------------- |
+| Services back                 | JUnit 5 + Mockito                 | Chaque règle métier et chaque branche, dépendances mockées    |
+| Contrôleurs back              | `@WebMvcTest` + MockMvc           | Codes HTTP, sérialisation, validation, gestion des erreurs    |
+| Règles de sécurité            | `@SpringBootTest`                 | 401 anonyme, 403 hors rôle, endpoints publics, préflight CORS |
+| Services, guards, pipes front | Jasmine + `HttpTestingController` | Requêtes émises, redirections, transformations                |
+| Composants front              | Jasmine + `TestBed`               | Rendu, entrées et sorties, logique de chaque écran            |
+
+### Couverture
+
+Le build back échoue si la couverture d'instructions **ou** de branches des
+couches `service.impl`, `controller` et `exception` descend sous 100 %. La règle
+est portée par JaCoCo et s'applique classe par classe :
+
+```bash
+  cd backend && ./mvnw verify   # rapport dans backend/target/site/jacoco
+```
+
+### Intégration continue
+
+Chaque push et chaque pull request déclenchent deux jobs :
+
+- **Frontend** : vérification du formatage Prettier, ESLint, tests Karma en
+  headless, build de production
+- **Backend** : suite de tests complète et contrôle de couverture, le rapport
+  JaCoCo étant publié en artefact
+
+Dependabot surveille par ailleurs les dépendances npm, Maven et GitHub Actions.
 
 </details>
 

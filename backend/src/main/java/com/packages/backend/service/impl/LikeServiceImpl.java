@@ -47,7 +47,7 @@ public class LikeServiceImpl implements LikeService {
       return ServiceStatus.FORBIDDEN;
     }
 
-    Stats userStats = statsRepository.getById(likedUser.getId());
+    Stats userStats = statsRepository.getReferenceById(likedUser.getId());
     userStats.setTotalLikes(userStats.getTotalLikes() + 1);
     Optional<Like> previousReceiverLike = likeRepository.getLikeByFk(likedUser.getId(), connectedUser.getId());
     if (previousReceiverLike.isPresent()) {
@@ -97,7 +97,7 @@ public class LikeServiceImpl implements LikeService {
   public void deleteLikeByFk(User connectedUser, User dislikedUser) {
     Optional<Like> previousSenderLike = likeRepository.getLikeByFk(connectedUser.getId(), dislikedUser.getId());
     Optional<Like> previousReceiverLike = likeRepository.getLikeByFk(dislikedUser.getId(), connectedUser.getId());
-    Stats userStats = statsRepository.getById(dislikedUser.getId());
+    Stats userStats = statsRepository.getReferenceById(dislikedUser.getId());
     userStats.setTotalDislikes(userStats.getTotalDislikes() + 1);
     previousSenderLike.ifPresent(likeSender -> {
       userStats.setTotalLikes(userStats.getTotalLikes() - 1);
@@ -117,7 +117,7 @@ public class LikeServiceImpl implements LikeService {
    */
   private String handleMatch(User likedUser, Stats userStats, User connectedUser) {
     userStats.setTotalMatches(userStats.getTotalMatches() + 1);
-    Stats connectedUserStats = statsRepository.getById(connectedUser.getId());
+    Stats connectedUserStats = statsRepository.getReferenceById(connectedUser.getId());
     connectedUserStats.setTotalMatches(connectedUserStats.getTotalMatches() + 1);
     notificationService.sendNotification("New match with " + connectedUser.getNickname(), "match", likedUser);
     statsRepository.save(connectedUserStats);
@@ -135,7 +135,7 @@ public class LikeServiceImpl implements LikeService {
     messageRepository.deleteMessagesByFk(connectedUser.getId(), dislikedUser.getId());
     notificationService.sendNotification(connectedUser.getNickname() + " decided to unmatch", "unmatch", dislikedUser);
     userStats.setTotalMatches(userStats.getTotalMatches() - 1);
-    Stats connectedUserStats = statsRepository.getById(connectedUser.getId());
+    Stats connectedUserStats = statsRepository.getReferenceById(connectedUser.getId());
     connectedUserStats.setTotalMatches(connectedUserStats.getTotalMatches() - 1);
     statsRepository.save(connectedUserStats);
   }

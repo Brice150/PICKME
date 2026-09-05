@@ -1,20 +1,19 @@
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   Component,
   OnInit,
-  input
+  input,
 } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { environment } from '../../../environments/environment';
 import { Gender } from '../../core/enums/gender';
 
 @Component({
-    selector: 'app-profile-demo',
-    imports: [CommonModule, MatExpansionModule],
-    templateUrl: './profile-demo.component.html',
-    styleUrl: './profile-demo.component.css',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  selector: 'app-profile-demo',
+  imports: [MatExpansionModule],
+  templateUrl: './profile-demo.component.html',
+  styleUrl: './profile-demo.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ProfileDemoComponent implements OnInit {
   imagePath: string = environment.imagePath;

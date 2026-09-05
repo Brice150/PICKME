@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { Gender } from '../core/enums/gender';
 import { ConnectService } from '../core/services/connect.service';
@@ -11,7 +10,6 @@ import { StartDemoComponent } from './start-demo/start-demo.component';
 @Component({
   selector: 'app-demo',
   imports: [
-    CommonModule,
     ProfileDemoComponent,
     SelectDemoComponent,
     MatchDemoComponent,

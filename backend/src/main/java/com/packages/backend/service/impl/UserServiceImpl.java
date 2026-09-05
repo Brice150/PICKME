@@ -27,10 +27,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -60,17 +62,17 @@ public class UserServiceImpl implements UserService {
   private final NotificationRepository notificationRepository;
   private final UserDTOMapper userDTOMapper;
   private final UserDTOMapperRestricted userDTOMapperRestricted;
-  private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final PasswordEncoder passwordEncoder;
   private final DistanceService distanceService;
   private final DeletedAccountService deletedAccountService;
 
-  public UserServiceImpl(UserRepository userRepository, MessageRepository messageRepository, LikeRepository likeRepository, PictureRepository pictureRepository, NotificationRepository notificationRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperRestricted userDTOMapperRestricted, DistanceService distanceService, DeletedAccountService deletedAccountService) {
+  public UserServiceImpl(UserRepository userRepository, MessageRepository messageRepository, LikeRepository likeRepository, PictureRepository pictureRepository, NotificationRepository notificationRepository, PasswordEncoder passwordEncoder, UserDTOMapper userDTOMapper, UserDTOMapperRestricted userDTOMapperRestricted, DistanceService distanceService, DeletedAccountService deletedAccountService) {
     this.userRepository = userRepository;
     this.messageRepository = messageRepository;
     this.likeRepository = likeRepository;
     this.pictureRepository = pictureRepository;
     this.notificationRepository = notificationRepository;
-    this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    this.passwordEncoder = passwordEncoder;
     this.userDTOMapper = userDTOMapper;
     this.userDTOMapperRestricted = userDTOMapperRestricted;
     this.distanceService = distanceService;
@@ -100,7 +102,7 @@ public class UserServiceImpl implements UserService {
    * @param user validated user to persist
    */
   private void registerUser(User user) {
-    String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+    String encodedPassword = passwordEncoder.encode(user.getPassword());
     user.setPassword(encodedPassword);
     user.setRegisteredDate(new Date());
     user.getGenderAge().setFkUser(user);
@@ -118,8 +120,8 @@ public class UserServiceImpl implements UserService {
     List<User> candidates = userRepository.getAllUsers(
       connectedUser.getGenderAge().getGenderSearch(),
       connectedUser.getGenderAge().getGender(),
-      connectedUser.getGenderAge().getMinAge().intValue(),
-      connectedUser.getGenderAge().getMaxAge().intValue(),
+      earliestBirthDateFor(connectedUser.getGenderAge().getMaxAge()),
+      latestBirthDateFor(connectedUser.getGenderAge().getMinAge()),
       connectedUser.getId()
     );
     Set<Long> goldUserIds = new HashSet<>(likeRepository.getGoldByConnectedUserId(connectedUser.getId()));
@@ -136,6 +138,32 @@ public class UserServiceImpl implements UserService {
       .limit(SELECTION_PAGE_SIZE)
       .toList();
     return toRestrictedViewsWithMainPicture(selectedPage);
+  }
+
+  /**
+   * Returns the first birth date of a candidate that is not older than the requested age, the day
+   * their next birthday makes them cross that age.
+   *
+   * @param maxAge oldest age accepted by the connected user
+   * @return the lower bound, included, of the birth dates to select
+   */
+  private Date earliestBirthDateFor(Long maxAge) {
+    return toDate(LocalDate.now().minusYears(maxAge + 1L).plusDays(1));
+  }
+
+  /**
+   * Returns the first birth date of a candidate that is too young to be selected, so that the
+   * whole day of the birthday of the youngest accepted candidates stays included.
+   *
+   * @param minAge youngest age accepted by the connected user
+   * @return the upper bound, excluded, of the birth dates to select
+   */
+  private Date latestBirthDateFor(Long minAge) {
+    return toDate(LocalDate.now().minusYears(minAge).plusDays(1));
+  }
+
+  private Date toDate(LocalDate date) {
+    return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
   }
 
   /**
@@ -194,7 +222,7 @@ public class UserServiceImpl implements UserService {
    */
   private void updatePassword(User connectedUser, UserUpdateRequest request) {
     if (request.getPassword() != null) {
-      connectedUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+      connectedUser.setPassword(passwordEncoder.encode(request.getPassword()));
     }
   }
 

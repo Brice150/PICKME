@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, input } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, input, output } from '@angular/core';
 
 @Component({
-    selector: 'app-paginator',
-    imports: [CommonModule],
-    templateUrl: './paginator.component.html',
-    styleUrl: './paginator.component.css'
+  selector: 'app-paginator',
+  imports: [NgClass],
+  templateUrl: './paginator.component.html',
+  styleUrl: './paginator.component.css',
 })
 export class PaginatorComponent {
   page = 0;
@@ -13,7 +13,7 @@ export class PaginatorComponent {
   readonly usersNumber = input<number>(0);
   readonly maxPerPage = input<number>(0);
   readonly maxPages = input<number>(100);
-  @Output() handlePageEvent: EventEmitter<number> = new EventEmitter<number>();
+  readonly handlePageEvent = output<number>();
 
   next(): void {
     if (

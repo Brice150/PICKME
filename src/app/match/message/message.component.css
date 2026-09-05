@@ -17,7 +17,7 @@
 }
 
 .container:not(.left):not(.deleted)::before {
-  content: "";
+  content: '';
   position: absolute;
   background-color: var(--primary);
   height: 0%;

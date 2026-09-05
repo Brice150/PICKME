@@ -21,13 +21,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     return userService.signUpUser(
       new User(
         UserRole.ROLE_USER,
-        request.getBirthDate(),
-        request.getNickname(),
-        request.getJob(),
-        request.getEmail(),
-        request.getPassword(),
-        request.getGenderAge(),
-        request.getGeolocation()
+        request.birthDate(),
+        request.nickname(),
+        request.job(),
+        request.email(),
+        request.password(),
+        request.genderAge(),
+        request.geolocation()
       )
     );
   }

@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { UserRole } from '../enums/user-role';
 import { Geolocation } from '../interfaces/geolocation';
 import { User } from '../interfaces/user';
 
@@ -46,6 +47,15 @@ export class ConnectService {
 
   getGeolocation(): Observable<Geolocation> {
     return this.http.get<Geolocation>('https://ipapi.co/json/');
+  }
+
+  /**
+   * Tells whether an account is an administrator, the connected one by default.
+   *
+   * @param user account to check
+   */
+  isAdmin(user: User | undefined = this.connectedUser): boolean {
+    return user?.userRole === UserRole.ROLE_ADMIN;
   }
 
   logout(): void {

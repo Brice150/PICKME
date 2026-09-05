@@ -1,0 +1,146 @@
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { of } from 'rxjs';
+import { User } from '../core/interfaces/user';
+import { SelectService } from '../core/services/select.service';
+import { userFixture } from '../core/testing/user.fixture';
+import { SelectComponent } from './select.component';
+
+describe('SelectComponent', () => {
+  let fixture: ComponentFixture<SelectComponent>;
+  let component: SelectComponent;
+  let selectService: jasmine.SpyObj<SelectService>;
+  let toastr: jasmine.SpyObj<ToastrService>;
+  let router: jasmine.SpyObj<Router>;
+
+  beforeEach(async () => {
+    selectService = jasmine.createSpyObj<SelectService>('SelectService', [
+      'getAllSelectedUsers',
+      'addLike',
+      'addDislike',
+    ]);
+    toastr = jasmine.createSpyObj<ToastrService>('ToastrService', ['success']);
+    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    selectService.getAllSelectedUsers.and.returnValue(of([]));
+    await TestBed.configureTestingModule({
+      imports: [SelectComponent],
+      providers: [
+        provideNoopAnimations(),
+        { provide: SelectService, useValue: selectService },
+        { provide: ToastrService, useValue: toastr },
+        { provide: Router, useValue: router },
+      ],
+    }).compileComponents();
+    fixture = TestBed.createComponent(SelectComponent);
+    component = fixture.componentInstance;
+  });
+
+  /** Starts the screen with a first page of candidates. */
+  function start(users: User[]): void {
+    selectService.getAllSelectedUsers.and.returnValue(of(users));
+    fixture.detectChanges();
+  }
+
+  /** Returns the title of the last toast that has been raised. */
+  function lastToastTitle(): string {
+    return toastr.success.calls.mostRecent().args[1] as string;
+  }
+
+  it('loads the first page of candidates on arrival', () => {
+    start([userFixture({ id: 2 }), userFixture({ id: 3 })]);
+
+    expect(selectService.getAllSelectedUsers).toHaveBeenCalledWith(0);
+    expect(component.users.length).toBe(2);
+    expect(component.initLoading).toBeFalse();
+    expect(component.loading).toBeFalse();
+  });
+
+  it('keeps showing the empty state when nobody matches the criteria', () => {
+    start([]);
+
+    expect(component.users).toEqual([]);
+    expect(
+      fixture.nativeElement.querySelector('app-loading-card'),
+    ).not.toBeNull();
+  });
+
+  it('drops the profile and congratulates the user on a match', fakeAsync(() => {
+    const candidate = userFixture({ id: 2, nickname: 'Alice' });
+    start([candidate]);
+    selectService.addLike.and.returnValue(of('Alice'));
+
+    component.like(candidate);
+
+    expect(component.activeMatchAnimation).toBeTrue();
+    expect(lastToastTitle()).toBe('Matched Alice');
+
+    tick(3000);
+
+    expect(component.activeMatchAnimation).toBeFalse();
+    expect(component.users).toEqual([]);
+    expect(component.isLoading).toBeFalse();
+  }));
+
+  it('drops the profile without any animation when the like is not returned', () => {
+    const candidate = userFixture({ id: 2, nickname: 'Alice' });
+    start([candidate]);
+    selectService.addLike.and.returnValue(of(''));
+
+    component.like(candidate);
+
+    expect(component.activeMatchAnimation).toBeFalse();
+    expect(component.users).toEqual([]);
+    expect(lastToastTitle()).toBe('Liked Alice');
+  });
+
+  it('drops the profile on a dislike', () => {
+    const candidate = userFixture({ id: 2, nickname: 'Alice' });
+    start([candidate]);
+    selectService.addDislike.and.returnValue(of(undefined));
+
+    component.dislike(candidate);
+
+    expect(component.users).toEqual([]);
+    expect(component.isLoading).toBeFalse();
+    expect(lastToastTitle()).toBe('Disliked Alice');
+  });
+
+  it('leaves the deck untouched when the answered profile is already gone', () => {
+    start([userFixture({ id: 2 })]);
+
+    component.removeSlide(99);
+
+    expect(component.users.length).toBe(1);
+  });
+
+  it('sends the user to their profile to widen the criteria', () => {
+    start([]);
+
+    component.goTo('profile');
+
+    expect(router.navigate).toHaveBeenCalledWith(['/profile']);
+  });
+
+  it('stays on the selection screen when going back to the first profile', () => {
+    start([]);
+
+    component.goTo('first');
+
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('ignores a slide change while the carousel is not mounted', () => {
+    start([userFixture({ id: 2 })]);
+
+    component.onSlideChange();
+
+    expect(selectService.getAllSelectedUsers).toHaveBeenCalledTimes(1);
+  });
+});

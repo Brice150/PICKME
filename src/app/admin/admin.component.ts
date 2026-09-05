@@ -1,5 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, OnInit, ViewChild, inject } from '@angular/core';
+import { NgClass } from '@angular/common';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -21,7 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
 @Component({
   selector: 'app-admin',
   imports: [
-    CommonModule,
+    NgClass,
     UserCardComponent,
     ReactiveFormsModule,
     LoadingComponent,
@@ -70,7 +76,6 @@ export class AdminComponent implements OnInit {
 
     this.search(0);
   }
-
 
   toggleUserOrDeleted(content: string) {
     if (
@@ -141,7 +146,7 @@ export class AdminComponent implements OnInit {
     this.adminService.deleteUser(userToDelete.id!).subscribe({
       next: () => {
         const userIndex = this.users.findIndex(
-          (user: User) => user.id === userToDelete.id
+          (user: User) => user.id === userToDelete.id,
         );
         if (userIndex !== -1) {
           this.users.splice(userIndex, 1);

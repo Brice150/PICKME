@@ -1,23 +1,27 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * Turns a birth date into the number of complete years elapsed since then.
+ */
 @Pipe({
   name: 'age',
   standalone: true,
 })
 export class AgePipe implements PipeTransform {
   transform(birth: Date | undefined): number {
-    let age = 0;
-    const today: Date = new Date();
-    if (birth) {
-      const birthDate: Date = new Date(birth);
-      const dateDifference: Date = new Date(
-        today.getFullYear() - birthDate.getFullYear(),
-        today.getMonth() - birthDate.getMonth(),
-        today.getDate() - birthDate.getDate()
-      );
-      age = dateDifference.getFullYear();
-      age = Number(String(age).slice(-2));
+    if (!birth) {
+      return 0;
     }
-    return age;
+    const birthDate = new Date(birth);
+    const today = new Date();
+    const age = today.getFullYear() - birthDate.getFullYear();
+    return this.hasHadBirthdayThisYear(birthDate, today) ? age : age - 1;
+  }
+
+  private hasHadBirthdayThisYear(birthDate: Date, today: Date): boolean {
+    if (today.getMonth() !== birthDate.getMonth()) {
+      return today.getMonth() > birthDate.getMonth();
+    }
+    return today.getDate() >= birthDate.getDate();
   }
 }

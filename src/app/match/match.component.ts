@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   Component,
   DestroyRef,
@@ -35,7 +35,7 @@ import { MessageComponent } from './message/message.component';
 @Component({
   selector: 'app-match',
   imports: [
-    CommonModule,
+    NgClass,
     FormsModule,
     MatchCardComponent,
     MessageComponent,
@@ -66,7 +66,8 @@ export class MatchComponent implements OnInit {
   selectedMatch?: Match;
   loading = true;
   previousMessages?: Message[];
-  @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+  // Absent as long as the selected conversation holds no message.
+  @ViewChild('messagesContainer') messagesContainer?: ElementRef;
 
   ngOnInit(): void {
     this.messageForm = this.fb.group({
@@ -302,7 +303,9 @@ export class MatchComponent implements OnInit {
   }
 
   scrollDown(): void {
-    this.messagesContainer.nativeElement.scrollTop =
-      this.messagesContainer.nativeElement.scrollHeight;
+    const container = this.messagesContainer?.nativeElement;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
   }
 }

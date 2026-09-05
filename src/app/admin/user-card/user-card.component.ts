@@ -1,5 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, input, inject } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { User } from '../../core/interfaces/user';
 import { environment } from '../../../environments/environment';
 import { MoreInfoComponent } from '../../shared/components/more-info/more-info.component';
@@ -9,17 +8,17 @@ import { CustomDatePipe } from '../../shared/pipes/custom-date.pipe';
 import { DescriptionPipe } from '../../shared/pipes/description.pipe';
 
 @Component({
-    selector: 'app-user-card',
-    imports: [CommonModule, CustomDatePipe, DescriptionPipe],
-    templateUrl: './user-card.component.html',
-    styleUrl: './user-card.component.css'
+  selector: 'app-user-card',
+  imports: [CustomDatePipe, DescriptionPipe],
+  templateUrl: './user-card.component.html',
+  styleUrl: './user-card.component.css',
 })
 export class UserCardComponent {
   private readonly dialog = inject(MatDialog);
 
   imagePath: string = environment.imagePath;
   readonly user = input.required<User>();
-  @Output() deleteEvent: EventEmitter<void> = new EventEmitter<void>();
+  readonly deleteEvent = output<void>();
 
   moreInfo(): void {
     const dialogRef = this.dialog.open(MoreInfoComponent, {

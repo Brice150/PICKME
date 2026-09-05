@@ -1,14 +1,13 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit, input } from '@angular/core';
 import { Gender } from '../../core/enums/gender';
 import { MatchCardDemoComponent } from './match-card-demo/match-card-demo.component';
 import { environment } from '../../../environments/environment';
 
 @Component({
-    selector: 'app-match-demo',
-    imports: [CommonModule, MatchCardDemoComponent],
-    templateUrl: './match-demo.component.html',
-    styleUrl: './match-demo.component.css'
+  selector: 'app-match-demo',
+  imports: [MatchCardDemoComponent],
+  templateUrl: './match-demo.component.html',
+  styleUrl: './match-demo.component.css',
 })
 export class MatchDemoComponent implements OnInit {
   imagePath: string = environment.imagePath;

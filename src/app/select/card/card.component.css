@@ -40,7 +40,7 @@
 }
 
 .text-container::before {
-  content: "";
+  content: '';
   position: absolute;
   background-color: var(--primary);
   height: 0%;
@@ -97,7 +97,7 @@
 }
 
 .button::before {
-  content: "";
+  content: '';
   position: absolute;
   background-color: var(--primary);
   height: 0%;

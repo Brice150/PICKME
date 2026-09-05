@@ -3,70 +3,76 @@
     class="menu-button"
     title="Menu"
     [ngClass]="{ gold: getUnseenNotificationsLength() !== 0 && !isMenuActive }"
-    >
+  >
     @if (
       getUnseenNotificationsLength() !== 0 &&
       !isNotificationsActive &&
       !isMenuActive
-      ) {
-      <span
-        >{{ getUnseenNotificationsLength() }}</span
-        >
-      }
-      @if (!isMenuActive) {
-        <i class="bx bx-menu" (click)="toggleMenu()" (keyup.enter)="toggleMenu()" tabindex="0"></i>
-      }
-      @if (isMenuActive) {
-        <i class="bx bx-x" (click)="toggleMenu()" (keyup.enter)="toggleMenu()" tabindex="0"></i>
-      }
-    </div>
-  }
-  @if (connectService.connectedUser && isMenuActive) {
-    <div
-      class="menu-button notification"
-      title="Notifications"
-      [ngClass]="{ gold: getUnseenNotificationsLength() !== 0 }"
-      @notificationLogoTrigger
-      >
-      @if (getUnseenNotificationsLength() !== 0 && !isNotificationsActive) {
-        <span
-          >{{ getUnseenNotificationsLength() }}</span
-          >
-        }
-        @if (!isNotificationsActive) {
-          <i
-            class="bx bxs-bell"
-            (click)="toggleNotifications()"
-            (keyup.enter)="toggleNotifications()"
-            tabindex="0"
-          ></i>
-        }
-        @if (isNotificationsActive) {
-          <i
-            class="bx bx-arrow-back"
-            (click)="toggleNotifications()"
-            (keyup.enter)="toggleNotifications()"
-            tabindex="0"
-          ></i>
-        }
-      </div>
+    ) {
+      <span>{{ getUnseenNotificationsLength() }}</span>
+    }
+    @if (!isMenuActive) {
+      <i
+        class="bx bx-menu"
+        (click)="toggleMenu()"
+        (keyup.enter)="toggleMenu()"
+        tabindex="0"
+      ></i>
     }
     @if (isMenuActive) {
-      <div class="container" @menuTrigger>
-        @if (!isNotificationsActive) {
-          <app-nav-buttons
-            [hasAdminRole]="connectService.connectedUser?.userRole === 'ROLE_ADMIN'"
-            (toggleMenuEvent)="toggleMenu()"
-            (logoutEvent)="logout()"
-            @navButtonTrigger
-          ></app-nav-buttons>
-        }
-        @if (isNotificationsActive) {
-          <app-notifications
-            [notifications]="notifications"
-            (goToEvent)="goTo()"
-            @notificationTrigger
-          ></app-notifications>
-        }
-      </div>
+      <i
+        class="bx bx-x"
+        (click)="toggleMenu()"
+        (keyup.enter)="toggleMenu()"
+        tabindex="0"
+      ></i>
     }
+  </div>
+}
+@if (connectService.connectedUser && isMenuActive) {
+  <div
+    class="menu-button notification"
+    title="Notifications"
+    [ngClass]="{ gold: getUnseenNotificationsLength() !== 0 }"
+    @notificationLogoTrigger
+  >
+    @if (getUnseenNotificationsLength() !== 0 && !isNotificationsActive) {
+      <span>{{ getUnseenNotificationsLength() }}</span>
+    }
+    @if (!isNotificationsActive) {
+      <i
+        class="bx bxs-bell"
+        (click)="toggleNotifications()"
+        (keyup.enter)="toggleNotifications()"
+        tabindex="0"
+      ></i>
+    }
+    @if (isNotificationsActive) {
+      <i
+        class="bx bx-arrow-back"
+        (click)="toggleNotifications()"
+        (keyup.enter)="toggleNotifications()"
+        tabindex="0"
+      ></i>
+    }
+  </div>
+}
+@if (isMenuActive) {
+  <div class="container" @menuTrigger>
+    @if (!isNotificationsActive) {
+      <app-nav-buttons
+        [hasAdminRole]="connectService.isAdmin()"
+        (toggleMenuEvent)="toggleMenu()"
+        (logoutEvent)="logout()"
+        @navButtonTrigger
+      ></app-nav-buttons>
+    }
+    @if (isNotificationsActive) {
+      <app-notifications
+        [notifications]="notifications"
+        (goToEvent)="goTo()"
+        @notificationTrigger
+      ></app-notifications>
+    }
+  </div>
+}

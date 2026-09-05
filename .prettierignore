@@ -1,0 +1,10 @@
+# Build output and dependencies
+/docs
+/dist
+/node_modules
+/.angular
+/coverage
+package-lock.json
+
+# The back end has its own conventions, enforced by the IDE and the compiler.
+/backend

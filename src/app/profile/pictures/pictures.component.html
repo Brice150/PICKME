@@ -5,8 +5,12 @@
         effect="cards"
         mousewheel="true"
         (swiperslidechange)="onSlideChange()"
-        >
-        @for (picture of user()?.pictures; track picture.id; let index = $index) {
+      >
+        @for (
+          picture of user()?.pictures;
+          track picture.id;
+          let index = $index
+        ) {
           <swiper-slide lazy="true">
             <app-picture
               loading="true"
@@ -21,10 +25,7 @@
       </swiper-container>
     }
     @if (!user()?.pictures || user()?.pictures?.length === 0) {
-      <img
-        [src]="imagePath + 'No-Image.png'"
-        [alt]="user()?.nickname"
-        />
+      <img [src]="imagePath + 'No-Image.png'" [alt]="user()?.nickname" />
     }
   </div>
   <div class="button-container">
@@ -33,18 +34,18 @@
       class="add"
       title="Add Picture"
       [ngClass]="{ disabled: isLoading }"
-      >
+    >
       Add picture</label
-      >
-      <input
-        #imageInput
-        type="file"
-        id="image"
-        (change)="addPicture($any($event.target).files)"
-        name="files"
-        accept=".jpg, .jpeg, .png"
-        multiple
-        [disabled]="isLoading"
-        />
-      </div>
-    </div>
+    >
+    <input
+      #imageInput
+      type="file"
+      id="image"
+      (change)="addPicture($any($event.target).files)"
+      name="files"
+      accept=".jpg, .jpeg, .png"
+      multiple
+      [disabled]="isLoading"
+    />
+  </div>
+</div>

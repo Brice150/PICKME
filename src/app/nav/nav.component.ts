@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
@@ -18,12 +18,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 
 @Component({
   selector: 'app-nav',
-  imports: [
-    CommonModule,
-    RouterModule,
-    NavButtonsComponent,
-    NotificationsComponent,
-  ],
+  imports: [NgClass, RouterModule, NavButtonsComponent, NotificationsComponent],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css',
   animations: [
@@ -53,10 +48,10 @@ export class NavComponent implements OnInit {
             .pipe(
               repeat({ delay: 10000 }),
               distinctUntilChanged(),
-              takeUntil(this.connectService.loggedOut$)
+              takeUntil(this.connectService.loggedOut$),
             );
         }),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((notifications: Notification[]) => {
         if (
@@ -89,13 +84,13 @@ export class NavComponent implements OnInit {
   setAllNotificationsToSeen(): void {
     if (
       this.notifications.some(
-        (notification: Notification) => !notification.seen
+        (notification: Notification) => !notification.seen,
       )
     ) {
       this.notificationService.markUserNotificationsAsSeen().subscribe({
         next: () => {
           this.notifications.forEach(
-            (notification: Notification) => (notification.seen = true)
+            (notification: Notification) => (notification.seen = true),
           );
         },
       });
@@ -103,7 +98,7 @@ export class NavComponent implements OnInit {
   }
 
   setAllNotificationsToSeenWithNewNotifications(
-    notifications: Notification[]
+    notifications: Notification[],
   ): void {
     if (
       notifications.some((notification: Notification) => !notification.seen)
@@ -111,7 +106,7 @@ export class NavComponent implements OnInit {
       this.notificationService.markUserNotificationsAsSeen().subscribe({
         next: () => {
           notifications.forEach(
-            (notification: Notification) => (notification.seen = true)
+            (notification: Notification) => (notification.seen = true),
           );
           this.notifications = notifications;
         },
@@ -121,7 +116,7 @@ export class NavComponent implements OnInit {
 
   getUnseenNotificationsLength(): number {
     return this.notifications.filter(
-      (notification: Notification) => !notification.seen
+      (notification: Notification) => !notification.seen,
     ).length;
   }
 

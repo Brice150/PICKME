@@ -1,15 +1,13 @@
+import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { ConnectService } from '../services/connect.service';
-import { inject } from '@angular/core';
 
+/**
+ * Keeps the connection and the demonstration screens out of reach of an account already logged in.
+ */
 export const noUserGuard: CanActivateFn = () => {
   const connectService = inject(ConnectService);
   const router = inject(Router);
 
-  if (!connectService.connectedUser) {
-    return true;
-  } else {
-    router.navigate(['/select']);
-    return false;
-  }
+  return !connectService.connectedUser || router.createUrlTree(['/select']);
 };

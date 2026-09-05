@@ -1,26 +1,32 @@
 import { DatePipe } from '@angular/common';
-import { Pipe, PipeTransform } from '@angular/core';
+import { LOCALE_ID, Pipe, PipeTransform, inject } from '@angular/core';
 
+/**
+ * Formats the date of a message: the hour alone for a message of the day, the full date otherwise.
+ */
 @Pipe({
   name: 'customDate',
   standalone: true,
 })
 export class CustomDatePipe implements PipeTransform {
-  datePipe: DatePipe = new DatePipe('en-FR');
+  private readonly datePipe = new DatePipe(inject(LOCALE_ID));
 
   transform(date: Date): string | null {
     if (!date) {
       return null;
     }
-    const today: Date = new Date();
-    const frontDate: Date = new Date(date);
-    const isToday: boolean =
-      frontDate.getFullYear() === today.getFullYear() &&
-      frontDate.getMonth() === today.getMonth() &&
-      frontDate.getDate() === today.getDate();
-    if (isToday) {
-      return this.datePipe.transform(date, 'HH:mm');
-    }
-    return this.datePipe.transform(date, 'dd/MM/yyyy');
+    const messageDate = new Date(date);
+    return this.isToday(messageDate)
+      ? this.datePipe.transform(date, 'HH:mm')
+      : this.datePipe.transform(date, 'dd/MM/yyyy');
+  }
+
+  private isToday(date: Date): boolean {
+    const today = new Date();
+    return (
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()
+    );
   }
 }

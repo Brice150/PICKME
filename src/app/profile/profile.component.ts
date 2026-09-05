@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -18,7 +17,6 @@ import { PreferencesComponent } from './preferences/preferences.component';
 @Component({
   selector: 'app-profile',
   imports: [
-    CommonModule,
     MatExpansionModule,
     PasswordComponent,
     DescriptionComponent,
@@ -57,7 +55,6 @@ export class ProfileComponent implements OnInit {
         },
       });
   }
-
 
   updateUser(message: string): void {
     this.user!.geolocation.latitude = this.geolocation.latitude;

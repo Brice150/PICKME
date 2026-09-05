@@ -3,7 +3,7 @@ package com.packages.backend.model.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.packages.backend.model.enums.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "preferences")

@@ -1,5 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, inject } from '@angular/core';
+import { LowerCasePipe, NgClass } from '@angular/common';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { User } from '../../../core/interfaces/user';
 import {
@@ -17,12 +22,12 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 import { filter } from 'rxjs';
 
 @Component({
-    selector: 'app-more-info',
-    imports: [CommonModule, MatChipsModule, AgePipe],
-    templateUrl: './more-info.component.html',
-    styleUrl: './more-info.component.css',
-    animations: [LikeButtonAnimation, DislikeButtonAnimation],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  selector: 'app-more-info',
+  imports: [NgClass, LowerCasePipe, MatChipsModule, AgePipe],
+  templateUrl: './more-info.component.html',
+  styleUrl: './more-info.component.css',
+  animations: [LikeButtonAnimation, DislikeButtonAnimation],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class MoreInfoComponent implements OnInit {
   dialogRef = inject<MatDialogRef<MoreInfoComponent>>(MatDialogRef);

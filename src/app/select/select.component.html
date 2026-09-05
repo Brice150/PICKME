@@ -3,13 +3,15 @@
     effect="cards"
     mousewheel="true"
     (swiperslidechange)="onSlideChange()"
-    >
+  >
     @for (user of users; track user.id; let index = $index) {
       <swiper-slide lazy="true">
         <app-card
           loading="true"
           [user]="user"
-          [display]="index === activeIndex && !activeMatchAnimation && !isLoading"
+          [display]="
+            index === activeIndex && !activeMatchAnimation && !isLoading
+          "
           [activeMatchAnimation]="activeMatchAnimation"
           (likeEvent)="like(user)"
           (dislikeEvent)="dislike(user)"
@@ -26,9 +28,7 @@
   </swiper-container>
 }
 @if (initLoading || (users && users.length === 0)) {
-  <div
-    class="loading-container"
-    >
+  <div class="loading-container">
     <app-loading-card
       [loading]="initLoading"
       [usersNumber]="users.length"

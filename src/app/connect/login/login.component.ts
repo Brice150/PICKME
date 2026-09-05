@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject } from '@angular/core';
 import {
@@ -20,7 +20,7 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
 @Component({
   selector: 'app-login',
   imports: [
-    CommonModule,
+    NgClass,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,

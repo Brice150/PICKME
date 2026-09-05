@@ -10,21 +10,10 @@
   </mat-form-field>
   <div class="button-container">
     @if (descriptionForm.dirty) {
-      <button
-        type="button"
-        title="Cancel"
-        (click)="cancel()"
-        >
-        Cancel
-      </button>
+      <button type="button" title="Cancel" (click)="cancel()">Cancel</button>
     }
     @if (descriptionForm.valid && descriptionForm.dirty) {
-      <button
-        title="Update"
-        type="submit"
-        >
-        Update
-      </button>
+      <button title="Update" type="submit">Update</button>
     }
   </div>
 </form>

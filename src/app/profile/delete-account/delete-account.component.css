@@ -24,7 +24,7 @@
 }
 
 .button-container button::before {
-  content: "";
+  content: '';
   position: absolute;
   background-color: var(--primary);
   height: 0%;

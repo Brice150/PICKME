@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, input, inject } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, inject, input, output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
 import { Picture } from '../../../core/interfaces/picture';
@@ -10,11 +10,11 @@ import {
 } from '../../../select/card/card-animation';
 
 @Component({
-    selector: 'app-picture',
-    imports: [CommonModule],
-    templateUrl: './picture.component.html',
-    styleUrl: './picture.component.css',
-    animations: [LikeButtonAnimation, DislikeButtonAnimation]
+  selector: 'app-picture',
+  imports: [NgClass],
+  templateUrl: './picture.component.html',
+  styleUrl: './picture.component.css',
+  animations: [LikeButtonAnimation, DislikeButtonAnimation],
 })
 export class PictureComponent {
   private readonly dialog = inject(MatDialog);
@@ -22,8 +22,8 @@ export class PictureComponent {
   readonly picture = input.required<Picture>();
   readonly display = input<boolean>(false);
   readonly isLoading = input<boolean>(false);
-  @Output() selectMainEvent: EventEmitter<void> = new EventEmitter<void>();
-  @Output() deleteEvent: EventEmitter<void> = new EventEmitter<void>();
+  readonly selectMainEvent = output<void>();
+  readonly deleteEvent = output<void>();
 
   selectMainPicture(): void {
     if (!this.picture().isMainPicture && !this.isLoading()) {

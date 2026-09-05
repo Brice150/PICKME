@@ -1,5 +1,4 @@
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -37,7 +36,6 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
     },
   ],
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -75,7 +73,7 @@ export class RegisterComponent implements OnInit {
     this.minDate = new Date(
       currentYear - 18,
       new Date().getMonth(),
-      new Date().getDate()
+      new Date().getDate(),
     );
   }
 
@@ -131,7 +129,7 @@ export class RegisterComponent implements OnInit {
           ],
         ],
       },
-      { validators: this.passwordMatchValidator }
+      { validators: this.passwordMatchValidator },
     );
 
     this.registerForm = this.fb.group({
@@ -156,13 +154,12 @@ export class RegisterComponent implements OnInit {
               },
               () => {
                 // Keeps the IP based location when the browser one is refused
-              }
+              },
             );
           }
         },
       });
   }
-
 
   passwordMatchValidator(control: AbstractControl): void {
     const password = control.get('password')?.value;
@@ -204,7 +201,7 @@ export class RegisterComponent implements OnInit {
             {
               positionClass: 'toast-bottom-center',
               toastClass: 'ngx-toastr custom gold',
-            }
+            },
           );
         },
       });

@@ -1,20 +1,19 @@
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   Component,
   OnInit,
-  input
+  input,
 } from '@angular/core';
 import { Gender } from '../../core/enums/gender';
 import { CardDemoComponent } from './card-demo/card-demo.component';
 import { environment } from '../../../environments/environment';
 
 @Component({
-    selector: 'app-select-demo',
-    imports: [CommonModule, CardDemoComponent],
-    templateUrl: './select-demo.component.html',
-    styleUrl: './select-demo.component.css',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  selector: 'app-select-demo',
+  imports: [CardDemoComponent],
+  templateUrl: './select-demo.component.html',
+  styleUrl: './select-demo.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SelectDemoComponent implements OnInit {
   imagePath: string = environment.imagePath;
@@ -36,8 +35,7 @@ export class SelectDemoComponent implements OnInit {
   }
 
   isCurrentView(image: string): boolean {
-    const index: number | undefined =
-      document.querySelector('swiper-container')?.swiper.activeIndex;
+    const index: number | undefined = this.getSwiper()?.activeIndex;
     if (index === undefined) {
       return false;
     }
@@ -58,13 +56,17 @@ export class SelectDemoComponent implements OnInit {
 
   removeSlide(imageToRemove: string): void {
     const imageIndex = this.images.findIndex(
-      (image: string) => image === imageToRemove
+      (image: string) => image === imageToRemove,
     );
     if (imageIndex !== -1) {
-      document
-        .querySelector('swiper-container')
-        ?.swiper.removeSlide(imageIndex);
+      this.getSwiper()?.removeSlide(imageIndex);
       this.images.splice(imageIndex, 1);
     }
+  }
+
+  // The carousel is only available once the custom element has been upgraded, which happens
+  // after the first render.
+  private getSwiper() {
+    return document.querySelector('swiper-container')?.swiper;
   }
 }

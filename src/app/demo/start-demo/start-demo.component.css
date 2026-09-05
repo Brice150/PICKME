@@ -67,7 +67,7 @@
 }
 
 .button-container a::before {
-  content: "";
+  content: '';
   position: absolute;
   background-color: var(--liked);
   height: 0%;

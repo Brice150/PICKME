@@ -33,7 +33,7 @@
 }
 
 .button::before {
-  content: "";
+  content: '';
   position: absolute;
   background-color: var(--primary);
   height: 0%;
@@ -107,7 +107,7 @@
 }
 
 .close-button::before {
-  content: "";
+  content: '';
   position: absolute;
   background-color: var(--primary);
   height: 0%;

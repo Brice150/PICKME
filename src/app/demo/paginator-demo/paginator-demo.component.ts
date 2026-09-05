@@ -1,17 +1,17 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, input } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, input, output } from '@angular/core';
 
 @Component({
-    selector: 'app-paginator-demo',
-    imports: [CommonModule],
-    templateUrl: './paginator-demo.component.html',
-    styleUrl: './paginator-demo.component.css'
+  selector: 'app-paginator-demo',
+  imports: [NgClass],
+  templateUrl: './paginator-demo.component.html',
+  styleUrl: './paginator-demo.component.css',
 })
 export class PaginatorDemoComponent {
   readonly currentIndex = input<number>(0);
   readonly listLength = input<number>(1);
-  @Output() previousEvent: EventEmitter<void> = new EventEmitter<void>();
-  @Output() nextEvent: EventEmitter<void> = new EventEmitter<void>();
+  readonly previousEvent = output<void>();
+  readonly nextEvent = output<void>();
 
   next(): void {
     if (this.currentIndex() !== this.listLength() - 1) {

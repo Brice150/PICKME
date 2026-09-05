@@ -1,12 +1,4 @@
-import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  Output,
-  input,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, inject, input, output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -23,7 +15,6 @@ import { ConnectService } from '../../core/services/connect.service';
 @Component({
   selector: 'app-gender-age',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatSliderModule,
     MatFormFieldModule,
@@ -39,7 +30,7 @@ export class GenderAgeComponent implements OnInit {
   readonly user = input.required<User>();
   genderAgeForm!: FormGroup;
   genders: string[] = Object.values(Gender);
-  @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
+  readonly updateEvent = output<string>();
 
   ngOnInit(): void {
     this.genderAgeForm = this.fb.group({

@@ -33,7 +33,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
               {
                 positionClass: 'toast-bottom-center',
                 toastClass: 'ngx-toastr custom error',
-              }
+              },
             );
           } else {
             toastr.error(error.message, 'Error', {
@@ -48,7 +48,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           });
         }
         return throwError(() => error);
-      })
+      }),
     );
   } else {
     return next(req);

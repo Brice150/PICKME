@@ -18,7 +18,7 @@ export class ProfileService {
       pictureContent,
       {
         withCredentials: true,
-      }
+      },
     );
   }
 
@@ -28,7 +28,7 @@ export class ProfileService {
       null,
       {
         withCredentials: true,
-      }
+      },
     );
   }
 

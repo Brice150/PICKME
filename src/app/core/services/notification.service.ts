@@ -14,7 +14,7 @@ export class NotificationService {
       `${this.apiServerUrl}/notification/all`,
       {
         withCredentials: true,
-      }
+      },
     );
   }
 

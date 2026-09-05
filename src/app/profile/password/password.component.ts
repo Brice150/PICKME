@@ -1,12 +1,4 @@
-import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  Output,
-  input,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, inject, input, output } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -24,7 +16,6 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-password',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -42,7 +33,7 @@ export class PasswordComponent implements OnInit {
   hide = true;
   hideDuplicate = true;
   passwordForm!: FormGroup;
-  @Output() updateEvent: EventEmitter<string> = new EventEmitter<string>();
+  readonly updateEvent = output<string>();
 
   ngOnInit(): void {
     this.passwordForm = this.fb.group(
@@ -64,7 +55,7 @@ export class PasswordComponent implements OnInit {
           ],
         ],
       },
-      { validators: this.passwordMatchValidator }
+      { validators: this.passwordMatchValidator },
     );
   }
 
