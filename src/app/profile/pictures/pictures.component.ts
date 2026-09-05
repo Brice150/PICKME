@@ -1,3 +1,5 @@
+import type { Swiper } from 'swiper';
+import type { SwiperContainer } from 'swiper/element';
 import { NgClass } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -7,6 +9,7 @@ import {
   inject,
   input,
   output,
+  viewChild,
 } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Picture } from '../../core/interfaces/picture';
@@ -126,7 +129,13 @@ export class PicturesComponent {
     this.activeIndex = this.getSwiper()?.activeIndex ?? this.activeIndex;
   }
 
-  private getSwiper() {
-    return document.querySelector('swiper-container')?.swiper;
+  // Resolved from the template rather than from the whole document: a global query would find
+  // the carousel of another screen, and the custom element is only upgraded after the first
+  // render, which leaves the swiper instance undefined until then.
+  private readonly carousel =
+    viewChild<ElementRef<SwiperContainer>>('carousel');
+
+  private getSwiper(): Swiper | undefined {
+    return this.carousel()?.nativeElement.swiper;
   }
 }

@@ -9,5 +9,5 @@ public interface DislikeService {
    * @return {@code null} when the dislike has been registered, or {@link ServiceStatus#FORBIDDEN}
    * when the profile had already been disliked
    */
-  String addDislike(Long userId);
+  ServiceStatus addDislike(Long userId);
 }

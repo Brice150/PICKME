@@ -34,7 +34,7 @@ public class MessageController {
 
   @DeleteMapping("/{messageId}")
   public ResponseEntity<Void> deleteMessage(@PathVariable("messageId") Long messageId) {
-    return ServiceStatus.OK.equals(messageService.deleteMessageById(messageId)) ?
+    return messageService.deleteMessageById(messageId) == ServiceStatus.OK ?
       new ResponseEntity<>(HttpStatus.OK) :
       new ResponseEntity<>(HttpStatus.FORBIDDEN);
   }

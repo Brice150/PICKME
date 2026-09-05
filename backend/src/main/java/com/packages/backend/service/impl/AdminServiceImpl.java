@@ -7,6 +7,7 @@ import com.packages.backend.model.dto.UserDTOMapper;
 import com.packages.backend.model.entity.DeletedAccount;
 import com.packages.backend.model.entity.User;
 import com.packages.backend.repository.AdminRepository;
+import com.packages.backend.service.AccountDeletionService;
 import com.packages.backend.service.AdminService;
 import com.packages.backend.service.DistanceService;
 import com.packages.backend.service.UserService;
@@ -29,12 +30,14 @@ public class AdminServiceImpl implements AdminService {
   private final UserService userService;
   private final UserDTOMapper userDTOMapper;
   private final DistanceService distanceService;
+  private final AccountDeletionService accountDeletionService;
 
-  public AdminServiceImpl(AdminRepository adminRepository, UserService userService, UserDTOMapper userDTOMapper, DistanceService distanceService) {
+  public AdminServiceImpl(AdminRepository adminRepository, UserService userService, UserDTOMapper userDTOMapper, DistanceService distanceService, AccountDeletionService accountDeletionService) {
     this.adminRepository = adminRepository;
     this.userService = userService;
     this.userDTOMapper = userDTOMapper;
     this.distanceService = distanceService;
+    this.accountDeletionService = accountDeletionService;
   }
 
   @Override
@@ -70,7 +73,7 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public void deleteUserById(Long userId) {
-    userService.deleteUserById(userId);
+    accountDeletionService.deleteUserById(userId);
   }
 
   /**

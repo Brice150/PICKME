@@ -28,7 +28,7 @@ public class DislikeServiceImpl implements DislikeService {
 
   @Override
   @Transactional
-  public String addDislike(Long userId) {
+  public ServiceStatus addDislike(Long userId) {
     User connectedUser = userService.getConnectedUser();
     User dislikedUser = userService.getUserById(userId);
     Optional<Dislike> previousSenderDislike = dislikeRepository.getDislikeByFk(connectedUser.getId(), dislikedUser.getId());
@@ -38,6 +38,6 @@ public class DislikeServiceImpl implements DislikeService {
     likeService.deleteLikeByFk(connectedUser, dislikedUser);
     Dislike dislike = new Dislike(new Date(), connectedUser.getId(), dislikedUser.getId());
     dislikeRepository.save(dislike);
-    return null;
+    return ServiceStatus.OK;
   }
 }

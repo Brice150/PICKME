@@ -85,15 +85,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
       " LEFT JOIN FETCH u.stats" +
       " LEFT JOIN Like l ON u.id = l.fkReceiver AND l.fkSender = :connectedId" +
       " LEFT JOIN Dislike d ON u.id = d.fkReceiver AND d.fkSender = :connectedId" +
-      " WHERE genderAge.genderSearch = :gender" +
-      " AND genderAge.gender = :genderSearch" +
+      // The interest has to go both ways: the candidate is of the gender the connected user is
+      // looking for, and is looking for the gender the connected user is.
+      " WHERE genderAge.gender = :soughtGender" +
+      " AND genderAge.genderSearch = :connectedGender" +
       " AND u.birthDate >= :earliestBirthDate" +
       " AND u.birthDate < :latestBirthDate" +
       " AND u.id != :connectedId" +
       " AND l.fkSender IS NULL" +
       " AND d.fkSender IS NULL"
   )
-  List<User> getAllUsers(@Param("genderSearch") Gender genderSearch, @Param("gender") Gender gender, @Param("earliestBirthDate") Date earliestBirthDate, @Param("latestBirthDate") Date latestBirthDate, @Param("connectedId") Long connectedId);
+  List<User> getAllUsers(@Param("soughtGender") Gender soughtGender, @Param("connectedGender") Gender connectedGender, @Param("earliestBirthDate") Date earliestBirthDate, @Param("latestBirthDate") Date latestBirthDate, @Param("connectedId") Long connectedId);
 
   @Query(
     value =

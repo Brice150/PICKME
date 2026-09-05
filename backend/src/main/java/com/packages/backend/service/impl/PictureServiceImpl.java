@@ -55,7 +55,7 @@ public class PictureServiceImpl implements PictureService {
 
   @Override
   @Transactional
-  public String selectMainPictureById(Long pictureId) {
+  public ServiceStatus selectMainPictureById(Long pictureId) {
     User connectedUser = userService.getConnectedUser();
     Picture picture = getPictureById(pictureId);
     if (connectedUser.getId().equals(picture.getFkUser().getId()) && Boolean.FALSE.equals(picture.getIsMainPicture())) {
@@ -69,7 +69,7 @@ public class PictureServiceImpl implements PictureService {
 
   @Override
   @Transactional
-  public String deletePictureById(Long pictureId) {
+  public ServiceStatus deletePictureById(Long pictureId) {
     User connectedUser = userService.getConnectedUser();
     Picture picture = getPictureById(pictureId);
     if (connectedUser.getId().equals(picture.getFkUser().getId())) {

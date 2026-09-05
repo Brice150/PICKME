@@ -81,7 +81,7 @@ public class MessageServiceImpl implements MessageService {
 
   @Override
   @Transactional
-  public String deleteMessageById(Long messageId) {
+  public ServiceStatus deleteMessageById(Long messageId) {
     User connectedUser = userService.getConnectedUser();
     Message message = getMessageById(messageId);
     if (Objects.equals(connectedUser.getId(), message.getFkSender())) {

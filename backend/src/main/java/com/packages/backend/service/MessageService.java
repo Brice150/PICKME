@@ -38,5 +38,5 @@ public interface MessageService {
    * @return {@link ServiceStatus#OK} or {@link ServiceStatus#FORBIDDEN} when the connected user is
    * not its author
    */
-  String deleteMessageById(Long messageId);
+  ServiceStatus deleteMessageById(Long messageId);
 }

@@ -1,13 +1,13 @@
 package com.packages.backend.service;
 
-public final class ServiceStatus {
+/**
+ * Outcome of an operation the connected user is not always allowed to apply.
+ */
+public enum ServiceStatus {
 
-  // The operation has been applied.
-  public static final String OK = "OK";
+  /** The operation has been applied. */
+  OK,
 
-  // The connected user is not allowed to apply the operation.
-  public static final String FORBIDDEN = "FORBIDDEN";
-
-  private ServiceStatus() {
-  }
+  /** The connected user is not allowed to apply the operation. */
+  FORBIDDEN
 }

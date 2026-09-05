@@ -18,18 +18,8 @@ public interface UserService extends UserDetailsService {
    * @return {@link ServiceStatus#OK} when the account has been created, otherwise the reason of
    * the rejection
    */
-  String signUpUser(User user);
+  RegistrationResult signUpUser(User user);
 
-  /**
-   * Returns one page of candidates for the connected user, sorted by distance then by affinity.
-   * <p>
-   * Only the main picture of each candidate is exposed: the whole album is loaded on demand by
-   * {@link PictureService#getUserPictures(Long)}.
-   *
-   * @param page zero based page number, {@code null} being handled as the first page
-   * @return at most one page of candidates
-   */
-  List<UserDTO> getAllSelectedUsers(Integer page);
 
   /**
    * Returns every match of the connected user with the conversation attached to it.
@@ -78,15 +68,5 @@ public interface UserService extends UserDetailsService {
    */
   UserDTO getConnectedUserDTO();
 
-  /**
-   * Deletes the account of the connected user and everything it owns.
-   */
-  void deleteConnectedUser();
 
-  /**
-   * Deletes the account of another user, which is reserved to the administrators.
-   *
-   * @param userId identifier of the user to delete
-   */
-  void deleteUserById(Long userId);
 }

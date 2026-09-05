@@ -3,6 +3,8 @@ package com.packages.backend.controller;
 import com.packages.backend.TestFixtures;
 import com.packages.backend.model.dto.UserDTOMapper;
 import com.packages.backend.model.dto.UserUpdateRequest;
+import com.packages.backend.service.AccountDeletionService;
+import com.packages.backend.service.CandidateSelectionService;
 import com.packages.backend.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +40,10 @@ class UserControllerTest {
 
   @MockitoBean
   private UserService userService;
+  @MockitoBean
+  private CandidateSelectionService candidateSelectionService;
+  @MockitoBean
+  private AccountDeletionService accountDeletionService;
 
   @Test
   @DisplayName("answers the login call with the connected account")
@@ -53,7 +59,7 @@ class UserControllerTest {
   @Test
   @DisplayName("reads a page of candidates")
   void getAllSelectedUsersReadsAPage() throws Exception {
-    when(userService.getAllSelectedUsers(3)).thenReturn(List.of(MAPPER.apply(TestFixtures.user(2L))));
+    when(candidateSelectionService.getAllSelectedUsers(3)).thenReturn(List.of(MAPPER.apply(TestFixtures.user(2L))));
 
     mockMvc.perform(get("/user/all/3"))
       .andExpect(status().isOk())
@@ -89,6 +95,6 @@ class UserControllerTest {
     mockMvc.perform(delete("/user"))
       .andExpect(status().isOk());
 
-    verify(userService).deleteConnectedUser();
+    verify(accountDeletionService).deleteConnectedUser();
   }
 }

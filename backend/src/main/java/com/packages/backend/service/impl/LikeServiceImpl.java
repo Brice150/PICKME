@@ -9,7 +9,7 @@ import com.packages.backend.repository.MessageRepository;
 import com.packages.backend.repository.StatsRepository;
 import com.packages.backend.service.LikeService;
 import com.packages.backend.service.NotificationService;
-import com.packages.backend.service.ServiceStatus;
+import com.packages.backend.service.LikeResult;
 import com.packages.backend.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,25 +38,25 @@ public class LikeServiceImpl implements LikeService {
 
   @Override
   @Transactional
-  public String addLike(Long userId) {
-    String matchNotification = null;
+  public LikeResult addLike(Long userId) {
+    LikeResult result = new LikeResult.Liked();
     User connectedUser = userService.getConnectedUser();
     User likedUser = userService.getUserById(userId);
 
     if (isForbidden(connectedUser, likedUser)) {
-      return ServiceStatus.FORBIDDEN;
+      return new LikeResult.Forbidden();
     }
 
     Stats userStats = statsRepository.getReferenceById(likedUser.getId());
     userStats.setTotalLikes(userStats.getTotalLikes() + 1);
     Optional<Like> previousReceiverLike = likeRepository.getLikeByFk(likedUser.getId(), connectedUser.getId());
     if (previousReceiverLike.isPresent()) {
-      matchNotification = handleMatch(likedUser, userStats, connectedUser);
+      result = new LikeResult.Matched(handleMatch(likedUser, userStats, connectedUser));
     }
     Like like = new Like(new Date(), connectedUser.getId(), likedUser.getId());
     likeRepository.save(like);
     statsRepository.save(userStats);
-    return matchNotification;
+    return result;
   }
 
   /**

@@ -10,7 +10,7 @@ import com.packages.backend.repository.LikeRepository;
 import com.packages.backend.repository.MessageRepository;
 import com.packages.backend.repository.StatsRepository;
 import com.packages.backend.service.NotificationService;
-import com.packages.backend.service.ServiceStatus;
+import com.packages.backend.service.LikeResult;
 import com.packages.backend.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -69,9 +69,9 @@ class LikeServiceImplTest {
     when(statsRepository.getReferenceById(2L)).thenReturn(likedUserStats);
     when(likeRepository.getLikeByFk(2L, 1L)).thenReturn(Optional.empty());
 
-    String matchNotification = likeService.addLike(2L);
+    LikeResult result = likeService.addLike(2L);
 
-    assertThat(matchNotification).isNull();
+    assertThat(result).isEqualTo(new LikeResult.Liked());
     assertThat(likedUserStats.getTotalLikes()).isEqualTo(1L);
     assertThat(likedUserStats.getTotalMatches()).isZero();
     verify(likeRepository).save(likeCaptor.capture());
@@ -96,9 +96,9 @@ class LikeServiceImplTest {
     when(statsRepository.getReferenceById(1L)).thenReturn(connectedUserStats);
     when(likeRepository.getLikeByFk(2L, 1L)).thenReturn(Optional.of(new Like(new Date(), 2L, 1L)));
 
-    String matchNotification = likeService.addLike(2L);
+    LikeResult result = likeService.addLike(2L);
 
-    assertThat(matchNotification).isEqualTo(likedUser.getNickname());
+    assertThat(result).isEqualTo(new LikeResult.Matched(likedUser.getNickname()));
     assertThat(likedUserStats.getTotalLikes()).isEqualTo(1L);
     assertThat(likedUserStats.getTotalMatches()).isEqualTo(1L);
     assertThat(connectedUserStats.getTotalMatches()).isEqualTo(1L);
@@ -116,7 +116,7 @@ class LikeServiceImplTest {
     when(userService.getUserById(2L)).thenReturn(likedUser);
     when(likeRepository.getLikeByFk(1L, 2L)).thenReturn(Optional.of(new Like(new Date(), 1L, 2L)));
 
-    assertThat(likeService.addLike(2L)).isEqualTo(ServiceStatus.FORBIDDEN);
+    assertThat(likeService.addLike(2L)).isEqualTo(new LikeResult.Forbidden());
     verify(likeRepository, never()).save(any());
     verifyNoInteractions(statsRepository);
   }
@@ -131,7 +131,7 @@ class LikeServiceImplTest {
     when(likeRepository.getLikeByFk(1L, 2L)).thenReturn(Optional.empty());
     when(dislikeRepository.getDislikeByFk(1L, 2L)).thenReturn(Optional.of(new Dislike(new Date(), 1L, 2L)));
 
-    assertThat(likeService.addLike(2L)).isEqualTo(ServiceStatus.FORBIDDEN);
+    assertThat(likeService.addLike(2L)).isEqualTo(new LikeResult.Forbidden());
     verify(likeRepository, never()).save(any());
     verifyNoInteractions(statsRepository);
   }

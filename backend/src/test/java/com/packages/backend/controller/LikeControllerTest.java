@@ -1,7 +1,7 @@
 package com.packages.backend.controller;
 
 import com.packages.backend.service.LikeService;
-import com.packages.backend.service.ServiceStatus;
+import com.packages.backend.service.LikeResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ class LikeControllerTest {
   @Test
   @DisplayName("answers a like that created a match with the nickname to display")
   void addLikeAnswersWithTheMatchedNickname() throws Exception {
-    when(likeService.addLike(2L)).thenReturn("nickname2");
+    when(likeService.addLike(2L)).thenReturn(new LikeResult.Matched("nickname2"));
 
     mockMvc.perform(post("/like/2"))
       .andExpect(status().isCreated())
@@ -41,7 +41,7 @@ class LikeControllerTest {
   @Test
   @DisplayName("answers a like without a match with an empty body")
   void addLikeAnswersWithoutABodyWhenThereIsNoMatch() throws Exception {
-    when(likeService.addLike(2L)).thenReturn(null);
+    when(likeService.addLike(2L)).thenReturn(new LikeResult.Liked());
 
     mockMvc.perform(post("/like/2"))
       .andExpect(status().isCreated())
@@ -51,7 +51,7 @@ class LikeControllerTest {
   @Test
   @DisplayName("rejects a profile the connected user already answered")
   void addLikeRejectsAnAlreadyAnsweredProfile() throws Exception {
-    when(likeService.addLike(2L)).thenReturn(ServiceStatus.FORBIDDEN);
+    when(likeService.addLike(2L)).thenReturn(new LikeResult.Forbidden());
 
     mockMvc.perform(post("/like/2"))
       .andExpect(status().isForbidden());

@@ -2,11 +2,19 @@ package com.packages.backend.controller;
 
 import com.packages.backend.model.dto.UserDTO;
 import com.packages.backend.model.dto.UserUpdateRequest;
+import com.packages.backend.service.AccountDeletionService;
+import com.packages.backend.service.CandidateSelectionService;
 import com.packages.backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -15,9 +23,13 @@ import java.util.List;
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 public class UserController {
   private final UserService userService;
+  private final CandidateSelectionService candidateSelectionService;
+  private final AccountDeletionService accountDeletionService;
 
-  public UserController(UserService userService) {
+  public UserController(UserService userService, CandidateSelectionService candidateSelectionService, AccountDeletionService accountDeletionService) {
     this.userService = userService;
+    this.candidateSelectionService = candidateSelectionService;
+    this.accountDeletionService = accountDeletionService;
   }
 
   @GetMapping("/login")
@@ -27,7 +39,7 @@ public class UserController {
 
   @GetMapping("/user/all/{page}")
   public ResponseEntity<List<UserDTO>> getAllSelectedUsers(@PathVariable("page") Integer page) {
-    return new ResponseEntity<>(userService.getAllSelectedUsers(page), HttpStatus.OK);
+    return new ResponseEntity<>(candidateSelectionService.getAllSelectedUsers(page), HttpStatus.OK);
   }
 
   @GetMapping("/user")
@@ -42,7 +54,7 @@ public class UserController {
 
   @DeleteMapping("/user")
   public ResponseEntity<Void> deleteConnectedUser() {
-    userService.deleteConnectedUser();
+    accountDeletionService.deleteConnectedUser();
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }

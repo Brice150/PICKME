@@ -30,7 +30,7 @@ class DislikeControllerTest {
   @Test
   @DisplayName("registers a dislike")
   void addDislikeRegistersIt() throws Exception {
-    when(dislikeService.addDislike(2L)).thenReturn(null);
+    when(dislikeService.addDislike(2L)).thenReturn(ServiceStatus.OK);
 
     mockMvc.perform(post("/dislike/2"))
       .andExpect(status().isCreated());

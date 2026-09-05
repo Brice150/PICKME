@@ -10,7 +10,7 @@
     </mat-form-field>
     @if (matches && matches.length !== 0 && !loading) {
       <div class="content">
-        @for (match of filteredMatches; track match) {
+        @for (match of filteredMatches; track match.user.id) {
           <app-match-card
             [match]="match"
             [preview]="getPreview(match)"
@@ -49,7 +49,7 @@
     </div>
     @if (selectedMatch.messages && selectedMatch.messages.length !== 0) {
       <div class="content" #messagesContainer>
-        @for (message of selectedMatch.messages; track message) {
+        @for (message of selectedMatch.messages; track message.id) {
           <app-message
             [ngClass]="
               message.sender === selectedMatch.user.nickname ? 'left' : 'right'

@@ -2,7 +2,7 @@ package com.packages.backend.controller;
 
 import com.packages.backend.model.Registration;
 import com.packages.backend.service.RegistrationService;
-import com.packages.backend.service.ServiceStatus;
+import com.packages.backend.service.RegistrationResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ class RegistrationControllerTest {
   @Test
   @DisplayName("creates the account of a valid registration")
   void registerCreatesTheAccount() throws Exception {
-    when(registrationService.register(any(Registration.class))).thenReturn(ServiceStatus.OK);
+    when(registrationService.register(any(Registration.class))).thenReturn(new RegistrationResult.Created());
 
     mockMvc.perform(post("/registration")
         .contentType(MediaType.APPLICATION_JSON)
@@ -57,7 +57,7 @@ class RegistrationControllerTest {
   @Test
   @DisplayName("answers a rejected registration with its reason")
   void registerAnswersWithTheReasonOfTheRejection() throws Exception {
-    when(registrationService.register(any(Registration.class))).thenReturn("Email already taken");
+    when(registrationService.register(any(Registration.class))).thenReturn(new RegistrationResult.Rejected("Email already taken"));
 
     mockMvc.perform(post("/registration")
         .contentType(MediaType.APPLICATION_JSON)

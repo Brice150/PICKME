@@ -8,6 +8,7 @@ import com.packages.backend.model.dto.UserDTOMapper;
 import com.packages.backend.model.entity.DeletedAccount;
 import com.packages.backend.model.entity.User;
 import com.packages.backend.repository.AdminRepository;
+import com.packages.backend.service.AccountDeletionService;
 import com.packages.backend.service.DistanceService;
 import com.packages.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +42,8 @@ class AdminServiceImplTest {
   private UserService userService;
   @Mock
   private DistanceService distanceService;
+  @Mock
+  private AccountDeletionService accountDeletionService;
 
   @Captor
   private ArgumentCaptor<Date> dateCaptor;
@@ -49,7 +52,7 @@ class AdminServiceImplTest {
 
   @BeforeEach
   void setUp() {
-    adminService = new AdminServiceImpl(adminRepository, userService, new UserDTOMapper(), distanceService);
+    adminService = new AdminServiceImpl(adminRepository, userService, new UserDTOMapper(), distanceService, accountDeletionService);
   }
 
   @Test
@@ -130,10 +133,10 @@ class AdminServiceImplTest {
   }
 
   @Test
-  @DisplayName("delegates the deletion of an account to the user service")
-  void deleteUserByIdDelegatesToTheUserService() {
+  @DisplayName("delegates the deletion of an account to the deletion service")
+  void deleteUserByIdDelegatesToTheDeletionService() {
     adminService.deleteUserById(2L);
 
-    verify(userService).deleteUserById(2L);
+    verify(accountDeletionService).deleteUserById(2L);
   }
 }

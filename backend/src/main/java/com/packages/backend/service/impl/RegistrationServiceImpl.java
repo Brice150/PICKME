@@ -3,6 +3,7 @@ package com.packages.backend.service.impl;
 import com.packages.backend.model.Registration;
 import com.packages.backend.model.entity.User;
 import com.packages.backend.model.enums.UserRole;
+import com.packages.backend.service.RegistrationResult;
 import com.packages.backend.service.RegistrationService;
 import com.packages.backend.service.UserService;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
   }
 
   @Override
-  public String register(Registration request) {
+  public RegistrationResult register(Registration request) {
     return userService.signUpUser(
       new User(
         UserRole.ROLE_USER,

@@ -58,7 +58,9 @@ public final class TestFixtures {
     user.setRegisteredDate(new Date(0));
     user.setGenderAge(new GenderAge(Gender.MAN, Gender.WOMAN, 18L, 99L, user));
     user.setGeolocation(new Geolocation(PARIS_LATITUDE, PARIS_LONGITUDE, 100L, 0L, user));
-    user.setPreferences(new Preferences());
+    Preferences preferences = new Preferences();
+    preferences.setFkUser(user);
+    user.setPreferences(preferences);
     user.setStats(new Stats(0L, 0L, 0L, user));
     user.setPictures(new ArrayList<>());
     user.setNotifications(new ArrayList<>());

@@ -1,9 +1,13 @@
+import type { Swiper } from 'swiper';
+import type { SwiperContainer } from 'swiper/element';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   Component,
   DestroyRef,
+  ElementRef,
   OnInit,
   inject,
+  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
@@ -153,7 +157,13 @@ export class SelectComponent implements OnInit {
     }
   }
 
-  private getSwiper() {
-    return document.querySelector('swiper-container')?.swiper;
+  // Resolved from the template rather than from the whole document: a global query would find
+  // the carousel of another screen, and the custom element is only upgraded after the first
+  // render, which leaves the swiper instance undefined until then.
+  private readonly carousel =
+    viewChild<ElementRef<SwiperContainer>>('carousel');
+
+  private getSwiper(): Swiper | undefined {
+    return this.carousel()?.nativeElement.swiper;
   }
 }

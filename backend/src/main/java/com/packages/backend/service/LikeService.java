@@ -12,7 +12,7 @@ public interface LikeService {
    * @return the nickname of the matched user, {@code null} when there is no match, or
    * {@link ServiceStatus#FORBIDDEN} when the profile has already been liked or disliked
    */
-  String addLike(Long userId);
+  LikeResult addLike(Long userId);
 
   /**
    * Removes a previous like and undoes the match it may have created.

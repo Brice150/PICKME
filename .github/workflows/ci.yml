@@ -40,6 +40,36 @@ jobs:
       - name: Build
         run: npm run build
 
+  e2e:
+    name: End to end
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install the browser
+        run: npx playwright install --with-deps chromium
+
+      # The API is stubbed at the network level, so the scenarios need neither the back end nor a
+      # database: they check the application the way a browser meets it.
+      - name: Run the scenarios
+        run: npm run e2e
+
+      - name: Publish the report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
+
   backend:
     name: Backend
     runs-on: ubuntu-latest
@@ -54,6 +84,12 @@ jobs:
           java-version: '21'
           distribution: temurin
           cache: maven
+
+      # The project is developed on Windows, where git does not track the
+      # executable bit: the wrapper is restored as read only on the runner
+      # whenever a commit drops the mode recorded in the index.
+      - name: Make the Maven wrapper executable
+        run: chmod +x mvnw
 
       # `verify` runs the tests then fails the build when the coverage of the
       # services, the controllers or the exception handling drops below 100%.

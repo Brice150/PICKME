@@ -119,6 +119,15 @@ Backend : Spring Boot 4 / Java 21 / PostgreSQL (API REST, Spring Security, JPA)
   ng test
 ```
 
+### Lancer les parcours end to end
+
+L'API est bouchonnée au niveau réseau : ni back ni base de données nécessaires.
+
+```bash
+  npx playwright install chromium
+  npm run e2e
+```
+
 ### Lancer le back (Java 21, PostgreSQL sur le port 5432)
 
 ```bash
@@ -138,7 +147,8 @@ Backend : Spring Boot 4 / Java 21 / PostgreSQL (API REST, Spring Security, JPA)
 
 ### Architecture
 
-Le back est découpé en couches, chacune avec une seule responsabilité :
+Le schéma est géré par Flyway (`backend/src/main/resources/db/migration`) et Hibernate se contente
+de le valider au démarrage. Le back est découpé en couches, chacune avec une seule responsabilité :
 
 | Couche       | Rôle                                                                     |
 | ------------ | ------------------------------------------------------------------------ |
@@ -161,6 +171,8 @@ mot de passe, rôle ni statistiques.
 | Règles de sécurité            | `@SpringBootTest`                 | 401 anonyme, 403 hors rôle, endpoints publics, préflight CORS |
 | Services, guards, pipes front | Jasmine + `HttpTestingController` | Requêtes émises, redirections, transformations                |
 | Composants front              | Jasmine + `TestBed`               | Rendu, entrées et sorties, logique de chaque écran            |
+| Requêtes back                 | `@DataJpaTest` + Flyway           | Chaque `@Query`, sur le schéma réel migré                     |
+| Parcours utilisateur          | Playwright                        | Connexion, sélection, règles d'accès, dans un vrai navigateur |
 
 ### Couverture
 

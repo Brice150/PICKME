@@ -41,7 +41,7 @@ public interface PictureService {
    * @return {@link ServiceStatus#OK} or {@link ServiceStatus#FORBIDDEN} when the picture does not
    * belong to the connected user
    */
-  String selectMainPictureById(Long pictureId);
+  ServiceStatus selectMainPictureById(Long pictureId);
 
   /**
    * Removes a picture from the album of the connected user.
@@ -50,5 +50,5 @@ public interface PictureService {
    * @return {@link ServiceStatus#OK} or {@link ServiceStatus#FORBIDDEN} when the picture does not
    * belong to the connected user
    */
-  String deletePictureById(Long pictureId);
+  ServiceStatus deletePictureById(Long pictureId);
 }

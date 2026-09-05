@@ -11,5 +11,5 @@ public interface RegistrationService {
    * @return {@link ServiceStatus#OK} when the account has been created, otherwise the reason of
    * the rejection
    */
-  String register(Registration request);
+  RegistrationResult register(Registration request);
 }

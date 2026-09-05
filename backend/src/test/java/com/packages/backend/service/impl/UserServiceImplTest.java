@@ -31,7 +31,7 @@ import com.packages.backend.repository.PictureRepository;
 import com.packages.backend.repository.UserRepository;
 import com.packages.backend.service.DeletedAccountService;
 import com.packages.backend.service.DistanceService;
-import com.packages.backend.service.ServiceStatus;
+import com.packages.backend.service.RegistrationResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -87,16 +87,13 @@ class UserServiceImplTest {
 
   @Captor
   private ArgumentCaptor<User> userCaptor;
-  @Captor
-  private ArgumentCaptor<List<Notification>> notificationsCaptor;
 
   private UserServiceImpl userService;
 
   @BeforeEach
   void setUp() {
-    userService = new UserServiceImpl(userRepository, messageRepository, likeRepository, pictureRepository,
-      notificationRepository, passwordEncoder, new UserDTOMapper(), new UserDTOMapperRestricted(),
-      distanceService, deletedAccountService);
+    userService = new UserServiceImpl(userRepository, messageRepository, passwordEncoder,
+      new UserDTOMapper(), new UserDTOMapperRestricted(), distanceService);
   }
 
   @AfterEach
@@ -176,7 +173,7 @@ class UserServiceImplTest {
       when(userRepository.getUserByEmail(CONNECTED_EMAIL)).thenReturn(Optional.empty());
       when(passwordEncoder.encode("password1")).thenReturn("hashed");
 
-      assertThat(userService.signUpUser(user)).isEqualTo(ServiceStatus.OK);
+      assertThat(userService.signUpUser(user)).isEqualTo(new RegistrationResult.Created());
 
       verify(userRepository).save(userCaptor.capture());
       User saved = userCaptor.getValue();
@@ -196,7 +193,8 @@ class UserServiceImplTest {
       User user = TestFixtures.user(1L);
       when(userRepository.getUserByEmail(CONNECTED_EMAIL)).thenReturn(Optional.of(TestFixtures.user(2L)));
 
-      assertThat(userService.signUpUser(user)).isEqualTo("Email already taken");
+      assertThat(userService.signUpUser(user))
+        .isEqualTo(new RegistrationResult.Rejected("Email already taken"));
       verify(userRepository, never()).save(any());
     }
   }
@@ -244,111 +242,6 @@ class UserServiceImplTest {
     }
   }
 
-  @Nested
-  @DisplayName("selection")
-  class Selection {
-
-    @Test
-    @DisplayName("keeps the candidates within the search radius and attaches their main picture")
-    void getAllSelectedUsersKeepsTheCandidatesWithinTheRadius() {
-      User connectedUser = connectedUserWithPartialPreferences();
-      User closeCandidate = candidateWithPreferences(2L);
-      User otherCloseCandidate = candidateWithPreferences(3L);
-      User farCandidate = candidateWithPreferences(4L);
-      authenticate(connectedUser);
-      when(userRepository.getAllUsers(any(Gender.class), any(Gender.class), any(Date.class), any(Date.class), eq(1L)))
-        .thenReturn(List.of(closeCandidate, otherCloseCandidate, farCandidate));
-      when(likeRepository.getGoldByConnectedUserId(1L)).thenReturn(List.of(3L));
-      when(distanceService.calculateDistance(connectedUser, closeCandidate)).thenReturn(5.0);
-      when(distanceService.calculateDistance(connectedUser, otherCloseCandidate)).thenReturn(8.0);
-      when(distanceService.calculateDistance(connectedUser, farCandidate)).thenReturn(500.0);
-      Picture mainPicture = new Picture("content", true, closeCandidate);
-      when(pictureRepository.findDisplayedPicturesByUserIds(List.of(2L, 3L))).thenReturn(List.of(mainPicture));
-
-      List<UserDTO> candidates = userService.getAllSelectedUsers(null);
-
-      assertThat(candidates).extracting(UserDTO::id).containsExactly(2L, 3L);
-      assertThat(candidates.get(0).pictures()).containsExactly(mainPicture);
-      assertThat(candidates.get(1).pictures()).isEmpty();
-      assertThat(candidates).allSatisfy(candidate -> assertThat(candidate.userRole()).isEqualTo(UserRole.HIDDEN));
-      assertThat(closeCandidate.getGold()).isFalse();
-      assertThat(otherCloseCandidate.getGold()).isTrue();
-    }
-
-    @Test
-    @DisplayName("selects the age range from the birth dates of the candidates")
-    void getAllSelectedUsersSelectsOnBirthDates() {
-      User connectedUser = connectedUserWithPartialPreferences();
-      connectedUser.getGenderAge().setMinAge(25L);
-      connectedUser.getGenderAge().setMaxAge(35L);
-      authenticate(connectedUser);
-      ArgumentCaptor<Date> earliest = ArgumentCaptor.forClass(Date.class);
-      ArgumentCaptor<Date> latest = ArgumentCaptor.forClass(Date.class);
-      when(userRepository.getAllUsers(any(Gender.class), any(Gender.class), earliest.capture(), latest.capture(), eq(1L)))
-        .thenReturn(List.of());
-      when(likeRepository.getGoldByConnectedUserId(1L)).thenReturn(List.of());
-
-      assertThat(userService.getAllSelectedUsers(-1)).isEmpty();
-
-      LocalDate today = LocalDate.now();
-      assertThat(toLocalDate(earliest.getValue())).isEqualTo(today.minusYears(36).plusDays(1));
-      assertThat(toLocalDate(latest.getValue())).isEqualTo(today.minusYears(25).plusDays(1));
-    }
-
-    @Test
-    @DisplayName("returns nothing beyond the last page of candidates")
-    void getAllSelectedUsersReturnsNothingBeyondTheLastPage() {
-      User connectedUser = connectedUserWithPartialPreferences();
-      User candidate = candidateWithPreferences(2L);
-      authenticate(connectedUser);
-      when(userRepository.getAllUsers(any(Gender.class), any(Gender.class), any(Date.class), any(Date.class), eq(1L)))
-        .thenReturn(List.of(candidate));
-      when(likeRepository.getGoldByConnectedUserId(1L)).thenReturn(List.of());
-      when(distanceService.calculateDistance(connectedUser, candidate)).thenReturn(5.0);
-
-      assertThat(userService.getAllSelectedUsers(1)).isEmpty();
-      verify(pictureRepository, never()).findDisplayedPicturesByUserIds(anyList());
-    }
-
-    /**
-     * Builds the connected user with a preference left empty, one the candidates leave empty and
-     * one both fill in, so that the three ways of scoring a preference are exercised.
-     *
-     * @return the connected user
-     */
-    private User connectedUserWithPartialPreferences() {
-      User connectedUser = TestFixtures.user(1L);
-      Preferences preferences = connectedUser.getPreferences();
-      preferences.setPersonality(null);
-      preferences.setParenthood(Parenthood.YES);
-      preferences.setSmokes(Smokes.NO);
-      preferences.setOrganised(Organised.YES);
-      preferences.setSportPractice(SportPractice.YES);
-      preferences.setAnimals(Animals.YES);
-      preferences.setAlcoholDrinking(AlcoholDrinking.MAYBE);
-      preferences.setGamer(Gamer.NO);
-      return connectedUser;
-    }
-
-    private User candidateWithPreferences(Long id) {
-      User candidate = TestFixtures.user(id);
-      Preferences preferences = candidate.getPreferences();
-      preferences.setPersonality(Personality.EXTRAVERT);
-      preferences.setParenthood(null);
-      preferences.setSmokes(Smokes.NO);
-      preferences.setOrganised(Organised.YES);
-      preferences.setSportPractice(SportPractice.YES);
-      preferences.setAnimals(Animals.YES);
-      preferences.setAlcoholDrinking(AlcoholDrinking.MAYBE);
-      preferences.setGamer(Gamer.NO);
-      return candidate;
-    }
-
-    private LocalDate toLocalDate(Date date) {
-      return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
-
-  }
 
   @Nested
   @DisplayName("matches")
@@ -478,58 +371,4 @@ class UserServiceImplTest {
     }
   }
 
-  @Nested
-  @DisplayName("account deletion")
-  class AccountDeletion {
-
-    @Test
-    @DisplayName("removes everything the account owns and warns its matches")
-    void deleteConnectedUserRemovesEverythingItOwns() {
-      User connectedUser = TestFixtures.user(1L);
-      User matchedUser = TestFixtures.user(2L);
-      authenticate(connectedUser);
-      when(userRepository.getAllUserMatches(1L)).thenReturn(List.of(matchedUser));
-
-      userService.deleteConnectedUser();
-
-      verify(notificationRepository).saveAll(notificationsCaptor.capture());
-      assertThat(notificationsCaptor.getValue()).singleElement().satisfies(notification -> {
-        assertThat(notification.getContent()).isEqualTo("nickname1 has deleted his account");
-        assertThat(notification.getLink()).isEqualTo("delete");
-        assertThat(notification.getSeen()).isFalse();
-        assertThat(notification.getFkUser()).isSameAs(matchedUser);
-      });
-      verify(userRepository).deleteUserNotificationsByFk(1L);
-      verify(userRepository).deleteUserGeolocationByFk(1L);
-      verify(userRepository).deleteUserPreferencesByFk(1L);
-      verify(userRepository).deleteUserGenderAgeByFk(1L);
-      verify(userRepository).deleteUserStatsByFk(1L);
-      verify(userRepository).deleteUserPicturesByFk(1L);
-      verify(userRepository).deleteUserLikesByFk(1L);
-      verify(userRepository).deleteUserDislikesByFk(1L);
-      verify(userRepository).deleteUserMessagesByFk(1L);
-      verify(userRepository).deleteUserByEmail(CONNECTED_EMAIL);
-      verify(deletedAccountService).addDeletedAccount(connectedUser, connectedUser);
-    }
-
-    @Test
-    @DisplayName("tells the matches when an administrator closed the account")
-    void deleteUserByIdTellsTheMatchesTheAdministratorClosedIt() {
-      User admin = TestFixtures.user(1L, UserRole.ROLE_ADMIN);
-      User deletedUser = TestFixtures.user(2L);
-      User matchedUser = TestFixtures.user(3L);
-      authenticate(admin);
-      when(userRepository.findById(2L)).thenReturn(Optional.of(deletedUser));
-      when(userRepository.getAllUserMatches(2L)).thenReturn(List.of(matchedUser));
-
-      userService.deleteUserById(2L);
-
-      verify(notificationRepository).saveAll(notificationsCaptor.capture());
-      assertThat(notificationsCaptor.getValue()).singleElement()
-        .extracting(Notification::getContent)
-        .isEqualTo("Admin has deleted nickname2's account");
-      verify(userRepository).deleteUserByEmail("user2@pickme.com");
-      verify(deletedAccountService).addDeletedAccount(deletedUser, admin);
-    }
-  }
 }

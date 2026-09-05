@@ -50,9 +50,9 @@ class DislikeServiceImplTest {
     when(userService.getUserById(2L)).thenReturn(dislikedUser);
     when(dislikeRepository.getDislikeByFk(1L, 2L)).thenReturn(Optional.empty());
 
-    String status = dislikeService.addDislike(2L);
+    ServiceStatus status = dislikeService.addDislike(2L);
 
-    assertThat(status).isNull();
+    assertThat(status).isEqualTo(ServiceStatus.OK);
     verify(likeService).deleteLikeByFk(connectedUser, dislikedUser);
     verify(dislikeRepository).save(dislikeCaptor.capture());
     Dislike saved = dislikeCaptor.getValue();
@@ -71,7 +71,7 @@ class DislikeServiceImplTest {
     when(dislikeRepository.getDislikeByFk(1L, 2L))
       .thenReturn(Optional.of(new Dislike(new Date(), 1L, 2L)));
 
-    String status = dislikeService.addDislike(2L);
+    ServiceStatus status = dislikeService.addDislike(2L);
 
     assertThat(status).isEqualTo(ServiceStatus.FORBIDDEN);
     verify(likeService, never()).deleteLikeByFk(connectedUser, dislikedUser);

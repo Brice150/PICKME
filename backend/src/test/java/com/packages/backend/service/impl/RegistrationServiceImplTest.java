@@ -6,7 +6,7 @@ import com.packages.backend.model.entity.Geolocation;
 import com.packages.backend.model.entity.User;
 import com.packages.backend.model.enums.Gender;
 import com.packages.backend.model.enums.UserRole;
-import com.packages.backend.service.ServiceStatus;
+import com.packages.backend.service.RegistrationResult;
 import com.packages.backend.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,11 +44,11 @@ class RegistrationServiceImplTest {
     GenderAge genderAge = new GenderAge(Gender.MAN, Gender.WOMAN, 18L, 99L, null);
     Geolocation geolocation = new Geolocation("48.8566", "2.3522", 100L, null, null);
     Registration request = new Registration("nickname", "job", birthDate, "user@pickme.com", "password", genderAge, geolocation);
-    when(userService.signUpUser(any(User.class))).thenReturn(ServiceStatus.OK);
+    when(userService.signUpUser(any(User.class))).thenReturn(new RegistrationResult.Created());
 
-    String status = registrationService.register(request);
+    RegistrationResult result = registrationService.register(request);
 
-    assertThat(status).isEqualTo(ServiceStatus.OK);
+    assertThat(result).isEqualTo(new RegistrationResult.Created());
     verify(userService).signUpUser(userCaptor.capture());
     User created = userCaptor.getValue();
     assertThat(created.getUserRole()).isEqualTo(UserRole.ROLE_USER);

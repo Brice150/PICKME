@@ -35,14 +35,14 @@ public class PictureController {
 
   @PutMapping("/{pictureId}")
   public ResponseEntity<Void> selectMainPicture(@PathVariable("pictureId") Long pictureId) {
-    return ServiceStatus.OK.equals(pictureService.selectMainPictureById(pictureId)) ?
+    return pictureService.selectMainPictureById(pictureId) == ServiceStatus.OK ?
       new ResponseEntity<>(HttpStatus.OK) :
       new ResponseEntity<>(HttpStatus.FORBIDDEN);
   }
 
   @DeleteMapping("/{pictureId}")
   public ResponseEntity<Void> deletePicture(@PathVariable("pictureId") Long pictureId) {
-    return ServiceStatus.OK.equals(pictureService.deletePictureById(pictureId)) ?
+    return pictureService.deletePictureById(pictureId) == ServiceStatus.OK ?
       new ResponseEntity<>(HttpStatus.OK) :
       new ResponseEntity<>(HttpStatus.FORBIDDEN);
   }
