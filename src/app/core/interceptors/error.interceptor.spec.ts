@@ -85,10 +85,11 @@ describe('errorInterceptor', () => {
     expect(connectService.logout).not.toHaveBeenCalled();
   });
 
-  it('logs out and warns the user on a forbidden call', () => {
+  it('warns the user on a refused action but keeps them logged in', () => {
     failingRequest(`${apiUrl}/admin/stats`, 403);
 
-    expect(connectService.logout).toHaveBeenCalled();
+    // The session is still valid: only that one action was refused.
+    expect(connectService.logout).not.toHaveBeenCalled();
     expect(toastMessage()).toBe('You are not allowed to do this action');
     expect(toastTitle()).toBe('Forbidden');
   });
@@ -114,10 +115,11 @@ describe('errorInterceptor', () => {
     expect(toastTitle()).toBe('Account Deleted');
   });
 
-  it('falls back on the message of any other error', () => {
+  it('reports any other failure without dropping the session', () => {
     const error = failingRequest(`${apiUrl}/match/all`, 502);
 
-    expect(connectService.logout).toHaveBeenCalled();
+    // A server hiccup must not cost the user the screen they were on.
+    expect(connectService.logout).not.toHaveBeenCalled();
     expect(toastMessage()).toBe(error.message);
     expect(toastTitle()).toBe('Error');
   });

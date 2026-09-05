@@ -3,8 +3,9 @@ spring:
     active: dev
 
   jpa:
-    # Kept enabled on purpose: a few responses serialize entities whose associations are lazy.
-    open-in-view: true
+    # The persistence session is closed with the transaction, not held open for the whole request:
+    # a response that carries a lazy association materialises it in the service, on purpose.
+    open-in-view: false
     # SQL logging is very expensive on large result sets: enable it only when debugging a query.
     show-sql: false
     hibernate:

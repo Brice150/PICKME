@@ -143,9 +143,15 @@ export class SelectComponent implements OnInit {
   removeSlide(userId: number): void {
     const userIndex = this.users.findIndex((user: User) => user.id === userId);
     if (userIndex !== -1) {
-      this.getSwiper()?.removeSlide(userIndex);
+      // Angular owns the slides: dropping the profile from the list removes its slide, and the
+      // carousel only recomputes its geometry once the view has caught up. Asking swiper to
+      // remove the slide as well was double book keeping, and its custom elements no longer
+      // expose that method anyway.
       this.users.splice(userIndex, 1);
-      this.activeIndex = this.getSwiper()?.activeIndex ?? this.activeIndex;
+      setTimeout(() => {
+        this.getSwiper()?.update();
+        this.activeIndex = this.getSwiper()?.activeIndex ?? this.activeIndex;
+      });
     }
   }
 

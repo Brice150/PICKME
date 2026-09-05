@@ -21,10 +21,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ToastrService } from 'ngx-toastr';
-import { distinctUntilChanged, filter, repeat } from 'rxjs';
+import { filter, startWith, switchMap } from 'rxjs';
 import { Match } from '../core/interfaces/match';
 import { Message } from '../core/interfaces/message';
 import { MatchService } from '../core/services/match.service';
+import { NotificationService } from '../core/services/notification.service';
 import { SelectService } from '../core/services/select.service';
 import { ConfirmationDialogComponent } from '../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { LoadingComponent } from '../shared/components/loading/loading.component';
@@ -54,6 +55,7 @@ export class MatchComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly fb = inject(FormBuilder);
   private readonly matchService = inject(MatchService);
+  private readonly notificationService = inject(NotificationService);
   private readonly selectService = inject(SelectService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -81,11 +83,12 @@ export class MatchComponent implements OnInit {
       ],
     });
 
-    this.matchService
-      .getAllUserMatches()
+    // Read once on arrival, then again on every signal the server sends: a new message or a
+    // profile that unmatched both raise one.
+    this.notificationService.serverEvents$
       .pipe(
-        repeat({ delay: 10000 }),
-        distinctUntilChanged(),
+        startWith(undefined),
+        switchMap(() => this.matchService.getAllUserMatches()),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({

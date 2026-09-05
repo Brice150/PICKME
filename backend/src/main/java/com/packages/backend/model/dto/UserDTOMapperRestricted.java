@@ -13,7 +13,9 @@ public class UserDTOMapperRestricted implements Function<User, UserDTO> {
 
   @Override
   public UserDTO apply(User user) {
-    return apply(user, user.getPictures());
+    // Copied rather than handed over: the album is lazy, and the JSON writer runs long after
+    // the persistence session has closed.
+    return apply(user, user.getPictures() == null ? null : List.copyOf(user.getPictures()));
   }
 
   /**

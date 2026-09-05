@@ -3,7 +3,7 @@ import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { distinctUntilChanged, repeat, switchMap, takeUntil } from 'rxjs';
+import { startWith, switchMap, takeUntil } from 'rxjs';
 import { Notification } from '../core/interfaces/notification';
 import { ConnectService } from '../core/services/connect.service';
 import { NotificationService } from '../core/services/notification.service';
@@ -42,15 +42,14 @@ export class NavComponent implements OnInit {
   ngOnInit(): void {
     this.connectService.connectedUserReady$
       .pipe(
-        switchMap(() => {
-          return this.notificationService
-            .getAllUserNotifications()
-            .pipe(
-              repeat({ delay: 10000 }),
-              distinctUntilChanged(),
-              takeUntil(this.connectService.loggedOut$),
-            );
-        }),
+        switchMap(() =>
+          // Read once on connection, then again on every signal the server sends.
+          this.notificationService.serverEvents$.pipe(
+            startWith(undefined),
+            switchMap(() => this.notificationService.getAllUserNotifications()),
+            takeUntil(this.connectService.loggedOut$),
+          ),
+        ),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((notifications: Notification[]) => {

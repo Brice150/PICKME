@@ -4,6 +4,7 @@ import com.packages.backend.model.entity.Notification;
 import com.packages.backend.model.entity.User;
 import com.packages.backend.repository.NotificationRepository;
 import com.packages.backend.service.NotificationService;
+import com.packages.backend.service.NotificationStream;
 import com.packages.backend.service.UserService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,12 @@ public class NotificationServiceImpl implements NotificationService {
 
   private final NotificationRepository notificationRepository;
   private final UserService userService;
+  private final NotificationStream notificationStream;
 
-  public NotificationServiceImpl(NotificationRepository notificationRepository, UserService userService) {
+  public NotificationServiceImpl(NotificationRepository notificationRepository, UserService userService, NotificationStream notificationStream) {
     this.notificationRepository = notificationRepository;
     this.userService = userService;
+    this.notificationStream = notificationStream;
   }
 
   @Override
@@ -49,5 +52,8 @@ public class NotificationServiceImpl implements NotificationService {
   @Override
   public void sendNotification(String content, String link, User user) {
     notificationRepository.save(new Notification(content, link, new Date(), false, user));
+    // The receiver is told right away when they are listening, instead of finding out on their
+    // next poll.
+    notificationStream.publish(user.getId());
   }
 }

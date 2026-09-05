@@ -92,13 +92,18 @@ export class PicturesComponent {
         if (pictureIndex !== -1) {
           const isMainPictureDeleted =
             this.user()!.pictures![pictureIndex].isMainPicture;
-          this.getSwiper()?.removeSlide(pictureIndex);
-          this.activeIndex = this.getSwiper()?.activeIndex ?? this.activeIndex;
+          // Angular owns the slides: removing the picture from the album removes its slide, and
+          // the carousel only recomputes its geometry once the view has caught up.
           this.user()!.pictures!.splice(pictureIndex, 1);
           const user = this.user();
           if (isMainPictureDeleted && user?.pictures?.length !== 0) {
             user!.pictures![0].isMainPicture = true;
           }
+          setTimeout(() => {
+            this.getSwiper()?.update();
+            this.activeIndex =
+              this.getSwiper()?.activeIndex ?? this.activeIndex;
+          });
           this.refreshEvent.emit('Picture Deleted');
           this.isLoading = false;
         }

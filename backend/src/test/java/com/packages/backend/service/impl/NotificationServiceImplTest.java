@@ -4,6 +4,7 @@ import com.packages.backend.TestFixtures;
 import com.packages.backend.model.entity.Notification;
 import com.packages.backend.model.entity.User;
 import com.packages.backend.repository.NotificationRepository;
+import com.packages.backend.service.NotificationStream;
 import com.packages.backend.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,8 @@ class NotificationServiceImplTest {
   private NotificationRepository notificationRepository;
   @Mock
   private UserService userService;
+  @Mock
+  private NotificationStream notificationStream;
 
   @Captor
   private ArgumentCaptor<Notification> notificationCaptor;

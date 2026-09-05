@@ -69,6 +69,11 @@ export async function stubApi(
   await page.route(`${API}/login`, (route) => json(route, connectedUser(role)));
   await page.route(`${API}/user`, (route) => json(route, connectedUser(role)));
   await page.route(`${API}/notification/all`, (route) => json(route, []));
+  // The menu opens a stream to be told when something changes. The scenarios drive the screens
+  // themselves, so an empty stream is enough.
+  await page.route(`${API}/notification/stream`, (route) =>
+    route.fulfill({ status: 200, contentType: 'text/event-stream', body: '' }),
+  );
   await page.route(`${API}/match/all`, (route) => json(route, []));
   // Only the first page holds candidates, the next ones are empty. Playwright matches the routes
   // in reverse order of registration, so the catch all has to be declared before the page it is

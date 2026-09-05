@@ -16,6 +16,7 @@ describe('NavComponent', () => {
   let toastr: jasmine.SpyObj<ToastrService>;
   let router: jasmine.SpyObj<Router>;
   let connectedUserReady$: Subject<void>;
+  let serverEvents$: Subject<void>;
   let loggedOut$: Subject<void>;
 
   function notification(
@@ -44,10 +45,14 @@ describe('NavComponent', () => {
       logout: jasmine.createSpy('logout'),
       isAdmin: jasmine.createSpy('isAdmin').and.returnValue(false),
     } as unknown as jasmine.SpyObj<ConnectService>;
-    notificationService = jasmine.createSpyObj<NotificationService>(
-      'NotificationService',
-      ['getAllUserNotifications', 'markUserNotificationsAsSeen'],
-    );
+    serverEvents$ = new Subject<void>();
+    notificationService = {
+      serverEvents$,
+      getAllUserNotifications: jasmine.createSpy('getAllUserNotifications'),
+      markUserNotificationsAsSeen: jasmine.createSpy(
+        'markUserNotificationsAsSeen',
+      ),
+    } as unknown as jasmine.SpyObj<NotificationService>;
     toastr = jasmine.createSpyObj<ToastrService>('ToastrService', ['success']);
     router = jasmine.createSpyObj<Router>('Router', ['navigate']);
     Object.defineProperty(router, 'url', {

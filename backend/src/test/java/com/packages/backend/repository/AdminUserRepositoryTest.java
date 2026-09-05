@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -18,22 +19,27 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryTest
-@DisplayName("AdminRepository")
-class AdminRepositoryTest {
+@DisplayName("AdminUserRepository")
+class AdminUserRepositoryTest {
 
-  private static final PageRequest FIRST_PAGE = PageRequest.of(0, 5);
+  private static final Sort NEWEST_FIRST = Sort.by(Sort.Direction.DESC, "registeredDate");
+  private static final Sort MOST_LIKED_FIRST = Sort.by(Sort.Direction.DESC, "stats.totalLikes");
 
   @Autowired
-  private AdminRepository adminRepository;
-  @Autowired
-  private UserRepository userRepository;
+  private AdminUserRepository adminUserRepository;
   @Autowired
   private DeletedAccountRepository deletedAccountRepository;
+  @Autowired
+  private UserRepository userRepository;
   @Autowired
   private EntityManager entityManager;
 
   private static Date daysAgo(int days) {
     return Date.from(LocalDate.now().minusDays(days).atStartOfDay(ZoneId.systemDefault()).toInstant());
+  }
+
+  private PageRequest firstPage(Sort sort) {
+    return PageRequest.of(0, 5, sort);
   }
 
   /**
@@ -54,9 +60,9 @@ class AdminRepositoryTest {
     return saved;
   }
 
-  private void persistDeletedAccount(String email, Date deletionDate, long totalLikes) {
+  private void persistDeletedAccount(String email, Date deletionDate) {
     deletedAccountRepository.saveAndFlush(new DeletedAccount(
-      "nickname", email, daysAgo(100), deletionDate, 0L, totalLikes, 0L, "User"));
+      "nickname", email, daysAgo(100), deletionDate, 0L, 0L, 0L, "User"));
   }
 
   @Test
@@ -64,10 +70,10 @@ class AdminRepositoryTest {
   void getAdminStatsCountsEverything() {
     persistUser("recent@pickme.com", daysAgo(2), 0);
     persistUser("old@pickme.com", daysAgo(30), 0);
-    persistDeletedAccount("recently.deleted@pickme.com", daysAgo(3), 0);
-    persistDeletedAccount("long.gone@pickme.com", daysAgo(60), 0);
+    persistDeletedAccount("recently.deleted@pickme.com", daysAgo(3));
+    persistDeletedAccount("long.gone@pickme.com", daysAgo(60));
 
-    AdminStats stats = adminRepository.getAdminStats(daysAgo(7));
+    AdminStats stats = adminUserRepository.getAdminStats(daysAgo(7));
 
     assertThat(stats.getTotalUsers()).isEqualTo(2L);
     assertThat(stats.getTotalDeletedAccounts()).isEqualTo(2L);
@@ -82,32 +88,34 @@ class AdminRepositoryTest {
     User bob = persistUser("BOB@pickme.com", daysAgo(2), 0);
     persistUser("alice@pickme.com", daysAgo(3), 0);
 
-    List<User> found = adminRepository.getAllUsers(connectedUser.getId(), "bob", FIRST_PAGE);
+    List<User> found = adminUserRepository.getAllUsers(
+      connectedUser.getId(), "bob", firstPage(NEWEST_FIRST));
 
     assertThat(found).extracting(User::getId).containsExactly(bob.getId());
   }
 
   @Test
-  @DisplayName("lists the most recent accounts first and never the administrator themselves")
-  void getAllUsersOrdersOnTheRegistrationDate() {
+  @DisplayName("applies the order carried by the page and never lists the administrator")
+  void getAllUsersAppliesTheRequestedOrder() {
     User connectedUser = persistUser("admin@pickme.com", daysAgo(1), 0);
     User newest = persistUser("newest@pickme.com", daysAgo(2), 0);
     User oldest = persistUser("oldest@pickme.com", daysAgo(30), 0);
 
-    List<User> found = adminRepository.getAllUsers(connectedUser.getId(), "", FIRST_PAGE);
+    List<User> found = adminUserRepository.getAllUsers(
+      connectedUser.getId(), "", firstPage(NEWEST_FIRST));
 
     assertThat(found).extracting(User::getId).containsExactly(newest.getId(), oldest.getId());
   }
 
   @Test
-  @DisplayName("sorts the accounts on the requested statistic")
-  void getAllUsersSortsOnTheRequestedStatistic() {
+  @DisplayName("sorts on a statistic that lives on another table")
+  void getAllUsersSortsOnANestedStatistic() {
     User connectedUser = persistUser("admin@pickme.com", daysAgo(1), 0);
-    User popular = persistUser("popular@pickme.com", daysAgo(2), 42);
-    User shy = persistUser("shy@pickme.com", daysAgo(3), 1);
+    User popular = persistUser("popular@pickme.com", daysAgo(30), 42);
+    User shy = persistUser("shy@pickme.com", daysAgo(2), 1);
 
-    List<User> found = adminRepository.getAllUsers(
-      connectedUser.getId(), "", "totalLikes", FIRST_PAGE);
+    List<User> found = adminUserRepository.getAllUsers(
+      connectedUser.getId(), "", firstPage(MOST_LIKED_FIRST));
 
     assertThat(found).extracting(User::getId).containsExactly(popular.getId(), shy.getId());
   }
@@ -120,32 +128,9 @@ class AdminRepositoryTest {
       persistUser("user" + index + "@pickme.com", daysAgo(index + 2), 0);
     }
 
-    assertThat(adminRepository.getAllUsers(connectedUser.getId(), "", FIRST_PAGE)).hasSize(5);
-    assertThat(adminRepository.getAllUsers(connectedUser.getId(), "", PageRequest.of(1, 5)))
-      .hasSize(2);
-  }
-
-  @Test
-  @DisplayName("lists the archived accounts, most recently closed first")
-  void getAllDeletedAccountsOrdersOnTheDeletionDate() {
-    persistDeletedAccount("oldest@pickme.com", daysAgo(30), 0);
-    persistDeletedAccount("newest@pickme.com", daysAgo(1), 0);
-
-    List<DeletedAccount> found = adminRepository.getAllDeletedAccounts("", FIRST_PAGE);
-
-    assertThat(found).extracting(DeletedAccount::getEmail)
-      .containsExactly("newest@pickme.com", "oldest@pickme.com");
-  }
-
-  @Test
-  @DisplayName("sorts the archived accounts on the requested statistic")
-  void getAllDeletedAccountsSortsOnTheRequestedStatistic() {
-    persistDeletedAccount("shy@pickme.com", daysAgo(1), 1);
-    persistDeletedAccount("popular@pickme.com", daysAgo(30), 42);
-
-    List<DeletedAccount> found = adminRepository.getAllDeletedAccounts("", "totalLikes", FIRST_PAGE);
-
-    assertThat(found).extracting(DeletedAccount::getEmail)
-      .containsExactly("popular@pickme.com", "shy@pickme.com");
+    assertThat(adminUserRepository.getAllUsers(connectedUser.getId(), "", firstPage(NEWEST_FIRST)))
+      .hasSize(5);
+    assertThat(adminUserRepository.getAllUsers(
+      connectedUser.getId(), "", PageRequest.of(1, 5, NEWEST_FIRST))).hasSize(2);
   }
 }

@@ -90,6 +90,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<Match> getAllUserMatches() {
     User connectedUser = getConnectedUser();
     return userRepository.getAllUserMatches(connectedUser.getId()).stream()
@@ -227,6 +228,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public UserDTO getConnectedUserDTO() {
     return userDTOMapper.apply(getConnectedUser());
   }

@@ -3,6 +3,7 @@ package com.packages.backend.model.dto;
 import com.packages.backend.model.entity.User;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.function.Function;
 
 @Service
@@ -24,7 +25,9 @@ public class UserDTOMapper implements Function<User, UserDTO> {
       user.getGenderAge(),
       user.getPreferences(),
       user.getGeolocation(),
-      user.getPictures(),
+      // Copied rather than handed over: the album is lazy, and the JSON writer runs long after
+      // the persistence session has closed.
+      user.getPictures() == null ? null : List.copyOf(user.getPictures()),
       user.getStats(),
       null
     );

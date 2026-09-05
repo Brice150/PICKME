@@ -156,7 +156,12 @@ de le valider au démarrage. Le back est découpé en couches, chacune avec une 
 | `service`    | Règles métier, derrière une interface par service                        |
 | `repository` | Accès aux données via Spring Data JPA                                    |
 | `model/dto`  | Vues exposées au client, distinctes des entités JPA                      |
-| `security`   | Chaîne de filtres, CORS, chiffrement des mots de passe                   |
+| `security`   | Chaîne de filtres, CORS, chiffrement, limitation des tentatives de login |
+
+Les notifications sont poussées par SSE (`GET /notification/stream`) plutôt que
+demandées toutes les dix secondes : le serveur signale qu'un changement a eu
+lieu, le navigateur relit ce qui le concerne par les endpoints habituels. Rien
+ne transite sur le flux lui-même.
 
 Les entités ne sortent jamais telles quelles : `UserDTO` expose la vue complète du
 compte connecté, `UserDTOMapperRestricted` la vue réduite d'un autre profil, sans
@@ -172,16 +177,18 @@ mot de passe, rôle ni statistiques.
 | Services, guards, pipes front | Jasmine + `HttpTestingController` | Requêtes émises, redirections, transformations                |
 | Composants front              | Jasmine + `TestBed`               | Rendu, entrées et sorties, logique de chaque écran            |
 | Requêtes back                 | `@DataJpaTest` + Flyway           | Chaque `@Query`, sur le schéma réel migré                     |
-| Parcours utilisateur          | Playwright                        | Connexion, sélection, règles d'accès, dans un vrai navigateur |
+| Parcours utilisateur          | Playwright                        | Les six écrans, dans un vrai navigateur                       |
 
 ### Couverture
 
-Le build back échoue si la couverture d'instructions **ou** de branches des
-couches `service.impl`, `controller` et `exception` descend sous 100 %. La règle
-est portée par JaCoCo et s'applique classe par classe :
+Les deux builds échouent quand la couverture baisse. Côté back, JaCoCo exige
+100 % des instructions **et** des branches sur `service.impl`, `controller` et
+`exception`, classe par classe. Côté front, Karma exige 95 % sur les quatre
+compteurs.
 
 ```bash
   cd backend && ./mvnw verify   # rapport dans backend/target/site/jacoco
+  npm run test:ci               # rapport dans coverage/pickme
 ```
 
 ### Intégration continue
@@ -364,6 +371,12 @@ Dependabot surveille par ailleurs les dépendances npm, Maven et GitHub Actions.
 
   <details>
   <summary>Notification</summary>
+
+### Écouter les changements (SSE)
+
+```http
+  GET /notification/stream
+```
 
 ### Récupérer toutes les notifications utilisateur
 

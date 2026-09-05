@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -55,6 +56,8 @@ public class WebSecurityConfig {
       // The front end sends the credentials on the login call only, then relies on the session
       // cookie. Since Spring Security 6 the basic filter keeps the authentication for the current
       // request only, so the session repository has to be declared explicitly.
+      // Placed before the credentials are ever checked, so a refused client costs nothing.
+      .addFilterBefore(new LoginRateLimitFilter(), BasicAuthenticationFilter.class)
       .httpBasic(basic -> basic
         .authenticationEntryPoint(authenticationEntryPoint)
         .securityContextRepository(new HttpSessionSecurityContextRepository()))

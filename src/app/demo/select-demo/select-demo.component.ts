@@ -63,8 +63,10 @@ export class SelectDemoComponent implements OnInit {
       (image: string) => image === imageToRemove,
     );
     if (imageIndex !== -1) {
-      this.getSwiper()?.removeSlide(imageIndex);
+      // The slides are rendered by Angular, so removing the image is enough: the carousel only
+      // has to recompute its geometry afterwards.
       this.images.splice(imageIndex, 1);
+      setTimeout(() => this.getSwiper()?.update());
     }
   }
 

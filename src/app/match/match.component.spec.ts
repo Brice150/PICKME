@@ -7,10 +7,11 @@ import {
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, of } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { Match } from '../core/interfaces/match';
 import { Message } from '../core/interfaces/message';
 import { MatchService } from '../core/services/match.service';
+import { NotificationService } from '../core/services/notification.service';
 import { SelectService } from '../core/services/select.service';
 import { userFixture } from '../core/testing/user.fixture';
 import { ConfirmationDialogComponent } from '../shared/components/confirmation-dialog/confirmation-dialog.component';
@@ -24,7 +25,8 @@ describe('MatchComponent', () => {
   let selectService: jasmine.SpyObj<SelectService>;
   let toastr: jasmine.SpyObj<ToastrService>;
   let dialog: jasmine.SpyObj<MatDialog>;
-  let polledMatches: BehaviorSubject<Match[]>;
+  let serverEvents$: Subject<void>;
+  let notificationService: jasmine.SpyObj<NotificationService>;
 
   /** Builds a conversation with the given profile. */
   function match(
@@ -41,8 +43,14 @@ describe('MatchComponent', () => {
 
   /** Starts the screen on a first answer of the polling. */
   function start(matches: Match[]): void {
-    polledMatches.next(matches);
+    matchService.getAllUserMatches.and.returnValue(of(matches));
     fixture.detectChanges();
+  }
+
+  /** Plays a signal from the server, which makes the screen read its conversations again. */
+  function serverSignals(matches: Match[]): void {
+    matchService.getAllUserMatches.and.returnValue(of(matches));
+    serverEvents$.next();
   }
 
   /** Makes the next dialog close with the given answer. */
@@ -57,7 +65,7 @@ describe('MatchComponent', () => {
   }
 
   beforeEach(async () => {
-    polledMatches = new BehaviorSubject<Match[]>([]);
+    serverEvents$ = new Subject<void>();
     matchService = jasmine.createSpyObj<MatchService>('MatchService', [
       'getAllUserMatches',
       'addMessage',
@@ -69,12 +77,16 @@ describe('MatchComponent', () => {
     ]);
     toastr = jasmine.createSpyObj<ToastrService>('ToastrService', ['success']);
     dialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
-    matchService.getAllUserMatches.and.returnValue(polledMatches);
+    matchService.getAllUserMatches.and.returnValue(of([]));
+    notificationService = {
+      serverEvents$,
+    } as unknown as jasmine.SpyObj<NotificationService>;
     await TestBed.configureTestingModule({
       imports: [MatchComponent],
       providers: [
         provideNoopAnimations(),
         { provide: MatchService, useValue: matchService },
+        { provide: NotificationService, useValue: notificationService },
         { provide: SelectService, useValue: selectService },
         { provide: ToastrService, useValue: toastr },
         { provide: MatDialog, useValue: dialog },
@@ -137,7 +149,7 @@ describe('MatchComponent', () => {
     component.selectMatch(alice);
 
     const refreshed = match(2, 'Alice', [message(1, 'Alice', 'hello')]);
-    polledMatches.next([refreshed]);
+    serverSignals([refreshed]);
 
     expect(component.selectedMatch).toBe(refreshed);
   });
@@ -147,7 +159,7 @@ describe('MatchComponent', () => {
     start([alice]);
     component.selectMatch(alice);
 
-    polledMatches.next([match(3, 'Bob')]);
+    serverSignals([match(3, 'Bob')]);
 
     expect(component.selectedMatch).toBeUndefined();
   });
