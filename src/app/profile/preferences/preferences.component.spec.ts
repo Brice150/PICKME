@@ -50,9 +50,9 @@ describe('PreferencesComponent', () => {
   });
 
   it('drops the pending answer when the user moves to another question', () => {
-    component.preference!.select(AlcoholDrinking.YES, 'alcoholDrinking');
-    component.preference!.preferenceForm.markAsDirty();
-    const previousQuestion = component.preference!;
+    component.preference()!.select(AlcoholDrinking.YES, 'alcoholDrinking');
+    component.preference()!.preferenceForm.markAsDirty();
+    const previousQuestion = component.preference()!;
 
     component.handlePageEvent(1);
 

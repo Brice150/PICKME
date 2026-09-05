@@ -7,7 +7,7 @@ import {
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { User } from '../core/interfaces/user';
 import { SelectService } from '../core/services/select.service';
 import { userFixture } from '../core/testing/user.fixture';
@@ -58,6 +58,17 @@ describe('SelectComponent', () => {
 
     expect(selectService.getAllSelectedUsers).toHaveBeenCalledWith(0);
     expect(component.users.length).toBe(2);
+    expect(component.initLoading).toBeFalse();
+    expect(component.loading).toBeFalse();
+  });
+
+  it('stops the loader when the candidates cannot be read', () => {
+    selectService.getAllSelectedUsers.and.returnValue(
+      throwError(() => new Error('offline')),
+    );
+
+    fixture.detectChanges();
+
     expect(component.initLoading).toBeFalse();
     expect(component.loading).toBeFalse();
   });

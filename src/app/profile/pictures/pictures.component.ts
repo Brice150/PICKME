@@ -5,7 +5,6 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   Component,
   ElementRef,
-  ViewChild,
   inject,
   input,
   output,
@@ -30,7 +29,9 @@ export class PicturesComponent {
   imagePath: string = environment.imagePath;
   readonly user = input<User>();
   readonly refreshEvent = output<string>();
-  @ViewChild('imageInput') imageInput!: ElementRef;
+  // Always in the template: the file input is what gets reset once a picture has been added.
+  private readonly imageInput =
+    viewChild.required<ElementRef<HTMLInputElement>>('imageInput');
   isLoading = false;
   activeIndex = 0;
 
@@ -71,7 +72,7 @@ export class PicturesComponent {
                 this.getSwiper()?.update();
                 this.getSwiper()?.slideTo(0);
                 this.activeIndex = 0;
-                this.imageInput.nativeElement.value = '';
+                this.imageInput().nativeElement.value = '';
                 this.refreshEvent.emit('Picture Added');
                 this.isLoading = false;
               }, 0);

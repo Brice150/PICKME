@@ -3,7 +3,7 @@ import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { startWith, switchMap, takeUntil } from 'rxjs';
+import { EMPTY, catchError, startWith, switchMap, takeUntil } from 'rxjs';
 import { Notification } from '../core/interfaces/notification';
 import { ConnectService } from '../core/services/connect.service';
 import { NotificationService } from '../core/services/notification.service';
@@ -46,7 +46,13 @@ export class NavComponent implements OnInit {
           // Read once on connection, then again on every signal the server sends.
           this.notificationService.serverEvents$.pipe(
             startWith(undefined),
-            switchMap(() => this.notificationService.getAllUserNotifications()),
+            // A failed read costs one refresh, not the whole subscription: the bell keeps
+            // following the stream and catches up on the next event.
+            switchMap(() =>
+              this.notificationService
+                .getAllUserNotifications()
+                .pipe(catchError(() => EMPTY)),
+            ),
             takeUntil(this.connectService.loggedOut$),
           ),
         ),

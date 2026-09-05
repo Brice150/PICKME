@@ -3,8 +3,8 @@ import {
   Component,
   DestroyRef,
   OnInit,
-  ViewChild,
   inject,
+  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -57,7 +57,8 @@ export class AdminComponent implements OnInit {
   isUserMode = true;
   isFirstSwitch = true;
   adminStats?: AdminStats;
-  @ViewChild('paginator') paginator?: PaginatorComponent;
+  // Absent until the first page of results has been rendered.
+  private readonly paginator = viewChild<PaginatorComponent>('paginator');
 
   ngOnInit(): void {
     this.adminForm = this.fb.group({
@@ -104,10 +105,12 @@ export class AdminComponent implements OnInit {
               this.users = users;
               this.loading = false;
               this.searched = true;
-              if (this.paginator && page === 0) {
-                this.paginator.page = page;
+              const paginator = this.paginator();
+              if (paginator && page === 0) {
+                paginator.page = page;
               }
             },
+            error: () => (this.loading = false),
           });
       } else {
         this.adminService
@@ -118,10 +121,12 @@ export class AdminComponent implements OnInit {
               this.deletedAccounts = deletedAccounts;
               this.loading = false;
               this.searched = true;
-              if (this.paginator && page === 0) {
-                this.paginator.page = page;
+              const paginator = this.paginator();
+              if (paginator && page === 0) {
+                paginator.page = page;
               }
             },
+            error: () => (this.loading = false),
           });
       }
     }

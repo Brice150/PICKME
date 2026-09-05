@@ -7,7 +7,7 @@ import {
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, of } from 'rxjs';
+import { Subject, of, throwError } from 'rxjs';
 import { Match } from '../core/interfaces/match';
 import { Message } from '../core/interfaces/message';
 import { MatchService } from '../core/services/match.service';
@@ -41,7 +41,7 @@ describe('MatchComponent', () => {
     return { id, sender, content, date: new Date(), fkReceiver: 1 };
   }
 
-  /** Starts the screen on a first answer of the polling. */
+  /** Starts the screen on a first read of the conversations. */
   function start(matches: Match[]): void {
     matchService.getAllUserMatches.and.returnValue(of(matches));
     fixture.detectChanges();
@@ -102,6 +102,20 @@ describe('MatchComponent', () => {
     expect(component.matches.length).toBe(2);
     expect(component.filteredMatches.length).toBe(2);
     expect(component.loading).toBeFalse();
+  });
+
+  it('stops the loader and keeps listening when a read fails', () => {
+    matchService.getAllUserMatches.and.returnValue(
+      throwError(() => new Error('offline')),
+    );
+
+    fixture.detectChanges();
+
+    expect(component.loading).toBeFalse();
+
+    serverSignals([match(2, 'Alice')]);
+
+    expect(component.matches.length).toBe(1);
   });
 
   it('filters the conversations on the nickname, whatever the case', () => {

@@ -61,6 +61,12 @@ export class SelectComponent implements OnInit {
             this.getSwiper()?.update();
           });
         },
+        // The interceptor reports the failure; the screen only has to stop spinning, so that the
+        // next slide change can try again instead of leaving the user on a dead loader.
+        error: () => {
+          this.initLoading = false;
+          this.loading = false;
+        },
       });
   }
 

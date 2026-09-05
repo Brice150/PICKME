@@ -128,7 +128,16 @@ L'API est bouchonnée au niveau réseau : ni back ni base de données nécessair
   npm run e2e
 ```
 
-### Lancer le back (Java 21, PostgreSQL sur le port 5432)
+### Lancer la base de données
+
+Rien à installer ni à configurer : le conteneur démarre avec les identifiants
+attendus par le profil `dev`, et Flyway crée le schéma au premier lancement du back.
+
+```bash
+  docker compose up -d
+```
+
+### Lancer le back (Java 21)
 
 ```bash
   cd backend && ./mvnw spring-boot:run

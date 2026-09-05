@@ -44,6 +44,39 @@ describe('PicturesComponent', () => {
     component.refreshEvent.subscribe((message) => refreshes.push(message));
   });
 
+  /**
+   * Builds a real 1x1 PNG, so that the resizing runs on an image the browser can actually decode
+   * rather than on a stub that would never fire its load event.
+   */
+  function pngFile(): File {
+    const base64 =
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+    const binary = atob(base64);
+    const bytes = Uint8Array.from(binary, (character) =>
+      character.charCodeAt(0),
+    );
+    return new File([bytes], 'avatar.png', { type: 'image/png' });
+  }
+
+  it('adds the sent picture and clears the file input', (done) => {
+    render([picture(1, true)]);
+    profileService.addPicture.and.returnValue(of(picture(2, false)));
+    const input: HTMLInputElement =
+      fixture.nativeElement.querySelector('#image');
+
+    component.refreshEvent.subscribe(() => {
+      expect(user.pictures?.[0].id).toBe(2);
+      expect(profileService.addPicture).toHaveBeenCalled();
+      // Reading the query is what used to be untested: an input the template no longer holds
+      // would fail here instead of silently later.
+      expect(input.value).toBe('');
+      expect(component.activeIndex).toBe(0);
+      done();
+    });
+
+    component.addPicture([pngFile()]);
+  });
+
   it('moves the main flag to the promoted picture', () => {
     render([picture(1, true), picture(2, false)]);
     profileService.selectMainPicture.and.returnValue(of(undefined));

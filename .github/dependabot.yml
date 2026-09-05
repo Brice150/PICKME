@@ -1,25 +1,52 @@
 version: 2
 
+# One pull request per group rather than one per package: a lockstep family like Angular only
+# resolves when its packages move together, and a flood of single-package pull requests each
+# costs a full CI run for no added signal.
 updates:
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     groups:
+      # Angular refuses to install unless every package of the framework sits on the same
+      # version, so they are bumped as one.
       angular:
         patterns:
           - '@angular/*'
           - '@angular-devkit/*'
           - 'angular-eslint'
+      # Everything else, gathered by kind of change: a single pull request to review instead of
+      # one per library.
+      minor-and-patch:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
 
   - package-ecosystem: maven
     directory: /backend
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
+    groups:
+      spring:
+        patterns:
+          - 'org.springframework*'
+      minor-and-patch:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
+    groups:
+      actions:
+        patterns:
+          - '*'

@@ -1,4 +1,4 @@
-import { Component, ViewChild, input, output } from '@angular/core';
+import { Component, input, output, viewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlcoholDrinking } from '../../core/enums/alcohol-drinking';
 import { Animals } from '../../core/enums/animals';
@@ -22,7 +22,8 @@ import { PreferenceComponent } from './preference/preference.component';
 export class PreferencesComponent {
   readonly user = input.required<User>();
   readonly updateEvent = output<string>();
-  @ViewChild('preference') preference?: PreferenceComponent;
+  // The question currently on screen, absent until it has been rendered.
+  readonly preference = viewChild<PreferenceComponent>('preference');
   currentPreferenceIndex = 0;
   alcoholDrinking: string[] = Object.values(AlcoholDrinking);
   smokes: string[] = Object.values(Smokes);
@@ -89,8 +90,8 @@ export class PreferencesComponent {
 
   handlePageEvent(pageIndex: number) {
     this.currentPreferenceIndex = pageIndex;
-    if (this.preference?.preferenceForm.dirty) {
-      this.preference?.cancel();
+    if (this.preference()?.preferenceForm.dirty) {
+      this.preference()?.cancel();
     }
   }
 }

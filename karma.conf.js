@@ -31,10 +31,10 @@ module.exports = function (config) {
       // thresholds sit just under what the suite reaches today: they are a ratchet, not a target.
       check: {
         global: {
-          statements: 95,
-          branches: 95,
-          functions: 95,
-          lines: 95,
+          statements: 97,
+          branches: 97,
+          functions: 97,
+          lines: 97,
         },
       },
     },

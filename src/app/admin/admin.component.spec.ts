@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ToastrService } from 'ngx-toastr';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { DeletedAccount } from '../core/interfaces/deleted-account';
 import { User } from '../core/interfaces/user';
 import { AdminService } from '../core/services/admin.service';
@@ -66,6 +66,16 @@ describe('AdminComponent', () => {
     expect(component.users.length).toBe(2);
     expect(component.loading).toBeFalse();
     expect(component.searched).toBeTrue();
+  });
+
+  it('stops the loader when the accounts cannot be read', () => {
+    adminService.getAllUsers.and.returnValue(
+      throwError(() => new Error('offline')),
+    );
+
+    fixture.detectChanges();
+
+    expect(component.loading).toBeFalse();
   });
 
   it('searches the accounts on the criteria of the form', () => {

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, of } from 'rxjs';
+import { Subject, of, throwError } from 'rxjs';
 import { Notification } from '../core/interfaces/notification';
 import { ConnectService } from '../core/services/connect.service';
 import { NotificationService } from '../core/services/notification.service';
@@ -27,8 +27,8 @@ describe('NavComponent', () => {
     return { id, content: 'content', link, date: new Date(), seen };
   }
 
-  /** Simulates the arrival of a batch of notifications from the polling. */
-  function poll(notifications: Notification[], url = '/select'): void {
+  /** Simulates a batch of notifications arriving after a signal from the server. */
+  function receive(notifications: Notification[], url = '/select'): void {
     notificationService.getAllUserNotifications.and.returnValue(
       of(notifications),
     );
@@ -77,16 +77,30 @@ describe('NavComponent', () => {
     fixture.detectChanges();
   });
 
-  it('waits for the account to be loaded before polling the notifications', () => {
+  it('waits for the account to be loaded before reading the notifications', () => {
     expect(notificationService.getAllUserNotifications).not.toHaveBeenCalled();
 
-    poll([notification(1, false)]);
+    receive([notification(1, false)]);
+
+    expect(component.notifications.length).toBe(1);
+  });
+
+  it('keeps following the stream after a read has failed', () => {
+    notificationService.getAllUserNotifications.and.returnValue(
+      throwError(() => new Error('offline')),
+    );
+    connectedUserReady$.next();
+
+    notificationService.getAllUserNotifications.and.returnValue(
+      of([notification(1, false)]),
+    );
+    serverEvents$.next();
 
     expect(component.notifications.length).toBe(1);
   });
 
   it('counts the notifications that have not been seen', () => {
-    poll([
+    receive([
       notification(1, false),
       notification(2, true),
       notification(3, false),
@@ -96,14 +110,14 @@ describe('NavComponent', () => {
   });
 
   it('marks the notifications as seen while the user reads the conversations', () => {
-    poll([notification(1, false)], '/match');
+    receive([notification(1, false)], '/match');
 
     expect(notificationService.markUserNotificationsAsSeen).toHaveBeenCalled();
     expect(component.notifications[0].seen).toBeTrue();
   });
 
   it('leaves an unmatch unread even on the conversations screen', () => {
-    poll([notification(1, false, 'unmatch')], '/match');
+    receive([notification(1, false, 'unmatch')], '/match');
 
     expect(
       notificationService.markUserNotificationsAsSeen,
@@ -120,7 +134,7 @@ describe('NavComponent', () => {
   });
 
   it('marks the notifications as seen when their panel is closed', () => {
-    poll([notification(1, false)]);
+    receive([notification(1, false)]);
     component.toggleNotifications();
 
     component.toggleNotifications();
@@ -130,7 +144,7 @@ describe('NavComponent', () => {
   });
 
   it('does not call the API when every notification has already been seen', () => {
-    poll([notification(1, true)]);
+    receive([notification(1, true)]);
     component.toggleNotifications();
 
     component.toggleNotifications();
@@ -141,7 +155,7 @@ describe('NavComponent', () => {
   });
 
   it('closes the notification panel when the menu is toggled', () => {
-    poll([notification(1, true)]);
+    receive([notification(1, true)]);
     component.toggleNotifications();
 
     component.toggleMenu();

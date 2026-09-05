@@ -1,0 +1,30 @@
+# Local database, so that a fresh clone can run the back without installing PostgreSQL first.
+#
+# The credentials below are the defaults of the dev profile
+# (backend/src/main/resources/application-dev.yml): the container comes up already matching what
+# the application expects, and nothing has to be configured to start.
+#
+# This file is for local development only. In production the datasource is read from the
+# environment of the host, and none of these values exist anywhere in the repository.
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: pickme-db
+    environment:
+      POSTGRES_DB: pickme
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - '5432:5432'
+    volumes:
+      # Named volume: the data survives a restart, and `down -v` wipes it on demand.
+      - pickme-data:/var/lib/postgresql/data
+    healthcheck:
+      # The schema is created by Flyway on the first start of the back, once the server answers.
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d pickme']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pickme-data:

@@ -4,8 +4,8 @@ import {
   DestroyRef,
   ElementRef,
   OnInit,
-  ViewChild,
   inject,
+  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -21,7 +21,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ToastrService } from 'ngx-toastr';
-import { filter, startWith, switchMap } from 'rxjs';
+import { EMPTY, catchError, filter, startWith, switchMap } from 'rxjs';
 import { Match } from '../core/interfaces/match';
 import { Message } from '../core/interfaces/message';
 import { MatchService } from '../core/services/match.service';
@@ -69,7 +69,8 @@ export class MatchComponent implements OnInit {
   loading = true;
   previousMessages?: Message[];
   // Absent as long as the selected conversation holds no message.
-  @ViewChild('messagesContainer') messagesContainer?: ElementRef;
+  private readonly messagesContainer =
+    viewChild<ElementRef<HTMLElement>>('messagesContainer');
 
   ngOnInit(): void {
     this.messageForm = this.fb.group({
@@ -88,7 +89,17 @@ export class MatchComponent implements OnInit {
     this.notificationService.serverEvents$
       .pipe(
         startWith(undefined),
-        switchMap(() => this.matchService.getAllUserMatches()),
+        // The failure is caught around the request rather than left to travel up: the interceptor
+        // has already reported it, and swallowing it here costs one refresh instead of ending the
+        // subscription and leaving the screen frozen until the user navigates away.
+        switchMap(() =>
+          this.matchService.getAllUserMatches().pipe(
+            catchError(() => {
+              this.loading = false;
+              return EMPTY;
+            }),
+          ),
+        ),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
@@ -306,7 +317,7 @@ export class MatchComponent implements OnInit {
   }
 
   scrollDown(): void {
-    const container = this.messagesContainer?.nativeElement;
+    const container = this.messagesContainer()?.nativeElement;
     if (container) {
       container.scrollTop = container.scrollHeight;
     }
