@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -51,7 +52,12 @@ public class WebSecurityConfig {
       .authorizeHttpRequests(requests -> requests
         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
         .anyRequest().authenticated())
-      .httpBasic(basic -> basic.authenticationEntryPoint(authenticationEntryPoint))
+      // The front end sends the credentials on the login call only, then relies on the session
+      // cookie. Since Spring Security 6 the basic filter keeps the authentication for the current
+      // request only, so the session repository has to be declared explicitly.
+      .httpBasic(basic -> basic
+        .authenticationEntryPoint(authenticationEntryPoint)
+        .securityContextRepository(new HttpSessionSecurityContextRepository()))
       .logout(logout -> logout
         .invalidateHttpSession(true)
         .clearAuthentication(true)

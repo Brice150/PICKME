@@ -3,7 +3,9 @@ package com.packages.backend.security;
 import com.packages.backend.TestFixtures;
 import com.packages.backend.model.AdminStats;
 import com.packages.backend.model.dto.UserDTOMapper;
+import com.packages.backend.model.entity.User;
 import com.packages.backend.service.AdminService;
+import com.packages.backend.service.NotificationService;
 import com.packages.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,15 +13,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -41,12 +50,40 @@ class SecurityRulesTest {
   private UserService userService;
   @MockitoBean
   private AdminService adminService;
+  @MockitoBean
+  private NotificationService notificationService;
 
   @BeforeEach
   void setUp(WebApplicationContext context) {
     mockMvc = MockMvcBuilders.webAppContextSetup(context)
       .apply(SecurityMockMvcConfigurers.springSecurity())
       .build();
+  }
+
+  /**
+   * The front end only sends the credentials on the login call, then relies on the session cookie
+   * for every other one. This reproduces that exchange end to end.
+   */
+  @Test
+  @DisplayName("keeps the user logged in through the session opened by the login call")
+  void theSessionOpenedByTheLoginCallAuthenticatesTheNextOnes() throws Exception {
+    User connectedUser = TestFixtures.user(1L);
+    connectedUser.setPassword(new BCryptPasswordEncoder().encode("password"));
+    when(userService.loadUserByUsername(connectedUser.getEmail())).thenReturn(connectedUser);
+    when(userService.getConnectedUserDTO()).thenReturn(new UserDTOMapper().apply(connectedUser));
+    when(notificationService.getAllUserNotifications()).thenReturn(List.of());
+
+    MvcResult login = mockMvc.perform(get("/login")
+        .with(httpBasic(connectedUser.getEmail(), "password")))
+      .andExpect(status().isOk())
+      .andReturn();
+
+    MockHttpSession session = (MockHttpSession) login.getRequest().getSession(false);
+    assertThat(session).as("the login call must open a session").isNotNull();
+
+    // No credentials this time, only the cookie the browser would send back.
+    mockMvc.perform(get("/notification/all").session(session))
+      .andExpect(status().isOk());
   }
 
   @Test
