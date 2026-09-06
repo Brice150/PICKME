@@ -98,7 +98,8 @@
               "functions": 98,
               "lines": 98
             },
-            "setupFiles": ["src/testing/setup.ts"]
+            "setupFiles": ["src/testing/setup.ts"],
+            "runnerConfig": "vitest.config.ts"
           }
         },
         "lint": {
