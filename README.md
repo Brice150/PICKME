@@ -5,7 +5,6 @@
 # PICK ME, une application web de rencontre
 
 [![CI](https://github.com/Brice150/PICKME/actions/workflows/ci.yml/badge.svg)](https://github.com/Brice150/PICKME/actions/workflows/ci.yml)
-![Coverage](https://img.shields.io/badge/couverture-100%25-brightgreen)
 ![Angular](https://img.shields.io/badge/Angular-21-dd0031)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1-6db33f)
 ![Java](https://img.shields.io/badge/Java-21-007396)
