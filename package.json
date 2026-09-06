@@ -46,7 +46,7 @@
     "jsdom": "^30.0.1",
     "prettier": "^3.9.6",
     "typescript": "~5.9.0",
-    "typescript-eslint": "8.59.2",
+    "typescript-eslint": "8.69.0",
     "vitest": "^4.0.8"
   }
 }
