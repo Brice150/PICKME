@@ -40,7 +40,7 @@
     "@emnapi/runtime": "^1.11.3",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",
-    "@types/node": "^20.17.19",
+    "@types/node": "^26.4.1",
     "@vitest/coverage-v8": "^4.0.8",
     "angular-eslint": "21.4.0",
     "eslint": "^10.3.0",
