@@ -35,7 +35,7 @@ describe('SelectService', () => {
 
     const request = httpController.expectOne(`${apiUrl}/user/all/1`);
     expect(request.request.method).toBe('GET');
-    expect(request.request.withCredentials).toBeTrue();
+    expect(request.request.withCredentials).toBe(true);
     request.flush(candidates);
     expect(received).toEqual(candidates);
   });
@@ -71,7 +71,7 @@ describe('SelectService', () => {
 
     const request = httpController.expectOne(`${apiUrl}/dislike/2`);
     expect(request.request.method).toBe('POST');
-    expect(request.request.withCredentials).toBeTrue();
+    expect(request.request.withCredentials).toBe(true);
     request.flush(null);
   });
 });

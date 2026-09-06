@@ -77,7 +77,7 @@ describe('NotificationService', () => {
 
     const request = httpController.expectOne(`${apiUrl}/notification/all`);
     expect(request.request.method).toBe('GET');
-    expect(request.request.withCredentials).toBeTrue();
+    expect(request.request.withCredentials).toBe(true);
     request.flush(notifications);
     expect(received).toEqual(notifications);
   });
@@ -96,7 +96,7 @@ describe('NotificationService', () => {
 
     expect(FakeEventSource.opened.length).toBe(1);
     expect(FakeEventSource.opened[0].url).toBe(`${apiUrl}/notification/stream`);
-    expect(FakeEventSource.opened[0].options?.withCredentials).toBeTrue();
+    expect(FakeEventSource.opened[0].options?.withCredentials).toBe(true);
 
     subscription.unsubscribe();
   });
@@ -127,9 +127,9 @@ describe('NotificationService', () => {
     const conversations = service.serverEvents$.subscribe();
 
     menu.unsubscribe();
-    expect(FakeEventSource.opened[0].closed).toBeFalse();
+    expect(FakeEventSource.opened[0].closed).toBe(false);
 
     conversations.unsubscribe();
-    expect(FakeEventSource.opened[0].closed).toBeTrue();
+    expect(FakeEventSource.opened[0].closed).toBe(true);
   });
 });

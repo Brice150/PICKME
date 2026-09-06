@@ -1,9 +1,4 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { CardDemoComponent } from './card-demo.component';
 
@@ -38,23 +33,24 @@ describe('CardDemoComponent', () => {
 
     component.like();
 
-    expect(component.activeMatchAnimation).toBeFalse();
+    expect(component.activeMatchAnimation).toBe(false);
     expect(likes).toBe(1);
   });
 
-  it('plays the match animation on the profile scripted to match', fakeAsync(() => {
+  it('plays the match animation on the profile scripted to match', () => {
+    vi.useFakeTimers();
     render('./assets/images/woman-select-demo/Picture2.jpg');
 
     component.like();
 
-    expect(component.activeMatchAnimation).toBeTrue();
+    expect(component.activeMatchAnimation).toBe(true);
     expect(likes).toBe(0);
 
-    tick(2000);
+    vi.advanceTimersByTime(2000);
 
-    expect(component.activeMatchAnimation).toBeFalse();
+    expect(component.activeMatchAnimation).toBe(false);
     expect(likes).toBe(1);
-  }));
+  });
 
   it('answers a dislike straight away', () => {
     render('./assets/images/woman-select-demo/Picture2.jpg');
@@ -62,6 +58,6 @@ describe('CardDemoComponent', () => {
     component.dislike();
 
     expect(dislikes).toBe(1);
-    expect(component.activeMatchAnimation).toBeFalse();
+    expect(component.activeMatchAnimation).toBe(false);
   });
 });

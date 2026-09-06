@@ -30,13 +30,13 @@ describe('MatchDemoComponent', () => {
     render(Gender.MAN);
 
     expect(component.images[0]).toContain('man-select-demo/Picture1.jpg');
-    expect(component.isWomanGenderSearch()).toBeFalse();
+    expect(component.isWomanGenderSearch()).toBe(false);
   });
 
   it('adapts the names of the samples to the gender being searched', () => {
     render(Gender.WOMAN);
 
-    expect(component.isWomanGenderSearch()).toBeTrue();
+    expect(component.isWomanGenderSearch()).toBe(true);
   });
 
   it('opens a conversation and closes it again', () => {

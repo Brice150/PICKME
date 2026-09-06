@@ -1,14 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { of, throwError } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../../testing/spy';
 import { User } from '../../core/interfaces/user';
 import { ConnectService } from '../../core/services/connect.service';
 import { userFixture } from '../../core/testing/user.fixture';
@@ -21,9 +17,9 @@ describe('LoginComponent', () => {
   } as User;
   let fixture: ComponentFixture<LoginComponent>;
   let component: LoginComponent;
-  let connectService: jasmine.SpyObj<ConnectService>;
-  let router: jasmine.SpyObj<Router>;
-  let toastr: jasmine.SpyObj<ToastrService>;
+  let connectService: SpyObj<ConnectService>;
+  let router: SpyObj<Router>;
+  let toastr: SpyObj<ToastrService>;
 
   /** Fills the form with valid credentials. */
   function fillForm(): void {
@@ -31,14 +27,9 @@ describe('LoginComponent', () => {
   }
 
   beforeEach(async () => {
-    connectService = jasmine.createSpyObj<ConnectService>('ConnectService', [
-      'login',
-    ]);
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
-    toastr = jasmine.createSpyObj<ToastrService>('ToastrService', [
-      'success',
-      'error',
-    ]);
+    connectService = createSpyObj<ConnectService>(['login']);
+    router = createSpyObj<Router>(['navigate']);
+    toastr = createSpyObj<ToastrService>(['success', 'error']);
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
       providers: [
@@ -55,19 +46,19 @@ describe('LoginComponent', () => {
 
   it('opens on an empty form, hiding the password', () => {
     expect(component.loginForm.value).toEqual({ email: '', password: '' });
-    expect(component.hide).toBeTrue();
+    expect(component.hide).toBe(true);
   });
 
   it('requires a well formed email', () => {
     component.loginForm.get('email')?.setValue('not-an-email');
 
-    expect(component.loginForm.get('email')?.valid).toBeFalse();
+    expect(component.loginForm.get('email')?.valid).toBe(false);
   });
 
   it('requires a password of at least five characters', () => {
     component.loginForm.get('password')?.setValue('abc');
 
-    expect(component.loginForm.get('password')?.valid).toBeFalse();
+    expect(component.loginForm.get('password')?.valid).toBe(false);
   });
 
   it('does not call the API on an invalid form', () => {
@@ -78,19 +69,20 @@ describe('LoginComponent', () => {
 
   it('opens the selection screen once the user is logged in', () => {
     fillForm();
-    connectService.login.and.returnValue(of(userFixture()));
+    connectService.login.mockReturnValue(of(userFixture()));
 
     component.loginUser(credentials);
 
     expect(connectService.login).toHaveBeenCalledWith(credentials);
     expect(router.navigate).toHaveBeenCalledWith(['/select']);
-    expect(component.loading).toBeFalse();
-    expect(toastr.success.calls.mostRecent().args[1]).toBe('Logged In');
+    expect(component.loading).toBe(false);
+    expect(toastr.success.mock.lastCall![1]).toBe('Logged In');
   });
 
-  it('shakes the form on wrong credentials, then settles down', fakeAsync(() => {
+  it('shakes the form on wrong credentials, then settles down', () => {
+    vi.useFakeTimers();
     fillForm();
-    connectService.login.and.returnValue(
+    connectService.login.mockReturnValue(
       throwError(
         () => new HttpErrorResponse({ error: 'Bad credentials', status: 401 }),
       ),
@@ -98,18 +90,18 @@ describe('LoginComponent', () => {
 
     component.loginUser(credentials);
 
-    expect(component.invalidLogin).toBeTrue();
-    expect(toastr.error.calls.mostRecent().args[1]).toBe('Bad Credentials');
+    expect(component.invalidLogin).toBe(true);
+    expect(toastr.error.mock.lastCall![1]).toBe('Bad Credentials');
     expect(router.navigate).not.toHaveBeenCalled();
 
-    tick(2000);
+    vi.advanceTimersByTime(2000);
 
-    expect(component.invalidLogin).toBeFalse();
-  }));
+    expect(component.invalidLogin).toBe(false);
+  });
 
   it('reports any other failure without shaking the form', () => {
     fillForm();
-    connectService.login.and.returnValue(
+    connectService.login.mockReturnValue(
       throwError(
         () => new HttpErrorResponse({ error: { error: 'down' }, status: 500 }),
       ),
@@ -117,8 +109,8 @@ describe('LoginComponent', () => {
 
     component.loginUser(credentials);
 
-    expect(component.invalidLogin).toBeFalse();
-    expect(toastr.error.calls.mostRecent().args[1]).toBe('Error');
-    expect(component.loading).toBeFalse();
+    expect(component.invalidLogin).toBe(false);
+    expect(toastr.error.mock.lastCall![1]).toBe('Error');
+    expect(component.loading).toBe(false);
   });
 });

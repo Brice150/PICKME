@@ -3,6 +3,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, of, throwError } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../testing/spy';
 import { Notification } from '../core/interfaces/notification';
 import { ConnectService } from '../core/services/connect.service';
 import { NotificationService } from '../core/services/notification.service';
@@ -11,10 +12,10 @@ import { NavComponent } from './nav.component';
 describe('NavComponent', () => {
   let fixture: ComponentFixture<NavComponent>;
   let component: NavComponent;
-  let connectService: jasmine.SpyObj<ConnectService>;
-  let notificationService: jasmine.SpyObj<NotificationService>;
-  let toastr: jasmine.SpyObj<ToastrService>;
-  let router: jasmine.SpyObj<Router>;
+  let connectService: SpyObj<ConnectService>;
+  let notificationService: SpyObj<NotificationService>;
+  let toastr: SpyObj<ToastrService>;
+  let router: SpyObj<Router>;
   let connectedUserReady$: Subject<void>;
   let serverEvents$: Subject<void>;
   let loggedOut$: Subject<void>;
@@ -29,7 +30,7 @@ describe('NavComponent', () => {
 
   /** Simulates a batch of notifications arriving after a signal from the server. */
   function receive(notifications: Notification[], url = '/select'): void {
-    notificationService.getAllUserNotifications.and.returnValue(
+    notificationService.getAllUserNotifications.mockReturnValue(
       of(notifications),
     );
     Object.defineProperty(router, 'url', { value: url, configurable: true });
@@ -42,24 +43,22 @@ describe('NavComponent', () => {
     connectService = {
       connectedUserReady$,
       loggedOut$,
-      logout: jasmine.createSpy('logout'),
-      isAdmin: jasmine.createSpy('isAdmin').and.returnValue(false),
-    } as unknown as jasmine.SpyObj<ConnectService>;
+      logout: vi.fn(),
+      isAdmin: vi.fn().mockReturnValue(false),
+    } as unknown as SpyObj<ConnectService>;
     serverEvents$ = new Subject<void>();
     notificationService = {
       serverEvents$,
-      getAllUserNotifications: jasmine.createSpy('getAllUserNotifications'),
-      markUserNotificationsAsSeen: jasmine.createSpy(
-        'markUserNotificationsAsSeen',
-      ),
-    } as unknown as jasmine.SpyObj<NotificationService>;
-    toastr = jasmine.createSpyObj<ToastrService>('ToastrService', ['success']);
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+      getAllUserNotifications: vi.fn(),
+      markUserNotificationsAsSeen: vi.fn(),
+    } as unknown as SpyObj<NotificationService>;
+    toastr = createSpyObj<ToastrService>(['success']);
+    router = createSpyObj<Router>(['navigate']);
     Object.defineProperty(router, 'url', {
       value: '/select',
       configurable: true,
     });
-    notificationService.markUserNotificationsAsSeen.and.returnValue(
+    notificationService.markUserNotificationsAsSeen.mockReturnValue(
       of(undefined),
     );
     await TestBed.configureTestingModule({
@@ -86,12 +85,12 @@ describe('NavComponent', () => {
   });
 
   it('keeps following the stream after a read has failed', () => {
-    notificationService.getAllUserNotifications.and.returnValue(
+    notificationService.getAllUserNotifications.mockReturnValue(
       throwError(() => new Error('offline')),
     );
     connectedUserReady$.next();
 
-    notificationService.getAllUserNotifications.and.returnValue(
+    notificationService.getAllUserNotifications.mockReturnValue(
       of([notification(1, false)]),
     );
     serverEvents$.next();
@@ -113,7 +112,7 @@ describe('NavComponent', () => {
     receive([notification(1, false)], '/match');
 
     expect(notificationService.markUserNotificationsAsSeen).toHaveBeenCalled();
-    expect(component.notifications[0].seen).toBeTrue();
+    expect(component.notifications[0].seen).toBe(true);
   });
 
   it('leaves an unmatch unread even on the conversations screen', () => {
@@ -122,15 +121,15 @@ describe('NavComponent', () => {
     expect(
       notificationService.markUserNotificationsAsSeen,
     ).not.toHaveBeenCalled();
-    expect(component.notifications[0].seen).toBeFalse();
+    expect(component.notifications[0].seen).toBe(false);
   });
 
   it('opens and closes the menu', () => {
     component.toggleMenu();
-    expect(component.isMenuActive).toBeTrue();
+    expect(component.isMenuActive).toBe(true);
 
     component.toggleMenu();
-    expect(component.isMenuActive).toBeFalse();
+    expect(component.isMenuActive).toBe(false);
   });
 
   it('marks the notifications as seen when their panel is closed', () => {
@@ -140,7 +139,7 @@ describe('NavComponent', () => {
     component.toggleNotifications();
 
     expect(notificationService.markUserNotificationsAsSeen).toHaveBeenCalled();
-    expect(component.notifications[0].seen).toBeTrue();
+    expect(component.notifications[0].seen).toBe(true);
   });
 
   it('does not call the API when every notification has already been seen', () => {
@@ -160,7 +159,7 @@ describe('NavComponent', () => {
 
     component.toggleMenu();
 
-    expect(component.isNotificationsActive).toBeFalse();
+    expect(component.isNotificationsActive).toBe(false);
   });
 
   it('opens the conversations and closes the menu', () => {
@@ -169,7 +168,7 @@ describe('NavComponent', () => {
     component.goTo();
 
     expect(router.navigate).toHaveBeenCalledWith(['match']);
-    expect(component.isMenuActive).toBeFalse();
+    expect(component.isMenuActive).toBe(false);
   });
 
   it('logs the user out and closes the menu', () => {
@@ -178,7 +177,7 @@ describe('NavComponent', () => {
     component.logout();
 
     expect(connectService.logout).toHaveBeenCalled();
-    expect(component.isMenuActive).toBeFalse();
-    expect(toastr.success.calls.mostRecent().args[1]).toBe('Logged Out');
+    expect(component.isMenuActive).toBe(false);
+    expect(toastr.success.mock.lastCall![1]).toBe('Logged Out');
   });
 });

@@ -55,7 +55,7 @@ describe('MatchCardComponent', () => {
   it('signals a conversation whose last message comes from the match', () => {
     render(match([{ content: 'hello', sender: 'Alice' }]));
 
-    expect(component.isLastMessageFromMatch()).toBeTrue();
+    expect(component.isLastMessageFromMatch()).toBe(true);
   });
 
   it('signals nothing when the connected user wrote last', () => {
@@ -66,13 +66,13 @@ describe('MatchCardComponent', () => {
       ]),
     );
 
-    expect(component.isLastMessageFromMatch()).toBeFalse();
+    expect(component.isLastMessageFromMatch()).toBe(false);
   });
 
   it('signals nothing on a conversation that has not started', () => {
     render(match());
 
-    expect(component.isLastMessageFromMatch()).toBeFalse();
+    expect(component.isLastMessageFromMatch()).toBe(false);
   });
 
   it('ignores the deleted messages when looking for the last one', () => {
@@ -83,19 +83,19 @@ describe('MatchCardComponent', () => {
       ]),
     );
 
-    expect(component.isLastMessageFromMatch()).toBeTrue();
+    expect(component.isLastMessageFromMatch()).toBe(true);
   });
 
   it('signals nothing when every message has been deleted', () => {
     render(match([{ content: undefined, sender: 'Alice' }]));
 
-    expect(component.isLastMessageFromMatch()).toBeFalse();
+    expect(component.isLastMessageFromMatch()).toBe(false);
   });
 
   it('stops signalling once the conversation is open', () => {
     render(match([{ content: 'hello', sender: 'Alice' }]), true);
 
-    expect(component.isLastMessageFromMatch()).toBeFalse();
+    expect(component.isLastMessageFromMatch()).toBe(false);
   });
 
   it('reports the click that opens the conversation', () => {

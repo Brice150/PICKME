@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../../testing/spy';
 import { ConnectService } from '../../core/services/connect.service';
 import { userFixture } from '../../core/testing/user.fixture';
 import { StartDemoComponent } from './start-demo.component';
@@ -9,16 +10,14 @@ import { StartDemoComponent } from './start-demo.component';
 describe('StartDemoComponent', () => {
   let fixture: ComponentFixture<StartDemoComponent>;
   let component: StartDemoComponent;
-  let connectService: jasmine.SpyObj<ConnectService>;
-  let router: jasmine.SpyObj<Router>;
-  let toastr: jasmine.SpyObj<ToastrService>;
+  let connectService: SpyObj<ConnectService>;
+  let router: SpyObj<Router>;
+  let toastr: SpyObj<ToastrService>;
 
   beforeEach(async () => {
-    connectService = jasmine.createSpyObj<ConnectService>('ConnectService', [
-      'login',
-    ]);
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
-    toastr = jasmine.createSpyObj<ToastrService>('ToastrService', ['success']);
+    connectService = createSpyObj<ConnectService>(['login']);
+    router = createSpyObj<Router>(['navigate']);
+    toastr = createSpyObj<ToastrService>(['success']);
     await TestBed.configureTestingModule({
       imports: [StartDemoComponent],
       providers: [
@@ -35,13 +34,13 @@ describe('StartDemoComponent', () => {
   it('logs the freshly registered user in and opens their profile', () => {
     const registeredUser = userFixture({ password: 'password' });
     connectService.registeredUser = registeredUser;
-    connectService.login.and.returnValue(of(registeredUser));
+    connectService.login.mockReturnValue(of(registeredUser));
 
     component.startNow();
 
     expect(connectService.login).toHaveBeenCalledWith(registeredUser);
     expect(router.navigate).toHaveBeenCalledWith(['/profile']);
-    expect(toastr.success.calls.mostRecent().args[1]).toBe('Logged In');
+    expect(toastr.success.mock.lastCall![1]).toBe('Logged In');
   });
 
   it('sends a visitor who did not register to the connection screen', () => {

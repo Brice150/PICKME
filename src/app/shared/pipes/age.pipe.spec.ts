@@ -5,11 +5,11 @@ describe('AgePipe', () => {
 
   beforeEach(() => {
     pipe = new AgePipe();
-    jasmine.clock().install();
-    jasmine.clock().mockDate(new Date(2026, 5, 15));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 5, 15));
   });
 
-  afterEach(() => jasmine.clock().uninstall());
+  afterEach(() => vi.useRealTimers());
 
   it('returns zero when no birth date is known', () => {
     expect(pipe.transform(undefined)).toBe(0);

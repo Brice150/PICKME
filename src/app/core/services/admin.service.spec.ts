@@ -40,7 +40,7 @@ describe('AdminService', () => {
 
     const request = httpController.expectOne(`${apiUrl}/admin/stats`);
     expect(request.request.method).toBe('GET');
-    expect(request.request.withCredentials).toBeTrue();
+    expect(request.request.withCredentials).toBe(true);
     request.flush(stats);
     expect(received).toEqual(stats);
   });
@@ -92,7 +92,7 @@ describe('AdminService', () => {
 
     const request = httpController.expectOne(`${apiUrl}/admin/7`);
     expect(request.request.method).toBe('DELETE');
-    expect(request.request.withCredentials).toBeTrue();
+    expect(request.request.withCredentials).toBe(true);
     request.flush(null);
   });
 });

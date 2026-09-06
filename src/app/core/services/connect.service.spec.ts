@@ -6,6 +6,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { createSpyObj, SpyObj } from '../../../testing/spy';
 import { UserRole } from '../enums/user-role';
 import { Geolocation } from '../interfaces/geolocation';
 import { userFixture } from '../testing/user.fixture';
@@ -15,10 +16,10 @@ describe('ConnectService', () => {
   const apiUrl = environment.apiBaseUrl;
   let service: ConnectService;
   let httpController: HttpTestingController;
-  let router: jasmine.SpyObj<Router>;
+  let router: SpyObj<Router>;
 
   beforeEach(() => {
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    router = createSpyObj<Router>(['navigate']);
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
@@ -61,7 +62,7 @@ describe('ConnectService', () => {
     );
     request.flush(loggedInUser);
     expect(service.connectedUser).toEqual(loggedInUser);
-    expect(ready).toBeTrue();
+    expect(ready).toBe(true);
   });
 
   it('restores the account still held by the session', () => {
@@ -71,7 +72,7 @@ describe('ConnectService', () => {
 
     const request = httpController.expectOne(`${apiUrl}/user`);
     expect(request.request.method).toBe('GET');
-    expect(request.request.withCredentials).toBeTrue();
+    expect(request.request.withCredentials).toBe(true);
     request.flush(loggedInUser);
     expect(service.connectedUser).toEqual(loggedInUser);
   });
@@ -101,25 +102,25 @@ describe('ConnectService', () => {
 
     expect(router.navigate).toHaveBeenCalledWith(['/']);
     expect(service.connectedUser).toBeUndefined();
-    expect(loggedOut).toBeTrue();
+    expect(loggedOut).toBe(true);
   });
 
   it('recognises an administrator', () => {
     service.connectedUser = userFixture({ userRole: UserRole.ROLE_ADMIN });
 
-    expect(service.isAdmin()).toBeTrue();
+    expect(service.isAdmin()).toBe(true);
   });
 
   it('does not take a standard user for an administrator', () => {
     service.connectedUser = userFixture();
 
-    expect(service.isAdmin()).toBeFalse();
+    expect(service.isAdmin()).toBe(false);
   });
 
   it('does not take a missing account for an administrator', () => {
-    expect(service.isAdmin()).toBeFalse();
+    expect(service.isAdmin()).toBe(false);
     expect(
       service.isAdmin(userFixture({ userRole: UserRole.ROLE_ADMIN })),
-    ).toBeTrue();
+    ).toBe(true);
   });
 });

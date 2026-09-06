@@ -178,22 +178,23 @@ mot de passe, rôle ni statistiques.
 
 ### Stratégie de test
 
-| Niveau                        | Outils                            | Ce qui est vérifié                                            |
-| ----------------------------- | --------------------------------- | ------------------------------------------------------------- |
-| Services back                 | JUnit 5 + Mockito                 | Chaque règle métier et chaque branche, dépendances mockées    |
-| Contrôleurs back              | `@WebMvcTest` + MockMvc           | Codes HTTP, sérialisation, validation, gestion des erreurs    |
-| Règles de sécurité            | `@SpringBootTest`                 | 401 anonyme, 403 hors rôle, endpoints publics, préflight CORS |
-| Services, guards, pipes front | Jasmine + `HttpTestingController` | Requêtes émises, redirections, transformations                |
-| Composants front              | Jasmine + `TestBed`               | Rendu, entrées et sorties, logique de chaque écran            |
-| Requêtes back                 | `@DataJpaTest` + Flyway           | Chaque `@Query`, sur le schéma réel migré                     |
-| Parcours utilisateur          | Playwright                        | Les six écrans, dans un vrai navigateur                       |
+| Niveau                        | Outils                           | Ce qui est vérifié                                            |
+| ----------------------------- | -------------------------------- | ------------------------------------------------------------- |
+| Services back                 | JUnit 5 + Mockito                | Chaque règle métier et chaque branche, dépendances mockées    |
+| Contrôleurs back              | `@WebMvcTest` + MockMvc          | Codes HTTP, sérialisation, validation, gestion des erreurs    |
+| Règles de sécurité            | `@SpringBootTest`                | 401 anonyme, 403 hors rôle, endpoints publics, préflight CORS |
+| Services, guards, pipes front | Vitest + `HttpTestingController` | Requêtes émises, redirections, transformations                |
+| Composants front              | Vitest + `TestBed`               | Rendu, entrées et sorties, logique de chaque écran            |
+| Requêtes back                 | `@DataJpaTest` + Flyway          | Chaque `@Query`, sur le schéma réel migré                     |
+| Parcours utilisateur          | Playwright                       | Les six écrans, dans un vrai navigateur                       |
 
 ### Couverture
 
 Les deux builds échouent quand la couverture baisse. Côté back, JaCoCo exige
 100 % des instructions **et** des branches sur `service.impl`, `controller` et
-`exception`, classe par classe. Côté front, Karma exige 95 % sur les quatre
-compteurs.
+`exception`, classe par classe. Côté front, Vitest exige 98 % des instructions,
+des lignes et des fonctions, et 96 % des branches, que le compteur v8 découpe
+plus finement qu’istanbul ne le faisait sous Karma.
 
 ```bash
   cd backend && ./mvnw verify   # rapport dans backend/target/site/jacoco
@@ -204,8 +205,8 @@ compteurs.
 
 Chaque push et chaque pull request déclenchent trois jobs, en parallèle :
 
-- **Frontend** : vérification du formatage Prettier, ESLint, tests Karma en
-  headless avec seuil de couverture, build de production
+- **Frontend** : vérification du formatage Prettier, ESLint, tests Vitest sur
+  jsdom avec seuil de couverture, build de production
 - **End to end** : les parcours Playwright dans Chromium, le rapport étant
   publié en artefact quand un scénario tombe
 - **Backend** : suite de tests complète et contrôle de couverture, le rapport

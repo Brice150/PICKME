@@ -1,11 +1,5 @@
 import { NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-  output,
-} from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
@@ -29,7 +23,6 @@ import {
   imports: [NgClass, DescriptionPipe, AgePipe, MatDialogModule, RouterModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     TextAnimation,
     LikeButtonAnimation,

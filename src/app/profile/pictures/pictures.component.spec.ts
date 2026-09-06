@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../../testing/spy';
 import { Picture } from '../../core/interfaces/picture';
 import { User } from '../../core/interfaces/user';
 import { ProfileService } from '../../core/services/profile.service';
@@ -10,7 +11,7 @@ import { PicturesComponent } from './pictures.component';
 describe('PicturesComponent', () => {
   let fixture: ComponentFixture<PicturesComponent>;
   let component: PicturesComponent;
-  let profileService: jasmine.SpyObj<ProfileService>;
+  let profileService: SpyObj<ProfileService>;
   let user: User;
   let refreshes: string[];
 
@@ -26,7 +27,7 @@ describe('PicturesComponent', () => {
   }
 
   beforeEach(async () => {
-    profileService = jasmine.createSpyObj<ProfileService>('ProfileService', [
+    profileService = createSpyObj<ProfileService>([
       'addPicture',
       'deletePicture',
       'selectMainPicture',
@@ -58,39 +59,41 @@ describe('PicturesComponent', () => {
     return new File([bytes], 'avatar.png', { type: 'image/png' });
   }
 
-  it('adds the sent picture and clears the file input', (done) => {
+  it('adds the sent picture and clears the file input', async () => {
     render([picture(1, true)]);
-    profileService.addPicture.and.returnValue(of(picture(2, false)));
+    profileService.addPicture.mockReturnValue(of(picture(2, false)));
     const input: HTMLInputElement =
       fixture.nativeElement.querySelector('#image');
-
-    component.refreshEvent.subscribe(() => {
-      expect(user.pictures?.[0].id).toBe(2);
-      expect(profileService.addPicture).toHaveBeenCalled();
-      // Reading the query is what used to be untested: an input the template no longer holds
-      // would fail here instead of silently later.
-      expect(input.value).toBe('');
-      expect(component.activeIndex).toBe(0);
-      done();
-    });
+    // The emitter fires while `addPicture` runs: the wait has to be armed before the call.
+    const refreshed = new Promise<void>((resolve) =>
+      component.refreshEvent.subscribe(() => resolve()),
+    );
 
     component.addPicture([pngFile()]);
+
+    await refreshed;
+    expect(user.pictures?.[0].id).toBe(2);
+    expect(profileService.addPicture).toHaveBeenCalled();
+    // Reading the query is what used to be untested: an input the template no longer holds
+    // would fail here instead of silently later.
+    expect(input.value).toBe('');
+    expect(component.activeIndex).toBe(0);
   });
 
   it('moves the main flag to the promoted picture', () => {
     render([picture(1, true), picture(2, false)]);
-    profileService.selectMainPicture.and.returnValue(of(undefined));
+    profileService.selectMainPicture.mockReturnValue(of(undefined));
 
     component.selectMainPicture(2);
 
     expect(user.pictures?.map((p) => p.isMainPicture)).toEqual([false, true]);
     expect(refreshes).toEqual(['Main Picture Selected']);
-    expect(component.isLoading).toBeFalse();
+    expect(component.isLoading).toBe(false);
   });
 
   it('removes a deleted picture from the album', () => {
     render([picture(1, true), picture(2, false)]);
-    profileService.deletePicture.and.returnValue(of(undefined));
+    profileService.deletePicture.mockReturnValue(of(undefined));
 
     component.deletePicture(2);
 
@@ -100,17 +103,17 @@ describe('PicturesComponent', () => {
 
   it('promotes the next picture when the main one is deleted', () => {
     render([picture(1, true), picture(2, false)]);
-    profileService.deletePicture.and.returnValue(of(undefined));
+    profileService.deletePicture.mockReturnValue(of(undefined));
 
     component.deletePicture(1);
 
     expect(user.pictures?.map((p) => p.id)).toEqual([2]);
-    expect(user.pictures?.[0].isMainPicture).toBeTrue();
+    expect(user.pictures?.[0].isMainPicture).toBe(true);
   });
 
   it('leaves the album untouched when the deleted picture is already gone', () => {
     render([picture(1, true)]);
-    profileService.deletePicture.and.returnValue(of(undefined));
+    profileService.deletePicture.mockReturnValue(of(undefined));
 
     component.deletePicture(99);
 

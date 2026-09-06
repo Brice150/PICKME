@@ -34,8 +34,6 @@ jobs:
 
       - name: Test
         run: npm run test:ci
-        env:
-          CHROME_BIN: /usr/bin/google-chrome
 
       - name: Build
         run: npm run build

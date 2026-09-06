@@ -1,59 +1,62 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Route } from '@angular/router';
 import { Observable, of } from 'rxjs';
+import { Mock } from 'vitest';
+import { createSpyObj, SpyObj } from '../../../testing/spy';
 import { ConnectionService } from './connection.service';
 import { SmartPreloading } from './smart-preloading.service';
 
 describe('SmartPreloading', () => {
   const route: Route = { path: 'select' };
-  let connection: jasmine.SpyObj<ConnectionService>;
+  let connection: SpyObj<ConnectionService>;
   let strategy: SmartPreloading;
-  let load: jasmine.Spy<() => Observable<unknown>>;
+  let load: Mock<() => Observable<unknown>>;
 
   beforeEach(() => {
-    connection = jasmine.createSpyObj<ConnectionService>('ConnectionService', [
-      'shouldPreload',
-    ]);
-    load = jasmine.createSpy('load').and.returnValue(of('chunk'));
+    vi.useFakeTimers();
+    connection = createSpyObj<ConnectionService>(['shouldPreload']);
+    load = vi.fn().mockReturnValue(of('chunk'));
     TestBed.configureTestingModule({
       providers: [{ provide: ConnectionService, useValue: connection }],
     });
     strategy = TestBed.inject(SmartPreloading);
   });
 
-  it('preloads a route once the delay has elapsed', fakeAsync(() => {
-    connection.shouldPreload.and.returnValue(true);
+  afterEach(() => vi.useRealTimers());
+
+  it('preloads a route once the delay has elapsed', () => {
+    connection.shouldPreload.mockReturnValue(true);
     let loaded: unknown;
 
     strategy.preload(route, load).subscribe((value) => (loaded = value));
     expect(load).not.toHaveBeenCalled();
 
-    tick(1500);
+    vi.advanceTimersByTime(1500);
 
     expect(load).toHaveBeenCalled();
     expect(loaded).toBe('chunk');
-  }));
+  });
 
-  it('skips a route excluded from the preloading', fakeAsync(() => {
-    connection.shouldPreload.and.returnValue(true);
+  it('skips a route excluded from the preloading', () => {
+    connection.shouldPreload.mockReturnValue(true);
     let completed = false;
 
     strategy
       .preload({ ...route, data: { preload: false } }, load)
       .subscribe({ complete: () => (completed = true) });
 
-    tick(1500);
+    vi.advanceTimersByTime(1500);
 
-    expect(completed).toBeTrue();
+    expect(completed).toBe(true);
     expect(load).not.toHaveBeenCalled();
-  }));
+  });
 
-  it('skips the preloading on a connection that cannot afford it', fakeAsync(() => {
-    connection.shouldPreload.and.returnValue(false);
+  it('skips the preloading on a connection that cannot afford it', () => {
+    connection.shouldPreload.mockReturnValue(false);
 
     strategy.preload(route, load).subscribe();
-    tick(1500);
+    vi.advanceTimersByTime(1500);
 
     expect(load).not.toHaveBeenCalled();
-  }));
+  });
 });

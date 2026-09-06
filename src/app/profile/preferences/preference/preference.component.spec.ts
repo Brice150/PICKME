@@ -48,15 +48,15 @@ describe('PreferenceComponent', () => {
   });
 
   it('tells which answer is currently selected', () => {
-    expect(component.isSelected(Smokes.NO, 'smokes')).toBeTrue();
-    expect(component.isSelected(Smokes.YES, 'smokes')).toBeFalse();
+    expect(component.isSelected(Smokes.NO, 'smokes')).toBe(true);
+    expect(component.isSelected(Smokes.YES, 'smokes')).toBe(false);
   });
 
   it('applies the answer the user picks', () => {
     component.select(Smokes.YES, 'smokes');
 
     expect(user.preferences?.smokes).toBe(Smokes.YES);
-    expect(component.isSelected(Smokes.YES, 'smokes')).toBeTrue();
+    expect(component.isSelected(Smokes.YES, 'smokes')).toBe(true);
   });
 
   it('asks for a save once an answer has been picked', () => {
@@ -66,7 +66,7 @@ describe('PreferenceComponent', () => {
     component.updatePreferences();
 
     expect(updates).toBe(1);
-    expect(component.preferenceForm.pristine).toBeTrue();
+    expect(component.preferenceForm.pristine).toBe(true);
   });
 
   it('restores the saved answer when the edition is cancelled', () => {
@@ -77,13 +77,13 @@ describe('PreferenceComponent', () => {
 
     expect(user.preferences?.smokes).toBe(Smokes.NO);
     expect(component.preferenceForm.value).toEqual({ smokes: Smokes.NO });
-    expect(component.preferenceForm.pristine).toBeTrue();
+    expect(component.preferenceForm.pristine).toBe(true);
   });
 
   it('handles a profile that never answered that question', () => {
     fixture.componentRef.setInput('user', userFixture({ preferences: {} }));
     fixture.detectChanges();
 
-    expect(component.isSelected(Smokes.NO, 'smokes')).toBeFalse();
+    expect(component.isSelected(Smokes.NO, 'smokes')).toBe(false);
   });
 });

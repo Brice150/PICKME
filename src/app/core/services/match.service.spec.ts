@@ -40,7 +40,7 @@ describe('MatchService', () => {
 
     const request = httpController.expectOne(`${apiUrl}/match/all`);
     expect(request.request.method).toBe('GET');
-    expect(request.request.withCredentials).toBeTrue();
+    expect(request.request.withCredentials).toBe(true);
     request.flush(matches);
     expect(received).toEqual(matches);
   });

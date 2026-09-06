@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { createSpyObj, SpyObj } from '../../testing/spy';
 import { Gender } from '../core/enums/gender';
 import { ConnectService } from '../core/services/connect.service';
 import { userFixture } from '../core/testing/user.fixture';
@@ -10,7 +11,7 @@ import { DemoComponent } from './demo.component';
 describe('DemoComponent', () => {
   let fixture: ComponentFixture<DemoComponent>;
   let component: DemoComponent;
-  let connectService: jasmine.SpyObj<ConnectService>;
+  let connectService: SpyObj<ConnectService>;
 
   /** Builds the screen for a visitor who just registered, or for one who did not. */
   async function build(registered: boolean): Promise<void> {
@@ -25,8 +26,8 @@ describe('DemoComponent', () => {
             },
           })
         : undefined,
-      login: jasmine.createSpy('login'),
-    } as unknown as jasmine.SpyObj<ConnectService>;
+      login: vi.fn(),
+    } as unknown as SpyObj<ConnectService>;
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [DemoComponent],
@@ -35,11 +36,11 @@ describe('DemoComponent', () => {
         { provide: ConnectService, useValue: connectService },
         {
           provide: Router,
-          useValue: jasmine.createSpyObj('Router', ['navigate']),
+          useValue: createSpyObj<Router>(['navigate']),
         },
         {
           provide: ToastrService,
-          useValue: jasmine.createSpyObj('ToastrService', ['success']),
+          useValue: createSpyObj<ToastrService>(['success']),
         },
       ],
     }).compileComponents();

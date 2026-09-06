@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../../../testing/spy';
 import { Picture } from '../../../core/interfaces/picture';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { PictureComponent } from './picture.component';
@@ -9,7 +10,7 @@ import { PictureComponent } from './picture.component';
 describe('PictureComponent', () => {
   let fixture: ComponentFixture<PictureComponent>;
   let component: PictureComponent;
-  let dialog: jasmine.SpyObj<MatDialog>;
+  let dialog: SpyObj<MatDialog>;
   let selections: number;
   let deletions: number;
 
@@ -27,13 +28,13 @@ describe('PictureComponent', () => {
   }
 
   function answerConfirmation(confirmed: boolean): void {
-    dialog.open.and.returnValue({
+    dialog.open.mockReturnValue({
       afterClosed: () => of(confirmed),
     } as MatDialogRef<ConfirmationDialogComponent>);
   }
 
   beforeEach(async () => {
-    dialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
+    dialog = createSpyObj<MatDialog>(['open']);
     await TestBed.configureTestingModule({
       imports: [PictureComponent],
       providers: [

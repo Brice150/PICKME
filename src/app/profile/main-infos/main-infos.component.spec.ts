@@ -49,13 +49,13 @@ describe('MainInfosComponent', () => {
   it('requires a nickname and a job', () => {
     component.mainInfosForm.patchValue({ nickname: '', job: '' });
 
-    expect(component.mainInfosForm.valid).toBeFalse();
+    expect(component.mainInfosForm.valid).toBe(false);
   });
 
   it('rejects a nickname longer than thirty characters', () => {
     component.mainInfosForm.get('nickname')?.setValue('a'.repeat(31));
 
-    expect(component.mainInfosForm.valid).toBeFalse();
+    expect(component.mainInfosForm.valid).toBe(false);
   });
 
   it('applies the whole form and asks for a save', () => {
@@ -73,7 +73,7 @@ describe('MainInfosComponent', () => {
     expect(user.job).toBe('Ingénieure');
     expect(user.geolocation.distanceSearch).toBe(30);
     expect(user.height).toBe(165);
-    expect(component.mainInfosForm.pristine).toBeTrue();
+    expect(component.mainInfosForm.pristine).toBe(true);
     expect(updates).toEqual(['Main Infos Updated']);
   });
 
@@ -86,7 +86,7 @@ describe('MainInfosComponent', () => {
     expect(user.nickname).toBe('Alice');
     expect(user.job).toBe('Architecte');
     expect(component.mainInfosForm.get('nickname')?.value).toBe('Alice');
-    expect(component.mainInfosForm.pristine).toBeTrue();
+    expect(component.mainInfosForm.pristine).toBe(true);
     expect(updates).toEqual([]);
   });
 });

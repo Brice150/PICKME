@@ -45,7 +45,7 @@ describe('GenderAgeComponent', () => {
   it('requires every criterion', () => {
     component.genderAgeForm.patchValue({ gender: null, minAge: null });
 
-    expect(component.genderAgeForm.valid).toBeFalse();
+    expect(component.genderAgeForm.valid).toBe(false);
   });
 
   it('applies the new criteria and asks for a save', () => {
@@ -65,7 +65,7 @@ describe('GenderAgeComponent', () => {
       minAge: 25,
       maxAge: 40,
     });
-    expect(component.genderAgeForm.pristine).toBeTrue();
+    expect(component.genderAgeForm.pristine).toBe(true);
     expect(updates).toEqual(['Gender and Age Updated']);
   });
 
@@ -78,7 +78,7 @@ describe('GenderAgeComponent', () => {
     expect(user.genderAge.minAge).toBe(18);
     expect(user.genderAge.maxAge).toBe(99);
     expect(component.genderAgeForm.get('minAge')?.value).toBe(18);
-    expect(component.genderAgeForm.pristine).toBeTrue();
+    expect(component.genderAgeForm.pristine).toBe(true);
     expect(updates).toEqual([]);
   });
 });

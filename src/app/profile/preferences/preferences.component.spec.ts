@@ -56,7 +56,7 @@ describe('PreferencesComponent', () => {
 
     component.handlePageEvent(1);
 
-    expect(previousQuestion.preferenceForm.pristine).toBeTrue();
+    expect(previousQuestion.preferenceForm.pristine).toBe(true);
   });
 
   it('asks for a save when an answer is confirmed', () => {

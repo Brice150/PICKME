@@ -73,7 +73,7 @@ describe('ProfileService', () => {
 
     const request = httpController.expectOne(`${apiUrl}/user`);
     expect(request.request.method).toBe('DELETE');
-    expect(request.request.withCredentials).toBeTrue();
+    expect(request.request.withCredentials).toBe(true);
     request.flush(null);
   });
 });

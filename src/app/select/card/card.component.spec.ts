@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../../testing/spy';
 import { Picture } from '../../core/interfaces/picture';
 import { User } from '../../core/interfaces/user';
 import { SelectService } from '../../core/services/select.service';
@@ -16,18 +17,16 @@ describe('CardComponent', () => {
   ];
   let fixture: ComponentFixture<CardComponent>;
   let component: CardComponent;
-  let dialog: jasmine.SpyObj<MatDialog>;
-  let selectService: jasmine.SpyObj<SelectService>;
-  let router: jasmine.SpyObj<Router>;
+  let dialog: SpyObj<MatDialog>;
+  let selectService: SpyObj<SelectService>;
+  let router: SpyObj<Router>;
   let likes: number;
   let dislikes: number;
 
   beforeEach(async () => {
-    dialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
-    selectService = jasmine.createSpyObj<SelectService>('SelectService', [
-      'getUserPictures',
-    ]);
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    dialog = createSpyObj<MatDialog>(['open']);
+    selectService = createSpyObj<SelectService>(['getUserPictures']);
+    router = createSpyObj<Router>(['navigate']);
     await TestBed.configureTestingModule({
       imports: [CardComponent],
       providers: [
@@ -59,7 +58,7 @@ describe('CardComponent', () => {
 
   /** Makes the profile sheet close with the given answer. */
   function answerMoreInfo(answer: string | undefined): void {
-    dialog.open.and.returnValue({
+    dialog.open.mockReturnValue({
       afterClosed: () => of(answer),
     } as MatDialogRef<MoreInfoComponent>);
   }
@@ -74,14 +73,14 @@ describe('CardComponent', () => {
   it('loads the album before opening the profile sheet', () => {
     const user = userFixture({ id: 2 });
     render(user);
-    selectService.getUserPictures.and.returnValue(of(pictures));
+    selectService.getUserPictures.mockReturnValue(of(pictures));
     answerMoreInfo(undefined);
 
     component.moreInfo();
 
     expect(selectService.getUserPictures).toHaveBeenCalledWith(2);
     expect(user.pictures).toEqual(pictures);
-    expect(user.picturesLoaded).toBeTrue();
+    expect(user.picturesLoaded).toBe(true);
     expect(dialog.open).toHaveBeenCalled();
   });
 
@@ -97,7 +96,7 @@ describe('CardComponent', () => {
 
   it('still opens the profile sheet when the album cannot be loaded', () => {
     render(userFixture({ id: 2 }));
-    selectService.getUserPictures.and.returnValue(
+    selectService.getUserPictures.mockReturnValue(
       throwError(() => new Error('offline')),
     );
     answerMoreInfo(undefined);

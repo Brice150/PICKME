@@ -4,6 +4,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { of, throwError } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../../testing/spy';
 import { Gender } from '../../core/enums/gender';
 import { Geolocation } from '../../core/interfaces/geolocation';
 import { ConnectService } from '../../core/services/connect.service';
@@ -13,9 +14,9 @@ describe('RegisterComponent', () => {
   const birthDate = new Date(1995, 5, 15);
   let fixture: ComponentFixture<RegisterComponent>;
   let component: RegisterComponent;
-  let connectService: jasmine.SpyObj<ConnectService>;
-  let router: jasmine.SpyObj<Router>;
-  let toastr: jasmine.SpyObj<ToastrService>;
+  let connectService: SpyObj<ConnectService>;
+  let router: SpyObj<Router>;
+  let toastr: SpyObj<ToastrService>;
 
   /** Fills the three steps of the form with a valid registration. */
   function fillForm(): void {
@@ -41,7 +42,7 @@ describe('RegisterComponent', () => {
   beforeEach(async () => {
     connectService = {
       registeredUser: undefined,
-      getGeolocation: jasmine.createSpy('getGeolocation').and.returnValue(
+      getGeolocation: vi.fn().mockReturnValue(
         of({
           latitude: '48.8566',
           longitude: '2.3522',
@@ -49,13 +50,10 @@ describe('RegisterComponent', () => {
           country_capital: 'Paris',
         } as Geolocation),
       ),
-      register: jasmine.createSpy('register'),
-    } as unknown as jasmine.SpyObj<ConnectService>;
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
-    toastr = jasmine.createSpyObj<ToastrService>('ToastrService', [
-      'success',
-      'error',
-    ]);
+      register: vi.fn(),
+    } as unknown as SpyObj<ConnectService>;
+    router = createSpyObj<Router>(['navigate']);
+    toastr = createSpyObj<ToastrService>(['success', 'error']);
     await TestBed.configureTestingModule({
       imports: [RegisterComponent],
       providers: [
@@ -84,7 +82,7 @@ describe('RegisterComponent', () => {
   });
 
   it('rejects an incomplete registration', () => {
-    expect(component.registerForm.valid).toBeFalse();
+    expect(component.registerForm.valid).toBe(false);
 
     component.registerUser();
 
@@ -99,7 +97,7 @@ describe('RegisterComponent', () => {
       component.thirdFormGroup
         .get('passwordDuplicate')
         ?.hasError('passwordMismatch'),
-    ).toBeTrue();
+    ).toBe(true);
   });
 
   it('gathers the three steps into a single account', () => {
@@ -129,22 +127,20 @@ describe('RegisterComponent', () => {
 
   it('opens the demonstration once the account is created', () => {
     fillForm();
-    connectService.register.and.returnValue(of('OK'));
+    connectService.register.mockReturnValue(of('OK'));
 
     component.registerUser();
 
     expect(connectService.register).toHaveBeenCalled();
     expect(connectService.registeredUser?.email).toBe('alice@pickme.com');
     expect(router.navigate).toHaveBeenCalledWith(['/demo']);
-    expect(component.loading).toBeFalse();
-    expect(toastr.success.calls.mostRecent().args[1]).toBe(
-      'Registration Successful',
-    );
+    expect(component.loading).toBe(false);
+    expect(toastr.success.mock.lastCall![1]).toBe('Registration Successful');
   });
 
   it('keeps the user on the form when the registration is refused', () => {
     fillForm();
-    connectService.register.and.returnValue(
+    connectService.register.mockReturnValue(
       throwError(
         () =>
           new HttpErrorResponse({ error: 'Email already taken', status: 403 }),
@@ -154,7 +150,7 @@ describe('RegisterComponent', () => {
     component.registerUser();
 
     expect(router.navigate).not.toHaveBeenCalled();
-    expect(component.loading).toBeFalse();
-    expect(toastr.error.calls.mostRecent().args[1]).toBe('Error');
+    expect(component.loading).toBe(false);
+    expect(toastr.error.mock.lastCall![1]).toBe('Error');
   });
 });

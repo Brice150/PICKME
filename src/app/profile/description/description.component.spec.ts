@@ -42,13 +42,13 @@ describe('DescriptionComponent', () => {
   it('rejects a description shorter than two characters', () => {
     component.descriptionForm.get('description')?.setValue('a');
 
-    expect(component.descriptionForm.valid).toBeFalse();
+    expect(component.descriptionForm.valid).toBe(false);
   });
 
   it('rejects a description longer than five hundred characters', () => {
     component.descriptionForm.get('description')?.setValue('a'.repeat(501));
 
-    expect(component.descriptionForm.valid).toBeFalse();
+    expect(component.descriptionForm.valid).toBe(false);
   });
 
   it('applies the new description and asks for a save', () => {
@@ -58,7 +58,7 @@ describe('DescriptionComponent', () => {
     component.updateDescription();
 
     expect(user.description).toBe('new description');
-    expect(component.descriptionForm.pristine).toBeTrue();
+    expect(component.descriptionForm.pristine).toBe(true);
     expect(updates).toEqual(['Description Updated']);
   });
 
@@ -72,7 +72,7 @@ describe('DescriptionComponent', () => {
     expect(component.descriptionForm.get('description')?.value).toBe(
       'saved description',
     );
-    expect(component.descriptionForm.pristine).toBeTrue();
+    expect(component.descriptionForm.pristine).toBe(true);
     expect(updates).toEqual([]);
   });
 });

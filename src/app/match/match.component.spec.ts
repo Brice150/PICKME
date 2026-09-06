@@ -1,13 +1,9 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, of, throwError } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../testing/spy';
 import { Match } from '../core/interfaces/match';
 import { Message } from '../core/interfaces/message';
 import { MatchService } from '../core/services/match.service';
@@ -21,12 +17,12 @@ import { MatchComponent } from './match.component';
 describe('MatchComponent', () => {
   let fixture: ComponentFixture<MatchComponent>;
   let component: MatchComponent;
-  let matchService: jasmine.SpyObj<MatchService>;
-  let selectService: jasmine.SpyObj<SelectService>;
-  let toastr: jasmine.SpyObj<ToastrService>;
-  let dialog: jasmine.SpyObj<MatDialog>;
+  let matchService: SpyObj<MatchService>;
+  let selectService: SpyObj<SelectService>;
+  let toastr: SpyObj<ToastrService>;
+  let dialog: SpyObj<MatDialog>;
   let serverEvents$: Subject<void>;
-  let notificationService: jasmine.SpyObj<NotificationService>;
+  let notificationService: SpyObj<NotificationService>;
 
   /** Builds a conversation with the given profile. */
   function match(
@@ -43,44 +39,42 @@ describe('MatchComponent', () => {
 
   /** Starts the screen on a first read of the conversations. */
   function start(matches: Match[]): void {
-    matchService.getAllUserMatches.and.returnValue(of(matches));
+    matchService.getAllUserMatches.mockReturnValue(of(matches));
     fixture.detectChanges();
   }
 
   /** Plays a signal from the server, which makes the screen read its conversations again. */
   function serverSignals(matches: Match[]): void {
-    matchService.getAllUserMatches.and.returnValue(of(matches));
+    matchService.getAllUserMatches.mockReturnValue(of(matches));
     serverEvents$.next();
   }
 
   /** Makes the next dialog close with the given answer. */
   function answerDialog(answer: boolean): void {
-    dialog.open.and.returnValue({
+    dialog.open.mockReturnValue({
       afterClosed: () => of(answer),
     } as MatDialogRef<unknown>);
   }
 
   function lastToastTitle(): string {
-    return toastr.success.calls.mostRecent().args[1] as string;
+    return toastr.success.mock.lastCall![1] as string;
   }
 
   beforeEach(async () => {
     serverEvents$ = new Subject<void>();
-    matchService = jasmine.createSpyObj<MatchService>('MatchService', [
+    matchService = createSpyObj<MatchService>([
       'getAllUserMatches',
       'addMessage',
       'updateMessage',
       'deleteMessage',
     ]);
-    selectService = jasmine.createSpyObj<SelectService>('SelectService', [
-      'addDislike',
-    ]);
-    toastr = jasmine.createSpyObj<ToastrService>('ToastrService', ['success']);
-    dialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
-    matchService.getAllUserMatches.and.returnValue(of([]));
+    selectService = createSpyObj<SelectService>(['addDislike']);
+    toastr = createSpyObj<ToastrService>(['success']);
+    dialog = createSpyObj<MatDialog>(['open']);
+    matchService.getAllUserMatches.mockReturnValue(of([]));
     notificationService = {
       serverEvents$,
-    } as unknown as jasmine.SpyObj<NotificationService>;
+    } as unknown as SpyObj<NotificationService>;
     await TestBed.configureTestingModule({
       imports: [MatchComponent],
       providers: [
@@ -101,17 +95,17 @@ describe('MatchComponent', () => {
 
     expect(component.matches.length).toBe(2);
     expect(component.filteredMatches.length).toBe(2);
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
   });
 
   it('stops the loader and keeps listening when a read fails', () => {
-    matchService.getAllUserMatches.and.returnValue(
+    matchService.getAllUserMatches.mockReturnValue(
       throwError(() => new Error('offline')),
     );
 
     fixture.detectChanges();
 
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
 
     serverSignals([match(2, 'Alice')]);
 
@@ -140,12 +134,12 @@ describe('MatchComponent', () => {
     expect(component.filteredMatches.length).toBe(2);
   });
 
-  it('opens a conversation and closes it again', fakeAsync(() => {
+  it('opens a conversation and closes it again', async () => {
     const alice = match(2, 'Alice', [message(1, 'Alice', 'hello')]);
     start([alice]);
 
     component.selectMatch(alice);
-    tick();
+    await Promise.resolve();
     fixture.detectChanges();
 
     expect(component.selectedMatch).toBe(alice);
@@ -155,7 +149,7 @@ describe('MatchComponent', () => {
 
     expect(component.selectedMatch).toBeUndefined();
     expect(component.previousMessages).toBeUndefined();
-  }));
+  });
 
   it('keeps the open conversation in sync with the polling', () => {
     const alice = match(2, 'Alice');
@@ -197,23 +191,23 @@ describe('MatchComponent', () => {
     expect(component.getPreview(match(2, 'Alice'))).toBeUndefined();
   });
 
-  it('sends a message and brings the conversation back to the top', fakeAsync(() => {
+  it('sends a message and brings the conversation back to the top', async () => {
     const alice = match(2, 'Alice');
     start([match(3, 'Bob'), alice]);
     component.selectMatch(alice);
     const sent = message(9, 'Bob', 'hi');
-    matchService.addMessage.and.returnValue(of(sent));
+    matchService.addMessage.mockReturnValue(of(sent));
 
     component.sendMessage({ content: 'hi' } as Message);
-    tick();
+    await Promise.resolve();
 
     expect(matchService.addMessage).toHaveBeenCalledWith(
-      jasmine.objectContaining({ content: 'hi', fkReceiver: 2 }),
+      expect.objectContaining({ content: 'hi', fkReceiver: 2 }),
     );
     expect(alice.messages).toEqual([sent]);
     expect(component.matches[0]).toBe(alice);
     expect(lastToastTitle()).toBe('Message Sent');
-  }));
+  });
 
   it('only offers to edit a message written by the connected user', () => {
     const alice = match(2, 'Alice', [message(1, 'Alice', 'hello')]);
@@ -221,10 +215,10 @@ describe('MatchComponent', () => {
     component.selectMatch(alice);
 
     component.modifyMessage(message(1, 'Alice', 'hello'));
-    expect(component.isModifying).toBeFalse();
+    expect(component.isModifying).toBe(false);
 
     component.modifyMessage(message(2, 'Bob', 'hi'));
-    expect(component.isModifying).toBeTrue();
+    expect(component.isModifying).toBe(true);
   });
 
   it('never offers to edit a message already deleted', () => {
@@ -234,7 +228,7 @@ describe('MatchComponent', () => {
 
     component.modifyMessage(message(2, 'Bob', undefined));
 
-    expect(component.isModifying).toBeFalse();
+    expect(component.isModifying).toBe(false);
   });
 
   it('applies the new content of an edited message', () => {
@@ -243,12 +237,12 @@ describe('MatchComponent', () => {
     start([alice]);
     component.selectMatch(alice);
     component.modifyMessage(edited);
-    matchService.updateMessage.and.returnValue(of(message(2, 'Bob', 'hello')));
+    matchService.updateMessage.mockReturnValue(of(message(2, 'Bob', 'hello')));
 
     component.updateMessage({ content: 'hello' } as Message);
 
     expect(edited.content).toBe('hello');
-    expect(component.isModifying).toBeFalse();
+    expect(component.isModifying).toBe(false);
     expect(lastToastTitle()).toBe('Message Updated');
   });
 
@@ -257,7 +251,7 @@ describe('MatchComponent', () => {
     const alice = match(2, 'Alice', [deleted]);
     start([alice]);
     component.selectMatch(alice);
-    matchService.deleteMessage.and.returnValue(of(undefined));
+    matchService.deleteMessage.mockReturnValue(of(undefined));
 
     component.deleteMessage(deleted);
 
@@ -272,7 +266,7 @@ describe('MatchComponent', () => {
     start([alice]);
     component.selectMatch(alice);
     component.modifyMessage(deleted);
-    matchService.deleteMessage.and.returnValue(of(undefined));
+    matchService.deleteMessage.mockReturnValue(of(undefined));
     answerDialog(true);
 
     component.openDialog();
@@ -298,7 +292,7 @@ describe('MatchComponent', () => {
     const alice = match(2, 'Alice');
     start([alice, match(3, 'Bob')]);
     component.selectMatch(alice);
-    selectService.addDislike.and.returnValue(of(undefined));
+    selectService.addDislike.mockReturnValue(of(undefined));
 
     component.dislike();
 
@@ -319,7 +313,7 @@ describe('MatchComponent', () => {
     const alice = match(2, 'Alice');
     start([alice]);
     component.selectMatch(alice);
-    selectService.addDislike.and.returnValue(of(undefined));
+    selectService.addDislike.mockReturnValue(of(undefined));
     answerDialog(true);
 
     component.moreInfo();
@@ -350,7 +344,7 @@ describe('MatchComponent', () => {
 
     component.unModifyMessage();
 
-    expect(component.isModifying).toBeFalse();
+    expect(component.isModifying).toBe(false);
     expect(component.updatedMessage).toBeUndefined();
     expect(component.messageForm.get('content')?.value).toBeNull();
   });

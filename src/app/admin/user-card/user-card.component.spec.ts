@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../../testing/spy';
 import { userFixture } from '../../core/testing/user.fixture';
 import { MoreInfoComponent } from '../../shared/components/more-info/more-info.component';
 import { UserCardComponent } from './user-card.component';
@@ -9,18 +10,18 @@ describe('UserCardComponent', () => {
   const user = userFixture({ id: 2, nickname: 'Alice' });
   let fixture: ComponentFixture<UserCardComponent>;
   let component: UserCardComponent;
-  let dialog: jasmine.SpyObj<MatDialog>;
+  let dialog: SpyObj<MatDialog>;
   let deletions: number;
 
   /** Makes the profile sheet close with the answer of the administrator. */
   function answerMoreInfo(deleted: boolean): void {
-    dialog.open.and.returnValue({
+    dialog.open.mockReturnValue({
       afterClosed: () => of(deleted),
     } as MatDialogRef<MoreInfoComponent>);
   }
 
   beforeEach(async () => {
-    dialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
+    dialog = createSpyObj<MatDialog>(['open']);
     await TestBed.configureTestingModule({
       imports: [UserCardComponent],
       providers: [{ provide: MatDialog, useValue: dialog }],

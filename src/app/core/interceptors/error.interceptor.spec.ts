@@ -11,6 +11,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../environments/environment';
+import { createSpyObj, SpyObj } from '../../../testing/spy';
 import { ConnectService } from '../services/connect.service';
 import { errorInterceptor } from './error.interceptor';
 
@@ -18,14 +19,12 @@ describe('errorInterceptor', () => {
   const apiUrl = environment.apiBaseUrl;
   let http: HttpClient;
   let httpController: HttpTestingController;
-  let toastr: jasmine.SpyObj<ToastrService>;
-  let connectService: jasmine.SpyObj<ConnectService>;
+  let toastr: SpyObj<ToastrService>;
+  let connectService: SpyObj<ConnectService>;
 
   beforeEach(() => {
-    toastr = jasmine.createSpyObj<ToastrService>('ToastrService', ['error']);
-    connectService = jasmine.createSpyObj<ConnectService>('ConnectService', [
-      'logout',
-    ]);
+    toastr = createSpyObj<ToastrService>(['error']);
+    connectService = createSpyObj<ConnectService>(['logout']);
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withInterceptors([errorInterceptor])),
@@ -61,12 +60,12 @@ describe('errorInterceptor', () => {
 
   /** Returns the title the toast has been opened with. */
   function toastTitle(): string {
-    return toastr.error.calls.mostRecent().args[1] as string;
+    return toastr.error.mock.lastCall![1] as string;
   }
 
   /** Returns the message the toast has been opened with. */
   function toastMessage(): string {
-    return toastr.error.calls.mostRecent().args[0] as string;
+    return toastr.error.mock.lastCall![0] as string;
   }
 
   it('leaves the login call alone so that the screen can animate its own error', () => {

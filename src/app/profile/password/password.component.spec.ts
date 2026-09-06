@@ -42,20 +42,20 @@ describe('PasswordComponent', () => {
       password: '',
       passwordDuplicate: '',
     });
-    expect(component.hide).toBeTrue();
-    expect(component.hideDuplicate).toBeTrue();
+    expect(component.hide).toBe(true);
+    expect(component.hideDuplicate).toBe(true);
   });
 
   it('requires a password of at least five characters', () => {
     type('abc', 'abc');
 
-    expect(component.passwordForm.get('password')?.valid).toBeFalse();
+    expect(component.passwordForm.get('password')?.valid).toBe(false);
   });
 
   it('rejects a password longer than thirty characters', () => {
     type('a'.repeat(31), 'a'.repeat(31));
 
-    expect(component.passwordForm.get('password')?.valid).toBeFalse();
+    expect(component.passwordForm.get('password')?.valid).toBe(false);
   });
 
   it('rejects two passwords that do not match', () => {
@@ -65,13 +65,13 @@ describe('PasswordComponent', () => {
       component.passwordForm
         .get('passwordDuplicate')
         ?.hasError('passwordMismatch'),
-    ).toBeTrue();
+    ).toBe(true);
   });
 
   it('accepts two matching passwords', () => {
     type('password', 'password');
 
-    expect(component.passwordForm.valid).toBeTrue();
+    expect(component.passwordForm.valid).toBe(true);
   });
 
   it('applies the new password and asks for a save', () => {
@@ -80,7 +80,7 @@ describe('PasswordComponent', () => {
     component.updateConnectionInfos();
 
     expect(user.password).toBe('newPassword');
-    expect(component.passwordForm.pristine).toBeTrue();
+    expect(component.passwordForm.pristine).toBe(true);
     expect(updates).toEqual(['Connection Infos Updated']);
   });
 
@@ -93,7 +93,7 @@ describe('PasswordComponent', () => {
       password: null,
       passwordDuplicate: null,
     });
-    expect(component.passwordForm.pristine).toBeTrue();
+    expect(component.passwordForm.pristine).toBe(true);
     expect(updates).toEqual([]);
   });
 });

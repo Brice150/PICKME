@@ -6,6 +6,7 @@ import {
 } from '@angular/material/dialog';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../../../testing/spy';
 import { userFixture } from '../../../core/testing/user.fixture';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { MoreInfoComponent } from './more-info.component';
@@ -15,18 +16,15 @@ describe('MoreInfoComponent', () => {
     pictures: [{ id: 1, content: 'base64', isMainPicture: true }],
     preferences: {},
   });
-  let dialogRef: jasmine.SpyObj<MatDialogRef<MoreInfoComponent>>;
-  let dialog: jasmine.SpyObj<MatDialog>;
+  let dialogRef: SpyObj<MatDialogRef<MoreInfoComponent>>;
+  let dialog: SpyObj<MatDialog>;
 
   /** Opens the profile sheet in one of the three modes the application uses. */
   async function build(
     mode: { adminMode?: boolean; matchMode?: boolean } = {},
   ): Promise<ComponentFixture<MoreInfoComponent>> {
-    dialogRef = jasmine.createSpyObj<MatDialogRef<MoreInfoComponent>>(
-      'MatDialogRef',
-      ['close'],
-    );
-    dialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
+    dialogRef = createSpyObj<MatDialogRef<MoreInfoComponent>>(['close']);
+    dialog = createSpyObj<MatDialog>(['open']);
     await TestBed.configureTestingModule({
       imports: [MoreInfoComponent],
       providers: [
@@ -46,7 +44,7 @@ describe('MoreInfoComponent', () => {
 
   /** Makes the confirmation dialog answer with the choice of the user. */
   function answerConfirmation(confirmed: boolean): void {
-    dialog.open.and.returnValue({
+    dialog.open.mockReturnValue({
       afterClosed: () => of(confirmed),
     } as MatDialogRef<ConfirmationDialogComponent>);
   }

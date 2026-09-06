@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { createSpyObj, SpyObj } from '../../../../testing/spy';
 import { ConfirmationDialogComponent } from './confirmation-dialog.component';
 
 describe('ConfirmationDialogComponent', () => {
-  let dialogRef: jasmine.SpyObj<MatDialogRef<ConfirmationDialogComponent>>;
+  let dialogRef: SpyObj<MatDialogRef<ConfirmationDialogComponent>>;
 
   /** Builds the dialog with the action it has been opened for. */
   async function build(
     data: string | null,
   ): Promise<ComponentFixture<ConfirmationDialogComponent>> {
-    dialogRef = jasmine.createSpyObj<MatDialogRef<ConfirmationDialogComponent>>(
-      'MatDialogRef',
-      ['close'],
-    );
+    dialogRef = createSpyObj<MatDialogRef<ConfirmationDialogComponent>>([
+      'close',
+    ]);
     await TestBed.configureTestingModule({
       imports: [ConfirmationDialogComponent],
       providers: [

@@ -1,12 +1,13 @@
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { Mock } from 'vitest';
 import { ConnectionService } from './connection.service';
 
 interface FakeConnection {
   effectiveType: string;
   downlink: number;
   saveData: boolean;
-  addEventListener: jasmine.Spy;
+  addEventListener: Mock;
 }
 
 describe('ConnectionService', () => {
@@ -18,7 +19,7 @@ describe('ConnectionService', () => {
       effectiveType: '4g',
       downlink: 10,
       saveData: false,
-      addEventListener: jasmine.createSpy('addEventListener'),
+      addEventListener: vi.fn(),
       ...overrides,
     };
     Object.defineProperty(navigator, 'connection', {
@@ -46,42 +47,42 @@ describe('ConnectionService', () => {
       configurable: true,
     });
 
-    expect(serviceWith().shouldPreload()).toBeTrue();
+    expect(serviceWith().shouldPreload()).toBe(true);
   });
 
   it('preloads on a fast connection', () => {
     stubConnection();
 
-    expect(serviceWith().shouldPreload()).toBeTrue();
+    expect(serviceWith().shouldPreload()).toBe(true);
   });
 
   it('does not preload when the user asked to save data', () => {
     stubConnection({ saveData: true });
 
-    expect(serviceWith().shouldPreload()).toBeFalse();
+    expect(serviceWith().shouldPreload()).toBe(false);
   });
 
   it('does not preload on a slow connection type', () => {
     stubConnection({ effectiveType: '3g' });
 
-    expect(serviceWith().shouldPreload()).toBeFalse();
+    expect(serviceWith().shouldPreload()).toBe(false);
   });
 
   it('does not preload under the minimum bandwidth', () => {
     stubConnection({ downlink: 1 });
 
-    expect(serviceWith().shouldPreload()).toBeFalse();
+    expect(serviceWith().shouldPreload()).toBe(false);
   });
 
   it('follows the connection when it changes', () => {
     const connection = stubConnection();
     const service = serviceWith();
-    expect(service.shouldPreload()).toBeTrue();
+    expect(service.shouldPreload()).toBe(true);
 
     connection.effectiveType = '2g';
-    connection.addEventListener.calls.mostRecent().args[1]();
+    connection.addEventListener.mock.lastCall![1]();
 
-    expect(service.shouldPreload()).toBeFalse();
+    expect(service.shouldPreload()).toBe(false);
   });
 
   it('publishes the preloading decision as an observable', () => {
@@ -90,12 +91,12 @@ describe('ConnectionService', () => {
 
     serviceWith().canPreload$.subscribe((value) => (canPreload = value));
 
-    expect(canPreload).toBeFalse();
+    expect(canPreload).toBe(false);
   });
 
   it('stays neutral when it does not run in a browser', () => {
     stubConnection({ saveData: true });
 
-    expect(serviceWith('server').shouldPreload()).toBeTrue();
+    expect(serviceWith('server').shouldPreload()).toBe(true);
   });
 });

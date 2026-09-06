@@ -71,6 +71,6 @@ describe('SelectDemoComponent', () => {
   it('highlights no card while the carousel is not mounted', () => {
     render(Gender.WOMAN);
 
-    expect(component.isCurrentView(component.images[0])).toBeFalse();
+    expect(component.isCurrentView(component.images[0])).toBe(false);
   });
 });

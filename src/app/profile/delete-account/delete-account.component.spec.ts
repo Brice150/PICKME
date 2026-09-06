@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../../testing/spy';
 import { userFixture } from '../../core/testing/user.fixture';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { DeleteAccountComponent } from './delete-account.component';
@@ -8,18 +9,18 @@ import { DeleteAccountComponent } from './delete-account.component';
 describe('DeleteAccountComponent', () => {
   let fixture: ComponentFixture<DeleteAccountComponent>;
   let component: DeleteAccountComponent;
-  let dialog: jasmine.SpyObj<MatDialog>;
+  let dialog: SpyObj<MatDialog>;
   let deletions: number;
 
   /** Makes the confirmation dialog answer with the choice of the user. */
   function answerConfirmation(confirmed: boolean): void {
-    dialog.open.and.returnValue({
+    dialog.open.mockReturnValue({
       afterClosed: () => of(confirmed),
     } as MatDialogRef<ConfirmationDialogComponent>);
   }
 
   beforeEach(async () => {
-    dialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
+    dialog = createSpyObj<MatDialog>(['open']);
     await TestBed.configureTestingModule({
       imports: [DeleteAccountComponent],
       providers: [{ provide: MatDialog, useValue: dialog }],

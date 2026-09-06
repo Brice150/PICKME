@@ -1,13 +1,9 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { of, throwError } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../testing/spy';
 import { User } from '../core/interfaces/user';
 import { SelectService } from '../core/services/select.service';
 import { userFixture } from '../core/testing/user.fixture';
@@ -16,19 +12,19 @@ import { SelectComponent } from './select.component';
 describe('SelectComponent', () => {
   let fixture: ComponentFixture<SelectComponent>;
   let component: SelectComponent;
-  let selectService: jasmine.SpyObj<SelectService>;
-  let toastr: jasmine.SpyObj<ToastrService>;
-  let router: jasmine.SpyObj<Router>;
+  let selectService: SpyObj<SelectService>;
+  let toastr: SpyObj<ToastrService>;
+  let router: SpyObj<Router>;
 
   beforeEach(async () => {
-    selectService = jasmine.createSpyObj<SelectService>('SelectService', [
+    selectService = createSpyObj<SelectService>([
       'getAllSelectedUsers',
       'addLike',
       'addDislike',
     ]);
-    toastr = jasmine.createSpyObj<ToastrService>('ToastrService', ['success']);
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
-    selectService.getAllSelectedUsers.and.returnValue(of([]));
+    toastr = createSpyObj<ToastrService>(['success']);
+    router = createSpyObj<Router>(['navigate']);
+    selectService.getAllSelectedUsers.mockReturnValue(of([]));
     await TestBed.configureTestingModule({
       imports: [SelectComponent],
       providers: [
@@ -44,13 +40,13 @@ describe('SelectComponent', () => {
 
   /** Starts the screen with a first page of candidates. */
   function start(users: User[]): void {
-    selectService.getAllSelectedUsers.and.returnValue(of(users));
+    selectService.getAllSelectedUsers.mockReturnValue(of(users));
     fixture.detectChanges();
   }
 
   /** Returns the title of the last toast that has been raised. */
   function lastToastTitle(): string {
-    return toastr.success.calls.mostRecent().args[1] as string;
+    return toastr.success.mock.lastCall![1] as string;
   }
 
   it('loads the first page of candidates on arrival', () => {
@@ -58,19 +54,19 @@ describe('SelectComponent', () => {
 
     expect(selectService.getAllSelectedUsers).toHaveBeenCalledWith(0);
     expect(component.users.length).toBe(2);
-    expect(component.initLoading).toBeFalse();
-    expect(component.loading).toBeFalse();
+    expect(component.initLoading).toBe(false);
+    expect(component.loading).toBe(false);
   });
 
   it('stops the loader when the candidates cannot be read', () => {
-    selectService.getAllSelectedUsers.and.returnValue(
+    selectService.getAllSelectedUsers.mockReturnValue(
       throwError(() => new Error('offline')),
     );
 
     fixture.detectChanges();
 
-    expect(component.initLoading).toBeFalse();
-    expect(component.loading).toBeFalse();
+    expect(component.initLoading).toBe(false);
+    expect(component.loading).toBe(false);
   });
 
   it('keeps showing the empty state when nobody matches the criteria', () => {
@@ -82,31 +78,32 @@ describe('SelectComponent', () => {
     ).not.toBeNull();
   });
 
-  it('drops the profile and congratulates the user on a match', fakeAsync(() => {
+  it('drops the profile and congratulates the user on a match', () => {
+    vi.useFakeTimers();
     const candidate = userFixture({ id: 2, nickname: 'Alice' });
     start([candidate]);
-    selectService.addLike.and.returnValue(of('Alice'));
+    selectService.addLike.mockReturnValue(of('Alice'));
 
     component.like(candidate);
 
-    expect(component.activeMatchAnimation).toBeTrue();
+    expect(component.activeMatchAnimation).toBe(true);
     expect(lastToastTitle()).toBe('Matched Alice');
 
-    tick(3000);
+    vi.advanceTimersByTime(3000);
 
-    expect(component.activeMatchAnimation).toBeFalse();
+    expect(component.activeMatchAnimation).toBe(false);
     expect(component.users).toEqual([]);
-    expect(component.isLoading).toBeFalse();
-  }));
+    expect(component.isLoading).toBe(false);
+  });
 
   it('drops the profile without any animation when the like is not returned', () => {
     const candidate = userFixture({ id: 2, nickname: 'Alice' });
     start([candidate]);
-    selectService.addLike.and.returnValue(of(''));
+    selectService.addLike.mockReturnValue(of(''));
 
     component.like(candidate);
 
-    expect(component.activeMatchAnimation).toBeFalse();
+    expect(component.activeMatchAnimation).toBe(false);
     expect(component.users).toEqual([]);
     expect(lastToastTitle()).toBe('Liked Alice');
   });
@@ -114,12 +111,12 @@ describe('SelectComponent', () => {
   it('drops the profile on a dislike', () => {
     const candidate = userFixture({ id: 2, nickname: 'Alice' });
     start([candidate]);
-    selectService.addDislike.and.returnValue(of(undefined));
+    selectService.addDislike.mockReturnValue(of(undefined));
 
     component.dislike(candidate);
 
     expect(component.users).toEqual([]);
-    expect(component.isLoading).toBeFalse();
+    expect(component.isLoading).toBe(false);
     expect(lastToastTitle()).toBe('Disliked Alice');
   });
 

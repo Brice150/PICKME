@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
+import { createSpyObj, SpyObj } from '../../testing/spy';
 import { Geolocation } from '../core/interfaces/geolocation';
 import { User } from '../core/interfaces/user';
 import { ConnectService } from '../core/services/connect.service';
@@ -12,14 +13,14 @@ import { ProfileComponent } from './profile.component';
 describe('ProfileComponent', () => {
   let fixture: ComponentFixture<ProfileComponent>;
   let component: ProfileComponent;
-  let connectService: jasmine.SpyObj<ConnectService>;
-  let profileService: jasmine.SpyObj<ProfileService>;
-  let toastr: jasmine.SpyObj<ToastrService>;
+  let connectService: SpyObj<ConnectService>;
+  let profileService: SpyObj<ProfileService>;
+  let toastr: SpyObj<ToastrService>;
   let connectedUser: User;
 
   /** Makes the ip lookup answer with a position. */
   function locateAt(geolocation: Partial<Geolocation>): void {
-    connectService.getGeolocation.and.returnValue(
+    connectService.getGeolocation.mockReturnValue(
       of({
         latitude: '48.8566',
         longitude: '2.3522',
@@ -32,7 +33,7 @@ describe('ProfileComponent', () => {
   }
 
   function lastToastTitle(): string {
-    return toastr.success.calls.mostRecent().args[1] as string;
+    return toastr.success.mock.lastCall![1] as string;
   }
 
   beforeEach(async () => {
@@ -41,15 +42,15 @@ describe('ProfileComponent', () => {
     // the read only properties of a spy object would silently swallow.
     connectService = {
       connectedUser,
-      getGeolocation: jasmine.createSpy('getGeolocation'),
-      getConnectedUser: jasmine.createSpy('getConnectedUser'),
-      logout: jasmine.createSpy('logout'),
-    } as unknown as jasmine.SpyObj<ConnectService>;
-    profileService = jasmine.createSpyObj<ProfileService>('ProfileService', [
+      getGeolocation: vi.fn(),
+      getConnectedUser: vi.fn(),
+      logout: vi.fn(),
+    } as unknown as SpyObj<ConnectService>;
+    profileService = createSpyObj<ProfileService>([
       'updateUser',
       'deleteConnectedUser',
     ]);
-    toastr = jasmine.createSpyObj<ToastrService>('ToastrService', ['success']);
+    toastr = createSpyObj<ToastrService>(['success']);
     locateAt({});
     await TestBed.configureTestingModule({
       imports: [ProfileComponent],
@@ -79,7 +80,7 @@ describe('ProfileComponent', () => {
   });
 
   it('asks the browser for a finer position when the ip only gives the capital', () => {
-    spyOn(navigator.geolocation, 'getCurrentPosition').and.callFake(
+    vi.spyOn(navigator.geolocation, 'getCurrentPosition').mockImplementation(
       (success) => {
         success({
           coords: { latitude: 45.764, longitude: 4.8357 },
@@ -97,7 +98,7 @@ describe('ProfileComponent', () => {
   it('saves the profile with the position and refreshes the connected account', () => {
     fixture.detectChanges();
     const updated = userFixture({ nickname: 'Alicia' });
-    profileService.updateUser.and.returnValue(of(updated));
+    profileService.updateUser.mockReturnValue(of(updated));
 
     component.updateUser('Main Infos Updated');
 
@@ -109,7 +110,7 @@ describe('ProfileComponent', () => {
 
   it('announces the picture that has been promoted', () => {
     fixture.detectChanges();
-    connectService.getConnectedUser.and.returnValue(of(connectedUser));
+    connectService.getConnectedUser.mockReturnValue(of(connectedUser));
 
     component.refreshUser('Main Picture Selected');
 
@@ -118,7 +119,7 @@ describe('ProfileComponent', () => {
 
   it('announces a picture that has been added or deleted', () => {
     fixture.detectChanges();
-    connectService.getConnectedUser.and.returnValue(of(connectedUser));
+    connectService.getConnectedUser.mockReturnValue(of(connectedUser));
 
     component.refreshUser('Picture Added');
     expect(lastToastTitle()).toBe('Picture Added');
@@ -129,7 +130,7 @@ describe('ProfileComponent', () => {
 
   it('refreshes silently when there is nothing to announce', () => {
     fixture.detectChanges();
-    connectService.getConnectedUser.and.returnValue(of(connectedUser));
+    connectService.getConnectedUser.mockReturnValue(of(connectedUser));
 
     component.refreshUser('');
 
@@ -139,7 +140,7 @@ describe('ProfileComponent', () => {
 
   it('logs the user out once their account is deleted', () => {
     fixture.detectChanges();
-    profileService.deleteConnectedUser.and.returnValue(of(undefined));
+    profileService.deleteConnectedUser.mockReturnValue(of(undefined));
 
     component.deleteAccount();
 
