@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { User } from '../../core/interfaces/user';
@@ -26,7 +27,10 @@ describe('PasswordComponent', () => {
       imports: [PasswordComponent],
       providers: [
         provideNoopAnimations(),
-        { provide: ConnectService, useValue: { connectedUser: userFixture() } },
+        {
+          provide: ConnectService,
+          useValue: { connectedUser: signal(userFixture()) },
+        },
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(PasswordComponent);
@@ -42,8 +46,8 @@ describe('PasswordComponent', () => {
       password: '',
       passwordDuplicate: '',
     });
-    expect(component.hide).toBe(true);
-    expect(component.hideDuplicate).toBe(true);
+    expect(component.hide()).toBe(true);
+    expect(component.hideDuplicate()).toBe(true);
   });
 
   it('requires a password of at least five characters', () => {

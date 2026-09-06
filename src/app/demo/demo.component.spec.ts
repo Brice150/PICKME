@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -16,16 +17,18 @@ describe('DemoComponent', () => {
   /** Builds the screen for a visitor who just registered, or for one who did not. */
   async function build(registered: boolean): Promise<void> {
     connectService = {
-      registeredUser: registered
-        ? userFixture({
-            genderAge: {
-              gender: Gender.WOMAN,
-              genderSearch: Gender.MAN,
-              minAge: 18,
-              maxAge: 99,
-            },
-          })
-        : undefined,
+      registeredUser: signal(
+        registered
+          ? userFixture({
+              genderAge: {
+                gender: Gender.WOMAN,
+                genderSearch: Gender.MAN,
+                minAge: 18,
+                maxAge: 99,
+              },
+            })
+          : undefined,
+      ),
       login: vi.fn(),
     } as unknown as SpyObj<ConnectService>;
     TestBed.resetTestingModule();
@@ -53,21 +56,21 @@ describe('DemoComponent', () => {
     await build(false);
 
     expect(component.demos).toEqual(['profile', 'select', 'match', 'start']);
-    expect(component.currentIndex).toBe(0);
+    expect(component.currentIndex()).toBe(0);
   });
 
   it('tailors the samples to the account that has just been created', async () => {
     await build(true);
 
-    expect(component.userGender).toBe(Gender.WOMAN);
-    expect(component.userGenderSearch).toBe(Gender.MAN);
+    expect(component.userGender()).toBe(Gender.WOMAN);
+    expect(component.userGenderSearch()).toBe(Gender.MAN);
   });
 
   it('falls back on neutral samples for a visitor who did not register', async () => {
     await build(false);
 
-    expect(component.userGender).toBe(Gender.MAN);
-    expect(component.userGenderSearch).toBe(Gender.WOMAN);
+    expect(component.userGender()).toBe(Gender.MAN);
+    expect(component.userGenderSearch()).toBe(Gender.WOMAN);
   });
 
   it('moves forward through the steps', async () => {
@@ -75,17 +78,17 @@ describe('DemoComponent', () => {
 
     component.next();
 
-    expect(component.currentIndex).toBe(1);
+    expect(component.currentIndex()).toBe(1);
     expect(component.animationDirection).toBe('next');
   });
 
   it('stops on the last step', async () => {
     await build(false);
-    component.currentIndex = 3;
+    component.currentIndex.set(3);
 
     component.next();
 
-    expect(component.currentIndex).toBe(3);
+    expect(component.currentIndex()).toBe(3);
   });
 
   it('moves back through the steps', async () => {
@@ -94,7 +97,7 @@ describe('DemoComponent', () => {
 
     component.previous();
 
-    expect(component.currentIndex).toBe(0);
+    expect(component.currentIndex()).toBe(0);
     expect(component.animationDirection).toBe('previous');
   });
 
@@ -103,6 +106,6 @@ describe('DemoComponent', () => {
 
     component.previous();
 
-    expect(component.currentIndex).toBe(0);
+    expect(component.currentIndex()).toBe(0);
   });
 });

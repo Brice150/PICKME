@@ -1,17 +1,17 @@
-@if (connectService.connectedUser) {
+@if (connectService.connectedUser()) {
   <div
     class="menu-button"
     title="Menu"
-    [ngClass]="{ gold: getUnseenNotificationsLength() !== 0 && !isMenuActive }"
+    [ngClass]="{ gold: unseenNotificationsCount() !== 0 && !isMenuActive() }"
   >
     @if (
-      getUnseenNotificationsLength() !== 0 &&
-      !isNotificationsActive &&
-      !isMenuActive
+      unseenNotificationsCount() !== 0 &&
+      !isNotificationsActive() &&
+      !isMenuActive()
     ) {
-      <span>{{ getUnseenNotificationsLength() }}</span>
+      <span>{{ unseenNotificationsCount() }}</span>
     }
-    @if (!isMenuActive) {
+    @if (!isMenuActive()) {
       <i
         class="bx bx-menu"
         (click)="toggleMenu()"
@@ -19,7 +19,7 @@
         tabindex="0"
       ></i>
     }
-    @if (isMenuActive) {
+    @if (isMenuActive()) {
       <i
         class="bx bx-x"
         (click)="toggleMenu()"
@@ -29,17 +29,17 @@
     }
   </div>
 }
-@if (connectService.connectedUser && isMenuActive) {
+@if (connectService.connectedUser() && isMenuActive()) {
   <div
     class="menu-button notification"
     title="Notifications"
-    [ngClass]="{ gold: getUnseenNotificationsLength() !== 0 }"
+    [ngClass]="{ gold: unseenNotificationsCount() !== 0 }"
     @notificationLogoTrigger
   >
-    @if (getUnseenNotificationsLength() !== 0 && !isNotificationsActive) {
-      <span>{{ getUnseenNotificationsLength() }}</span>
+    @if (unseenNotificationsCount() !== 0 && !isNotificationsActive()) {
+      <span>{{ unseenNotificationsCount() }}</span>
     }
-    @if (!isNotificationsActive) {
+    @if (!isNotificationsActive()) {
       <i
         class="bx bxs-bell"
         (click)="toggleNotifications()"
@@ -47,7 +47,7 @@
         tabindex="0"
       ></i>
     }
-    @if (isNotificationsActive) {
+    @if (isNotificationsActive()) {
       <i
         class="bx bx-arrow-back"
         (click)="toggleNotifications()"
@@ -57,9 +57,9 @@
     }
   </div>
 }
-@if (isMenuActive) {
+@if (isMenuActive()) {
   <div class="container" @menuTrigger>
-    @if (!isNotificationsActive) {
+    @if (!isNotificationsActive()) {
       <app-nav-buttons
         [hasAdminRole]="connectService.isAdmin()"
         (toggleMenuEvent)="toggleMenu()"
@@ -67,9 +67,9 @@
         @navButtonTrigger
       ></app-nav-buttons>
     }
-    @if (isNotificationsActive) {
+    @if (isNotificationsActive()) {
       <app-notifications
-        [notifications]="notifications"
+        [notifications]="notifications()"
         (goToEvent)="goTo()"
         @notificationTrigger
       ></app-notifications>

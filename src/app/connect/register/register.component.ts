@@ -1,5 +1,12 @@
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
@@ -28,6 +35,7 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
 
 @Component({
   selector: 'app-register',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     provideNativeDateAdapter(),
     {
@@ -56,17 +64,16 @@ export class RegisterComponent implements OnInit {
   private readonly toastr = inject(ToastrService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
-  hide = true;
-  hideDuplicate = true;
+  readonly hide = signal(true);
+  readonly hideDuplicate = signal(true);
   registerForm!: FormGroup;
   firstFormGroup!: FormGroup;
   secondFormGroup!: FormGroup;
   thirdFormGroup!: FormGroup;
-  passwordsMatch = false;
-  minDate: Date;
-  genders: string[] = Object.values(Gender);
+  readonly minDate: Date;
+  readonly genders: string[] = Object.values(Gender);
   geolocation: Geolocation = {} as Geolocation;
-  loading = false;
+  readonly loading = signal(false);
 
   constructor() {
     const currentYear = new Date().getFullYear();
@@ -179,16 +186,16 @@ export class RegisterComponent implements OnInit {
 
   registerUser() {
     if (this.registerForm.valid) {
-      this.loading = true;
+      this.loading.set(true);
       const user: User = this.setUser();
       this.connectService.register(user).subscribe({
         next: () => {
-          this.loading = false;
-          this.connectService.registeredUser = user;
+          this.loading.set(false);
+          this.connectService.registeredUser.set(user);
           this.router.navigate(['/demo']);
         },
         error: (error: HttpErrorResponse) => {
-          this.loading = false;
+          this.loading.set(false);
           this.toastr.error(error.message, 'Error', {
             positionClass: 'toast-bottom-center',
             toastClass: 'ngx-toastr custom error',

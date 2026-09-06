@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ToastrService } from 'ngx-toastr';
@@ -38,10 +39,8 @@ describe('ProfileComponent', () => {
 
   beforeEach(async () => {
     connectedUser = userFixture();
-    // Built by hand rather than with createSpyObj: the component assigns `connectedUser`, which
-    // the read only properties of a spy object would silently swallow.
     connectService = {
-      connectedUser,
+      connectedUser: signal<User | undefined>(connectedUser),
       getGeolocation: vi.fn(),
       getConnectedUser: vi.fn(),
       logout: vi.fn(),
@@ -68,8 +67,8 @@ describe('ProfileComponent', () => {
   it('edits a copy of the connected account, not the account itself', () => {
     fixture.detectChanges();
 
-    expect(component.user).toEqual(connectedUser);
-    expect(component.user).not.toBe(connectedUser);
+    expect(component.user()).toEqual(connectedUser);
+    expect(component.user()).not.toBe(connectedUser);
   });
 
   it('locates the user from their ip address', () => {
@@ -102,9 +101,9 @@ describe('ProfileComponent', () => {
 
     component.updateUser('Main Infos Updated');
 
-    expect(component.user!.geolocation.latitude).toBe('48.8566');
-    expect(component.user!.password).toBeUndefined();
-    expect(connectService.connectedUser).toBe(updated);
+    expect(component.user()!.geolocation.latitude).toBe('48.8566');
+    expect(component.user()!.password).toBeUndefined();
+    expect(connectService.connectedUser()).toBe(updated);
     expect(lastToastTitle()).toBe('Main Infos Updated');
   });
 
@@ -144,7 +143,7 @@ describe('ProfileComponent', () => {
 
     component.deleteAccount();
 
-    expect(component.user).toBeUndefined();
+    expect(component.user()).toBeUndefined();
     expect(connectService.logout).toHaveBeenCalled();
     expect(lastToastTitle()).toBe('Account Deleted');
   });

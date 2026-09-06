@@ -1,9 +1,11 @@
 import { NgClass } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   OnInit,
   inject,
+  signal,
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -26,6 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-admin',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgClass,
     UserCardComponent,
@@ -48,30 +51,28 @@ export class AdminComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
 
-  users: User[] = [];
-  deletedAccounts: DeletedAccount[] = [];
-  loading = false;
-  searched = false;
-  adminForm!: FormGroup;
+  readonly users = signal<User[]>([]);
+  readonly deletedAccounts = signal<DeletedAccount[]>([]);
+  readonly loading = signal(false);
+  readonly searched = signal(false);
+  readonly isUserMode = signal(true);
+  readonly adminStats = signal<AdminStats | undefined>(undefined);
+  readonly adminForm: FormGroup = this.fb.group({
+    email: [''],
+    orderBy: [''],
+  });
   adminSearch: AdminSearch = {} as AdminSearch;
-  isUserMode = true;
-  isFirstSwitch = true;
-  adminStats?: AdminStats;
+  private isFirstSwitch = true;
   // Absent until the first page of results has been rendered.
   private readonly paginator = viewChild<PaginatorComponent>('paginator');
 
   ngOnInit(): void {
-    this.adminForm = this.fb.group({
-      email: [''],
-      orderBy: [''],
-    });
-
     this.adminService
       .getAdminStats()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (adminStats: AdminStats) => {
-          this.adminStats = adminStats;
+          this.adminStats.set(adminStats);
         },
       });
 
@@ -80,13 +81,13 @@ export class AdminComponent implements OnInit {
 
   toggleUserOrDeleted(content: string) {
     if (
-      (content === 'deleted' && this.isUserMode) ||
-      (content === 'user' && !this.isUserMode)
+      (content === 'deleted' && this.isUserMode()) ||
+      (content === 'user' && !this.isUserMode())
     ) {
-      this.isUserMode = !this.isUserMode;
+      this.isUserMode.update((userMode: boolean) => !userMode);
       if (this.isFirstSwitch) {
-        this.searched = false;
-        this.isFirstSwitch = !this.isFirstSwitch;
+        this.searched.set(false);
+        this.isFirstSwitch = false;
       }
       this.search(0);
     }
@@ -94,23 +95,18 @@ export class AdminComponent implements OnInit {
 
   search(page: number): void {
     if (this.adminForm.valid) {
-      this.loading = true;
+      this.loading.set(true);
       this.setAdminForm();
-      if (this.isUserMode) {
+      if (this.isUserMode()) {
         this.adminService
           .getAllUsers(this.adminSearch, page)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: (users: User[]) => {
-              this.users = users;
-              this.loading = false;
-              this.searched = true;
-              const paginator = this.paginator();
-              if (paginator && page === 0) {
-                paginator.page = page;
-              }
+              this.users.set(users);
+              this.searchDone(page);
             },
-            error: () => (this.loading = false),
+            error: () => this.loading.set(false),
           });
       } else {
         this.adminService
@@ -118,15 +114,10 @@ export class AdminComponent implements OnInit {
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: (deletedAccounts: DeletedAccount[]) => {
-              this.deletedAccounts = deletedAccounts;
-              this.loading = false;
-              this.searched = true;
-              const paginator = this.paginator();
-              if (paginator && page === 0) {
-                paginator.page = page;
-              }
+              this.deletedAccounts.set(deletedAccounts);
+              this.searchDone(page);
             },
-            error: () => (this.loading = false),
+            error: () => this.loading.set(false),
           });
       }
     }
@@ -136,7 +127,7 @@ export class AdminComponent implements OnInit {
     if (
       (this.adminForm.get('email')?.value &&
         this.adminForm.get('email')?.value !== '') ||
-      this.searched
+      this.searched()
     ) {
       this.search(page);
     }
@@ -150,11 +141,11 @@ export class AdminComponent implements OnInit {
   deleteUser(userToDelete: User): void {
     this.adminService.deleteUser(userToDelete.id!).subscribe({
       next: () => {
-        const userIndex = this.users.findIndex(
-          (user: User) => user.id === userToDelete.id,
+        const remaining = this.users().filter(
+          (user: User) => user.id !== userToDelete.id,
         );
-        if (userIndex !== -1) {
-          this.users.splice(userIndex, 1);
+        if (remaining.length !== this.users().length) {
+          this.users.set(remaining);
           this.toastr.success('User has been deleted', 'User Deleted', {
             positionClass: 'toast-bottom-center',
             toastClass: 'ngx-toastr custom',
@@ -166,5 +157,14 @@ export class AdminComponent implements OnInit {
 
   handlePageEvent(pageIndex: number) {
     this.search(pageIndex);
+  }
+
+  /** Closes a search, and brings the paginator back to the front when it started over. */
+  private searchDone(page: number): void {
+    this.loading.set(false);
+    this.searched.set(true);
+    if (page === 0) {
+      this.paginator()?.page.set(page);
+    }
   }
 }

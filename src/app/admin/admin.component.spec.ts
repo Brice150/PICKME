@@ -63,10 +63,10 @@ describe('AdminComponent', () => {
   it('opens on the statistics and the first page of accounts', () => {
     start([userFixture({ id: 2 }), userFixture({ id: 3 })]);
 
-    expect(component.adminStats?.totalUsers).toBe(10);
-    expect(component.users.length).toBe(2);
-    expect(component.loading).toBe(false);
-    expect(component.searched).toBe(true);
+    expect(component.adminStats()?.totalUsers).toBe(10);
+    expect(component.users().length).toBe(2);
+    expect(component.loading()).toBe(false);
+    expect(component.searched()).toBe(true);
   });
 
   it('stops the loader when the accounts cannot be read', () => {
@@ -76,7 +76,7 @@ describe('AdminComponent', () => {
 
     fixture.detectChanges();
 
-    expect(component.loading).toBe(false);
+    expect(component.loading()).toBe(false);
   });
 
   it('searches the accounts on the criteria of the form', () => {
@@ -96,8 +96,8 @@ describe('AdminComponent', () => {
 
     component.toggleUserOrDeleted('deleted');
 
-    expect(component.isUserMode).toBe(false);
-    expect(component.deletedAccounts).toEqual([archived]);
+    expect(component.isUserMode()).toBe(false);
+    expect(component.deletedAccounts()).toEqual([archived]);
     expect(adminService.getAllDeletedAccounts).toHaveBeenCalled();
   });
 
@@ -107,7 +107,7 @@ describe('AdminComponent', () => {
 
     component.toggleUserOrDeleted('user');
 
-    expect(component.isUserMode).toBe(true);
+    expect(component.isUserMode()).toBe(true);
     expect(adminService.getAllUsers.mock.calls.length).toBe(searchesSoFar);
   });
 
@@ -130,7 +130,7 @@ describe('AdminComponent', () => {
 
   it('does not search on an empty field that was never searched', () => {
     start();
-    component.searched = false;
+    component.searched.set(false);
     const searchesSoFar = adminService.getAllUsers.mock.calls.length;
 
     component.focusOut(0);
@@ -145,7 +145,7 @@ describe('AdminComponent', () => {
 
     component.deleteUser(user);
 
-    expect(component.users.map((u) => u.id)).toEqual([3]);
+    expect(component.users().map((u) => u.id)).toEqual([3]);
     expect(toastr.success.mock.lastCall![1]).toBe('User Deleted');
   });
 
@@ -155,7 +155,7 @@ describe('AdminComponent', () => {
 
     component.deleteUser(userFixture({ id: 2 }));
 
-    expect(component.users.length).toBe(1);
+    expect(component.users().length).toBe(1);
     expect(toastr.success).not.toHaveBeenCalled();
   });
 });

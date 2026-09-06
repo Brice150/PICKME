@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -7,6 +8,7 @@ import { of, throwError } from 'rxjs';
 import { createSpyObj, SpyObj } from '../../../testing/spy';
 import { Gender } from '../../core/enums/gender';
 import { Geolocation } from '../../core/interfaces/geolocation';
+import { User } from '../../core/interfaces/user';
 import { ConnectService } from '../../core/services/connect.service';
 import { RegisterComponent } from './register.component';
 
@@ -41,7 +43,7 @@ describe('RegisterComponent', () => {
 
   beforeEach(async () => {
     connectService = {
-      registeredUser: undefined,
+      registeredUser: signal<User | undefined>(undefined),
       getGeolocation: vi.fn().mockReturnValue(
         of({
           latitude: '48.8566',
@@ -132,9 +134,9 @@ describe('RegisterComponent', () => {
     component.registerUser();
 
     expect(connectService.register).toHaveBeenCalled();
-    expect(connectService.registeredUser?.email).toBe('alice@pickme.com');
+    expect(connectService.registeredUser()?.email).toBe('alice@pickme.com');
     expect(router.navigate).toHaveBeenCalledWith(['/demo']);
-    expect(component.loading).toBe(false);
+    expect(component.loading()).toBe(false);
     expect(toastr.success.mock.lastCall![1]).toBe('Registration Successful');
   });
 
@@ -150,7 +152,7 @@ describe('RegisterComponent', () => {
     component.registerUser();
 
     expect(router.navigate).not.toHaveBeenCalled();
-    expect(component.loading).toBe(false);
+    expect(component.loading()).toBe(false);
     expect(toastr.error.mock.lastCall![1]).toBe('Error');
   });
 });

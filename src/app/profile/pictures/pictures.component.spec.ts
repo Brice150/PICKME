@@ -77,7 +77,7 @@ describe('PicturesComponent', () => {
     // Reading the query is what used to be untested: an input the template no longer holds
     // would fail here instead of silently later.
     expect(input.value).toBe('');
-    expect(component.activeIndex).toBe(0);
+    expect(component.activeIndex()).toBe(0);
   });
 
   it('moves the main flag to the promoted picture', () => {
@@ -88,7 +88,7 @@ describe('PicturesComponent', () => {
 
     expect(user.pictures?.map((p) => p.isMainPicture)).toEqual([false, true]);
     expect(refreshes).toEqual(['Main Picture Selected']);
-    expect(component.isLoading).toBe(false);
+    expect(component.isLoading()).toBe(false);
   });
 
   it('removes a deleted picture from the album', () => {
@@ -123,10 +123,10 @@ describe('PicturesComponent', () => {
 
   it('keeps track of the picture the carousel stops on', () => {
     render([picture(1, true)]);
-    component.activeIndex = 3;
+    component.activeIndex.set(3);
 
     component.onSlideChange();
 
-    expect(component.activeIndex).toBe(3);
+    expect(component.activeIndex()).toBe(3);
   });
 });

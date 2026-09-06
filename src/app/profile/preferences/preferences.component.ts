@@ -1,4 +1,12 @@
-import { Component, input, output, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlcoholDrinking } from '../../core/enums/alcohol-drinking';
 import { Animals } from '../../core/enums/animals';
@@ -15,6 +23,7 @@ import { PreferenceComponent } from './preference/preference.component';
 
 @Component({
   selector: 'app-preferences',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, PreferenceComponent, PaginatorComponent],
   templateUrl: './preferences.component.html',
   styleUrl: './preferences.component.css',
@@ -24,7 +33,7 @@ export class PreferencesComponent {
   readonly updateEvent = output<string>();
   // The question currently on screen, absent until it has been rendered.
   readonly preference = viewChild<PreferenceComponent>('preference');
-  currentPreferenceIndex = 0;
+  readonly currentPreferenceIndex = signal(0);
   alcoholDrinking: string[] = Object.values(AlcoholDrinking);
   smokes: string[] = Object.values(Smokes);
   sportPractice: string[] = Object.values(SportPractice);
@@ -84,12 +93,17 @@ export class PreferencesComponent {
     },
   ];
 
+  /** The question the paginator has brought on screen. */
+  readonly currentPreference = computed(
+    () => this.preferences[this.currentPreferenceIndex()],
+  );
+
   updatePreferences(): void {
     this.updateEvent.emit('Preferences Updated');
   }
 
   handlePageEvent(pageIndex: number) {
-    this.currentPreferenceIndex = pageIndex;
+    this.currentPreferenceIndex.set(pageIndex);
     if (this.preference()?.preferenceForm.dirty) {
       this.preference()?.cancel();
     }

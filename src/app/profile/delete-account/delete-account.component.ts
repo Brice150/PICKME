@@ -1,4 +1,10 @@
-import { Component, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { User } from '../../core/interfaces/user';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,6 +12,7 @@ import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-delete-account',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   templateUrl: './delete-account.component.html',
   styleUrl: './delete-account.component.css',

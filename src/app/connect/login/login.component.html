@@ -1,6 +1,6 @@
-@if (!loading) {
+@if (!loading()) {
   <form
-    [ngClass]="{ invalidLogin: invalidLogin }"
+    [ngClass]="{ invalidLogin: invalidLogin() }"
     [formGroup]="loginForm"
     (ngSubmit)="loginUser(loginForm.value)"
   >
@@ -19,19 +19,19 @@
       <mat-label>Password</mat-label>
       <input
         matInput
-        [type]="hide ? 'password' : 'text'"
+        [type]="hide() ? 'password' : 'text'"
         formControlName="password"
         required
       />
       <button
         mat-icon-button
         matSuffix
-        (click)="hide = !hide"
+        (click)="hide.set(!hide())"
         [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hide"
+        [attr.aria-pressed]="hide()"
         type="button"
       >
-        <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+        <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
       @if (loginForm.get('password')!.hasError('required')) {
         <mat-error>Password is required</mat-error>

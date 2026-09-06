@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { User } from '../../core/interfaces/user';
@@ -20,11 +21,13 @@ describe('MainInfosComponent', () => {
         {
           provide: ConnectService,
           useValue: {
-            connectedUser: userFixture({
-              nickname: 'Alice',
-              job: 'Architecte',
-              height: 170,
-            }),
+            connectedUser: signal(
+              userFixture({
+                nickname: 'Alice',
+                job: 'Architecte',
+                height: 170,
+              }),
+            ),
           },
         },
       ],

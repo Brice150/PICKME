@@ -13,7 +13,7 @@ export const adminGuard: CanActivateFn = () => {
   const router = inject(Router);
   const selection = (): UrlTree => router.createUrlTree(['/select']);
 
-  if (connectService.connectedUser) {
+  if (connectService.connectedUser()) {
     return connectService.isAdmin() || selection();
   }
   return connectService.getConnectedUser().pipe(

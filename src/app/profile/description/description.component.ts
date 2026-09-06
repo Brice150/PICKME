@@ -1,4 +1,11 @@
-import { Component, OnInit, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  OnInit,
+  output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -12,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-description',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './description.component.html',
   styleUrl: './description.component.css',
@@ -49,7 +57,7 @@ export class DescriptionComponent implements OnInit {
   cancel(): void {
     const user = this.user();
     if (user) {
-      user.description = this.connectService.connectedUser!.description;
+      user.description = this.connectService.connectedUser()!.description;
       this.descriptionForm.get('description')?.setValue(user.description);
       this.descriptionForm.markAsPristine();
     }

@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { AlcoholDrinking } from '../../core/enums/alcohol-drinking';
@@ -15,7 +16,10 @@ describe('PreferencesComponent', () => {
       imports: [PreferencesComponent],
       providers: [
         provideNoopAnimations(),
-        { provide: ConnectService, useValue: { connectedUser: userFixture() } },
+        {
+          provide: ConnectService,
+          useValue: { connectedUser: signal(userFixture()) },
+        },
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(PreferencesComponent);
@@ -28,7 +32,7 @@ describe('PreferencesComponent', () => {
 
   it('walks the user through the eight questions, one at a time', () => {
     expect(component.preferences.length).toBe(8);
-    expect(component.currentPreferenceIndex).toBe(0);
+    expect(component.currentPreferenceIndex()).toBe(0);
     expect(
       fixture.nativeElement.querySelectorAll('app-preference').length,
     ).toBe(1);
@@ -46,7 +50,7 @@ describe('PreferencesComponent', () => {
   it('moves to the question the paginator asks for', () => {
     component.handlePageEvent(3);
 
-    expect(component.currentPreferenceIndex).toBe(3);
+    expect(component.currentPreferenceIndex()).toBe(3);
   });
 
   it('drops the pending answer when the user moves to another question', () => {

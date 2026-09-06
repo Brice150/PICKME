@@ -1,4 +1,11 @@
-import { Component, OnInit, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  OnInit,
+  output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -13,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-main-infos',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     MatSliderModule,
@@ -76,10 +84,11 @@ export class MainInfosComponent implements OnInit {
   cancel(): void {
     const user = this.user();
     if (user) {
-      user.nickname = this.connectService.connectedUser!.nickname;
-      user.job = this.connectService.connectedUser!.job;
+      const connectedUser = this.connectService.connectedUser()!;
+      user.nickname = connectedUser.nickname;
+      user.job = connectedUser.job;
       user.geolocation.distanceSearch =
-        this.connectService.connectedUser!.geolocation?.distanceSearch;
+        connectedUser.geolocation?.distanceSearch;
       this.mainInfosForm.patchValue({
         nickname: user.nickname,
         job: user.job,

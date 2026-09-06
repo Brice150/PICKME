@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ConnectService } from '../../core/services/connect.service';
 import { Router } from '@angular/router';
 import { User } from '../../core/interfaces/user';
@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-start-demo',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   templateUrl: './start-demo.component.html',
   styleUrl: './start-demo.component.css',
@@ -16,8 +17,9 @@ export class StartDemoComponent {
   private readonly toastr = inject(ToastrService);
 
   startNow(): void {
-    if (this.connectService.registeredUser) {
-      this.loginUser(this.connectService.registeredUser);
+    const registeredUser = this.connectService.registeredUser();
+    if (registeredUser) {
+      this.loginUser(registeredUser);
     } else {
       this.router.navigate(['/']);
     }

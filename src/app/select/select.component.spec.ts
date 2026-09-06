@@ -53,9 +53,9 @@ describe('SelectComponent', () => {
     start([userFixture({ id: 2 }), userFixture({ id: 3 })]);
 
     expect(selectService.getAllSelectedUsers).toHaveBeenCalledWith(0);
-    expect(component.users.length).toBe(2);
-    expect(component.initLoading).toBe(false);
-    expect(component.loading).toBe(false);
+    expect(component.users().length).toBe(2);
+    expect(component.initLoading()).toBe(false);
+    expect(component.loading()).toBe(false);
   });
 
   it('stops the loader when the candidates cannot be read', () => {
@@ -65,14 +65,14 @@ describe('SelectComponent', () => {
 
     fixture.detectChanges();
 
-    expect(component.initLoading).toBe(false);
-    expect(component.loading).toBe(false);
+    expect(component.initLoading()).toBe(false);
+    expect(component.loading()).toBe(false);
   });
 
   it('keeps showing the empty state when nobody matches the criteria', () => {
     start([]);
 
-    expect(component.users).toEqual([]);
+    expect(component.users()).toEqual([]);
     expect(
       fixture.nativeElement.querySelector('app-loading-card'),
     ).not.toBeNull();
@@ -86,14 +86,14 @@ describe('SelectComponent', () => {
 
     component.like(candidate);
 
-    expect(component.activeMatchAnimation).toBe(true);
+    expect(component.activeMatchAnimation()).toBe(true);
     expect(lastToastTitle()).toBe('Matched Alice');
 
     vi.advanceTimersByTime(3000);
 
-    expect(component.activeMatchAnimation).toBe(false);
-    expect(component.users).toEqual([]);
-    expect(component.isLoading).toBe(false);
+    expect(component.activeMatchAnimation()).toBe(false);
+    expect(component.users()).toEqual([]);
+    expect(component.isLoading()).toBe(false);
   });
 
   it('drops the profile without any animation when the like is not returned', () => {
@@ -103,8 +103,8 @@ describe('SelectComponent', () => {
 
     component.like(candidate);
 
-    expect(component.activeMatchAnimation).toBe(false);
-    expect(component.users).toEqual([]);
+    expect(component.activeMatchAnimation()).toBe(false);
+    expect(component.users()).toEqual([]);
     expect(lastToastTitle()).toBe('Liked Alice');
   });
 
@@ -115,8 +115,8 @@ describe('SelectComponent', () => {
 
     component.dislike(candidate);
 
-    expect(component.users).toEqual([]);
-    expect(component.isLoading).toBe(false);
+    expect(component.users()).toEqual([]);
+    expect(component.isLoading()).toBe(false);
     expect(lastToastTitle()).toBe('Disliked Alice');
   });
 
@@ -125,7 +125,7 @@ describe('SelectComponent', () => {
 
     component.removeSlide(99);
 
-    expect(component.users.length).toBe(1);
+    expect(component.users().length).toBe(1);
   });
 
   it('sends the user to their profile to widen the criteria', () => {

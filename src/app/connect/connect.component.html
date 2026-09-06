@@ -5,7 +5,7 @@
       (keyup.enter)="toggleLoginOrRegister('register')"
       tabindex="0"
       title="Register"
-      [ngClass]="isRegistering ? 'active' : 'unactive'"
+      [ngClass]="isRegistering() ? 'active' : 'unactive'"
       >Register</a
     >
     <a
@@ -13,15 +13,15 @@
       (keyup.enter)="toggleLoginOrRegister('login')"
       tabindex="0"
       title="Login"
-      [ngClass]="!isRegistering ? 'active' : 'unactive'"
+      [ngClass]="!isRegistering() ? 'active' : 'unactive'"
       >Login</a
     >
   </div>
   <div class="content">
-    @if (!isRegistering) {
+    @if (!isRegistering()) {
       <app-login></app-login>
     }
-    @if (isRegistering) {
+    @if (isRegistering()) {
       <app-register></app-register>
     }
   </div>

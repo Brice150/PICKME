@@ -1,4 +1,11 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ToastrService } from 'ngx-toastr';
@@ -16,6 +23,7 @@ import { PreferencesComponent } from './preferences/preferences.component';
 
 @Component({
   selector: 'app-profile',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatExpansionModule,
     PasswordComponent,
@@ -35,7 +43,13 @@ export class ProfileComponent implements OnInit {
   private readonly profileService = inject(ProfileService);
   private readonly destroyRef = inject(DestroyRef);
 
-  user?: User = { ...this.connectService.connectedUser! };
+  /**
+   * The account the panels edit, a copy of the connected one: an abandoned edition has to be
+   * able to fall back on what the server holds.
+   */
+  readonly user = signal<User | undefined>({
+    ...this.connectService.connectedUser()!,
+  });
   geolocation: Geolocation = {} as Geolocation;
 
   ngOnInit(): void {
@@ -57,12 +71,13 @@ export class ProfileComponent implements OnInit {
   }
 
   updateUser(message: string): void {
-    this.user!.geolocation.latitude = this.geolocation.latitude;
-    this.user!.geolocation.longitude = this.geolocation.longitude;
-    this.profileService.updateUser(this.user!).subscribe({
+    const user = this.user()!;
+    user.geolocation.latitude = this.geolocation.latitude;
+    user.geolocation.longitude = this.geolocation.longitude;
+    this.profileService.updateUser(user).subscribe({
       next: (updatedUser: User) => {
-        this.user!.password = undefined;
-        this.connectService.connectedUser = updatedUser;
+        user.password = undefined;
+        this.connectService.connectedUser.set(updatedUser);
       },
       complete: () => {
         this.toastr.success('Your profile has been updated', message, {
@@ -99,7 +114,7 @@ export class ProfileComponent implements OnInit {
   deleteAccount(): void {
     this.profileService.deleteConnectedUser().subscribe({
       next: () => {
-        this.user = undefined;
+        this.user.set(undefined);
         this.connectService.logout();
       },
       complete: () => {

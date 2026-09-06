@@ -1,8 +1,9 @@
 import {
-  CUSTOM_ELEMENTS_SCHEMA,
+  ChangeDetectionStrategy,
   Component,
-  OnInit,
+  CUSTOM_ELEMENTS_SCHEMA,
   input,
+  OnInit,
 } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { environment } from '../../../environments/environment';
@@ -10,6 +11,7 @@ import { Gender } from '../../core/enums/gender';
 
 @Component({
   selector: 'app-profile-demo',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatExpansionModule],
   templateUrl: './profile-demo.component.html',
   styleUrl: './profile-demo.component.css',

@@ -93,9 +93,9 @@ describe('MatchComponent', () => {
   it('lists the conversations of the connected user', () => {
     start([match(2, 'Alice'), match(3, 'Bob')]);
 
-    expect(component.matches.length).toBe(2);
-    expect(component.filteredMatches.length).toBe(2);
-    expect(component.loading).toBe(false);
+    expect(component.matches().length).toBe(2);
+    expect(component.filteredMatches().length).toBe(2);
+    expect(component.loading()).toBe(false);
   });
 
   it('stops the loader and keeps listening when a read fails', () => {
@@ -105,33 +105,30 @@ describe('MatchComponent', () => {
 
     fixture.detectChanges();
 
-    expect(component.loading).toBe(false);
+    expect(component.loading()).toBe(false);
 
     serverSignals([match(2, 'Alice')]);
 
-    expect(component.matches.length).toBe(1);
+    expect(component.matches().length).toBe(1);
   });
 
   it('filters the conversations on the nickname, whatever the case', () => {
     start([match(2, 'Alice'), match(3, 'Bob')]);
 
-    component.search = 'ali';
-    component.searchByNickname();
+    component.search.set('ali');
 
-    expect(component.filteredMatches.map((m) => m.user.nickname)).toEqual([
+    expect(component.filteredMatches().map((m) => m.user.nickname)).toEqual([
       'Alice',
     ]);
   });
 
   it('shows every conversation back when the search is cleared', () => {
     start([match(2, 'Alice'), match(3, 'Bob')]);
-    component.search = 'ali';
-    component.searchByNickname();
+    component.search.set('ali');
 
-    component.search = '';
-    component.searchByNickname();
+    component.search.set('');
 
-    expect(component.filteredMatches.length).toBe(2);
+    expect(component.filteredMatches().length).toBe(2);
   });
 
   it('opens a conversation and closes it again', async () => {
@@ -142,12 +139,12 @@ describe('MatchComponent', () => {
     await Promise.resolve();
     fixture.detectChanges();
 
-    expect(component.selectedMatch).toBe(alice);
+    expect(component.selectedMatch()).toBe(alice);
     expect(fixture.nativeElement.textContent).toContain('hello');
 
     component.back();
 
-    expect(component.selectedMatch).toBeUndefined();
+    expect(component.selectedMatch()).toBeUndefined();
     expect(component.previousMessages).toBeUndefined();
   });
 
@@ -159,7 +156,7 @@ describe('MatchComponent', () => {
     const refreshed = match(2, 'Alice', [message(1, 'Alice', 'hello')]);
     serverSignals([refreshed]);
 
-    expect(component.selectedMatch).toBe(refreshed);
+    expect(component.selectedMatch()).toBe(refreshed);
   });
 
   it('closes the conversation of a profile that unmatched in the meantime', () => {
@@ -169,7 +166,7 @@ describe('MatchComponent', () => {
 
     serverSignals([match(3, 'Bob')]);
 
-    expect(component.selectedMatch).toBeUndefined();
+    expect(component.selectedMatch()).toBeUndefined();
   });
 
   it('previews the last message that still has a content', () => {
@@ -204,8 +201,8 @@ describe('MatchComponent', () => {
     expect(matchService.addMessage).toHaveBeenCalledWith(
       expect.objectContaining({ content: 'hi', fkReceiver: 2 }),
     );
-    expect(alice.messages).toEqual([sent]);
-    expect(component.matches[0]).toBe(alice);
+    expect(component.matches()[0].user.id).toBe(2);
+    expect(component.matches()[0].messages).toEqual([sent]);
     expect(lastToastTitle()).toBe('Message Sent');
   });
 
@@ -215,10 +212,10 @@ describe('MatchComponent', () => {
     component.selectMatch(alice);
 
     component.modifyMessage(message(1, 'Alice', 'hello'));
-    expect(component.isModifying).toBe(false);
+    expect(component.isModifying()).toBe(false);
 
     component.modifyMessage(message(2, 'Bob', 'hi'));
-    expect(component.isModifying).toBe(true);
+    expect(component.isModifying()).toBe(true);
   });
 
   it('never offers to edit a message already deleted', () => {
@@ -228,7 +225,7 @@ describe('MatchComponent', () => {
 
     component.modifyMessage(message(2, 'Bob', undefined));
 
-    expect(component.isModifying).toBe(false);
+    expect(component.isModifying()).toBe(false);
   });
 
   it('applies the new content of an edited message', () => {
@@ -241,8 +238,8 @@ describe('MatchComponent', () => {
 
     component.updateMessage({ content: 'hello' } as Message);
 
-    expect(edited.content).toBe('hello');
-    expect(component.isModifying).toBe(false);
+    expect(component.selectedMatch()!.messages[0].content).toBe('hello');
+    expect(component.isModifying()).toBe(false);
     expect(lastToastTitle()).toBe('Message Updated');
   });
 
@@ -255,8 +252,8 @@ describe('MatchComponent', () => {
 
     component.deleteMessage(deleted);
 
-    expect(alice.messages.length).toBe(1);
-    expect(deleted.content).toBeUndefined();
+    expect(component.selectedMatch()!.messages.length).toBe(1);
+    expect(component.selectedMatch()!.messages[0].content).toBeUndefined();
     expect(lastToastTitle()).toBe('Message Deleted');
   });
 
@@ -296,8 +293,8 @@ describe('MatchComponent', () => {
 
     component.dislike();
 
-    expect(component.matches.map((m) => m.user.id)).toEqual([3]);
-    expect(component.selectedMatch).toBeUndefined();
+    expect(component.matches().map((m) => m.user.id)).toEqual([3]);
+    expect(component.selectedMatch()).toBeUndefined();
     expect(lastToastTitle()).toBe('Disliked Alice');
   });
 
@@ -344,8 +341,8 @@ describe('MatchComponent', () => {
 
     component.unModifyMessage();
 
-    expect(component.isModifying).toBe(false);
-    expect(component.updatedMessage).toBeUndefined();
+    expect(component.isModifying()).toBe(false);
+    expect(component.updatedMessage()).toBeUndefined();
     expect(component.messageForm.get('content')?.value).toBeNull();
   });
 });

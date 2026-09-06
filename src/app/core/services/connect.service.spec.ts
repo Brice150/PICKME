@@ -61,7 +61,7 @@ describe('ConnectService', () => {
       'Basic ' + window.btoa('user@pickme.com:password'),
     );
     request.flush(loggedInUser);
-    expect(service.connectedUser).toEqual(loggedInUser);
+    expect(service.connectedUser()).toEqual(loggedInUser);
     expect(ready).toBe(true);
   });
 
@@ -74,7 +74,7 @@ describe('ConnectService', () => {
     expect(request.request.method).toBe('GET');
     expect(request.request.withCredentials).toBe(true);
     request.flush(loggedInUser);
-    expect(service.connectedUser).toEqual(loggedInUser);
+    expect(service.connectedUser()).toEqual(loggedInUser);
   });
 
   it('reads the geolocation from the public ip service', () => {
@@ -94,25 +94,25 @@ describe('ConnectService', () => {
   });
 
   it('drops the account and goes back to the connection screen on logout', () => {
-    service.connectedUser = userFixture();
+    service.connectedUser.set(userFixture());
     let loggedOut = false;
     service.loggedOut$.subscribe(() => (loggedOut = true));
 
     service.logout();
 
     expect(router.navigate).toHaveBeenCalledWith(['/']);
-    expect(service.connectedUser).toBeUndefined();
+    expect(service.connectedUser()).toBeUndefined();
     expect(loggedOut).toBe(true);
   });
 
   it('recognises an administrator', () => {
-    service.connectedUser = userFixture({ userRole: UserRole.ROLE_ADMIN });
+    service.connectedUser.set(userFixture({ userRole: UserRole.ROLE_ADMIN }));
 
     expect(service.isAdmin()).toBe(true);
   });
 
   it('does not take a standard user for an administrator', () => {
-    service.connectedUser = userFixture();
+    service.connectedUser.set(userFixture());
 
     expect(service.isAdmin()).toBe(false);
   });

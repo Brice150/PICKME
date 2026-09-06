@@ -4,24 +4,28 @@
       (click)="toggleUserOrDeleted('user')"
       (keyup.enter)="toggleUserOrDeleted('user')"
       tabindex="0"
-      [title]="!isUserMode ? 'View Users' : ''"
-      [ngClass]="isUserMode ? 'active' : 'unactive'"
+      [title]="!isUserMode() ? 'View Users' : ''"
+      [ngClass]="isUserMode() ? 'active' : 'unactive'"
     >
-      <span class="main">{{ adminStats?.totalUsers }} Users</span>
-      @if (adminStats && adminStats.totalRecentUsers > 0) {
-        <span>(+{{ adminStats.totalRecentUsers }} this week)</span>
+      <span class="main">{{ adminStats()?.totalUsers }} Users</span>
+      @if (adminStats(); as adminStats) {
+        @if (adminStats.totalRecentUsers > 0) {
+          <span>(+{{ adminStats.totalRecentUsers }} this week)</span>
+        }
       }
     </a>
     <a
       (click)="toggleUserOrDeleted('deleted')"
       (keyup.enter)="toggleUserOrDeleted('deleted')"
       tabindex="0"
-      [title]="isUserMode ? 'View Deleted Users' : ''"
-      [ngClass]="!isUserMode ? 'active' : 'unactive'"
+      [title]="isUserMode() ? 'View Deleted Users' : ''"
+      [ngClass]="!isUserMode() ? 'active' : 'unactive'"
     >
-      <span class="main">{{ adminStats?.totalDeletedAccounts }} Deleted</span>
-      @if (adminStats && adminStats.totalRecentDeletedAccounts > 0) {
-        <span>(+{{ adminStats.totalRecentDeletedAccounts }} this week)</span>
+      <span class="main">{{ adminStats()?.totalDeletedAccounts }} Deleted</span>
+      @if (adminStats(); as adminStats) {
+        @if (adminStats.totalRecentDeletedAccounts > 0) {
+          <span>(+{{ adminStats.totalRecentDeletedAccounts }} this week)</span>
+        }
       }
     </a>
   </div>
@@ -40,19 +44,19 @@
       </mat-select>
     </mat-form-field>
   </form>
-  @if (searched) {
+  @if (searched()) {
     <app-paginator
       #paginator
       (handlePageEvent)="handlePageEvent($event)"
-      [loading]="loading"
-      [usersNumber]="isUserMode ? users.length : deletedAccounts.length"
+      [loading]="loading()"
+      [usersNumber]="isUserMode() ? users().length : deletedAccounts().length"
       [maxPerPage]="5"
     >
     </app-paginator>
   }
-  @if (users && users.length !== 0 && !loading && isUserMode) {
+  @if (users().length !== 0 && !loading() && isUserMode()) {
     <div class="content">
-      @for (user of users; track user.id) {
+      @for (user of users(); track user.id) {
         <app-user-card
           [user]="user"
           (deleteEvent)="deleteUser(user)"
@@ -60,32 +64,27 @@
       }
     </div>
   }
-  @if (
-    deletedAccounts && deletedAccounts.length !== 0 && !loading && !isUserMode
-  ) {
+  @if (deletedAccounts().length !== 0 && !loading() && !isUserMode()) {
     <div class="content">
-      @for (deletedAccount of deletedAccounts; track deletedAccount.email) {
+      @for (deletedAccount of deletedAccounts(); track deletedAccount.email) {
         <app-deleted-account-card
           [deletedAccount]="deletedAccount"
         ></app-deleted-account-card>
       }
     </div>
   }
-  @if (loading) {
+  @if (loading()) {
     <div class="content loading">
       <app-loading></app-loading>
     </div>
   }
-  @if ((!users || users.length === 0) && !loading && searched && isUserMode) {
+  @if (users().length === 0 && !loading() && searched() && isUserMode()) {
     <div class="content nothing">
       <span>No user</span>
     </div>
   }
   @if (
-    (!deletedAccounts || deletedAccounts.length === 0) &&
-    !loading &&
-    searched &&
-    !isUserMode
+    deletedAccounts().length === 0 && !loading() && searched() && !isUserMode()
   ) {
     <div class="content nothing">
       <span>No deleted account</span>

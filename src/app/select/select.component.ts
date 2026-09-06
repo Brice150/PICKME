@@ -2,11 +2,13 @@ import type { Swiper } from 'swiper';
 import type { SwiperContainer } from 'swiper/element';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
+  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
   OnInit,
   inject,
+  signal,
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -21,6 +23,7 @@ const SLIDES_BEFORE_NEXT_PAGE = 15;
 
 @Component({
   selector: 'app-select',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CardComponent, LoadingCardComponent],
   templateUrl: './select.component.html',
   styleUrl: './select.component.css',
@@ -32,31 +35,31 @@ export class SelectComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
-  users: User[] = [];
-  activeMatchAnimation = false;
-  loading = true;
-  isLoading = false;
-  initLoading = true;
-  activeIndex = 0;
+  readonly users = signal<User[]>([]);
+  readonly activeMatchAnimation = signal(false);
+  readonly loading = signal(true);
+  readonly isLoading = signal(false);
+  readonly initLoading = signal(true);
+  readonly activeIndex = signal(0);
 
   private page = 0;
   private maxLoadedIndex = 0;
 
   ngOnInit(): void {
-    this.initLoading = true;
+    this.initLoading.set(true);
     this.loadUsers();
   }
 
   loadUsers(): void {
-    this.loading = true;
+    this.loading.set(true);
     this.selectService
       .getAllSelectedUsers(this.page)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (users: User[]) => {
-          this.users.push(...users);
-          this.initLoading = false;
-          this.loading = false;
+          this.users.update((loaded: User[]) => [...loaded, ...users]);
+          this.initLoading.set(false);
+          this.loading.set(false);
           setTimeout(() => {
             this.getSwiper()?.update();
           });
@@ -64,8 +67,8 @@ export class SelectComponent implements OnInit {
         // The interceptor reports the failure; the screen only has to stop spinning, so that the
         // next slide change can try again instead of leaving the user on a dead loader.
         error: () => {
-          this.initLoading = false;
-          this.loading = false;
+          this.initLoading.set(false);
+          this.loading.set(false);
         },
       });
   }
@@ -75,7 +78,7 @@ export class SelectComponent implements OnInit {
     if (index === undefined) {
       return;
     }
-    this.activeIndex = index;
+    this.activeIndex.set(index);
     const shouldLoadNextPage =
       index % SLIDES_BEFORE_NEXT_PAGE === 0 && index > this.maxLoadedIndex;
     if (shouldLoadNextPage) {
@@ -86,18 +89,18 @@ export class SelectComponent implements OnInit {
   }
 
   like(user: User): void {
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.selectService
       .addLike(user.id!)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (matchNotification: string) => {
           if (matchNotification && matchNotification !== '') {
-            this.activeMatchAnimation = true;
+            this.activeMatchAnimation.set(true);
             setTimeout(() => {
-              this.activeMatchAnimation = false;
+              this.activeMatchAnimation.set(false);
               this.removeSlide(user.id!);
-              this.isLoading = false;
+              this.isLoading.set(false);
             }, 3000);
             this.toastr.success(
               'You have a match with ' + matchNotification,
@@ -109,7 +112,7 @@ export class SelectComponent implements OnInit {
             );
           } else {
             this.removeSlide(user.id!);
-            this.isLoading = false;
+            this.isLoading.set(false);
             this.toastr.success(
               'You have liked ' + user.nickname,
               'Liked ' + user.nickname,
@@ -124,14 +127,14 @@ export class SelectComponent implements OnInit {
   }
 
   dislike(user: User): void {
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.selectService
       .addDislike(user.id!)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.removeSlide(user.id!);
-          this.isLoading = false;
+          this.isLoading.set(false);
         },
         complete: () => {
           this.toastr.success(
@@ -147,18 +150,19 @@ export class SelectComponent implements OnInit {
   }
 
   removeSlide(userId: number): void {
-    const userIndex = this.users.findIndex((user: User) => user.id === userId);
-    if (userIndex !== -1) {
-      // Angular owns the slides: dropping the profile from the list removes its slide, and the
-      // carousel only recomputes its geometry once the view has caught up. Asking swiper to
-      // remove the slide as well was double book keeping, and its custom elements no longer
-      // expose that method anyway.
-      this.users.splice(userIndex, 1);
-      setTimeout(() => {
-        this.getSwiper()?.update();
-        this.activeIndex = this.getSwiper()?.activeIndex ?? this.activeIndex;
-      });
+    const remaining = this.users().filter((user: User) => user.id !== userId);
+    if (remaining.length === this.users().length) {
+      return;
     }
+    // Angular owns the slides: dropping the profile from the list removes its slide, and the
+    // carousel only recomputes its geometry once the view has caught up. Asking swiper to
+    // remove the slide as well was double book keeping, and its custom elements no longer
+    // expose that method anyway.
+    this.users.set(remaining);
+    setTimeout(() => {
+      this.getSwiper()?.update();
+      this.activeIndex.set(this.getSwiper()?.activeIndex ?? this.activeIndex());
+    });
   }
 
   goTo(action: string): void {

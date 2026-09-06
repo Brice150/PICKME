@@ -1,19 +1,19 @@
-@if (users && users.length !== 0) {
+@if (users().length !== 0) {
   <swiper-container
     #carousel
     effect="cards"
     mousewheel="true"
     (swiperslidechange)="onSlideChange()"
   >
-    @for (user of users; track user.id; let index = $index) {
+    @for (user of users(); track user.id; let index = $index) {
       <swiper-slide lazy="true">
         <app-card
           loading="true"
           [user]="user"
           [display]="
-            index === activeIndex && !activeMatchAnimation && !isLoading
+            index === activeIndex() && !activeMatchAnimation() && !isLoading()
           "
-          [activeMatchAnimation]="activeMatchAnimation"
+          [activeMatchAnimation]="activeMatchAnimation()"
           (likeEvent)="like(user)"
           (dislikeEvent)="dislike(user)"
         ></app-card>
@@ -21,18 +21,18 @@
     }
     <swiper-slide>
       <app-loading-card
-        [loading]="loading"
-        [usersNumber]="users.length"
+        [loading]="loading()"
+        [usersNumber]="users().length"
         (goToActionEvent)="goTo($event)"
       ></app-loading-card>
     </swiper-slide>
   </swiper-container>
 }
-@if (initLoading || (users && users.length === 0)) {
+@if (initLoading() || users().length === 0) {
   <div class="loading-container">
     <app-loading-card
-      [loading]="initLoading"
-      [usersNumber]="users.length"
+      [loading]="initLoading()"
+      [usersNumber]="users().length"
       (goToActionEvent)="goTo($event)"
     ></app-loading-card>
   </div>

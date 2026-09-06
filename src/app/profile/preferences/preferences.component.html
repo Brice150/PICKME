@@ -1,7 +1,7 @@
 <app-preference
   #preference
   [user]="user()"
-  [preference]="preferences[currentPreferenceIndex]"
+  [preference]="currentPreference()"
   (updateEvent)="updatePreferences()"
 ></app-preference>
 <app-paginator

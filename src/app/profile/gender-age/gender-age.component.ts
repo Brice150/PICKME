@@ -1,4 +1,11 @@
-import { Component, OnInit, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  OnInit,
+  output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -14,6 +21,7 @@ import { ConnectService } from '../../core/services/connect.service';
 
 @Component({
   selector: 'app-gender-age',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     MatSliderModule,
@@ -63,7 +71,7 @@ export class GenderAgeComponent implements OnInit {
 
   cancel(): void {
     const user = this.user();
-    const connectedGenderAge = this.connectService.connectedUser?.genderAge;
+    const connectedGenderAge = this.connectService.connectedUser()?.genderAge;
     if (user && connectedGenderAge) {
       user.genderAge.gender = connectedGenderAge.gender;
       user.genderAge.genderSearch = connectedGenderAge.genderSearch;

@@ -22,14 +22,14 @@ describe('MatchDemoComponent', () => {
   it('shows two sample conversations', () => {
     render(Gender.WOMAN);
 
-    expect(component.images.length).toBe(2);
-    expect(component.images[0]).toContain('woman-select-demo/Picture1.jpg');
+    expect(component.images().length).toBe(2);
+    expect(component.images()[0]).toContain('woman-select-demo/Picture1.jpg');
   });
 
   it('shows the sample men to someone looking for a man', () => {
     render(Gender.MAN);
 
-    expect(component.images[0]).toContain('man-select-demo/Picture1.jpg');
+    expect(component.images()[0]).toContain('man-select-demo/Picture1.jpg');
     expect(component.isWomanGenderSearch()).toBe(false);
   });
 
@@ -42,10 +42,10 @@ describe('MatchDemoComponent', () => {
   it('opens a conversation and closes it again', () => {
     render(Gender.WOMAN);
 
-    component.selectMatch(component.images[0]);
-    expect(component.selectedMatch).toBe(component.images[0]);
+    component.selectMatch(component.images()[0]);
+    expect(component.selectedMatch()).toBe(component.images()[0]);
 
     component.back();
-    expect(component.selectedMatch).toBeUndefined();
+    expect(component.selectedMatch()).toBeUndefined();
   });
 });

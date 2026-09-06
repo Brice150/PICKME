@@ -8,17 +8,17 @@
     refresh every 10 secondes on this page. If you are not on this page, you
     will receive a notification in the application menu !
   </span>
-  @if (!selectedMatch && isWomanGenderSearch()) {
+  @if (!selectedMatch() && isWomanGenderSearch()) {
     <div class="match-container">
       <app-match-card-demo
-        [picture]="images[1]"
+        [picture]="images()[1]"
         [match]="'Kate'"
         [preview]="'I like your pictures !'"
         (clickEvent)="selectMatch('Kate')"
         title="View Messages"
       ></app-match-card-demo>
       <app-match-card-demo
-        [picture]="images[0]"
+        [picture]="images()[0]"
         [match]="'Eva'"
         [preview]="'Hey how are you ?'"
         (clickEvent)="selectMatch('Eva')"
@@ -26,17 +26,17 @@
       ></app-match-card-demo>
     </div>
   }
-  @if (!selectedMatch && !isWomanGenderSearch()) {
+  @if (!selectedMatch() && !isWomanGenderSearch()) {
     <div class="match-container">
       <app-match-card-demo
-        [picture]="images[1]"
+        [picture]="images()[1]"
         [match]="'Mark'"
         [preview]="'I like your pictures !'"
         (clickEvent)="selectMatch('Mark')"
         title="View Messages"
       ></app-match-card-demo>
       <app-match-card-demo
-        [picture]="images[0]"
+        [picture]="images()[0]"
         [match]="'John'"
         [preview]="'Hey how are you ?'"
         (clickEvent)="selectMatch('John')"
@@ -45,13 +45,14 @@
     </div>
   }
 
-  @if (selectedMatch) {
+  @if (selectedMatch()) {
     <div class="match-container">
       <a title="Back" (click)="back()" (keyup.enter)="back()" tabindex="0">
         <i class="bx bx-arrow-back"></i>
       </a>
       @if (
-        selectedMatch && (selectedMatch === 'Eva' || selectedMatch === 'John')
+        selectedMatch() &&
+        (selectedMatch() === 'Eva' || selectedMatch() === 'John')
       ) {
         <div>
           <div class="message left">
@@ -65,7 +66,8 @@
         </div>
       }
       @if (
-        selectedMatch && (selectedMatch === 'Kate' || selectedMatch === 'Mark')
+        selectedMatch() &&
+        (selectedMatch() === 'Kate' || selectedMatch() === 'Mark')
       ) {
         <div>
           <div class="message right">

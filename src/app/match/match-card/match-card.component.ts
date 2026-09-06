@@ -1,11 +1,17 @@
 import { NgClass } from '@angular/common';
-import { Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Match } from '../../core/interfaces/match';
 import { DescriptionPipe } from '../../shared/pipes/description.pipe';
 
 @Component({
   selector: 'app-match-card',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, DescriptionPipe],
   templateUrl: './match-card.component.html',
   styleUrl: './match-card.component.css',

@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -5,6 +6,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Subject, of, throwError } from 'rxjs';
 import { createSpyObj, SpyObj } from '../../testing/spy';
 import { Notification } from '../core/interfaces/notification';
+import { User } from '../core/interfaces/user';
+import { userFixture } from '../core/testing/user.fixture';
 import { ConnectService } from '../core/services/connect.service';
 import { NotificationService } from '../core/services/notification.service';
 import { NavComponent } from './nav.component';
@@ -41,6 +44,7 @@ describe('NavComponent', () => {
     connectedUserReady$ = new Subject<void>();
     loggedOut$ = new Subject<void>();
     connectService = {
+      connectedUser: signal<User | undefined>(userFixture()),
       connectedUserReady$,
       loggedOut$,
       logout: vi.fn(),
@@ -81,7 +85,7 @@ describe('NavComponent', () => {
 
     receive([notification(1, false)]);
 
-    expect(component.notifications.length).toBe(1);
+    expect(component.notifications().length).toBe(1);
   });
 
   it('keeps following the stream after a read has failed', () => {
@@ -95,7 +99,7 @@ describe('NavComponent', () => {
     );
     serverEvents$.next();
 
-    expect(component.notifications.length).toBe(1);
+    expect(component.notifications().length).toBe(1);
   });
 
   it('counts the notifications that have not been seen', () => {
@@ -105,14 +109,14 @@ describe('NavComponent', () => {
       notification(3, false),
     ]);
 
-    expect(component.getUnseenNotificationsLength()).toBe(2);
+    expect(component.unseenNotificationsCount()).toBe(2);
   });
 
   it('marks the notifications as seen while the user reads the conversations', () => {
     receive([notification(1, false)], '/match');
 
     expect(notificationService.markUserNotificationsAsSeen).toHaveBeenCalled();
-    expect(component.notifications[0].seen).toBe(true);
+    expect(component.notifications()[0].seen).toBe(true);
   });
 
   it('leaves an unmatch unread even on the conversations screen', () => {
@@ -121,15 +125,15 @@ describe('NavComponent', () => {
     expect(
       notificationService.markUserNotificationsAsSeen,
     ).not.toHaveBeenCalled();
-    expect(component.notifications[0].seen).toBe(false);
+    expect(component.notifications()[0].seen).toBe(false);
   });
 
   it('opens and closes the menu', () => {
     component.toggleMenu();
-    expect(component.isMenuActive).toBe(true);
+    expect(component.isMenuActive()).toBe(true);
 
     component.toggleMenu();
-    expect(component.isMenuActive).toBe(false);
+    expect(component.isMenuActive()).toBe(false);
   });
 
   it('marks the notifications as seen when their panel is closed', () => {
@@ -139,7 +143,7 @@ describe('NavComponent', () => {
     component.toggleNotifications();
 
     expect(notificationService.markUserNotificationsAsSeen).toHaveBeenCalled();
-    expect(component.notifications[0].seen).toBe(true);
+    expect(component.notifications()[0].seen).toBe(true);
   });
 
   it('does not call the API when every notification has already been seen', () => {
@@ -159,7 +163,7 @@ describe('NavComponent', () => {
 
     component.toggleMenu();
 
-    expect(component.isNotificationsActive).toBe(false);
+    expect(component.isNotificationsActive()).toBe(false);
   });
 
   it('opens the conversations and closes the menu', () => {
@@ -168,7 +172,7 @@ describe('NavComponent', () => {
     component.goTo();
 
     expect(router.navigate).toHaveBeenCalledWith(['match']);
-    expect(component.isMenuActive).toBe(false);
+    expect(component.isMenuActive()).toBe(false);
   });
 
   it('logs the user out and closes the menu', () => {
@@ -177,7 +181,7 @@ describe('NavComponent', () => {
     component.logout();
 
     expect(connectService.logout).toHaveBeenCalled();
-    expect(component.isMenuActive).toBe(false);
+    expect(component.isMenuActive()).toBe(false);
     expect(toastr.success.mock.lastCall![1]).toBe('Logged Out');
   });
 });

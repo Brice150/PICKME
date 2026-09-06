@@ -1,8 +1,14 @@
-import { Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-loading-card',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LoadingComponent],
   templateUrl: './loading-card.component.html',
   styleUrl: './loading-card.component.css',

@@ -1,5 +1,13 @@
 import { NgClass } from '@angular/common';
-import { Component, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
@@ -20,6 +28,7 @@ import {
 
 @Component({
   selector: 'app-card',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, DescriptionPipe, AgePipe, MatDialogModule, RouterModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
@@ -36,12 +45,22 @@ export class CardComponent {
   private readonly router = inject(Router);
   private readonly selectService = inject(SelectService);
 
-  imagePath: string = environment.imagePath;
+  readonly imagePath: string = environment.imagePath;
   readonly user = input.required<User>();
   readonly display = input<boolean>(false);
   readonly activeMatchAnimation = input<boolean>(false);
   readonly likeEvent = output<void>();
   readonly dislikeEvent = output<void>();
+
+  /**
+   * The album, once the whole of it has been read. The profile carries only its main picture as
+   * long as the details have not been opened, and the object it is stored in is shared with the
+   * screen: the card republishes the album here rather than counting on that edit being noticed.
+   */
+  private readonly loadedPictures = signal<Picture[] | undefined>(undefined);
+  readonly pictures = computed(
+    () => this.loadedPictures() ?? this.user().pictures,
+  );
 
   moreInfo(): void {
     const user = this.user();
@@ -53,6 +72,7 @@ export class CardComponent {
       next: (pictures: Picture[]) => {
         user.pictures = pictures;
         user.picturesLoaded = true;
+        this.loadedPictures.set(pictures);
         this.openMoreInfo(user);
       },
       error: () => this.openMoreInfo(user),

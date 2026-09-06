@@ -1,4 +1,10 @@
-import { Component, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { User } from '../../core/interfaces/user';
 import { environment } from '../../../environments/environment';
 import { MoreInfoComponent } from '../../shared/components/more-info/more-info.component';
@@ -9,6 +15,7 @@ import { DescriptionPipe } from '../../shared/pipes/description.pipe';
 
 @Component({
   selector: 'app-user-card',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CustomDatePipe, DescriptionPipe],
   templateUrl: './user-card.component.html',
   styleUrl: './user-card.component.css',

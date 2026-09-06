@@ -1,4 +1,4 @@
-@if (!loading) {
+@if (!loading()) {
   <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
     <mat-stepper
       orientation="vertical"
@@ -111,19 +111,19 @@
           <mat-label>Password</mat-label>
           <input
             matInput
-            [type]="hide ? 'password' : 'text'"
+            [type]="hide() ? 'password' : 'text'"
             formControlName="password"
             required
           />
           <button
             mat-icon-button
             matSuffix
-            (click)="hide = !hide"
+            (click)="hide.set(!hide())"
             [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="hide"
+            [attr.aria-pressed]="hide()"
             type="button"
           >
-            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+            <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
           @if (thirdFormGroup.get('password')!.hasError('required')) {
             <mat-error>Password is required</mat-error>
@@ -137,20 +137,20 @@
           <mat-label>Password Confirmation</mat-label>
           <input
             matInput
-            [type]="hideDuplicate ? 'password' : 'text'"
+            [type]="hideDuplicate() ? 'password' : 'text'"
             formControlName="passwordDuplicate"
             required
           />
           <button
             mat-icon-button
             matSuffix
-            (click)="hideDuplicate = !hideDuplicate"
+            (click)="hideDuplicate.set(!hideDuplicate())"
             [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="hideDuplicate"
+            [attr.aria-pressed]="hideDuplicate()"
             type="button"
           >
             <mat-icon>{{
-              hideDuplicate ? 'visibility_off' : 'visibility'
+              hideDuplicate() ? 'visibility_off' : 'visibility'
             }}</mat-icon>
           </button>
           @if (thirdFormGroup.get('passwordDuplicate')!.hasError('required')) {

@@ -1,11 +1,12 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
   inject,
   input,
+  OnChanges,
+  OnInit,
   output,
+  SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
@@ -21,6 +22,7 @@ type PreferenceValues = Record<PreferenceName, string | undefined>;
 
 @Component({
   selector: 'app-preference',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatChipsModule, ReactiveFormsModule],
   templateUrl: './preference.component.html',
   styleUrl: './preference.component.css',
@@ -85,7 +87,7 @@ export class PreferenceComponent implements OnInit, OnChanges {
   }
 
   private readConnectedUserValue(): string | undefined {
-    return this.valuesOf(this.connectService.connectedUser?.preferences)[
+    return this.valuesOf(this.connectService.connectedUser()?.preferences)[
       this.preference().name
     ];
   }

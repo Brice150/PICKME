@@ -1,5 +1,13 @@
 import { NgClass } from '@angular/common';
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -18,6 +26,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 
 @Component({
   selector: 'app-nav',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, RouterModule, NavButtonsComponent, NotificationsComponent],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css',
@@ -35,9 +44,16 @@ export class NavComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
-  isMenuActive = false;
-  isNotificationsActive = false;
-  notifications: Notification[] = [];
+  readonly isMenuActive = signal(false);
+  readonly isNotificationsActive = signal(false);
+  readonly notifications = signal<Notification[]>([]);
+  /** Drives the badge, so it is derived from the list instead of being counted by the template. */
+  readonly unseenNotificationsCount = computed(
+    () =>
+      this.notifications().filter(
+        (notification: Notification) => !notification.seen,
+      ).length,
+  );
 
   ngOnInit(): void {
     this.connectService.connectedUserReady$
@@ -66,63 +82,34 @@ export class NavComponent implements OnInit {
         ) {
           this.setAllNotificationsToSeenWithNewNotifications(notifications);
         } else {
-          this.notifications = notifications;
+          this.notifications.set(notifications);
         }
       });
   }
 
   toggleMenu(): void {
-    this.isMenuActive = !this.isMenuActive;
-    if (this.isNotificationsActive) {
+    this.isMenuActive.update((active: boolean) => !active);
+    if (this.isNotificationsActive()) {
       this.setAllNotificationsToSeen();
     }
-    this.isNotificationsActive = false;
+    this.isNotificationsActive.set(false);
   }
 
   toggleNotifications(): void {
-    if (this.isNotificationsActive) {
+    if (this.isNotificationsActive()) {
       this.setAllNotificationsToSeen();
     }
-    this.isNotificationsActive = !this.isNotificationsActive;
+    this.isNotificationsActive.update((active: boolean) => !active);
   }
 
   setAllNotificationsToSeen(): void {
-    if (
-      this.notifications.some(
-        (notification: Notification) => !notification.seen,
-      )
-    ) {
-      this.notificationService.markUserNotificationsAsSeen().subscribe({
-        next: () => {
-          this.notifications.forEach(
-            (notification: Notification) => (notification.seen = true),
-          );
-        },
-      });
-    }
+    this.markAsSeen(this.notifications());
   }
 
   setAllNotificationsToSeenWithNewNotifications(
     notifications: Notification[],
   ): void {
-    if (
-      notifications.some((notification: Notification) => !notification.seen)
-    ) {
-      this.notificationService.markUserNotificationsAsSeen().subscribe({
-        next: () => {
-          notifications.forEach(
-            (notification: Notification) => (notification.seen = true),
-          );
-          this.notifications = notifications;
-        },
-      });
-    }
-  }
-
-  getUnseenNotificationsLength(): number {
-    return this.notifications.filter(
-      (notification: Notification) => !notification.seen,
-    ).length;
+    this.markAsSeen(notifications);
   }
 
   goTo(): void {
@@ -136,6 +123,29 @@ export class NavComponent implements OnInit {
     this.toastr.success('You are logged out', 'Logged Out', {
       positionClass: 'toast-bottom-center',
       toastClass: 'ngx-toastr custom',
+    });
+  }
+
+  /**
+   * Marks a batch as read on the server, then publishes it read. The batch is republished instead
+   * of being edited in place: the badge is derived from the list, and a signal only reports a
+   * value it has been given.
+   */
+  private markAsSeen(notifications: Notification[]): void {
+    if (
+      !notifications.some((notification: Notification) => !notification.seen)
+    ) {
+      return;
+    }
+    this.notificationService.markUserNotificationsAsSeen().subscribe({
+      next: () => {
+        this.notifications.set(
+          notifications.map((notification: Notification) => ({
+            ...notification,
+            seen: true,
+          })),
+        );
+      },
     });
   }
 }

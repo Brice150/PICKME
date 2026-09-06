@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, UrlTree } from '@angular/router';
 import { firstValueFrom, Observable, of, throwError } from 'rxjs';
@@ -18,7 +19,7 @@ describe('adminGuard', () => {
     selectionUrl = {} as UrlTree;
     connectService = createSpyObj<ConnectService>(
       ['getConnectedUser', 'isAdmin'],
-      { connectedUser: undefined },
+      { connectedUser: signal<User | undefined>(undefined) },
     );
     router = createSpyObj<Router>(['createUrlTree']);
     router.createUrlTree.mockReturnValue(selectionUrl);
@@ -40,10 +41,7 @@ describe('adminGuard', () => {
   }
 
   function connect(user: User | undefined): void {
-    Object.defineProperty(connectService, 'connectedUser', {
-      value: user,
-      configurable: true,
-    });
+    connectService.connectedUser.set(user);
   }
 
   it('lets an administrator already loaded through', () => {

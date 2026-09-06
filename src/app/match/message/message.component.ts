@@ -1,10 +1,11 @@
 import { NgClass } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Message } from '../../core/interfaces/message';
 import { CustomDatePipe } from '../../shared/pipes/custom-date.pipe';
 
 @Component({
   selector: 'app-message',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, CustomDatePipe],
   templateUrl: './message.component.html',
   styleUrl: './message.component.css',

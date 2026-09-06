@@ -12,7 +12,7 @@ export const userGuard: CanActivateFn = () => {
   const router = inject(Router);
   const connection = (): UrlTree => router.createUrlTree(['/']);
 
-  if (connectService.connectedUser) {
+  if (connectService.connectedUser()) {
     return true;
   }
   return connectService.getConnectedUser().pipe(

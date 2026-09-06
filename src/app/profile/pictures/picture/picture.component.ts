@@ -1,5 +1,11 @@
 import { NgClass } from '@angular/common';
-import { Component, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
 import { Picture } from '../../../core/interfaces/picture';
@@ -11,6 +17,7 @@ import {
 
 @Component({
   selector: 'app-picture',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass],
   templateUrl: './picture.component.html',
   styleUrl: './picture.component.css',

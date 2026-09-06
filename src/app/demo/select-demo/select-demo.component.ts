@@ -1,11 +1,13 @@
 import type { Swiper } from 'swiper';
 import type { SwiperContainer } from 'swiper/element';
 import {
-  CUSTOM_ELEMENTS_SCHEMA,
+  ChangeDetectionStrategy,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
-  OnInit,
   input,
+  OnInit,
+  signal,
   viewChild,
 } from '@angular/core';
 import { Gender } from '../../core/enums/gender';
@@ -14,6 +16,7 @@ import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-select-demo',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CardDemoComponent],
   templateUrl: './select-demo.component.html',
   styleUrl: './select-demo.component.css',
@@ -22,7 +25,7 @@ import { environment } from '../../../environments/environment';
 export class SelectDemoComponent implements OnInit {
   imagePath: string = environment.imagePath;
   readonly userGenderSearch = input.required<Gender>();
-  images: string[] = [];
+  readonly images = signal<string[]>([]);
 
   ngOnInit(): void {
     const userGenderSearch = this.userGenderSearch();
@@ -31,11 +34,11 @@ export class SelectDemoComponent implements OnInit {
     } else if (userGenderSearch === Gender.WOMAN) {
       this.imagePath = this.imagePath + 'woman-select-demo/';
     }
-    this.images = [
+    this.images.set([
       this.imagePath + 'Picture1.jpg',
       this.imagePath + 'Picture2.jpg',
       this.imagePath + 'Picture3.jpg',
-    ];
+    ]);
   }
 
   isCurrentView(image: string): boolean {
@@ -43,7 +46,7 @@ export class SelectDemoComponent implements OnInit {
     if (index === undefined) {
       return false;
     }
-    return image === this.images[index];
+    return image === this.images()[index];
   }
 
   onSlideChange(): void {
@@ -59,13 +62,13 @@ export class SelectDemoComponent implements OnInit {
   }
 
   removeSlide(imageToRemove: string): void {
-    const imageIndex = this.images.findIndex(
-      (image: string) => image === imageToRemove,
+    const remaining = this.images().filter(
+      (image: string) => image !== imageToRemove,
     );
-    if (imageIndex !== -1) {
+    if (remaining.length !== this.images().length) {
       // The slides are rendered by Angular, so removing the image is enough: the carousel only
       // has to recompute its geometry afterwards.
-      this.images.splice(imageIndex, 1);
+      this.images.set(remaining);
       setTimeout(() => this.getSwiper()?.update());
     }
   }

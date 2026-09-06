@@ -175,6 +175,14 @@ Les entités ne sortent jamais telles quelles : `UserDTO` expose la vue complèt
 compte connecté, `UserDTOMapperRestricted` la vue réduite d'un autre profil, sans
 mot de passe, rôle ni statistiques.
 
+Le front tourne sans zone.js (`provideZonelessChangeDetection`) et chaque composant
+est en `OnPush`. L'état affiché tient donc dans des signaux, et ce qui s'en déduit
+(le compteur de notifications, la liste filtrée des conversations, la question de
+préférence à l'écran) dans des `computed` : une réponse HTTP redessine l'écran
+parce qu'elle publie une nouvelle valeur, pas parce qu'un patch global a vu passer
+une tâche. Les collections sont republiées plutôt que modifiées sur place, sans
+quoi le signal n'aurait rien à signaler.
+
 ### Stratégie de test
 
 | Niveau                        | Outils                           | Ce qui est vérifié                                            |

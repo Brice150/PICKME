@@ -1,6 +1,12 @@
 import { NgClass } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -19,6 +25,7 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
 
 @Component({
   selector: 'app-login',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgClass,
     ReactiveFormsModule,
@@ -38,9 +45,9 @@ export class LoginComponent implements OnInit {
   private readonly toastr = inject(ToastrService);
 
   loginForm!: FormGroup;
-  hide = true;
-  invalidLogin = false;
-  loading = false;
+  readonly hide = signal(true);
+  readonly invalidLogin = signal(false);
+  readonly loading = signal(false);
 
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -61,22 +68,22 @@ export class LoginComponent implements OnInit {
 
   loginUser(user: User) {
     if (this.loginForm.valid) {
-      this.loading = true;
+      this.loading.set(true);
       this.connectService.login(user).subscribe({
         next: () => {
-          this.loading = false;
+          this.loading.set(false);
           this.router.navigate(['/select']);
         },
         error: (error: HttpErrorResponse) => {
-          this.loading = false;
+          this.loading.set(false);
           if (!error.error.error && error.error.includes('Bad credentials')) {
-            this.invalidLogin = true;
+            this.invalidLogin.set(true);
             this.toastr.error('Wrong email or password !', 'Bad Credentials', {
               positionClass: 'toast-bottom-center',
               toastClass: 'ngx-toastr custom error',
             });
             setTimeout(() => {
-              this.invalidLogin = false;
+              this.invalidLogin.set(false);
             }, 2000);
           } else {
             this.toastr.error(error.message, 'Error', {

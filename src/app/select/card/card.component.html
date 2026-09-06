@@ -24,10 +24,9 @@
   </a>
 }
 <div class="picture-container">
-  @if (user().pictures && user().pictures!.length !== 0) {
-    <img [src]="user().pictures![0].content" [alt]="user().nickname" />
-  }
-  @if (!user().pictures || user().pictures!.length === 0) {
+  @if (pictures()?.length) {
+    <img [src]="pictures()![0].content" [alt]="user().nickname" />
+  } @else {
     <img [src]="imagePath + 'No-Image.png'" [alt]="user().nickname" />
   }
 </div>

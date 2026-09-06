@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { User } from '../../core/interfaces/user';
@@ -20,7 +21,9 @@ describe('DescriptionComponent', () => {
         {
           provide: ConnectService,
           useValue: {
-            connectedUser: userFixture({ description: 'saved description' }),
+            connectedUser: signal(
+              userFixture({ description: 'saved description' }),
+            ),
           },
         },
       ],

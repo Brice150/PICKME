@@ -1,9 +1,10 @@
 import { LowerCasePipe, NgClass } from '@angular/common';
 import {
-  CUSTOM_ELEMENTS_SCHEMA,
+  ChangeDetectionStrategy,
   Component,
-  OnInit,
+  CUSTOM_ELEMENTS_SCHEMA,
   inject,
+  OnInit,
 } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { User } from '../../../core/interfaces/user';
@@ -23,6 +24,7 @@ import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-more-info',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, LowerCasePipe, MatChipsModule, AgePipe],
   templateUrl: './more-info.component.html',
   styleUrl: './more-info.component.css',

@@ -33,7 +33,7 @@ describe('PaginatorComponent', () => {
 
     component.next();
 
-    expect(component.page).toBe(1);
+    expect(component.page()).toBe(1);
     expect(emitted).toEqual([1]);
   });
 
@@ -42,7 +42,7 @@ describe('PaginatorComponent', () => {
 
     component.next();
 
-    expect(component.page).toBe(0);
+    expect(component.page()).toBe(0);
     expect(emitted).toEqual([]);
   });
 
@@ -51,18 +51,18 @@ describe('PaginatorComponent', () => {
 
     component.next();
 
-    expect(component.page).toBe(0);
+    expect(component.page()).toBe(0);
     expect(emitted).toEqual([]);
   });
 
   it('stops on the last page of a bounded pagination', () => {
     fullPage({ maxPages: 2 });
     component.next();
-    expect(component.page).toBe(1);
+    expect(component.page()).toBe(1);
 
     component.next();
 
-    expect(component.page).toBe(1);
+    expect(component.page()).toBe(1);
     expect(emitted).toEqual([1]);
   });
 
@@ -72,7 +72,7 @@ describe('PaginatorComponent', () => {
 
     component.previous();
 
-    expect(component.page).toBe(0);
+    expect(component.page()).toBe(0);
     expect(emitted).toEqual([1, 0]);
   });
 
@@ -81,7 +81,7 @@ describe('PaginatorComponent', () => {
 
     component.previous();
 
-    expect(component.page).toBe(0);
+    expect(component.page()).toBe(0);
     expect(emitted).toEqual([]);
   });
 

@@ -33,7 +33,7 @@ describe('CardDemoComponent', () => {
 
     component.like();
 
-    expect(component.activeMatchAnimation).toBe(false);
+    expect(component.activeMatchAnimation()).toBe(false);
     expect(likes).toBe(1);
   });
 
@@ -43,12 +43,12 @@ describe('CardDemoComponent', () => {
 
     component.like();
 
-    expect(component.activeMatchAnimation).toBe(true);
+    expect(component.activeMatchAnimation()).toBe(true);
     expect(likes).toBe(0);
 
     vi.advanceTimersByTime(2000);
 
-    expect(component.activeMatchAnimation).toBe(false);
+    expect(component.activeMatchAnimation()).toBe(false);
     expect(likes).toBe(1);
   });
 
@@ -58,6 +58,6 @@ describe('CardDemoComponent', () => {
     component.dislike();
 
     expect(dislikes).toBe(1);
-    expect(component.activeMatchAnimation).toBe(false);
+    expect(component.activeMatchAnimation()).toBe(false);
   });
 });

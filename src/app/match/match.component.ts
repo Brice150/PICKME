@@ -1,10 +1,13 @@
 import { NgClass } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
   OnInit,
+  computed,
   inject,
+  signal,
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -35,6 +38,7 @@ import { MessageComponent } from './message/message.component';
 
 @Component({
   selector: 'app-match',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgClass,
     FormsModule,
@@ -59,14 +63,36 @@ export class MatchComponent implements OnInit {
   private readonly selectService = inject(SelectService);
   private readonly destroyRef = inject(DestroyRef);
 
-  search!: string;
   messageForm!: FormGroup;
-  isModifying = false;
-  updatedMessage?: Message;
-  matches: Match[] = [];
-  filteredMatches: Match[] = [];
-  selectedMatch?: Match;
-  loading = true;
+  readonly search = signal('');
+  readonly isModifying = signal(false);
+  readonly updatedMessage = signal<Message | undefined>(undefined);
+  readonly matches = signal<Match[]>([]);
+  readonly loading = signal(true);
+
+  readonly filteredMatches = computed(() => {
+    const search = this.search().toLocaleLowerCase();
+    if (search === '') {
+      return this.matches();
+    }
+    return this.matches().filter((match: Match) =>
+      match.user.nickname.toLocaleLowerCase().includes(search),
+    );
+  });
+
+  /**
+   * The conversation being read, named by the profile it belongs to rather than held apart. The
+   * list is republished on every signal from the server and on every message written: reading the
+   * conversation back from it keeps the two in step, and closes it on its own when the profile
+   * has unmatched in the meantime.
+   */
+  private readonly selectedUserId = signal<number | undefined>(undefined);
+  readonly selectedMatch = computed(() =>
+    this.matches().find(
+      (match: Match) => match.user.id === this.selectedUserId(),
+    ),
+  );
+
   previousMessages?: Message[];
   // Absent as long as the selected conversation holds no message.
   private readonly messagesContainer =
@@ -95,7 +121,7 @@ export class MatchComponent implements OnInit {
         switchMap(() =>
           this.matchService.getAllUserMatches().pipe(
             catchError(() => {
-              this.loading = false;
+              this.loading.set(false);
               return EMPTY;
             }),
           ),
@@ -104,74 +130,42 @@ export class MatchComponent implements OnInit {
       )
       .subscribe({
         next: (matches: Match[]) => {
-          this.matches = matches;
-          this.searchByNickname();
-          this.loading = false;
-          if (this.selectedMatch) {
-            const matchIndex = this.matches.findIndex(
-              (match: Match) => this.selectedMatch?.user.id === match.user.id,
-            );
-            if (matchIndex !== -1) {
-              this.selectedMatch = this.matches[matchIndex];
-              if (
-                this.previousMessages?.length !==
-                this.selectedMatch.messages.length
-              ) {
-                this.previousMessages = this.selectedMatch.messages;
-                setTimeout(() => {
-                  this.scrollDown();
-                });
-              }
-            } else {
-              this.back();
-            }
-          }
+          this.matches.set(matches);
+          this.loading.set(false);
+          this.scrollDownOnNewMessages();
         },
       });
   }
 
-  searchByNickname(): void {
-    if (!this.search || this.search === '') {
-      this.filteredMatches = [...this.matches];
-    } else {
-      this.filteredMatches = [...this.matches].filter((match: Match) =>
-        match.user.nickname
-          .toLocaleLowerCase()
-          .includes(this.search.toLocaleLowerCase()),
-      );
-    }
-  }
-
   dislike(): void {
-    const selectedMatch = this.selectedMatch;
+    const selectedMatch = this.selectedMatch();
     if (!selectedMatch?.user.id) {
       return;
     }
     this.selectService.addDislike(selectedMatch.user.id).subscribe({
       next: () => {
-        const matchIndex = this.matches.findIndex(
-          (match: Match) => match.user.id === selectedMatch.user.id,
+        this.matches.update((matches: Match[]) =>
+          matches.filter(
+            (match: Match) => match.user.id !== selectedMatch.user.id,
+          ),
         );
-        if (matchIndex !== -1) {
-          this.matches.splice(matchIndex, 1);
-          this.searchByNickname();
-          this.toastr.success(
-            'You have disliked ' + selectedMatch.user.nickname,
-            'Disliked ' + selectedMatch.user.nickname,
-            {
-              positionClass: 'toast-bottom-center',
-              toastClass: 'ngx-toastr custom',
-            },
-          );
-          this.selectedMatch = undefined;
-        }
+        this.selectedUserId.set(undefined);
+        this.previousMessages = undefined;
+        this.toastr.success(
+          'You have disliked ' + selectedMatch.user.nickname,
+          'Disliked ' + selectedMatch.user.nickname,
+          {
+            positionClass: 'toast-bottom-center',
+            toastClass: 'ngx-toastr custom',
+          },
+        );
       },
     });
   }
 
   selectMatch(match: Match): void {
-    this.selectedMatch = match;
-    this.previousMessages = this.selectedMatch.messages;
+    this.selectedUserId.set(match.user.id);
+    this.previousMessages = match.messages;
     setTimeout(() => {
       this.scrollDown();
     });
@@ -180,7 +174,7 @@ export class MatchComponent implements OnInit {
   moreInfo(): void {
     const dialogRef = this.dialog.open(MoreInfoComponent, {
       data: {
-        user: this.selectedMatch!.user,
+        user: this.selectedMatch()!.user,
         adminMode: false,
         matchMode: true,
       },
@@ -195,17 +189,17 @@ export class MatchComponent implements OnInit {
   }
 
   back(): void {
-    this.selectedMatch = undefined;
+    this.selectedUserId.set(undefined);
     this.previousMessages = undefined;
   }
 
   modifyMessage(message: Message): void {
     if (
-      message.sender !== this.selectedMatch?.user.nickname &&
+      message.sender !== this.selectedMatch()?.user.nickname &&
       message.content
     ) {
-      this.updatedMessage = message;
-      this.isModifying = true;
+      this.updatedMessage.set(message);
+      this.isModifying.set(true);
     }
   }
 
@@ -213,23 +207,28 @@ export class MatchComponent implements OnInit {
     this.messageForm.get('content')?.reset();
     this.messageForm.get('content')?.setErrors(null);
     this.messageForm.markAsPristine();
-    this.updatedMessage = undefined;
-    this.isModifying = false;
+    this.updatedMessage.set(undefined);
+    this.isModifying.set(false);
   }
 
   sendMessage(message: Message): void {
-    message.fkReceiver = this.selectedMatch?.user.id;
+    const selectedMatch = this.selectedMatch();
+    message.fkReceiver = selectedMatch?.user.id;
     this.matchService.addMessage(message).subscribe({
       next: (newMessage: Message) => {
-        this.selectedMatch!.messages.push(newMessage);
-        const index = this.matches.findIndex(
-          (match) => match.user.id === this.selectedMatch!.user.id,
-        );
-        if (index !== -1) {
-          const selected = this.matches.splice(index, 1)[0];
-          this.matches.unshift(selected);
-          this.searchByNickname();
-        }
+        // The conversation is republished with its new message, then moved back to the top of the
+        // list, where the most recent exchange belongs.
+        const updated: Match = {
+          ...selectedMatch!,
+          messages: [...selectedMatch!.messages, newMessage],
+        };
+        this.matches.update((matches: Match[]) => [
+          updated,
+          ...matches.filter(
+            (match: Match) => match.user.id !== updated.user.id,
+          ),
+        ]);
+        this.previousMessages = updated.messages;
         this.unModifyMessage();
         setTimeout(() => {
           this.scrollDown();
@@ -245,12 +244,13 @@ export class MatchComponent implements OnInit {
   }
 
   updateMessage(message: Message): void {
-    this.updatedMessage!.content = message.content;
-    this.matchService.updateMessage(this.updatedMessage!).subscribe({
+    const edited: Message = {
+      ...this.updatedMessage()!,
+      content: message.content,
+    };
+    this.matchService.updateMessage(edited).subscribe({
       next: (updatedMessage: Message) => {
-        this.selectedMatch!.messages.find(
-          (message: Message) => message.id === this.updatedMessage?.id,
-        )!.content = updatedMessage.content;
+        this.replaceMessage(edited.id, updatedMessage.content);
         this.unModifyMessage();
       },
       complete: () => {
@@ -269,13 +269,9 @@ export class MatchComponent implements OnInit {
   deleteMessage(messageToDelete: Message): void {
     this.matchService.deleteMessage(messageToDelete.id).subscribe({
       next: () => {
-        const messageIndex = this.selectedMatch!.messages.findIndex(
-          (message: Message) => message.id === messageToDelete.id,
-        );
-        if (messageIndex !== -1) {
-          this.selectedMatch!.messages[messageIndex].content = undefined;
-          this.unModifyMessage();
-        }
+        // A deleted message keeps its place in the conversation, emptied of its content.
+        this.replaceMessage(messageToDelete.id, undefined);
+        this.unModifyMessage();
       },
       complete: () => {
         this.toastr.success(
@@ -299,7 +295,7 @@ export class MatchComponent implements OnInit {
       .afterClosed()
       .pipe(filter((res: boolean) => res))
       .subscribe(() => {
-        this.deleteMessage(this.updatedMessage!);
+        this.deleteMessage(this.updatedMessage()!);
       });
   }
 
@@ -320,6 +316,38 @@ export class MatchComponent implements OnInit {
     const container = this.messagesContainer()?.nativeElement;
     if (container) {
       container.scrollTop = container.scrollHeight;
+    }
+  }
+
+  /** Republishes one message of the open conversation, and the list that carries it. */
+  private replaceMessage(messageId: number, content: string | undefined): void {
+    const selectedUserId = this.selectedUserId();
+    this.matches.update((matches: Match[]) =>
+      matches.map((match: Match) =>
+        match.user.id !== selectedUserId
+          ? match
+          : {
+              ...match,
+              messages: match.messages.map((message: Message) =>
+                message.id === messageId ? { ...message, content } : message,
+              ),
+            },
+      ),
+    );
+  }
+
+  /** Follows the conversation down when the server has brought new messages to it. */
+  private scrollDownOnNewMessages(): void {
+    const selectedMatch = this.selectedMatch();
+    if (!selectedMatch) {
+      this.previousMessages = undefined;
+      return;
+    }
+    if (this.previousMessages?.length !== selectedMatch.messages.length) {
+      this.previousMessages = selectedMatch.messages;
+      setTimeout(() => {
+        this.scrollDown();
+      });
     }
   }
 }

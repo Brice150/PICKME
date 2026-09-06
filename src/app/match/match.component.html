@@ -1,39 +1,4 @@
-@if (!selectedMatch) {
-  <div class="container">
-    <mat-form-field color="accent" class="search">
-      <mat-label>Search by nickname</mat-label>
-      <input
-        matInput
-        [(ngModel)]="search"
-        (ngModelChange)="searchByNickname()"
-      />
-    </mat-form-field>
-    @if (matches && matches.length !== 0 && !loading) {
-      <div class="content">
-        @for (match of filteredMatches; track match.user.id) {
-          <app-match-card
-            [match]="match"
-            [preview]="getPreview(match)"
-            (clickEvent)="selectMatch(match)"
-            title="View Messages"
-          ></app-match-card>
-        }
-      </div>
-    }
-    @if (loading) {
-      <div class="content loading">
-        <app-loading></app-loading>
-      </div>
-    }
-    @if ((!matches || matches.length === 0) && !loading) {
-      <div class="content nothing">
-        <span>No match</span>
-      </div>
-    }
-  </div>
-}
-
-@if (selectedMatch) {
+@if (selectedMatch(); as selectedMatch) {
   <div class="container">
     <div class="title">
       <app-match-card
@@ -66,7 +31,7 @@
         <span>No message</span>
       </div>
     }
-    @if (!isModifying) {
+    @if (!isModifying()) {
       <form
         [formGroup]="messageForm"
         (ngSubmit)="sendMessage(messageForm.value)"
@@ -95,7 +60,7 @@
         </mat-form-field>
       </form>
     }
-    @if (isModifying) {
+    @if (isModifying()) {
       <form
         [formGroup]="messageForm"
         (ngSubmit)="updateMessage(messageForm.value)"
@@ -105,7 +70,7 @@
           <textarea
             matInput
             formControlName="content"
-            ngModel="{{ updatedMessage?.content }}"
+            ngModel="{{ updatedMessage()?.content }}"
           ></textarea>
           <button
             mat-icon-button
@@ -144,6 +109,39 @@
           }
         </mat-form-field>
       </form>
+    }
+  </div>
+} @else {
+  <div class="container">
+    <mat-form-field color="accent" class="search">
+      <mat-label>Search by nickname</mat-label>
+      <input
+        matInput
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
+      />
+    </mat-form-field>
+    @if (matches().length !== 0 && !loading()) {
+      <div class="content">
+        @for (match of filteredMatches(); track match.user.id) {
+          <app-match-card
+            [match]="match"
+            [preview]="getPreview(match)"
+            (clickEvent)="selectMatch(match)"
+            title="View Messages"
+          ></app-match-card>
+        }
+      </div>
+    }
+    @if (loading()) {
+      <div class="content loading">
+        <app-loading></app-loading>
+      </div>
+    }
+    @if (matches().length === 0 && !loading()) {
+      <div class="content nothing">
+        <span>No match</span>
+      </div>
     }
   </div>
 }

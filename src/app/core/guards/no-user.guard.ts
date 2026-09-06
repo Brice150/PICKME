@@ -9,5 +9,5 @@ export const noUserGuard: CanActivateFn = () => {
   const connectService = inject(ConnectService);
   const router = inject(Router);
 
-  return !connectService.connectedUser || router.createUrlTree(['/select']);
+  return !connectService.connectedUser() || router.createUrlTree(['/select']);
 };

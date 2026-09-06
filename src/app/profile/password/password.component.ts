@@ -1,4 +1,12 @@
-import { Component, OnInit, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -15,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-password',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -30,8 +39,8 @@ export class PasswordComponent implements OnInit {
   private readonly connectService = inject(ConnectService);
 
   readonly user = input.required<User>();
-  hide = true;
-  hideDuplicate = true;
+  readonly hide = signal(true);
+  readonly hideDuplicate = signal(true);
   passwordForm!: FormGroup;
   readonly updateEvent = output<string>();
 
@@ -91,7 +100,7 @@ export class PasswordComponent implements OnInit {
   cancel(): void {
     const user = this.user();
     if (user) {
-      user.password = this.connectService.connectedUser!.password;
+      user.password = this.connectService.connectedUser()!.password;
       this.passwordForm.patchValue({
         password: null,
         passwordDuplicate: null,

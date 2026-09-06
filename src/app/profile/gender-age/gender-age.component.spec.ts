@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Gender } from '../../core/enums/gender';
@@ -18,7 +19,10 @@ describe('GenderAgeComponent', () => {
       imports: [GenderAgeComponent],
       providers: [
         provideNoopAnimations(),
-        { provide: ConnectService, useValue: { connectedUser: userFixture() } },
+        {
+          provide: ConnectService,
+          useValue: { connectedUser: signal(userFixture()) },
+        },
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(GenderAgeComponent);

@@ -1,4 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import { Gender } from '../core/enums/gender';
 import { ConnectService } from '../core/services/connect.service';
 import { MatchDemoComponent } from './match-demo/match-demo.component';
@@ -9,6 +15,7 @@ import { StartDemoComponent } from './start-demo/start-demo.component';
 
 @Component({
   selector: 'app-demo',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ProfileDemoComponent,
     SelectDemoComponent,
@@ -22,31 +29,31 @@ import { StartDemoComponent } from './start-demo/start-demo.component';
 export class DemoComponent implements OnInit {
   private readonly connectService = inject(ConnectService);
 
-  demos: string[] = ['profile', 'select', 'match', 'start'];
+  readonly demos: string[] = ['profile', 'select', 'match', 'start'];
   animationDirection: 'previous' | 'next' = 'next';
-  currentIndex = 0;
-  userGender: Gender = Gender.MAN;
-  userGenderSearch: Gender = Gender.WOMAN;
+  readonly currentIndex = signal(0);
+  readonly userGender = signal<Gender>(Gender.MAN);
+  readonly userGenderSearch = signal<Gender>(Gender.WOMAN);
 
   ngOnInit(): void {
-    if (this.connectService.registeredUser) {
-      this.userGender = this.connectService.registeredUser.genderAge.gender;
-      this.userGenderSearch =
-        this.connectService.registeredUser.genderAge.genderSearch;
+    const registeredUser = this.connectService.registeredUser();
+    if (registeredUser) {
+      this.userGender.set(registeredUser.genderAge.gender);
+      this.userGenderSearch.set(registeredUser.genderAge.genderSearch);
     }
   }
 
   previous(): void {
-    if (this.currentIndex > 0) {
+    if (this.currentIndex() > 0) {
       this.animationDirection = 'previous';
-      this.currentIndex--;
+      this.currentIndex.update((index: number) => index - 1);
     }
   }
 
   next(): void {
-    if (this.currentIndex < this.demos.length - 1) {
+    if (this.currentIndex() < this.demos.length - 1) {
       this.animationDirection = 'next';
-      this.currentIndex++;
+      this.currentIndex.update((index: number) => index + 1);
     }
   }
 }

@@ -46,7 +46,7 @@ describe('LoginComponent', () => {
 
   it('opens on an empty form, hiding the password', () => {
     expect(component.loginForm.value).toEqual({ email: '', password: '' });
-    expect(component.hide).toBe(true);
+    expect(component.hide()).toBe(true);
   });
 
   it('requires a well formed email', () => {
@@ -75,7 +75,7 @@ describe('LoginComponent', () => {
 
     expect(connectService.login).toHaveBeenCalledWith(credentials);
     expect(router.navigate).toHaveBeenCalledWith(['/select']);
-    expect(component.loading).toBe(false);
+    expect(component.loading()).toBe(false);
     expect(toastr.success.mock.lastCall![1]).toBe('Logged In');
   });
 
@@ -90,13 +90,13 @@ describe('LoginComponent', () => {
 
     component.loginUser(credentials);
 
-    expect(component.invalidLogin).toBe(true);
+    expect(component.invalidLogin()).toBe(true);
     expect(toastr.error.mock.lastCall![1]).toBe('Bad Credentials');
     expect(router.navigate).not.toHaveBeenCalled();
 
     vi.advanceTimersByTime(2000);
 
-    expect(component.invalidLogin).toBe(false);
+    expect(component.invalidLogin()).toBe(false);
   });
 
   it('reports any other failure without shaking the form', () => {
@@ -109,8 +109,8 @@ describe('LoginComponent', () => {
 
     component.loginUser(credentials);
 
-    expect(component.invalidLogin).toBe(false);
+    expect(component.invalidLogin()).toBe(false);
     expect(toastr.error.mock.lastCall![1]).toBe('Error');
-    expect(component.loading).toBe(false);
+    expect(component.loading()).toBe(false);
   });
 });

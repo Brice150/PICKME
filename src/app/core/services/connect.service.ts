@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, WritableSignal, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -13,8 +13,18 @@ export class ConnectService {
   private readonly router = inject(Router);
   private readonly apiServerUrl = environment.apiBaseUrl;
 
-  registeredUser?: User;
-  connectedUser?: User;
+  /**
+   * The two accounts the application carries between screens. They are signals rather than plain
+   * fields because the menu and the screens read them from their templates: a change has to notify
+   * the change detection on its own, nothing else watches for it.
+   */
+  readonly registeredUser: WritableSignal<User | undefined> = signal<
+    User | undefined
+  >(undefined);
+  readonly connectedUser: WritableSignal<User | undefined> = signal<
+    User | undefined
+  >(undefined);
+
   readonly connectedUserReady$: Subject<void> = new Subject<void>();
   readonly loggedOut$: Subject<void> = new Subject<void>();
 
@@ -54,18 +64,18 @@ export class ConnectService {
    *
    * @param user account to check
    */
-  isAdmin(user: User | undefined = this.connectedUser): boolean {
+  isAdmin(user: User | undefined = this.connectedUser()): boolean {
     return user?.userRole === UserRole.ROLE_ADMIN;
   }
 
   logout(): void {
     this.router.navigate(['/']);
-    this.connectedUser = undefined;
+    this.connectedUser.set(undefined);
     this.loggedOut$.next();
   }
 
   private storeConnectedUser(loggedInUser: User): void {
-    this.connectedUser = loggedInUser;
+    this.connectedUser.set(loggedInUser);
     this.connectedUserReady$.next();
   }
 }

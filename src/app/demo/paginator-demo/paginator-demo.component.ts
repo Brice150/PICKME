@@ -1,8 +1,14 @@
 import { NgClass } from '@angular/common';
-import { Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 
 @Component({
   selector: 'app-paginator-demo',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass],
   templateUrl: './paginator-demo.component.html',
   styleUrl: './paginator-demo.component.css',

@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, UrlTree } from '@angular/router';
 import { createSpyObj, SpyObj } from '../../../testing/spy';
@@ -13,7 +14,7 @@ describe('noUserGuard', () => {
 
   beforeEach(() => {
     connectService = createSpyObj<ConnectService>([], {
-      connectedUser: undefined,
+      connectedUser: signal<User | undefined>(undefined),
     });
     router = createSpyObj<Router>(['createUrlTree']);
     router.createUrlTree.mockReturnValue(selectionUrl);
@@ -26,10 +27,7 @@ describe('noUserGuard', () => {
   });
 
   function connect(user: User | undefined): void {
-    Object.defineProperty(connectService, 'connectedUser', {
-      value: user,
-      configurable: true,
-    });
+    connectService.connectedUser.set(user);
   }
 
   it('lets a visitor reach the connection screen', () => {

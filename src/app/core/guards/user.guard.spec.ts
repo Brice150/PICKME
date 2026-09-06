@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, UrlTree } from '@angular/router';
 import { firstValueFrom, Observable, of, throwError } from 'rxjs';
@@ -14,7 +15,7 @@ describe('userGuard', () => {
 
   beforeEach(() => {
     connectService = createSpyObj<ConnectService>(['getConnectedUser'], {
-      connectedUser: undefined,
+      connectedUser: signal<User | undefined>(undefined),
     });
     router = createSpyObj<Router>(['createUrlTree']);
     router.createUrlTree.mockReturnValue(connectionUrl);
@@ -35,10 +36,7 @@ describe('userGuard', () => {
   }
 
   function connect(user: User | undefined): void {
-    Object.defineProperty(connectService, 'connectedUser', {
-      value: user,
-      configurable: true,
-    });
+    connectService.connectedUser.set(user);
   }
 
   it('lets an account already loaded through', () => {
