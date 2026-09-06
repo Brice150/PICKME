@@ -212,15 +212,21 @@ export class MatchComponent implements OnInit {
   }
 
   sendMessage(message: Message): void {
-    const selectedMatch = this.selectedMatch();
-    message.fkReceiver = selectedMatch?.user.id;
+    message.fkReceiver = this.selectedMatch()?.user.id;
     this.matchService.addMessage(message).subscribe({
       next: (newMessage: Message) => {
+        // The conversation is read back here rather than before the request: the server may have
+        // signalled a refresh while the message travelled, and appending to the conversation as
+        // it was would drop whatever arrived in the meantime, the profile unmatching included.
+        const selectedMatch = this.selectedMatch();
+        if (!selectedMatch) {
+          return;
+        }
         // The conversation is republished with its new message, then moved back to the top of the
         // list, where the most recent exchange belongs.
         const updated: Match = {
-          ...selectedMatch!,
-          messages: [...selectedMatch!.messages, newMessage],
+          ...selectedMatch,
+          messages: [...selectedMatch.messages, newMessage],
         };
         this.matches.update((matches: Match[]) => [
           updated,

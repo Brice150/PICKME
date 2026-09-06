@@ -206,6 +206,37 @@ describe('MatchComponent', () => {
     expect(lastToastTitle()).toBe('Message Sent');
   });
 
+  it('keeps what the server sent while the message was travelling', () => {
+    const alice = match(2, 'Alice');
+    start([alice]);
+    component.selectMatch(alice);
+    // The answer is held back, so that the signal from the server lands in between.
+    const answer = new Subject<Message>();
+    matchService.addMessage.mockReturnValue(answer);
+    const sent = message(9, 'Bob', 'hi');
+    const received = message(8, 'Alice', 'coucou');
+
+    component.sendMessage({ content: 'hi' } as Message);
+    serverSignals([match(2, 'Alice', [received])]);
+    answer.next(sent);
+
+    expect(component.selectedMatch()!.messages).toEqual([received, sent]);
+  });
+
+  it('drops the message of a profile that unmatched while it was travelling', () => {
+    const alice = match(2, 'Alice');
+    start([alice]);
+    component.selectMatch(alice);
+    const answer = new Subject<Message>();
+    matchService.addMessage.mockReturnValue(answer);
+
+    component.sendMessage({ content: 'hi' } as Message);
+    serverSignals([]);
+    answer.next(message(9, 'Bob', 'hi'));
+
+    expect(component.matches()).toEqual([]);
+  });
+
   it('only offers to edit a message written by the connected user', () => {
     const alice = match(2, 'Alice', [message(1, 'Alice', 'hello')]);
     start([alice]);
