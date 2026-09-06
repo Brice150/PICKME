@@ -92,10 +92,10 @@
             ],
             "coverageReporters": ["text-summary", "html"],
             "coverageThresholds": {
-              "statements": 96,
-              "branches": 94,
-              "functions": 96,
-              "lines": 96
+              "statements": 98,
+              "branches": 96,
+              "functions": 98,
+              "lines": 98
             },
             "setupFiles": ["src/testing/setup.ts"],
             "runnerConfig": "vitest.config.ts"
