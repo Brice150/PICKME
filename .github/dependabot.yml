@@ -6,8 +6,10 @@ version: 2
 updates:
   - package-ecosystem: npm
     directory: /
+    # Mensuel : chaque pull request Dependabot (et chacun de ses rebases)
+    # coûte un run complet de CI.
     schedule:
-      interval: weekly
+      interval: monthly
     open-pull-requests-limit: 3
     # A major Angular release is migrated with `ng update`, which runs the schematics rewriting
     # the code that changed. Dependabot only edits the manifest, so it opens pull requests that
@@ -46,7 +48,7 @@ updates:
   - package-ecosystem: maven
     directory: /backend
     schedule:
-      interval: weekly
+      interval: monthly
     open-pull-requests-limit: 3
     # Same reasoning as Angular: a Spring Boot major carries breaking changes across the starters
     # and is upgraded deliberately, not merged from a bot.

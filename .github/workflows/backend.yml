@@ -1,0 +1,60 @@
+name: Backend
+
+# Runs only when a pull request touches the back end. The application is not
+# deployed, so a push on main, already checked by its pull request, runs
+# nothing.
+on:
+  pull_request:
+    branches: [main]
+    # `ready_for_review` starts the checks once a draft is ready.
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'backend/**'
+      - '!backend/**.md'
+      - '.github/workflows/backend.yml'
+  # Lets the checks be run by hand from the Actions tab.
+  workflow_dispatch:
+
+# A new push on a branch cancels the run still in progress for that branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend
+    # A draft costs no minutes: the checks start when it is ready.
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    # Safety net: a stuck run stops instead of burning 6 hours of minutes.
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: temurin
+          cache: maven
+
+      # The project is developed on Windows, where git does not track the
+      # executable bit: the wrapper is restored as read only on the runner
+      # whenever a commit drops the mode recorded in the index.
+      - name: Make the Maven wrapper executable
+        run: chmod +x mvnw
+
+      # `verify` runs the tests then fails the build when the coverage of the
+      # services, the controllers or the exception handling drops below 100%.
+      - name: Test and check coverage
+        run: ./mvnw --batch-mode --no-transfer-progress verify
+
+      - name: Publish the coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: backend/target/site/jacoco
+          retention-days: 7
