@@ -16,7 +16,7 @@
   <properties>
     <java.version>21</java.version>
     <postgresql.version>42.7.13</postgresql.version>
-    <jacoco.version>0.8.15</jacoco.version>
+    <jacoco.version>0.8.16</jacoco.version>
   </properties>
   <dependencies>
     <!-- production code dependencies -->
